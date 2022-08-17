@@ -198,7 +198,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None, indoor=False):
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
     arw_d : float
-        arrow radius in [metres]
+        arrow diameter in [metres]
     indoor : bool
         is this an indoor round for arrow diameter purposes? default = False
 
@@ -298,7 +298,7 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, indoor=False,
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
     arw_d : float
-        arrow radius in [metres] default = None (use defaults)
+        arrow diameter in [metres] default = None -> (use defaults)
     indoor : bool
         is this an indoor round for arrow diameter purposes? default = False
     round_score_up : bool
@@ -317,6 +317,9 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, indoor=False,
     """
 
     # TODO: make 'indoor' an attribute of the Round class and set from there. Do when creating library of rounds.
+    # TODO: It would be good if this function could be called with rounds.Pass as well as rounds.Round.
+    #  maybe add intelligent input to loot at whether rnd is type rounds.Round or rounds.Pass?
+    #  or make a separate score_for_pass() that this calls?
 
     pass_score = []
     for Pass_i in rnd.passes:
@@ -326,5 +329,6 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, indoor=False,
 
     if round_score_up:
         round_score = np.ceil(round_score)
+        # round_score = np.round(round_score)
 
     return round_score, pass_score
