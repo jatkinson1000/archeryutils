@@ -1,5 +1,5 @@
 {
-  "AGB_datum" : 5.75,
+  "AGB_datum" : 6.05,
   "AGB_step" : 3.5,
   "AGB_ang_0" : 5.0e-4,
   "AGB_kd" : 0.00365,
@@ -24,5 +24,5 @@
   "AA2_d0" : 50.0,
 
   "arrow_diameter_indoors" : 9.3e-3,
-  "arrow_diameter_outdoors" : 4.9288e-3
+  "arrow_diameter_outdoors" : 5.5e-3
 }

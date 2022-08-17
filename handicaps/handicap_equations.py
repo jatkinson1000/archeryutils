@@ -47,7 +47,7 @@ class HcParams:
 
     # DEFAULT ARROW DIAMETER
     arw_d_in = 9.3e-3  # Diameter of an indoor arrow [metres]
-    arw_d_out = 4.9288e-3  # Diameter of an outdoor arrow [metres]
+    arw_d_out = 5.5e-3  # Diameter of an outdoor arrow [metres]
 
     def load_json_params(self, jsonpath):
         with open(jsonpath, "r") as read_file:
