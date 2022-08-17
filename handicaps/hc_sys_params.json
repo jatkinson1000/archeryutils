@@ -11,6 +11,7 @@
   "AGBo_k2" : 1.07,
   "AGBo_k3" : 4.3,
   "AGBo_p1" : 2.0,
+  "AGB0_arw_d" : 7.14e-3,
 
   "AA_k0" : 2.37,
   "AA_ks" : 0.027,
@@ -20,5 +21,8 @@
   "AA2_ks" : 0.027,
   "AA2_f1" : 0.815,
   "AA2_f2" : 0.185,
-  "AA2_d0" : 50.0
+  "AA2_d0" : 50.0,
+
+  "arrow_diameter_indoors" : 9.3e-3,
+  "arrow_diameter_outdoors" : 4.9288e-3
 }

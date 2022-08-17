@@ -22,6 +22,8 @@ class Target:
 
     Methods
     -------
+    max_score()
+        Returns the maximum score ring value
     """
     def __init__(self, diameter, scoring_system, distance=None):
         """
@@ -50,3 +52,32 @@ class Target:
         self.diameter = diameter
         self.distance = distance
         self.sys = scoring_system
+
+    def max_score(self):
+        """
+        max_score
+        returns the maximum numerical score possible on this target (i.e. not X)
+
+        Parameters
+        ----------
+
+        Returns
+        ----------
+        max_score : float
+            maximum score possible on this target face
+        """
+        if self.sys in ['5_zone']:
+            return 9.0
+        elif self.sys in ['10_zone', '10_zone_compound',
+                          '10_zone_6_ring', '10_zone_6_ring_compound',
+                          '10_zone_5_ring', '10_zone_5_ring_compound']:
+            return 10.0
+        elif self.sys in ['WA_field']:
+            return 6.0
+        elif self.sys in ['IFAA_field', 'IFAA_field_expert',
+                          'Worcester', 'Worcester_2_ring']:
+            return 5.0
+        elif self.sys in ['Beiter_hit_miss']:
+            return 1.0
+        else:
+            raise ValueError(f"target face '{self.sys}' has no specified maximum score")

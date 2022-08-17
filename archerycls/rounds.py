@@ -8,6 +8,8 @@
 # Summary       : definition of classes to define rounds for archery applications
 #
 
+import numpy as np
+
 import archerycls.targets as targets
 
 
@@ -25,6 +27,8 @@ class Pass:
 
     Methods
     -------
+    max_score()
+        Returns the maximum score for Pass
     """
     def __init__(self, diameter, scoring_system, distance, n_arrows):
         """
@@ -44,6 +48,22 @@ class Pass:
         self.target = targets.Target(diameter, scoring_system, distance)
         self.n_arrows = n_arrows
 
+    def max_score(self):
+        """
+        max_score
+        returns the maximum numerical score possible on this pass (i.e. not counting x's)
+
+        Parameters
+        ----------
+
+        Returns
+        ----------
+        max_score : float
+            maximum score possible on this pass
+        """
+
+        return self.n_arrows * self.target.max_score()
+
 
 class Round:
     """
@@ -61,6 +81,8 @@ class Round:
     -------
     get_info()
         Prints information about the round including name and breakdown of passes
+    max_score()
+        Returns the maximum score for Round
 
     """
     def __init__(self, name, passes):
@@ -81,10 +103,10 @@ class Round:
         method get_info()
         Prints information about the round
 
-        Attributes
+        Parameters
         ----------
 
-        Methods
+        Returns
         -------
         """
         print(f"A {self.name} round consists of {len(self.passes)} passes:")
@@ -95,3 +117,21 @@ class Round:
         #  e.g. we want to print imperial round distances in yards, not metres.
         #  Maybe use pint module in future? or encode a 'dia_base_unit' and 'dist_base_unit' attribute
         #  so as to keep all calculations in SI units?
+
+        return None
+
+    def max_score(self):
+        """
+        max_score
+        returns the maximum numerical score possible on this round (i.e. not counting x's)
+
+        Parameters
+        ----------
+
+        Returns
+        ----------
+        max_score : float
+            maximum score possible on this pass
+        """
+
+        return np.sum([pass_i.max_score() for pass_i in self.passes])

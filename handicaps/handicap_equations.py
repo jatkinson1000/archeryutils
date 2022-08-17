@@ -31,6 +31,7 @@ class HcParams:
     AGBo_k2 = 1.07  # constant used in handicap equation
     AGBo_k3 = 4.3  # constant used in handicap equation
     AGBo_p1 = 2.0  # exponent of distance scaling
+    AGB0_arw_d = 7.14e-3  # arrow diameter used in the old AGB algorithm by D. Lane
 
     # KEY PARAMETERS AND CONSTANTS FOR THE ARCHERY AUSTRALIA SCHEME
     AA_k0 = 2.37  # offset required to set handicap 100 at desired score
@@ -43,6 +44,10 @@ class HcParams:
     AA2_f1 = 0.815  # 'linear' scaling factor
     AA2_f2 = 0.185  # 'quadratic' scaling factor
     AA2_d0 = 50.0  # Normalisation distance [metres]
+
+    # DEFAULT ARROW DIAMETER
+    arw_d_in = 9.3e-3  # Diameter of an indoor arrow [metres]
+    arw_d_out = 4.9288e-3  # Diameter of an outdoor arrow [metres]
 
     def load_json_params(self, jsonpath):
         with open(jsonpath, "r") as read_file:
@@ -58,6 +63,7 @@ class HcParams:
         self.AGBo_k2 = paramsdict["AGBo_k2"]
         self.AGBo_k3 = paramsdict["AGBo_k3"]
         self.AGBo_p1 = paramsdict["AGBo_p1"]
+        self.AGB0_arw_d = paramsdict["AGB0_arw_d"]
         self.AA_k0 = paramsdict["AA_k0"]
         self.AA_ks = paramsdict["AA_ks"]
         self.AA_kd = paramsdict["AA_kd"]
@@ -66,6 +72,8 @@ class HcParams:
         self.AA2_f1 = paramsdict["AA2_f1"]
         self.AA2_f2 = paramsdict["AA2_f2"]
         self.AA2_d0 = paramsdict["AA2_d0"]
+        self.arw_d_in = paramsdict["arrow_diameter_indoors"]
+        self.arw_d_out = paramsdict["arrow_diameter_outdoors"]
 
 
 def sigma_t(h, hc_sys, dist, hc_dat):
@@ -174,7 +182,7 @@ def sigma_r(h, hc_sys, dist, hc_dat):
     return sig_r
 
 
-def arrow_score(target, h, hc_sys, hc_dat, arw_rad):
+def arrow_score(target, h, hc_sys, hc_dat, arw_d=None, indoor=False):
     """
     Subroutine to calculate the average arrow score for a given
     target and handicap rating.
@@ -189,8 +197,10 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_rad):
         identifier for the handicap system
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
-    arw_rad : float
+    arw_d : float
         arrow radius in [metres]
+    indoor : bool
+        is this an indoor round for arrow diameter purposes? default = False
 
 
     Returns
@@ -201,6 +211,18 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_rad):
     References
     ----------
     """
+    # Set arrow diameter. Use provided, if AGBold scheme set value, otherwise select default from params based on in/out
+    if arw_d is None:
+        if hc_sys == 'AGBold':
+            arw_rad = hc_dat.AGB0_arw_d / 2.0
+        else:
+            if indoor:
+                arw_rad = hc_dat.arw_d_in / 2.0
+            else:
+                arw_rad = hc_dat.arw_d_out / 2.0
+    else:
+        arw_rad = arw_d / 2.0
+
     tar_dia = target.diameter
     sig_r = sigma_r(h, hc_sys, target.distance, hc_dat)
 
@@ -259,7 +281,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_rad):
     return s_bar
 
 
-def score_for_round(rnd, h, hc_sys, hc_dat, arw_rad,
+def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, indoor=False,
                     round_score_up=True):
     """
     Subroutine to calculate the average arrow score for a given
@@ -275,8 +297,10 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_rad,
         identifier for the handicap system
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
-    arw_rad : float
-        arrow radius in [metres]
+    arw_d : float
+        arrow radius in [metres] default = None (use defaults)
+    indoor : bool
+        is this an indoor round for arrow diameter purposes? default = False
     round_score_up : bool
         round score up to nearest integer value
 
@@ -292,9 +316,11 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_rad,
     ----------
     """
 
+    # TODO: make 'indoor' an attribute of the Round class and set from there. Do when creating library of rounds.
+
     pass_score = []
     for Pass_i in rnd.passes:
-        pass_score.append(Pass_i.n_arrows * arrow_score(Pass_i.target, h, hc_sys, hc_dat, arw_rad))
+        pass_score.append(Pass_i.n_arrows * arrow_score(Pass_i.target, h, hc_sys, hc_dat, arw_d=arw_d, indoor=indoor))
 
     round_score = np.sum(pass_score, axis=0)
 

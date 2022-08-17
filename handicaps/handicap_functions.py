@@ -105,3 +105,21 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_rad,
         print('Done.')
 
     return None
+
+
+def handicap_from_score(score, rnd, hc_sys):
+    """
+    Subroutine to return the handicap of a given score on a given round
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    hc
+
+    References
+    ----------
+    """
+    pass
+
