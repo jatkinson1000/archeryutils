@@ -9,8 +9,10 @@
 #
 
 import numpy as np
+import json
 
 import archerycls.targets as targets
+from archerycls.constants import YARD_TO_METRE
 
 
 class Pass:
@@ -30,23 +32,25 @@ class Pass:
     max_score()
         Returns the maximum score for Pass
     """
-    def __init__(self, diameter, scoring_system, distance, n_arrows):
+    def __init__(self, n_arrows, diameter, scoring_system, distance, dist_unit='metres'):
         """
         Parameters
         ----------
+        n_arrows : int
+            number of arrows in this pass
         diameter : float
             face diameter in [metres]
         scoring_system : str
             target face/scoring system type
         distance : float
             linear distance from archer to target
-        n_arrows : int
-            number of arrows in this pass
+        dist_unit : str
+            The unit distance is measured in. default = 'metres'
 
         """
 
-        self.target = targets.Target(diameter, scoring_system, distance)
         self.n_arrows = n_arrows
+        self.target = targets.Target(diameter, scoring_system, distance, dist_unit)
 
     def max_score(self):
         """
@@ -110,13 +114,12 @@ class Round:
         -------
         """
         print(f"A {self.name} round consists of {len(self.passes)} passes:")
-        [print("\t- {} arrows at a {} cm target at {} metres.".format(
-            pass_i.n_arrows, pass_i.target.diameter/100.0, pass_i.target.distance)) for pass_i in self.passes]
-
-        # TODO: There is clearly a need here to deal with different units in an appropriate manner.
-        #  e.g. we want to print imperial round distances in yards, not metres.
-        #  Maybe use pint module in future? or encode a 'dia_base_unit' and 'dist_base_unit' attribute
-        #  so as to keep all calculations in SI units?
+        for pass_i in self.passes:
+            print("\t- {} arrows at a {} cm target at {} {}.".format(
+                pass_i.n_arrows, pass_i.target.diameter*100.0,
+                (pass_i.target.distance/YARD_TO_METRE if pass_i.target.native_dist_unit == 'yard'
+                 else pass_i.target.distance),
+                pass_i.target.native_dist_unit))
 
         return None
 
@@ -135,3 +138,35 @@ class Round:
         """
 
         return np.sum([pass_i.max_score() for pass_i in self.passes])
+
+
+def read_json_to_round_dict(json_file):
+    """
+    Subroutine to return round information read in from a json file as a dictionary of rounds
+
+    Parameters
+    ----------
+    json_file : str
+        filepath to json file
+
+    Returns
+    -------
+    round_dict : dict of str : Round
+
+    References
+    ----------
+    """
+    with open(json_file) as json_file:
+        data = json.load(json_file)
+
+    round_dict = {}
+
+    for round_i in data:
+        passes = []
+        for pass_i in round_i['passes']:
+            passes.append(Pass(pass_i['n_arrows'], pass_i['diameter']/100, pass_i['scoring'],
+                               pass_i['distance'], dist_unit=pass_i['dist_unit'],))
+
+        round_dict[round_i['name']] = Round(round_i['name'], passes)
+
+    return round_dict

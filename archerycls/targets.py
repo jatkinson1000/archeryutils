@@ -7,9 +7,13 @@
 #
 # Summary       : definition of a target class for archery applications
 #
+
+from archerycls.constants import YARD_TO_METRE
+
+
 class Target:
     """
-    A class used to represent a target face
+    A class used to represent a target
 
     Attributes
     ----------
@@ -17,6 +21,8 @@ class Target:
         Target face diameter in [centimetres]
     distance : float
         Linear distance from archer to target
+    native_dist_unit : str
+        The native unit distance is measured in
     scoring_system : str
         the type of target face (scoring system) used
 
@@ -25,7 +31,7 @@ class Target:
     max_score()
         Returns the maximum score ring value
     """
-    def __init__(self, diameter, scoring_system, distance=None):
+    def __init__(self, diameter, scoring_system, distance=None, native_dist_unit=None):
         """
         Parameters
         ----------
@@ -35,7 +41,8 @@ class Target:
             target face/scoring system type
         distance : float
             linear distance from archer to target
-
+        native_dist_unit : str
+            The native unit distance is measured in
         """
         systems = ['5_zone', '10_zone', '10_zone_compound',
                    '10_zone_6_ring', '10_zone_6_ring_compound',
@@ -49,8 +56,16 @@ class Target:
             raise ValueError("Invalid Target Face Type specified.\n"
                              "Please select from '{}'.".format("', '".join(systems)))
 
+        if native_dist_unit in ['Yard', 'yard', 'Yards', 'yards', 'Y', 'y', 'Yd', 'yd', 'Yds', 'yds']:
+            native_dist_unit = 'yard'
+        elif native_dist_unit in ['Metre', 'metre', 'Metres', 'metres', 'M', 'm', 'Ms', 'ms']:
+            native_dist_unit = 'metre'
+        else:
+            raise ValueError(f"distance unit '{native_dist_unit}' not recognised. Select from 'yard' or 'metre'.")
+
         self.diameter = diameter
-        self.distance = distance
+        self.native_dist_unit = native_dist_unit
+        self.distance = distance*YARD_TO_METRE if self.native_dist_unit == 'yard' else distance
         self.sys = scoring_system
 
     def max_score(self):

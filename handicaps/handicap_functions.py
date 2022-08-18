@@ -71,7 +71,7 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
             for jscore, score in enumerate(row):
                 if table[irow, jscore] == table[irow+1, jscore]:
                     if int_prec:
-                        table[irow, jscore] = -1
+                        table[irow, jscore] = -1000
                     else:
                         table[irow, jscore] = np.nan
 
@@ -81,7 +81,7 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
         print('\n', end='')
         for row in table:
             if int_prec:
-                [print(f"{''.rjust(14)}" if (sc == -1) else f"{sc:14d}", end='') for sc in row]
+                [print(f"{''.rjust(14)}" if (sc == -1000) else f"{sc:14d}", end='') for sc in row]
             else:
                 [print(f"{''.rjust(14)}" if (np.isnan(sc)) else f"{sc:14.8f}", end='') for sc in row]
             print('\n', end='')
