@@ -3,7 +3,7 @@
 # Contributors  : Jack Atkinson
 #
 # Date Created  : 2022-08-16
-# Last Modified : 2022-08-16 by Jack Atkinson
+# Last Modified : 2022-08-18 by Jack Atkinson
 #
 # Summary       : Code for doing things with archery handicap code
 #
@@ -61,7 +61,7 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
     # Abbreviations to replace headings with in Handicap Tables to keep concise
     abbreviations = {"Compound": "C", "Recurve": "R", "Triple": "Tr", "Centre": "C",
                      "Portsmouth": "Ports", "Worcester": "Worc",
-                     "Short": "St", "Long": "Lg",
+                     "Short": "St", "Long": "Lg", "Small": "Sm", "Gents": "G", "Ladies": "L"
                      }
 
     table = np.empty([len(hcs), len(round_list)+1])

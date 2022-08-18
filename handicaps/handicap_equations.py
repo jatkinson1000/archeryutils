@@ -3,7 +3,7 @@
 # Contributors  : Jack Atkinson
 #
 # Date Created  : 2022-08-15
-# Last Modified : 2022-08-15 by Jack Atkinson
+# Last Modified : 2022-08-18 by Jack Atkinson
 #
 # Summary       : Code for archery calculating handicaps using various systems
 #

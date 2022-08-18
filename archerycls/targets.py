@@ -3,7 +3,7 @@
 # Contributors  : Jack Atkinson
 #
 # Date Created  : 2022-08-16
-# Last Modified : 2022-08-16 by Jack Atkinson
+# Last Modified : 2022-08-18 by Jack Atkinson
 #
 # Summary       : definition of a target class for archery applications
 #
