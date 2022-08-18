@@ -10,6 +10,7 @@
 
 import numpy as np
 import json
+from pathlib import Path
 
 import archerycls.targets as targets
 from archerycls.constants import YARD_TO_METRE
@@ -167,6 +168,43 @@ def read_json_to_round_dict(json_file):
             passes.append(Pass(pass_i['n_arrows'], pass_i['diameter']/100, pass_i['scoring'],
                                pass_i['distance'], dist_unit=pass_i['dist_unit'],))
 
-        round_dict[round_i['name']] = Round(round_i['name'], passes)
+        round_dict[round_i['codename']] = Round(round_i['name'], passes)
 
     return round_dict
+
+
+class DotDict(dict):
+    """
+    A subclass of dict to provide dot notation access to a dictionary
+
+    Attributes
+    ----------
+
+    Methods
+    -------
+
+    References
+    -------
+    https://goodcode.io/articles/python-dict-object/
+    """
+    def __getattr__(self, name):
+        if name in self:
+            return self[name]
+        else:
+            raise AttributeError(f'''No such attribute: {name}.
+            Please select from '{"', '".join([key for key in self.keys()])}'.''')
+
+    def __setattr__(self, name, value):
+        self[name] = value
+
+    def __delattr__(self, name):
+        if name in self:
+            del self[name]
+        else:
+            raise AttributeError(f'''No such attribute: {name}.
+            Please select from '{"', '".join([key for key in self.keys()])}'.''')
+
+
+# Generate a set of default rounds that come with this module, accessible as a DotDict:
+AGB = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/AGB.json'))
+WA = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/WA.json'))
