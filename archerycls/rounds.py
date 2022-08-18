@@ -225,4 +225,5 @@ AGB_outdoor_metric = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}'
 AGB_indoor = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}'
                                              f'/round_data_files/AGB_indoor.json'))
 WA_outdoor = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/WA_outdoor.json'))
+WA_indoor = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/WA_indoor.json'))
 custom = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/Custom.json'))
