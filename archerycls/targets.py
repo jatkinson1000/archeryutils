@@ -31,7 +31,7 @@ class Target:
     max_score()
         Returns the maximum score ring value
     """
-    def __init__(self, diameter, scoring_system, distance=None, native_dist_unit=None):
+    def __init__(self, diameter, scoring_system, distance=None, native_dist_unit=None, indoor=False):
         """
         Parameters
         ----------
@@ -43,6 +43,8 @@ class Target:
             linear distance from archer to target
         native_dist_unit : str
             The native unit distance is measured in
+        indoor : bool
+            is round indoors for arrow diameter purposes? default = False
         """
         systems = ['5_zone', '10_zone', '10_zone_compound',
                    '10_zone_6_ring', '10_zone_6_ring_compound',
@@ -67,6 +69,7 @@ class Target:
         self.native_dist_unit = native_dist_unit
         self.distance = distance*YARD_TO_METRE if self.native_dist_unit == 'yard' else distance
         self.sys = scoring_system
+        self.indoor = indoor
 
     def max_score(self):
         """

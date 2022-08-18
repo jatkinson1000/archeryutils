@@ -182,7 +182,7 @@ def sigma_r(h, hc_sys, dist, hc_dat):
     return sig_r
 
 
-def arrow_score(target, h, hc_sys, hc_dat, arw_d=None, indoor=False):
+def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     """
     Subroutine to calculate the average arrow score for a given
     target and handicap rating.
@@ -199,9 +199,6 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None, indoor=False):
         dataclass containing parameters for handicap equations
     arw_d : float
         arrow diameter in [metres]
-    indoor : bool
-        is this an indoor round for arrow diameter purposes? default = False
-
 
     Returns
     -------
@@ -216,7 +213,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None, indoor=False):
         if hc_sys == 'AGBold':
             arw_rad = hc_dat.AGB0_arw_d / 2.0
         else:
-            if indoor:
+            if target.indoor:
                 arw_rad = hc_dat.arw_d_in / 2.0
             else:
                 arw_rad = hc_dat.arw_d_out / 2.0
@@ -281,8 +278,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None, indoor=False):
     return s_bar
 
 
-def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, indoor=False,
-                    round_score_up=True):
+def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, round_score_up=True):
     """
     Subroutine to calculate the average arrow score for a given
     target and handicap rating.
@@ -299,8 +295,6 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, indoor=False,
         dataclass containing parameters for handicap equations
     arw_d : float
         arrow diameter in [metres] default = None -> (use defaults)
-    indoor : bool
-        is this an indoor round for arrow diameter purposes? default = False
     round_score_up : bool
         round score up to nearest integer value
 
@@ -316,19 +310,13 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, indoor=False,
     ----------
     """
 
-    # TODO: make 'indoor' an attribute of the Round class and set from there. Do when creating library of rounds.
-    # TODO: It would be good if this function could be called with rounds.Pass as well as rounds.Round.
-    #  maybe add intelligent input to loot at whether rnd is type rounds.Round or rounds.Pass?
-    #  or make a separate score_for_pass() that this calls?
-
     pass_score = []
     for Pass_i in rnd.passes:
-        pass_score.append(Pass_i.n_arrows * arrow_score(Pass_i.target, h, hc_sys, hc_dat, arw_d=arw_d, indoor=indoor))
+        pass_score.append(Pass_i.n_arrows * arrow_score(Pass_i.target, h, hc_sys, hc_dat, arw_d=arw_d))
 
     round_score = np.sum(pass_score, axis=0)
 
     if round_score_up:
         round_score = np.ceil(round_score)
-        # round_score = np.round(round_score)
 
     return round_score, pass_score

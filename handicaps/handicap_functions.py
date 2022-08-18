@@ -15,6 +15,8 @@ import warnings
 from archerycls import rounds
 import handicaps.handicap_equations as hc_eq
 
+FILL = -1000
+
 
 def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
                          round_scores_up=True, clean_gaps=False,
@@ -55,6 +57,13 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
     References
     ----------
     """
+
+    # Abbreviations to replace headings with in Handicap Tables to keep concise
+    abbreviations = {"Compound": "C", "Recurve": "R", "Triple": "Tr", "Centre": "C",
+                     "Portsmouth": "Ports", "Worcester": "Worc",
+                     "Short": "St", "Long": "Lg",
+                     }
+
     table = np.empty([len(hcs), len(round_list)+1])
     table[:, 0] = hcs[:]
     for i, round_i in enumerate(round_list):
@@ -71,17 +80,18 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
             for jscore, score in enumerate(row):
                 if table[irow, jscore] == table[irow+1, jscore]:
                     if int_prec:
-                        table[irow, jscore] = -1000
+                        table[irow, jscore] = FILL
                     else:
                         table[irow, jscore] = np.nan
 
     if printout:
         print('Handicap'.rjust(14), end='')
-        [print(f'{round_i.name.rjust(14)}', end='') for round_i in round_list]
+        [print(f"{' '.join([abbreviations.get(i, i) for i in round_i.name.split()]).rjust(14)}")
+         for round_i in round_list]
         print('\n', end='')
         for row in table:
             if int_prec:
-                [print(f"{''.rjust(14)}" if (sc == -1000) else f"{sc:14d}", end='') for sc in row]
+                [print(f"{''.rjust(14)}" if (sc == FILL) else f"{sc:14d}", end='') for sc in row]
             else:
                 [print(f"{''.rjust(14)}" if (np.isnan(sc)) else f"{sc:14.8f}", end='') for sc in row]
             print('\n', end='')
@@ -90,11 +100,12 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
         print('Writing handicap table to file...', end='')
         with open(filename, 'w') as f:
             f.write('Handicap'.rjust(14))
-            [f.write(f'{round_i.name.rjust(14)}') for round_i in round_list]
+            [f.write(f"{' '.join([abbreviations.get(i, i) for i in round_i.name.split()]).rjust(14)}")
+             for round_i in round_list]
             f.write('\n')
             for row in table:
                 if int_prec:
-                    [f.write(f"{''.rjust(14)}" if (sc == -1) else f"{sc:14d}") for sc in row]
+                    [f.write(f"{''.rjust(14)}" if (sc == FILL) else f"{sc:14d}") for sc in row]
                 else:
                     [f.write(f"{''.rjust(14)}" if np.isnan(sc) else f"{sc:14.2f}") for sc in row]
                 f.write('\n')

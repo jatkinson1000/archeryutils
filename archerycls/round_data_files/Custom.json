@@ -1,0 +1,42 @@
+[
+  {"name" : "252 100",
+   "codename" : "c_252_100",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"}]
+  },
+  {"name" : "252 80",
+   "codename" : "c_252_80",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"}]
+  },
+  {"name" : "252 60",
+   "codename" : "c_252_60",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}]
+  },
+  {"name" : "252 50",
+   "codename" : "c_252_50",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}]
+  },
+  {"name" : "252 40",
+   "codename" : "c_252_40",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}]
+  },
+  {"name" : "252 30",
+   "codename" : "c_252_30",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}]
+  },
+  {"name" : "252 20",
+   "codename" : "c_252_20",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}]
+  },
+  {"name" : "252 10",
+   "codename" : "c_252_10",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 10, "dist_unit" : "yard"}]
+  }
+]

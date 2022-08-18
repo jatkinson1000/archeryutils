@@ -11,6 +11,7 @@
 import numpy as np
 import json
 from pathlib import Path
+import warnings
 
 import archerycls.targets as targets
 from archerycls.constants import YARD_TO_METRE
@@ -164,9 +165,20 @@ def read_json_to_round_dict(json_file):
 
     for round_i in data:
         passes = []
+        if "location" not in round_i:
+            warnings.warn(f"No location provided for round {round_i['name']}. Defaulting to outdoor.")
+            round_i["indoor"] = False
+        elif round_i["location"] in ["indoors", "indoor", "in", "inside", "Indoors", "Indoor", "In", "Inside"]:
+            round_i["indoor"] = True
+        elif round_i["location"] in ["outdoors", "outdoor", "out", "outside", "Outdoors", "Outdoor", "Out", "Outside"]:
+            round_i["indoor"] = False
+        else:
+            warnings.warn(f"Location not recognised for round {round_i['name']}. Defaulting to outdoor.")
+            round_i["indoor"] = False
+
         for pass_i in round_i['passes']:
             passes.append(Pass(pass_i['n_arrows'], pass_i['diameter']/100, pass_i['scoring'],
-                               pass_i['distance'], dist_unit=pass_i['dist_unit'],))
+                               pass_i['distance'], dist_unit=pass_i['dist_unit']))
 
         round_dict[round_i['codename']] = Round(round_i['name'], passes)
 
@@ -206,5 +218,11 @@ class DotDict(dict):
 
 
 # Generate a set of default rounds that come with this module, accessible as a DotDict:
-AGB = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/AGB.json'))
-WA = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/WA.json'))
+AGB_outdoor_imperial = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}'
+                                                       f'/round_data_files/AGB_outdoor_imperial.json'))
+AGB_outdoor_metric = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}'
+                                                     f'/round_data_files/AGB_outdoor_metric.json'))
+AGB_indoor = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}'
+                                             f'/round_data_files/AGB_indoor.json'))
+WA_outdoor = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/WA_outdoor.json'))
+custom = DotDict(read_json_to_round_dict(f'{Path(__file__).parent}/round_data_files/Custom.json'))
