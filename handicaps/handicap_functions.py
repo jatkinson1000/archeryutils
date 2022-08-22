@@ -86,7 +86,7 @@ def print_handicap_table(hcs, hc_sys, round_list, hc_dat, arrow_d=None,
 
     if printout:
         print('Handicap'.rjust(14), end='')
-        [print(f"{' '.join([abbreviations.get(i, i) for i in round_i.name.split()]).rjust(14)}")
+        [print(f"{' '.join([abbreviations.get(i, i) for i in round_i.name.split()]).rjust(14)}", end='')
          for round_i in round_list]
         print('\n', end='')
         for row in table:
