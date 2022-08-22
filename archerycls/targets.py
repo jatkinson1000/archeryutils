@@ -33,7 +33,15 @@ class Target:
     max_score()
         Returns the maximum score ring value
     """
-    def __init__(self, diameter, scoring_system, distance=None, native_dist_unit=None, indoor=False):
+
+    def __init__(
+        self,
+        diameter,
+        scoring_system,
+        distance=None,
+        native_dist_unit=None,
+        indoor=False,
+    ):
         """
         Parameters
         ----------
@@ -48,28 +56,62 @@ class Target:
         indoor : bool
             is round indoors for arrow diameter purposes? default = False
         """
-        systems = ['5_zone', '10_zone', '10_zone_compound',
-                   '10_zone_6_ring', '10_zone_6_ring_compound',
-                   '10_zone_5_ring', '10_zone_5_ring_compound',
-                   'WA_field',
-                   'IFAA_field', 'IFAA_field_expert',
-                   'Beiter_hit_miss',
-                   'Worcester', 'Worcester_2_ring']
+        systems = [
+            "5_zone",
+            "10_zone",
+            "10_zone_compound",
+            "10_zone_6_ring",
+            "10_zone_6_ring_compound",
+            "10_zone_5_ring",
+            "10_zone_5_ring_compound",
+            "WA_field",
+            "IFAA_field",
+            "IFAA_field_expert",
+            "Beiter_hit_miss",
+            "Worcester",
+            "Worcester_2_ring",
+        ]
 
         if scoring_system not in systems:
-            raise ValueError("Invalid Target Face Type specified.\n"
-                             "Please select from '{}'.".format("', '".join(systems)))
+            raise ValueError(
+                "Invalid Target Face Type specified.\n"
+                "Please select from '{}'.".format("', '".join(systems))
+            )
 
-        if native_dist_unit in ['Yard', 'yard', 'Yards', 'yards', 'Y', 'y', 'Yd', 'yd', 'Yds', 'yds']:
-            native_dist_unit = 'yard'
-        elif native_dist_unit in ['Metre', 'metre', 'Metres', 'metres', 'M', 'm', 'Ms', 'ms']:
-            native_dist_unit = 'metre'
+        if native_dist_unit in [
+            "Yard",
+            "yard",
+            "Yards",
+            "yards",
+            "Y",
+            "y",
+            "Yd",
+            "yd",
+            "Yds",
+            "yds",
+        ]:
+            native_dist_unit = "yard"
+        elif native_dist_unit in [
+            "Metre",
+            "metre",
+            "Metres",
+            "metres",
+            "M",
+            "m",
+            "Ms",
+            "ms",
+        ]:
+            native_dist_unit = "metre"
         else:
-            raise ValueError(f"distance unit '{native_dist_unit}' not recognised. Select from 'yard' or 'metre'.")
+            raise ValueError(
+                f"distance unit '{native_dist_unit}' not recognised. Select from 'yard' or 'metre'."
+            )
 
         self.diameter = diameter
         self.native_dist_unit = native_dist_unit
-        self.distance = distance*YARD_TO_METRE if self.native_dist_unit == 'yard' else distance
+        self.distance = (
+            distance * YARD_TO_METRE if self.native_dist_unit == "yard" else distance
+        )
         self.scoring_system = scoring_system
         self.indoor = indoor
 
@@ -86,18 +128,29 @@ class Target:
         max_score : float
             maximum score possible on this target face
         """
-        if self.scoring_system in ['5_zone']:
+        if self.scoring_system in ["5_zone"]:
             return 9.0
-        elif self.scoring_system in ['10_zone', '10_zone_compound',
-                                     '10_zone_6_ring', '10_zone_6_ring_compound',
-                                     '10_zone_5_ring', '10_zone_5_ring_compound']:
+        elif self.scoring_system in [
+            "10_zone",
+            "10_zone_compound",
+            "10_zone_6_ring",
+            "10_zone_6_ring_compound",
+            "10_zone_5_ring",
+            "10_zone_5_ring_compound",
+        ]:
             return 10.0
-        elif self.scoring_system in ['WA_field']:
+        elif self.scoring_system in ["WA_field"]:
             return 6.0
-        elif self.scoring_system in ['IFAA_field', 'IFAA_field_expert',
-                                     'Worcester', 'Worcester_2_ring']:
+        elif self.scoring_system in [
+            "IFAA_field",
+            "IFAA_field_expert",
+            "Worcester",
+            "Worcester_2_ring",
+        ]:
             return 5.0
-        elif self.scoring_system in ['Beiter_hit_miss']:
+        elif self.scoring_system in ["Beiter_hit_miss"]:
             return 1.0
         else:
-            raise ValueError(f"target face '{self.scoring_system}' has no specified maximum score")
+            raise ValueError(
+                f"target face '{self.scoring_system}' has no specified maximum score"
+            )

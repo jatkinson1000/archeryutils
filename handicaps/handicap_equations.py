@@ -112,35 +112,48 @@ def sigma_t(h, hc_sys, dist, hc_dat):
       https://doi.org/10.1177%2F1754337114539308
     """
 
-    if hc_sys == 'AGB':
+    if hc_sys == "AGB":
         # New AGB (Archery GB) System
         # Written by Jack Atkinson
-        sig_t = (hc_dat.AGB_ang_0
-                 * ((1.0 + hc_dat.AGB_step / 100.0) ** (h + hc_dat.AGB_datum))
-                 * np.exp(hc_dat.AGB_kd*dist))
+        sig_t = (
+            hc_dat.AGB_ang_0
+            * ((1.0 + hc_dat.AGB_step / 100.0) ** (h + hc_dat.AGB_datum))
+            * np.exp(hc_dat.AGB_kd * dist)
+        )
 
-    elif hc_sys == 'AGBold':
+    elif hc_sys == "AGBold":
         # Old AGB (Archery GB) System
         # Written by David Lane (2013)
         K = hc_dat.AGBo_k1 * hc_dat.AGBo_k2 ** (h + hc_dat.AGBo_k3)
-        F = 1 + K * dist ** hc_dat.AGBo_p1
-        sig_t = (hc_dat.AGBo_ang_0
-                 * ((1.0 + hc_dat.AGBo_step / 100.0) ** (h + hc_dat.AGBo_datum)) * F)
+        F = 1 + K * dist**hc_dat.AGBo_p1
+        sig_t = (
+            hc_dat.AGBo_ang_0
+            * ((1.0 + hc_dat.AGBo_step / 100.0) ** (h + hc_dat.AGBo_datum))
+            * F
+        )
 
-    elif hc_sys == 'AA':
+    elif hc_sys == "AA":
         # Original Archery Australia (AA) System
         # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma between AGB and AA
         # Required so code elsewhere is unchanged
         # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so convert to rad
-        sig_t = 1.0e-3 * np.sqrt(2) * np.exp(hc_dat.AA_k0 - hc_dat.AA_ks * h + hc_dat.AA_kd * dist)
+        sig_t = (
+            1.0e-3
+            * np.sqrt(2)
+            * np.exp(hc_dat.AA_k0 - hc_dat.AA_ks * h + hc_dat.AA_kd * dist)
+        )
 
-    elif hc_sys == 'AA2':
+    elif hc_sys == "AA2":
         # Updated Archery Australia (AA) System
         # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma between AGB and AA
         # Required so code elsewhere is unchanged
         # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so convert to rad
-        sig_t = (np.sqrt(2) * 1.0e-3 * np.exp(hc_dat.AA2_k0 - hc_dat.AA2_ks * h)
-                 * (hc_dat.AA2_f1 + hc_dat.AA2_f2*dist/hc_dat.AA2_d0))
+        sig_t = (
+            np.sqrt(2)
+            * 1.0e-3
+            * np.exp(hc_dat.AA2_k0 - hc_dat.AA2_ks * h)
+            * (hc_dat.AA2_f1 + hc_dat.AA2_f2 * dist / hc_dat.AA2_d0)
+        )
 
     # elif hc_sys == 'AA2AGB':
     #     # AA2AGB System
@@ -149,8 +162,10 @@ def sigma_t(h, hc_sys, dist, hc_dat):
     #     sig_t = ((1.0 + ap.step / 100.0) ** (h + ap.datum)) * ap.ang_0 * F
 
     else:
-        raise ValueError("Invalid Handicap System specified.\n"
-                         "Please select from 'AGB', 'AGBold', 'AA', or 'AA2'.")
+        raise ValueError(
+            "Invalid Handicap System specified.\n"
+            "Please select from 'AGB', 'AGBold', 'AA', or 'AA2'."
+        )
 
     return sig_t
 
@@ -214,7 +229,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     """
     # Set arrow diameter. Use provided, if AGBold scheme set value, otherwise select default from params based on in/out
     if arw_d is None:
-        if hc_sys == 'AGBold':
+        if hc_sys == "AGBold":
             arw_rad = hc_dat.AGB0_arw_d / 2.0
         else:
             if target.indoor:
@@ -227,48 +242,89 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     tar_dia = target.diameter
     sig_r = sigma_r(h, hc_sys, target.distance, hc_dat)
 
-    if target.scoring_system == '5_zone':
-        s_bar = 9 - 2 * sum(np.exp(-(((n * tar_dia / 10) + arw_rad) / sig_r) ** 2) for n in range(1, 5))\
-                - np.exp(-(((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
+    if target.scoring_system == "5_zone":
+        s_bar = (
+            9 - 2 * sum(
+                np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+                for n in range(1, 5)
+            )
+            - np.exp(-((((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+        )
 
-    elif target.scoring_system == '10_zone':
-        s_bar = 10 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(1, 11))
+    elif target.scoring_system == "10_zone":
+        s_bar = 10 - sum(
+            np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+            for n in range(1, 11)
+        )
 
-    elif target.scoring_system == '10_zone_6_ring':
-        s_bar = 10 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(1, 6))\
-                - 5.0 * np.exp(-(((6 * tar_dia / 20) + arw_rad) / sig_r) ** 2)
+    elif target.scoring_system == "10_zone_6_ring":
+        s_bar = (
+            10 - sum(
+                np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+                for n in range(1, 6)
+            )
+            - 5.0 * np.exp(-((((6 * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+        )
 
-    elif target.scoring_system == '10_zone_compound':
-        s_bar = 10 - np.exp(-(((tar_dia / 40) + arw_rad) / sig_r) ** 2)\
-                - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(2, 11))
+    elif target.scoring_system == "10_zone_compound":
+        s_bar = (
+            10 - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
+            - sum(
+                np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+                for n in range(2, 11)
+            )
+        )
 
-    elif target.scoring_system == '10_zone_5_ring':
-        s_bar = 10 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(1, 5))\
-                - 6.0 * np.exp(-(((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2)
+    elif target.scoring_system == "10_zone_5_ring":
+        s_bar = (
+            10 - sum(
+                np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+                for n in range(1, 5)
+            )
+            - 6.0 * np.exp(-((((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+        )
 
-    elif target.scoring_system == '10_zone_5_ring_compound':
-        s_bar = 10 - np.exp(-(((tar_dia / 40) + arw_rad) / sig_r) ** 2)\
-                - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(2, 5))\
-                - 6.0 * np.exp(-(((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2)
+    elif target.scoring_system == "10_zone_5_ring_compound":
+        s_bar = (
+            10 - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
+            - sum(
+                np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+                for n in range(2, 5)
+            )
+            - 6.0 * np.exp(-((((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+        )
 
-    elif target.scoring_system == 'WA_field':
-        s_bar = 6 - np.exp(-(((tar_dia / 20) + arw_rad) / sig_r) ** 2)\
-                - sum(np.exp(-(((n * tar_dia / 10) + arw_rad) / sig_r) ** 2) for n in range(2, 7))
+    elif target.scoring_system == "WA_field":
+        s_bar = (
+            6 - np.exp(-((((tar_dia / 20) + arw_rad) / sig_r) ** 2))
+            - sum(
+                np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+                for n in range(2, 7)
+            )
+        )
 
-    elif target.scoring_system == 'IFAA_field':
-        s_bar = 5 - np.exp(-(((tar_dia / 10) + arw_rad) / sig_r) ** 2)\
-                - np.exp(-(((3 * tar_dia / 10) + arw_rad) / sig_r) ** 2)\
-                - 3.0 * np.exp(-(((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
+    elif target.scoring_system == "IFAA_field":
+        s_bar = (
+            5
+            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            - np.exp(-((((3 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            - 3.0 * np.exp(-((((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+        )
 
-    elif target.scoring_system == 'Beiter_hit_miss':
-        s_bar = 1 - np.exp(-(((tar_dia / 2) + arw_rad) / sig_r) ** 2)
+    elif target.scoring_system == "Beiter_hit_miss":
+        s_bar = 1 - np.exp(-((((tar_dia / 2) + arw_rad) / sig_r) ** 2))
 
-    elif target.scoring_system == 'Worcester':
-        s_bar = 5 - sum(np.exp(-(((n * tar_dia / 10) + arw_rad) / sig_r) ** 2) for n in range(1, 6))
+    elif target.scoring_system == "Worcester":
+        s_bar = 5 - sum(
+            np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            for n in range(1, 6)
+        )
 
-    elif target.scoring_system == 'Worcester_2_ring':
-        s_bar = 5 - np.exp(-(((tar_dia / 10) + arw_rad) / sig_r) ** 2)\
-                - 4.0 * np.exp(-(((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
+    elif target.scoring_system == "Worcester_2_ring":
+        s_bar = (
+            5 - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            - 4.0 * np.exp(-((((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+        )
 
     # elif target.scoring_system == 12:
     # Worcester with an extra point for the 'x' ring
@@ -277,7 +333,9 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     #             - 4.0 * np.exp(-(((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
 
     else:
-        raise ValueError(f"No rule for calculating scoring for face type {target.scoring_system}.")
+        raise ValueError(
+            f"No rule for calculating scoring for face type {target.scoring_system}."
+        )
 
     return s_bar
 
@@ -316,7 +374,9 @@ def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, round_score_up=True):
 
     pass_score = []
     for Pass_i in rnd.passes:
-        pass_score.append(Pass_i.n_arrows * arrow_score(Pass_i.target, h, hc_sys, hc_dat, arw_d=arw_d))
+        pass_score.append(
+            Pass_i.n_arrows * arrow_score(Pass_i.target, h, hc_sys, hc_dat, arw_d=arw_d)
+        )
 
     round_score = np.sum(pass_score, axis=0)
 
