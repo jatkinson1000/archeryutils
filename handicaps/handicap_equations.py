@@ -3,7 +3,7 @@
 # Contributors  : Jack Atkinson
 #
 # Date Created  : 2022-08-15
-# Last Modified : 2022-08-18 by Jack Atkinson
+# Last Modified : 2022-08-22 by Jack Atkinson
 #
 # Summary       : Code for archery calculating handicaps using various systems
 #
@@ -49,31 +49,35 @@ class HcParams:
     arw_d_in = 9.3e-3  # Diameter of an indoor arrow [metres]
     arw_d_out = 5.5e-3  # Diameter of an outdoor arrow [metres]
 
-    def load_json_params(self, jsonpath):
+    @classmethod
+    def load_json_params(cls, jsonpath):
+        json_HcParams = cls
         with open(jsonpath, "r") as read_file:
             paramsdict = json.load(read_file)
-        self.AGB_datum = paramsdict["AGB_datum"]
-        self.AGB_step = paramsdict["AGB_step"]
-        self.AGB_ang_0 = paramsdict["AGB_ang_0"]
-        self.AGB_kd = paramsdict["AGB_kd"]
-        self.AGBo_datum = paramsdict["AGBo_datum"]
-        self.AGBo_step = paramsdict["AGBo_step"]
-        self.AGBo_ang_0 = paramsdict["AGBo_ang_0"]
-        self.AGBo_k1 = paramsdict["AGBo_k1"]
-        self.AGBo_k2 = paramsdict["AGBo_k2"]
-        self.AGBo_k3 = paramsdict["AGBo_k3"]
-        self.AGBo_p1 = paramsdict["AGBo_p1"]
-        self.AGB0_arw_d = paramsdict["AGB0_arw_d"]
-        self.AA_k0 = paramsdict["AA_k0"]
-        self.AA_ks = paramsdict["AA_ks"]
-        self.AA_kd = paramsdict["AA_kd"]
-        self.AA2_k0 = paramsdict["AA2_k0"]
-        self.AA2_ks = paramsdict["AA2_ks"]
-        self.AA2_f1 = paramsdict["AA2_f1"]
-        self.AA2_f2 = paramsdict["AA2_f2"]
-        self.AA2_d0 = paramsdict["AA2_d0"]
-        self.arw_d_in = paramsdict["arrow_diameter_indoors"]
-        self.arw_d_out = paramsdict["arrow_diameter_outdoors"]
+        json_HcParams.AGB_datum = paramsdict["AGB_datum"]
+        json_HcParams.AGB_step = paramsdict["AGB_step"]
+        json_HcParams.AGB_ang_0 = paramsdict["AGB_ang_0"]
+        json_HcParams.AGB_kd = paramsdict["AGB_kd"]
+        json_HcParams.AGBo_datum = paramsdict["AGBo_datum"]
+        json_HcParams.AGBo_step = paramsdict["AGBo_step"]
+        json_HcParams.AGBo_ang_0 = paramsdict["AGBo_ang_0"]
+        json_HcParams.AGBo_k1 = paramsdict["AGBo_k1"]
+        json_HcParams.AGBo_k2 = paramsdict["AGBo_k2"]
+        json_HcParams.AGBo_k3 = paramsdict["AGBo_k3"]
+        json_HcParams.AGBo_p1 = paramsdict["AGBo_p1"]
+        json_HcParams.AGB0_arw_d = paramsdict["AGB0_arw_d"]
+        json_HcParams.AA_k0 = paramsdict["AA_k0"]
+        json_HcParams.AA_ks = paramsdict["AA_ks"]
+        json_HcParams.AA_kd = paramsdict["AA_kd"]
+        json_HcParams.AA2_k0 = paramsdict["AA2_k0"]
+        json_HcParams.AA2_ks = paramsdict["AA2_ks"]
+        json_HcParams.AA2_f1 = paramsdict["AA2_f1"]
+        json_HcParams.AA2_f2 = paramsdict["AA2_f2"]
+        json_HcParams.AA2_d0 = paramsdict["AA2_d0"]
+        json_HcParams.arw_d_in = paramsdict["arrow_diameter_indoors"]
+        json_HcParams.arw_d_out = paramsdict["arrow_diameter_outdoors"]
+
+        return json_HcParams
 
 
 def sigma_t(h, hc_sys, dist, hc_dat):
