@@ -34,7 +34,7 @@ class Pass:
     max_score()
         Returns the maximum score for Pass
     """
-    def __init__(self, n_arrows, diameter, scoring_system, distance, dist_unit='metres'):
+    def __init__(self, n_arrows, diameter, scoring_system, distance, dist_unit='metres', indoor=False):
         """
         Parameters
         ----------
@@ -48,11 +48,32 @@ class Pass:
             linear distance from archer to target
         dist_unit : str
             The unit distance is measured in. default = 'metres'
-
+        indoor : bool
+            is round indoors for arrow diameter purposes? default = False
         """
 
         self.n_arrows = n_arrows
-        self.target = targets.Target(diameter, scoring_system, distance, dist_unit)
+        self.target = targets.Target(diameter, scoring_system, distance, dist_unit, indoor)
+
+    @property
+    def distance(self):
+        return self.target.distance
+
+    @property
+    def native_dist_unit(self):
+        return self.target.native_dist_unit
+
+    @property
+    def diameter(self):
+        return self.target.diameter
+
+    @property
+    def scoring_system(self):
+        return self.target.scoring_system
+
+    @property
+    def indoor(self):
+        return self.target.indoor
 
     def max_score(self):
         """
@@ -118,10 +139,10 @@ class Round:
         print(f"A {self.name} round consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
             print("\t- {} arrows at a {} cm target at {} {}.".format(
-                pass_i.n_arrows, pass_i.target.diameter*100.0,
-                (pass_i.target.distance/YARD_TO_METRE if pass_i.target.native_dist_unit == 'yard'
-                 else pass_i.target.distance),
-                pass_i.target.native_dist_unit))
+                pass_i.n_arrows, pass_i.diameter*100.0,
+                (pass_i.target.distance/YARD_TO_METRE if pass_i.native_dist_unit == 'yard'
+                 else pass_i.distance),
+                pass_i.native_dist_unit))
 
         return None
 
@@ -178,7 +199,7 @@ def read_json_to_round_dict(json_file):
 
         for pass_i in round_i['passes']:
             passes.append(Pass(pass_i['n_arrows'], pass_i['diameter']/100, pass_i['scoring'],
-                               pass_i['distance'], dist_unit=pass_i['dist_unit']))
+                               pass_i['distance'], dist_unit=pass_i['dist_unit'], indoor=round_i["indoor"]))
 
         round_dict[round_i['codename']] = Round(round_i['name'], passes)
 

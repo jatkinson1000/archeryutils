@@ -223,57 +223,57 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     tar_dia = target.diameter
     sig_r = sigma_r(h, hc_sys, target.distance, hc_dat)
 
-    if target.sys == '5_zone':
+    if target.scoring_system == '5_zone':
         s_bar = 9 - 2 * sum(np.exp(-(((n * tar_dia / 10) + arw_rad) / sig_r) ** 2) for n in range(1, 5))\
                 - np.exp(-(((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
 
-    elif target.sys == '10_zone':
+    elif target.scoring_system == '10_zone':
         s_bar = 10 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(1, 11))
 
-    elif target.sys == '10_zone_6_ring':
+    elif target.scoring_system == '10_zone_6_ring':
         s_bar = 10 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(1, 6))\
                 - 5.0 * np.exp(-(((6 * tar_dia / 20) + arw_rad) / sig_r) ** 2)
 
-    elif target.sys == '10_zone_compound':
+    elif target.scoring_system == '10_zone_compound':
         s_bar = 10 - np.exp(-(((tar_dia / 40) + arw_rad) / sig_r) ** 2)\
                 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(2, 11))
 
-    elif target.sys == '10_zone_5_ring':
+    elif target.scoring_system == '10_zone_5_ring':
         s_bar = 10 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(1, 5))\
                 - 6.0 * np.exp(-(((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2)
 
-    elif target.sys == '10_zone_5_ring_compound':
+    elif target.scoring_system == '10_zone_5_ring_compound':
         s_bar = 10 - np.exp(-(((tar_dia / 40) + arw_rad) / sig_r) ** 2)\
                 - sum(np.exp(-(((n * tar_dia / 20) + arw_rad) / sig_r) ** 2) for n in range(2, 5))\
                 - 6.0 * np.exp(-(((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2)
 
-    elif target.sys == 'WA_field':
+    elif target.scoring_system == 'WA_field':
         s_bar = 6 - np.exp(-(((tar_dia / 20) + arw_rad) / sig_r) ** 2)\
                 - sum(np.exp(-(((n * tar_dia / 10) + arw_rad) / sig_r) ** 2) for n in range(2, 7))
 
-    elif target.sys == 'IFAA_field':
+    elif target.scoring_system == 'IFAA_field':
         s_bar = 5 - np.exp(-(((tar_dia / 10) + arw_rad) / sig_r) ** 2)\
                 - np.exp(-(((3 * tar_dia / 10) + arw_rad) / sig_r) ** 2)\
                 - 3.0 * np.exp(-(((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
 
-    elif target.sys == 'Beiter_hit_miss':
+    elif target.scoring_system == 'Beiter_hit_miss':
         s_bar = 1 - np.exp(-(((tar_dia / 2) + arw_rad) / sig_r) ** 2)
 
-    elif target.sys == 'Worcester':
+    elif target.scoring_system == 'Worcester':
         s_bar = 5 - sum(np.exp(-(((n * tar_dia / 10) + arw_rad) / sig_r) ** 2) for n in range(1, 6))
 
-    elif target.sys == 'Worcester_2_ring':
+    elif target.scoring_system == 'Worcester_2_ring':
         s_bar = 5 - np.exp(-(((tar_dia / 10) + arw_rad) / sig_r) ** 2)\
                 - 4.0 * np.exp(-(((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
 
-    # elif target.sys == 12:
+    # elif target.scoring_system == 12:
     # Worcester with an extra point for the 'x' ring
     #     s_bar = 6 - np.exp(-(((tar_dia / 20.32) + arw_rad) / sig_r) ** 2) -\
     #             np.exp(-(((tar_dia / 10) + arw_rad) / sig_r) ** 2)\
     #             - 4.0 * np.exp(-(((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
 
     else:
-        raise ValueError(f"No rule for calculating scoring for face type {target.sys}.")
+        raise ValueError(f"No rule for calculating scoring for face type {target.scoring_system}.")
 
     return s_bar
 

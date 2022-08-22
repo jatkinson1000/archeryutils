@@ -25,6 +25,8 @@ class Target:
         The native unit distance is measured in
     scoring_system : str
         the type of target face (scoring system) used
+    indoor : bool
+        is this an indoor event (use large arrow diameter)
 
     Methods
     -------
@@ -68,7 +70,7 @@ class Target:
         self.diameter = diameter
         self.native_dist_unit = native_dist_unit
         self.distance = distance*YARD_TO_METRE if self.native_dist_unit == 'yard' else distance
-        self.sys = scoring_system
+        self.scoring_system = scoring_system
         self.indoor = indoor
 
     def max_score(self):
@@ -84,18 +86,18 @@ class Target:
         max_score : float
             maximum score possible on this target face
         """
-        if self.sys in ['5_zone']:
+        if self.scoring_system in ['5_zone']:
             return 9.0
-        elif self.sys in ['10_zone', '10_zone_compound',
-                          '10_zone_6_ring', '10_zone_6_ring_compound',
-                          '10_zone_5_ring', '10_zone_5_ring_compound']:
+        elif self.scoring_system in ['10_zone', '10_zone_compound',
+                                     '10_zone_6_ring', '10_zone_6_ring_compound',
+                                     '10_zone_5_ring', '10_zone_5_ring_compound']:
             return 10.0
-        elif self.sys in ['WA_field']:
+        elif self.scoring_system in ['WA_field']:
             return 6.0
-        elif self.sys in ['IFAA_field', 'IFAA_field_expert',
-                          'Worcester', 'Worcester_2_ring']:
+        elif self.scoring_system in ['IFAA_field', 'IFAA_field_expert',
+                                     'Worcester', 'Worcester_2_ring']:
             return 5.0
-        elif self.sys in ['Beiter_hit_miss']:
+        elif self.scoring_system in ['Beiter_hit_miss']:
             return 1.0
         else:
-            raise ValueError(f"target face '{self.sys}' has no specified maximum score")
+            raise ValueError(f"target face '{self.scoring_system}' has no specified maximum score")
