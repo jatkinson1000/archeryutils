@@ -8,13 +8,17 @@
 #
 
 import numpy as np
-from archerycls import rounds
-import handicaps.handicap_equations as hc_eq
-import handicaps.handicap_functions as hc_func
+from pathlib import Path
+from archeryutils import (
+    rounds,
+    handicap_equations as hc_eq, 
+    handicap_functions as hc_func,
+)
 
 if __name__ == "__main__":
     # Generate a set of handicap tables for the York/Hereford/Bristol rounds
-    hc_params = hc_eq.HcParams.load_json_params("handicaps/hc_sys_params.json")
+    hc_json_path = Path(__file__).parent / "archeryutils/handicaps/hc_sys_params.json"
+    hc_params = hc_eq.HcParams().load_json_params(hc_json_path)
 
     # Rounds
     # Get round info from preloaded data:
