@@ -12,25 +12,27 @@ import numpy as np
 import scipy.optimize
 import warnings
 from itertools import chain
+from typing import Union, Optional, List
 
 import archeryutils.handicaps.handicap_equations as hc_eq
+from archeryutils import rounds
 
 FILL = -1000
 
 
 def print_handicap_table(
-    hcs,
-    hc_sys,
-    round_list,
-    hc_dat,
-    arrow_d=None,
-    round_scores_up=True,
-    clean_gaps=False,
-    printout=True,
-    filename=None,
-    csvfile=None,
-    int_prec=False,
-):
+    hcs: Union[float, np.ndarray],
+    hc_sys: str,
+    round_list: List[rounds.Round],
+    hc_dat: hc_eq.HcParams,
+    arrow_d: Optional[float] = None,
+    round_scores_up: bool = True,
+    clean_gaps: bool = False,
+    printout: bool = True,
+    filename: Optional[str] = None,
+    csvfile: Optional[str] = None,
+    int_prec: bool = False,
+) -> None:
     """
     Subroutine to generate a handicap table
 
@@ -102,7 +104,7 @@ def print_handicap_table(
                         table[irow, jscore] = FILL
                     else:
                         table[irow, jscore] = np.nan
-    
+
     # Write to CSV
 
     if csvfile is not None:
@@ -147,8 +149,17 @@ def print_handicap_table(
             f.write(output_str)
         print("Done.")
 
+    return
 
-def handicap_from_score(score, rnd, hc_sys, hc_dat, arw_d=None, int_prec=False):
+
+def handicap_from_score(
+    score: float,
+    rnd: rounds.Round,
+    hc_sys: str,
+    hc_dat: hc_eq.HcParams,
+    arw_d: Optional[float] = None,
+    int_prec: bool = False,
+) -> Union[int, float]:
     """
     Subroutine to return the handicap of a given score on a given round
 
@@ -170,7 +181,8 @@ def handicap_from_score(score, rnd, hc_sys, hc_dat, arw_d=None, int_prec=False):
 
     Returns
     -------
-    hc
+    hc: int or float
+        Handicap. Has type int if int_prec is True, and otherwise has type false.
 
     References
     ----------

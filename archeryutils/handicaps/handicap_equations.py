@@ -10,7 +10,10 @@
 
 import numpy as np
 import json
+from typing import Union, Optional, Tuple, List
 from dataclasses import dataclass
+
+from archeryutils import targets, rounds
 
 
 @dataclass
@@ -78,7 +81,12 @@ class HcParams:
         return json_HcParams
 
 
-def sigma_t(h, hc_sys, dist, hc_dat):
+def sigma_t(
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    dist: Union[float, np.ndarray],
+    hc_dat: HcParams,
+) -> Union[float, np.ndarray]:
     """
     function sigma_t
     Calculates the angular deviation for a given handicap scheme, handicap value,
@@ -173,7 +181,12 @@ def sigma_t(h, hc_sys, dist, hc_dat):
     return sig_t
 
 
-def sigma_r(h, hc_sys, dist, hc_dat):
+def sigma_r(
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    dist: Union[float, np.ndarray],
+    hc_dat: HcParams,
+) -> Union[float, np.ndarray]:
     """
     function sigma_r
     Calculates the angular deviation for a given handicap scheme, handicap value
@@ -204,7 +217,13 @@ def sigma_r(h, hc_sys, dist, hc_dat):
     return sig_r
 
 
-def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
+def arrow_score(
+    target: targets.Target,
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    hc_dat: HcParams,
+    arw_d: Optional[float] = None,
+) -> float:
     """
     Subroutine to calculate the average arrow score for a given
     target and handicap rating.
@@ -248,9 +267,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     if target.scoring_system == "5_zone":
         s_bar = (
-            9
-            - 2
-            * sum(
+            9 - 2 * sum(
                 np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 5)
             )
@@ -265,8 +282,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "10_zone_6_ring":
         s_bar = (
-            10
-            - sum(
+            10 - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 6)
             )
@@ -275,8 +291,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "10_zone_compound":
         s_bar = (
-            10
-            - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
+            10 - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
             - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 11)
@@ -285,8 +300,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "10_zone_5_ring":
         s_bar = (
-            10
-            - sum(
+            10 - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 5)
             )
@@ -295,8 +309,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "10_zone_5_ring_compound":
         s_bar = (
-            10
-            - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
+            10 - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
             - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 5)
@@ -306,8 +319,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "WA_field":
         s_bar = (
-            6
-            - np.exp(-((((tar_dia / 20) + arw_rad) / sig_r) ** 2))
+            6 - np.exp(-((((tar_dia / 20) + arw_rad) / sig_r) ** 2))
             - sum(
                 np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 7)
@@ -316,8 +328,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "IFAA_field":
         s_bar = (
-            5
-            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            5 - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - np.exp(-((((3 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - 3.0 * np.exp(-((((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
         )
@@ -333,8 +344,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "Worcester_2_ring":
         s_bar = (
-            5
-            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            5 - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - 4.0 * np.exp(-((((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
         )
 
@@ -352,7 +362,14 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     return s_bar
 
 
-def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, round_score_up=True):
+def score_for_round(
+    rnd: rounds.Round,
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    hc_dat: HcParams,
+    arw_d: Optional[float] = None,
+    round_score_up: bool = True,
+) -> Tuple[float, List[float]]:
     """
     Subroutine to calculate the average arrow score for a given
     target and handicap rating.
