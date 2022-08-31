@@ -8,7 +8,7 @@
 # Summary       : definition of a target class for archery applications
 #
 
-from archerycls.constants import YARD_TO_METRE
+from archeryutils.constants import YARD_TO_METRE
 
 
 class Target:
@@ -104,7 +104,8 @@ class Target:
             native_dist_unit = "metre"
         else:
             raise ValueError(
-                f"distance unit '{native_dist_unit}' not recognised. Select from 'yard' or 'metre'."
+                f"distance unit '{native_dist_unit}' not recognised. "
+                "Select from 'yard' or 'metre'."
             )
 
         self.diameter = diameter

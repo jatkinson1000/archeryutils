@@ -10,9 +10,10 @@
 
 import numpy as np
 import json
+from typing import Union, Optional, Tuple, List
 from dataclasses import dataclass
 
-from archerycls import targets, rounds
+from archeryutils import targets, rounds
 
 
 @dataclass
@@ -51,7 +52,7 @@ class HcParams:
 
     @classmethod
     def load_json_params(cls, jsonpath):
-        json_HcParams = cls
+        json_HcParams = cls()
         with open(jsonpath, "r") as read_file:
             paramsdict = json.load(read_file)
         json_HcParams.AGB_datum = paramsdict["AGB_datum"]
@@ -80,10 +81,16 @@ class HcParams:
         return json_HcParams
 
 
-def sigma_t(h, hc_sys, dist, hc_dat):
+def sigma_t(
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    dist: Union[float, np.ndarray],
+    hc_dat: HcParams,
+) -> Union[float, np.ndarray]:
     """
     function sigma_t
-    Calculates the angular deviation for a given handicap scheme, handicap value, and distance
+    Calculates the angular deviation for a given handicap scheme, handicap value,
+    and distance.
 
     Parameters
     ----------
@@ -106,8 +113,8 @@ def sigma_t(h, hc_sys, dist, hc_dat):
     - The construction of the graduated handicap tables for target archery
       Lane, D (2013)
       https://www.jackatkinson.net/files/Handicap_Tables_2013.pdf
-    - Modelling archers’ scores at different distances to quantify score loss due to equipment selection and
-      technique errors
+    - Modelling archers’ scores at different distances to quantify score loss due to
+      equipment selection and technique errors
       Park, J (2014)
       https://doi.org/10.1177%2F1754337114539308
     """
@@ -134,9 +141,11 @@ def sigma_t(h, hc_sys, dist, hc_dat):
 
     elif hc_sys == "AA":
         # Original Archery Australia (AA) System
-        # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma between AGB and AA
+        # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma
+        # between AGB and AA
         # Required so code elsewhere is unchanged
-        # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so convert to rad
+        # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so
+        # convert to rad
         sig_t = (
             1.0e-3
             * np.sqrt(2)
@@ -145,9 +154,11 @@ def sigma_t(h, hc_sys, dist, hc_dat):
 
     elif hc_sys == "AA2":
         # Updated Archery Australia (AA) System
-        # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma between AGB and AA
+        # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma
+        # between AGB and AA
         # Required so code elsewhere is unchanged
-        # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so convert to rad
+        # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so
+        # convert to rad
         sig_t = (
             np.sqrt(2)
             * 1.0e-3
@@ -170,7 +181,12 @@ def sigma_t(h, hc_sys, dist, hc_dat):
     return sig_t
 
 
-def sigma_r(h, hc_sys, dist, hc_dat):
+def sigma_r(
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    dist: Union[float, np.ndarray],
+    hc_dat: HcParams,
+) -> Union[float, np.ndarray]:
     """
     function sigma_r
     Calculates the angular deviation for a given handicap scheme, handicap value
@@ -201,7 +217,13 @@ def sigma_r(h, hc_sys, dist, hc_dat):
     return sig_r
 
 
-def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
+def arrow_score(
+    target: targets.Target,
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    hc_dat: HcParams,
+    arw_d: Optional[float] = None,
+) -> float:
     """
     Subroutine to calculate the average arrow score for a given
     target and handicap rating.
@@ -227,7 +249,8 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     References
     ----------
     """
-    # Set arrow diameter. Use provided, if AGBold scheme set value, otherwise select default from params based on in/out
+    # Set arrow diameter. Use provided, if AGBold scheme set value, otherwise select
+    # default from params based on in/out
     if arw_d is None:
         if hc_sys == "AGBold":
             arw_rad = hc_dat.AGB0_arw_d / 2.0
@@ -305,8 +328,7 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
 
     elif target.scoring_system == "IFAA_field":
         s_bar = (
-            5
-            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            5 - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - np.exp(-((((3 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - 3.0 * np.exp(-((((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
         )
@@ -340,7 +362,14 @@ def arrow_score(target, h, hc_sys, hc_dat, arw_d=None):
     return s_bar
 
 
-def score_for_round(rnd, h, hc_sys, hc_dat, arw_d=None, round_score_up=True):
+def score_for_round(
+    rnd: rounds.Round,
+    h: Union[float, np.ndarray],
+    hc_sys: str,
+    hc_dat: HcParams,
+    arw_d: Optional[float] = None,
+    round_score_up: bool = True,
+) -> Tuple[float, List[float]]:
     """
     Subroutine to calculate the average arrow score for a given
     target and handicap rating.

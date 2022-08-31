@@ -13,8 +13,8 @@ import json
 from pathlib import Path
 import warnings
 
-import archerycls.targets as targets
-from archerycls.constants import YARD_TO_METRE
+from archeryutils.targets import Target
+from archeryutils.constants import YARD_TO_METRE
 
 
 class Pass:
@@ -24,7 +24,7 @@ class Pass:
 
     Attributes
     ----------
-    target : targets.Target
+    target : Target
         a Target class representing the target used
     n_arrows : int
         the number of arrows shot at the target in this Pass
@@ -62,9 +62,7 @@ class Pass:
         """
 
         self.n_arrows = n_arrows
-        self.target = targets.Target(
-            diameter, scoring_system, distance, dist_unit, indoor
-        )
+        self.target = Target(diameter, scoring_system, distance, dist_unit, indoor)
 
     @property
     def distance(self):
@@ -89,7 +87,7 @@ class Pass:
     def max_score(self):
         """
         max_score
-        returns the maximum numerical score possible on this pass (i.e. not counting x's)
+        returns the maximum numerical score possible on this pass (not counting x's)
 
         Parameters
         ----------
@@ -168,7 +166,7 @@ class Round:
     def max_score(self):
         """
         max_score
-        returns the maximum numerical score possible on this round (i.e. not counting x's)
+        returns the maximum numerical score possible on this round (not counting x's)
 
         Parameters
         ----------
@@ -184,7 +182,8 @@ class Round:
 
 def read_json_to_round_dict(json_file):
     """
-    Subroutine to return round information read in from a json file as a dictionary of rounds
+    Subroutine to return round information read in from a json file as a dictionary of
+    rounds
 
     Parameters
     ----------
@@ -207,7 +206,8 @@ def read_json_to_round_dict(json_file):
         passes = []
         if "location" not in round_i:
             warnings.warn(
-                f"No location provided for round {round_i['name']}. Defaulting to outdoor."
+                f"No location provided for round {round_i['name']}. "
+                "Defaulting to outdoor."
             )
             round_i["indoor"] = False
         elif round_i["location"] in [
@@ -234,7 +234,8 @@ def read_json_to_round_dict(json_file):
             round_i["indoor"] = False
         else:
             warnings.warn(
-                f"Location not recognised for round {round_i['name']}. Defaulting to outdoor."
+                f"Location not recognised for round {round_i['name']}. "
+                "Defaulting to outdoor."
             )
             round_i["indoor"] = False
 
@@ -274,10 +275,7 @@ class DotDict(dict):
         if name in self:
             return self[name]
         else:
-            raise AttributeError(
-                f"""No such attribute: {name}.
-            Please select from '{"', '".join([key for key in self.keys()])}'."""
-            )
+            raise AttributeError(self._attribute_err_msg(name))
 
     def __setattr__(self, name, value):
         self[name] = value
@@ -286,34 +284,26 @@ class DotDict(dict):
         if name in self:
             del self[name]
         else:
-            raise AttributeError(
-                f"""No such attribute: {name}.
-            Please select from '{"', '".join([key for key in self.keys()])}'."""
-            )
+            raise AttributeError(self._attribute_err_msg(name))
+
+    def _attribute_err_msg(self, name: str) -> str:
+        quoted = [f"'{key}'" for key in self]
+        return f"No such attribute: '{name}'. Please select from {', '.join(quoted)}."
 
 
 # Generate a set of default rounds that come with this module, accessible as a DotDict:
-AGB_outdoor_imperial = DotDict(
-    read_json_to_round_dict(
-        f"{Path(__file__).parent}" f"/round_data_files/AGB_outdoor_imperial.json"
-    )
-)
-AGB_outdoor_metric = DotDict(
-    read_json_to_round_dict(
-        f"{Path(__file__).parent}" f"/round_data_files/AGB_outdoor_metric.json"
-    )
-)
-AGB_indoor = DotDict(
-    read_json_to_round_dict(
-        f"{Path(__file__).parent}" f"/round_data_files/AGB_indoor.json"
-    )
-)
-WA_outdoor = DotDict(
-    read_json_to_round_dict(f"{Path(__file__).parent}/round_data_files/WA_outdoor.json")
-)
-WA_indoor = DotDict(
-    read_json_to_round_dict(f"{Path(__file__).parent}/round_data_files/WA_indoor.json")
-)
-custom = DotDict(
-    read_json_to_round_dict(f"{Path(__file__).parent}/round_data_files/Custom.json")
-)
+
+
+def _make_rounds_dict(json_name: str) -> DotDict:
+    round_data_files = Path(__file__).parent / "round_data_files"
+    return DotDict(read_json_to_round_dict(round_data_files / json_name))
+
+
+AGB_outdoor_imperial = _make_rounds_dict("AGB_outdoor_imperial.json")
+AGB_outdoor_metric = _make_rounds_dict("AGB_outdoor_metric.json")
+AGB_indoor = _make_rounds_dict("AGB_indoor.json")
+WA_outdoor = _make_rounds_dict("WA_outdoor.json")
+WA_indoor = _make_rounds_dict("WA_indoor.json")
+custom = _make_rounds_dict("Custom.json")
+
+del _make_rounds_dict

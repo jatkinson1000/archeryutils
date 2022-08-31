@@ -11,26 +11,28 @@
 import numpy as np
 import scipy.optimize
 import warnings
+from itertools import chain
+from typing import Union, Optional, List
 
-from archerycls import rounds
-import handicaps.handicap_equations as hc_eq
+import archeryutils.handicaps.handicap_equations as hc_eq
+from archeryutils import rounds
 
 FILL = -1000
 
 
 def print_handicap_table(
-    hcs,
-    hc_sys,
-    round_list,
-    hc_dat,
-    arrow_d=None,
-    round_scores_up=True,
-    clean_gaps=False,
-    printout=True,
-    filename=None,
-    csvfile=None,
-    int_prec=False,
-):
+    hcs: Union[float, np.ndarray],
+    hc_sys: str,
+    round_list: List[rounds.Round],
+    hc_dat: hc_eq.HcParams,
+    arrow_d: Optional[float] = None,
+    round_scores_up: bool = True,
+    clean_gaps: bool = False,
+    printout: bool = True,
+    filename: Optional[str] = None,
+    csvfile: Optional[str] = None,
+    int_prec: bool = False,
+) -> None:
     """
     Subroutine to generate a handicap table
 
@@ -103,50 +105,7 @@ def print_handicap_table(
                     else:
                         table[irow, jscore] = np.nan
 
-    if printout:
-        print("Handicap".rjust(14), end="")
-        [
-            print(f"{' '.join([abbreviations.get(i, i) for i in round_i.name.split()]).rjust(14)}", end="",)
-            for round_i in round_list
-        ]
-        print("\n", end="")
-        for row in table:
-            if int_prec:
-                [
-                    print(f"{''.rjust(14)}" if (sc == FILL) else f"{sc:14d}", end="")
-                    for sc in row
-                ]
-            else:
-                [
-                    print(f"{''.rjust(14)}" if (np.isnan(sc)) else f"{sc:14.8f}", end="")
-                    for sc in row
-                ]
-            print("\n", end="")
-
-    if filename is not None:
-        print("Writing handicap table to file...", end="")
-        with open(filename, "w") as f:
-            f.write("Handicap".rjust(14))
-            [
-                f.write(
-                    f"{' '.join([abbreviations.get(i, i) for i in round_i.name.split()]).rjust(14)}"
-                )
-                for round_i in round_list
-            ]
-            f.write("\n")
-            for row in table:
-                if int_prec:
-                    [
-                        f.write(f"{''.rjust(14)}" if (sc == FILL) else f"{sc:14d}")
-                        for sc in row
-                    ]
-                else:
-                    [
-                        f.write(f"{''.rjust(14)}" if np.isnan(sc) else f"{sc:14.2f}")
-                        for sc in row
-                    ]
-                f.write("\n")
-        print("Done.")
+    # Write to CSV
 
     if csvfile is not None:
         print("Writing handicap table to csv...", end="")
@@ -158,10 +117,49 @@ def print_handicap_table(
         )
         print("Done.")
 
-    return None
+    # Write to terminal/string
+    # Return early if this isn't required
+    if filename is None and not printout:
+        return
+
+    # To ensure both terminal and file output are the same, create a single string to
+    # be used in either case
+
+    def abbreviate(name):
+        return " ".join(abbreviations.get(i, i) for i in name.split())
+
+    round_names = [abbreviate(r.name) for r in round_list]
+    output_header = "".join(name.rjust(14) for name in chain(["Handicap"], round_names))
+
+    def format_row(row):
+        if int_prec:
+            return "".join("".rjust(14) if x == FILL else f"{x:14d}" for x in row)
+        else:
+            return "".join("".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row)
+
+    output_rows = [format_row(row) for row in table]
+    output_str = "\n".join(chain([output_header], output_rows))
+
+    if printout:
+        print(output_str)
+
+    if filename is not None:
+        print("Writing handicap table to file...", end="")
+        with open(filename, "w") as f:
+            f.write(output_str)
+        print("Done.")
+
+    return
 
 
-def handicap_from_score(score, rnd, hc_sys, hc_dat, arw_d=None, int_prec=False):
+def handicap_from_score(
+    score: float,
+    rnd: rounds.Round,
+    hc_sys: str,
+    hc_dat: hc_eq.HcParams,
+    arw_d: Optional[float] = None,
+    int_prec: bool = False,
+) -> Union[int, float]:
     """
     Subroutine to return the handicap of a given score on a given round
 
@@ -178,11 +176,13 @@ def handicap_from_score(score, rnd, hc_sys, hc_dat, arw_d=None, int_prec=False):
     arw_d : float
         arrow diameter in [metres] default = None
     int_prec : bool
-        display results as integers? default = False, with decimal to 2dp accuracy from rootfinder
+        display results as integers? default = False, with decimal to 2dp accuracy from
+        rootfinder
 
     Returns
     -------
-    hc
+    hc: int or float
+        Handicap. Has type int if int_prec is True, and otherwise has type false.
 
     References
     ----------
@@ -192,16 +192,19 @@ def handicap_from_score(score, rnd, hc_sys, hc_dat, arw_d=None, int_prec=False):
     max_score = rnd.max_score()
     if score > max_score:
         raise ValueError(
-            f"The score of {score} provided is greater that the maximum of {max_score} for a {rnd.name}."
+            f"The score of {score} provided is greater that the maximum of {max_score} "
+            f"for a {rnd.name}."
         )
     elif score <= 0.0:
         raise ValueError(
-            f"The score of {score} provided is less than or equal to zero so cannot have a handicap."
+            f"The score of {score} provided is less than or equal to zero so cannot "
+            "have a handicap."
         )
 
     elif score == max_score:
         # Deal with max score before root finding
-        # start high and drop down until no longer ceiling to max score (i.e. >= max_score - 1.0)
+        # start high and drop down until no longer ceiling to max score
+        # (i.e. >= max_score - 1.0)
         if hc_sys in ["AA", "AA2"]:
             hc = 175
             dhc = -0.01
@@ -254,7 +257,8 @@ def handicap_from_score(score, rnd, hc_sys, hc_dat, arw_d=None, int_prec=False):
         )
         hc = sol.root
 
-        # Force integer precision if required. If Aus systems force down, other systems force up.
+        # Force integer precision if required. If Aus systems force down, other systems
+        # force up.
         # Not trivial as we require asymmetric rounding, hence the if <0 clause
         if int_prec:
             if np.sign(hc) < 0:
@@ -268,7 +272,8 @@ def handicap_from_score(score, rnd, hc_sys, hc_dat, arw_d=None, int_prec=False):
                 else:
                     hc = np.ceil(hc)
 
-            # Check that you can't get the same score from a larger handicap when working in integers
+            # Check that you can't get the same score from a larger handicap when
+            # working in integers
             min_h_flag = False
             if hc_sys in ["AA", "AA2"]:
                 hstep = -1.0
