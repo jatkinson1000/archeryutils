@@ -152,8 +152,8 @@
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Western 30",
-   "codename" : "western_30",
+  {"name" : "St Nicholas",
+   "codename" : "st_nicholas",
    "location" : "outdoor",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
