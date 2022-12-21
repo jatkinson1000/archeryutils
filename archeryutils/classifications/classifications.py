@@ -2,7 +2,11 @@ import numpy as np
 import json
 from pathlib import Path
 
-from archeryutils import rounds
+from archeryutils import (
+    rounds,
+    handicap_equations as hc_eq,
+    handicap_functions as hc_func,
+)
 
 
 def _make_AGB_outdoor_classification_dict():
@@ -17,10 +21,11 @@ def _make_AGB_outdoor_classification_dict():
 
     Returns
     -------
-    classification_dict : dict of str : dict of str: list, list
+    classification_dict : dict of str : dict of str: list, list, list
         dictionary indexed on group name (e.g 'adult_female_barebow')
-        containing list of handicaps associated with each classification
-        and a list of prestige rounds eligible for that group
+        containing list of handicaps associated with each classification,
+        a list of prestige rounds eligible for that group, and a list of
+        the maximum distances available to that group
 
     References
     ----------
@@ -163,12 +168,15 @@ def _make_AGB_outdoor_classification_dict():
                             max_dist
                         ):
                             prestige_rounds.append(roundname)
-                    # Additional fix for Masters and U18 Males
-                    if gender.lower() == "male" and (
-                        age["age_group"].lower() == "50+"
-                        or age["age_group"].lower() == "under 18"
-                    ):
-                        prestige_rounds.append(prestige_720[1])
+                    # Additional fix for Male 50+, U18, and U16
+                    if gender.lower() == "male":
+                        if (
+                            age["age_group"].lower() == "50+"
+                            or age["age_group"].lower() == "under 18"
+                        ):
+                            prestige_rounds.append(prestige_720[1])
+                        elif age["age_group"].lower() == "under 16":
+                            prestige_rounds.append(prestige_720[2])
 
                 # Imperial and 1440 rounds
                 for roundname in prestige_imperial + prestige_metric:
@@ -183,6 +191,7 @@ def _make_AGB_outdoor_classification_dict():
                 classification_dict[dictkey] = {
                     "class_HC": class_HC,
                     "prestige_rounds": prestige_rounds,
+                    "max_distance": max_dist,
                 }
 
     return classification_dict
@@ -193,7 +202,135 @@ AGB_outdoor_classifications = _make_AGB_outdoor_classification_dict()
 del _make_AGB_outdoor_classification_dict
 
 
+def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age_group):
+    """
+    Subroutine to calculate a classification from a score given suitable inputs
+    Appropriate for 2023 ArcheryGB age groups and classifications
+
+    Parameters
+    ----------
+    roundname : str
+        name of round shot as given by 'codename' in json
+    score : int
+        numerical score on the round to calculate classification for
+    bowstyle : str
+        archer's bowstyle under AGB outdoor target rules
+    gender : str
+        archer's gender under AGB outdoor target rules
+    age_group : str
+        archer's age group under AGB outdoor target rules
+
+    Returns
+    -------
+    classification_from_score : str
+        abbreviation of the classification appropriate for this score
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    """
+
+    # TODO: Need routines to sanitise/deal with variety of user inputs
+
+    # TODO: Should this be defined outside the function to reduce I/O or does
+    #   it have no effect?
+    all_outdoor_rounds = rounds.read_json_to_round_dict(
+        [
+            "AGB_outdoor_imperial.json",
+            "AGB_outdoor_metric.json",
+            "WA_outdoor.json",
+        ]
+    )
+
+    groupname = (
+        f"{age_group.lower().replace(' ', '')}_"
+        f"{gender.lower()}_"
+        f"{bowstyle.lower()}"
+    )
+
+    # Dict mapping handicaps to classifications with min dist for each classification
+    classes_file = Path(__file__).parent / "AGB_classes.json"
+    with open(classes_file) as json_file:
+        AGB_classes = json.load(json_file)["classes"]
+    dists = [90, 70, 60, 50, 40, 30]
+    max_dist_index = dists.index(
+        min(AGB_outdoor_classifications[groupname]["max_distance"])
+    )
+
+    # TODO: This could perhaps be made it's own function if useful elsewhere...
+    # Might require significant restructure of this function (which is overly large...)
+    # print(f'max_dist req. for {groupname} is {dists[max_dist_index]}')
+
+    # MB and B1 all require max distance:
+    dist_req = [dists[max_dist_index]] * 3
+    for i in range(6):
+        try:
+            dist_req = dist_req + [dists[max_dist_index + i]]
+        except IndexError:
+            dist_req = dist_req + [dists[-1]]
+    HC2class = dict(
+        zip(
+            AGB_outdoor_classifications[groupname]["class_HC"],
+            zip(AGB_classes, dist_req),
+        )
+    )
+
+    # calculate handicap
+    hc_params = hc_eq.HcParams()
+    hc_from_score = hc_func.handicap_from_score(
+        score, all_outdoor_rounds[roundname], "AGB", hc_params, int_prec=True
+    )
+
+    print(hc_from_score)
+
+    # is it a prestige round? If not remove MB as an option
+    if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
+        # TODO: a list of dictionary keys is super dodgy python...
+        #   can this be improved?
+        for item in list(HC2class.keys())[0:3]:
+            del HC2class[item]
+
+        # If not prestige, what classes are eligible based on category and distance
+        to_del = []
+        for item in HC2class:
+            round_max_dist = all_outdoor_rounds[roundname].max_distance()
+            if HC2class[item][1] > round_max_dist:
+                to_del.append(item)
+        for item in to_del:
+            del HC2class[item]
+
+    # Of those remaining, what is the highest classification this score gets?
+    # Loop over dict of HC to class name
+    to_del = []
+    for item in HC2class:
+        if item < hc_from_score:
+            to_del.append(item)
+    for item in to_del:
+        del HC2class[item]
+
+    classification_from_score = HC2class[list(HC2class.keys())[0]][0]
+
+    return classification_from_score
+
+
 if __name__ == "__main__":
 
     for item in AGB_outdoor_classifications:
         print(item, AGB_outdoor_classifications[item]["prestige_rounds"])
+
+    print(
+        calculate_AGB_outdoor_classification(
+            "bristol_ii", 1200, "compound", "male", "adult"
+        )
+    )
+    print(
+        calculate_AGB_outdoor_classification(
+            "bristol_ii", 1200, "compound", "male", "under15"
+        )
+    )
+    print(
+        calculate_AGB_outdoor_classification(
+            "bristol_ii", 1200, "compound", "male", "under12"
+        )
+    )
