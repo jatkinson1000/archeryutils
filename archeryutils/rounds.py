@@ -149,7 +149,7 @@ class Round:
         print(f"A {self.name} round consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
             print(
-                "\t- {} arrows at a {} cm target at {} {}.".format(
+                "\t- {} arrows at a {} cm target at {} {}s.".format(
                     pass_i.n_arrows,
                     pass_i.diameter * 100.0,
                     (
@@ -174,10 +174,37 @@ class Round:
         Returns
         ----------
         max_score : float
-            maximum score possible on this pass
+            maximum score possible on this round
         """
 
         return np.sum([pass_i.max_score() for pass_i in self.passes])
+
+    def max_distance(self, unit=False):
+        """
+        max_distance
+        returns the maximum distance shot on this round along with the unit (optional)
+
+        Parameters
+        ----------
+        unit : bool
+            Return unit as well as numerical value?
+
+        Returns
+        ----------
+        max_dist : float
+            maximum distance shot in this round
+        (max_dist, unit) : tuple (float, str)
+            tuple of max_dist and string of unit
+        """
+        max_dist = (
+            self.passes[0].distance / YARD_TO_METRE
+            if self.passes[0].native_dist_unit == "yard"
+            else self.passes[0].distance
+        )
+        if unit:
+            return (max_dist, self.passes[0].native_dist_unit)
+        else:
+            return max_dist
 
 
 def read_json_to_round_dict(json_file):
