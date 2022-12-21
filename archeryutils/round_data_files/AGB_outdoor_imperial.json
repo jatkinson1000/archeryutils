@@ -15,6 +15,14 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
               ]
   },
+  {"name" : "Bristol I",
+   "codename" : "bristol_i",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
+               {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
+               {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
+              ]
+  },
   {"name" : "Bristol II",
    "codename" : "bristol_ii",
    "location" : "outdoor",
