@@ -1,0 +1,43 @@
+[
+  {"desc" : "name of age_group, and maximum distances [metres, yards] for Males and Females",
+   "age_group" : "50+",
+   "male" : [70, 80],
+   "female" : [60, 60],
+   "step" : 1
+  },
+  {"age_group" : "Adult",
+   "male" : [90, 100],
+   "female" : [70, 80],
+   "step" : 0
+  },
+  {"age_group" : "Under 21",
+   "male" : [90, 100],
+   "female" : [70, 80],
+   "step" : 1
+  },
+  {"age_group" : "Under 18",
+   "male" : [70, 80],
+   "female" : [60, 60],
+   "step" : 2
+  },
+  {"age_group" : "Under 16",
+   "male" : [60, 60],
+   "female" : [50, 50],
+   "step" : 3
+  },
+  {"age_group" : "Under 15",
+   "male" : [50, 50],
+   "female" : [50, 50],
+   "step" : 4
+  },
+  {"age_group" : "Under 14",
+   "male" : [40, 40],
+   "female" : [40, 40],
+   "step" : 5
+  },
+  {"age_group" : "Under 12",
+   "male" : [30, 30],
+   "female" : [30, 30],
+   "step" : 6
+  }
+]

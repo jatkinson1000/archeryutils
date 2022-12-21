@@ -1,0 +1,12 @@
+{
+  "classes" : ["EMB", "GMB", "MB", "B1", "B2", "B3", "A1", "A2", "A3"],
+  "classes_long" : ["Elite Master Bowman",
+                    "Grand Master Bowman",
+                    "Master Bowman",
+                    "Bowman 1",
+                    "Bowman 2",
+                    "Bowman 3",
+                    "Archer 1",
+                    "Archer 2",
+                    "Archer 3"]
+}
