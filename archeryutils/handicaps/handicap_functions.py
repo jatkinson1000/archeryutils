@@ -9,7 +9,6 @@
 #
 
 import numpy as np
-import scipy.optimize
 import warnings
 from itertools import chain
 from typing import Union, Optional, List
@@ -244,18 +243,84 @@ def handicap_from_score(
             return val - scr
 
         if hc_sys in ["AA", "AA2"]:
-            br = [-250, 175]
+            x = [-250, 175]
         else:
-            br = [-75, 300]
-        sol = scipy.optimize.root_scalar(
-            f_root,
-            args=(score, rnd, hc_sys, hc_dat, arw_d),
-            method="brenth",
-            bracket=br,
-            xtol=0.001,
-            maxiter=50,
-        )
-        hc = sol.root
+            x = [-75, 300]
+
+        f = [
+             f_root(x[0], score, rnd, hc_sys, hc_dat, arw_d),
+             f_root(x[1], score, rnd, hc_sys, hc_dat, arw_d)
+             ]
+        xtol = 1.0e-16
+        rtol = 0.001
+        xblk = 0.0
+        fblk = 0.0
+        scur = 0.0
+        spre = 0.0
+        dpre = 0.0
+        dblk = 0.0
+        stry = 0.0
+
+        if (abs(f[1])<=f[0]):
+            xcur = x[0]
+            xpre = x[1]
+            fcur = f[0]
+            fpre = f[1]
+        else:
+            xpre = x[1]
+            xcur = x[0]
+            fpre = f[1]
+            fcur = f[0]
+
+        for i in range(100):
+            if ((fpre != 0.0) and (fcur != 0.0) and (np.sign(fpre) != np.sign(fcur))):
+                xblk = xpre
+                fblk = fpre
+                spre = xcur - xpre
+                scur = xcur - xpre
+            if (abs(fblk) < abs(fcur)):
+                xpre = xcur
+                xcur = xblk
+                xblk = xpre
+
+                fpre = fcur
+                fcur = fblk
+                fblk = fpre
+
+            delta = (xtol + rtol * abs(xcur))/2.0
+            sbis = (xblk - xcur) / 2.0
+            if ((abs(spre) > delta) and (abs(fcur) < abs(fpre))):
+                if (xpre == xblk):
+                    stry = -fcur * (xcur - xpre) / (fcur - xpre)
+                else:
+                    dpre = (fpre - fcur) / (xpre - xcur)
+                    dblk = (fblk - fcur) / (xblk - xcur)
+                    stry = -fcur * (fblk - fpre) / (fblk * dpre - fpre * dblk)
+
+                if (2*abs(stry) < min(abs(spre), 3*abs(sbis) - delta)):
+                    # accept step
+                    spre = scur
+                    scur = stry
+                else:
+                    # bisect
+                    spre = sbis
+                    scur = sbis
+            else:
+                # bisect
+                spre = sbis
+                scur = sbis
+            xpre = xcur
+            fpre = fcur
+            if (abs(scur) > delta):
+                xcur += scur
+            else:
+                if sbis > 0:
+                    xcur += delta
+                else:
+                    xcur -= delta
+
+            fcur = f_root(xcur, score, rnd, hc_sys, hc_dat, arw_d)
+            hc = xcur
 
         # Force integer precision if required. If Aus systems force down, other systems
         # force up.
