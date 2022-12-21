@@ -2,11 +2,9 @@ import numpy as np
 import json
 from pathlib import Path
 
-from archeryutils import (
-    rounds,
-    handicap_equations as hc_eq,
-    handicap_functions as hc_func,
-)
+from archeryutils import rounds
+from archeryutils.handicaps import handicap_equations as hc_eq
+from archeryutils.handicaps import handicap_functions as hc_func
 
 
 def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
