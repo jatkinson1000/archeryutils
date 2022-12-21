@@ -207,14 +207,14 @@ class Round:
             return max_dist
 
 
-def read_json_to_round_dict(json_file):
+def read_json_to_round_dict(json_filelist):
     """
     Subroutine to return round information read in from a json file as a dictionary of
     rounds
 
     Parameters
     ----------
-    json_file : str
+    json_filelist : list of str
         filepath to json file
 
     Returns
@@ -224,61 +224,68 @@ def read_json_to_round_dict(json_file):
     References
     ----------
     """
-    with open(json_file) as json_file:
-        data = json.load(json_file)
+    if type(json_filelist) is not list:
+        json_filelist = [json_filelist]
+
+    round_data_files = Path(__file__).parent.joinpath("round_data_files")
 
     round_dict = {}
+    
+    for json_file in json_filelist:
+        json_filepath = round_data_files.joinpath(json_file)
+        with open(json_filepath) as json_round_file:
+            data = json.load(json_round_file)
 
-    for round_i in data:
-        passes = []
-        if "location" not in round_i:
-            warnings.warn(
-                f"No location provided for round {round_i['name']}. "
-                "Defaulting to outdoor."
-            )
-            round_i["indoor"] = False
-        elif round_i["location"] in [
-            "indoors",
-            "indoor",
-            "in",
-            "inside",
-            "Indoors",
-            "Indoor",
-            "In",
-            "Inside",
-        ]:
-            round_i["indoor"] = True
-        elif round_i["location"] in [
-            "outdoors",
-            "outdoor",
-            "out",
-            "outside",
-            "Outdoors",
-            "Outdoor",
-            "Out",
-            "Outside",
-        ]:
-            round_i["indoor"] = False
-        else:
-            warnings.warn(
-                f"Location not recognised for round {round_i['name']}. "
-                "Defaulting to outdoor."
-            )
-            round_i["indoor"] = False
+        for round_i in data:
+            passes = []
+            if "location" not in round_i:
+                warnings.warn(
+                    f"No location provided for round {round_i['name']}. "
+                    "Defaulting to outdoor."
+                )
+                round_i["indoor"] = False
+            elif round_i["location"] in [
+                "indoors",
+                "indoor",
+                "in",
+                "inside",
+                "Indoors",
+                "Indoor",
+                "In",
+                "Inside",
+            ]:
+                round_i["indoor"] = True
+            elif round_i["location"] in [
+                "outdoors",
+                "outdoor",
+                "out",
+                "outside",
+                "Outdoors",
+                "Outdoor",
+                "Out",
+                "Outside",
+            ]:
+                round_i["indoor"] = False
+            else:
+                warnings.warn(
+                    f"Location not recognised for round {round_i['name']}. "
+                    "Defaulting to outdoor."
+                )
+                round_i["indoor"] = False
 
-        for pass_i in round_i["passes"]:
-            passes.append(
-                Pass(
-                    pass_i["n_arrows"],
-                    pass_i["diameter"] / 100,
-                    pass_i["scoring"],
-                    pass_i["distance"],
-                    dist_unit=pass_i["dist_unit"],
+            for pass_i in round_i["passes"]:
+                passes.append(
+                    Pass(
+                        pass_i["n_arrows"],
+                        pass_i["diameter"] / 100,
+                        pass_i["scoring"],
+                        pass_i["distance"],
+                        dist_unit=pass_i["dist_unit"],
                     indoor=round_i["indoor"],
                 )
             )
 
-        round_dict[round_i["codename"]] = Round(round_i["name"], passes)
+            round_dict[round_i["codename"]] = Round(round_i["name"], passes)
 
     return round_dict
 
@@ -322,8 +329,7 @@ class DotDict(dict):
 
 
 def _make_rounds_dict(json_name: str) -> DotDict:
-    round_data_files = Path(__file__).parent / "round_data_files"
-    return DotDict(read_json_to_round_dict(round_data_files / json_name))
+    return DotDict(read_json_to_round_dict(json_name))
 
 
 AGB_outdoor_imperial = _make_rounds_dict("AGB_outdoor_imperial.json")
