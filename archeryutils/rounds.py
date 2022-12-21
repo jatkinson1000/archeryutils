@@ -215,7 +215,7 @@ def read_json_to_round_dict(json_filelist):
     Parameters
     ----------
     json_filelist : list of str
-        filepath to json file
+        filenames of json round files in ./round_data_files/
 
     Returns
     -------
@@ -232,6 +232,7 @@ def read_json_to_round_dict(json_filelist):
     round_dict = {}
     
     for json_file in json_filelist:
+        print(json_file)
         json_filepath = round_data_files.joinpath(json_file)
         with open(json_filepath) as json_round_file:
             data = json.load(json_round_file)
