@@ -9,6 +9,32 @@ from archeryutils import (
 )
 
 
+def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
+    # Read in age group info as list of dicts
+    with open(age_file) as json_file:
+        ages = json.load(json_file)
+    return ages
+
+def read_bowstyles_json(bowstyles_file=Path(__file__).parent / "AGB_bowstyles.json"):
+    # Read in bowstyleclass info as list of dicts
+    with open(bowstyles_file) as json_file:
+        bowstyles = json.load(json_file)
+    return bowstyles
+
+def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
+    # Read in gender info as list
+    with open(genders_file) as json_file:
+        genders = json.load(json_file)["genders"]
+    return genders
+
+def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
+    # Read in classification names as dict
+    with open(classes_file) as json_file:
+        classes = json.load(json_file)
+    return classes
+
+
+
 def _make_AGB_outdoor_classification_dict():
     """
     Subroutine to generate a dictionary of dictionaries providing handicaps for
@@ -88,24 +114,13 @@ def _make_AGB_outdoor_classification_dict():
     )
 
     # Read in age group info as list of dicts
-    age_file = Path(__file__).parent / "AGB_ages.json"
-    with open(age_file) as json_file:
-        AGB_ages = json.load(json_file)
-
+    AGB_ages = read_ages_json()
     # Read in bowstyleclass info as list of dicts
-    bowstyles_file = Path(__file__).parent / "AGB_bowstyles.json"
-    with open(bowstyles_file) as json_file:
-        AGB_bowstyles = json.load(json_file)
-
+    AGB_bowstyles = read_bowstyles_json()
     # Read in gender info as list of dicts
-    gender_file = Path(__file__).parent / "AGB_genders.json"
-    with open(gender_file) as json_file:
-        AGB_genders = json.load(json_file)["AGB_genders"]
-
+    AGB_genders = read_genders_json()
     # Read in classification names as dict
-    classes_file = Path(__file__).parent / "AGB_classes.json"
-    with open(classes_file) as json_file:
-        AGB_classes = json.load(json_file)["classes"]
+    AGB_classes = read_classes_json()["classes"]
 
     # Generate dict of classifications
     # loop over bowstyles
