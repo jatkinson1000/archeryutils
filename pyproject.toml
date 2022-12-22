@@ -2,13 +2,6 @@
 requires = ["setuptools >= 61"]
 build-backend = "setuptools.build_meta"
 
-[project]
-name = "archeryutils"
-version = "0.1.1"
-description = "A collection of archery utilities in python"
-authors = [
-  { name="Jack Atkinson", email="jack.atkinson1000@gmail.com" },
-]
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.7"
@@ -60,4 +53,3 @@ per-file-ignores = [
 ]
 max-line-length = 88
 count = true
-
