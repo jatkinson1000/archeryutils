@@ -11,7 +11,7 @@ import numpy as np
 from pathlib import Path
 from archeryutils import (
     rounds,
-    handicap_equations as hc_eq, 
+    handicap_equations as hc_eq,
     handicap_functions as hc_func,
 )
 
@@ -25,6 +25,9 @@ if __name__ == "__main__":
     rounds.AGB_outdoor_imperial.york.get_info()
     print(
         f"Max score for a {rounds.AGB_outdoor_imperial.york.name} is {rounds.AGB_outdoor_imperial.york.max_score()}."
+    )
+    print(
+        f"Max distance shot in a {rounds.AGB_outdoor_imperial.york.name} is {rounds.AGB_outdoor_imperial.york.max_distance()} {rounds.AGB_outdoor_imperial.york.max_distance(True)[1]}s."
     )
     print(
         f"The first pass on a {rounds.AGB_outdoor_imperial.york.name} is "

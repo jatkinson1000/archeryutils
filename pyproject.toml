@@ -1,5 +1,59 @@
 [build-system]
+requires = ["setuptools >= 43"]
 build-backend = "setuptools.build_meta"
-requires = [
-    "setuptools >= 43",
+
+[project]
+name = "archeryutils"
+version = "0.1.1"
+description = "A collection of archery utilities in python"
+authors = [
+  { name="Jack Atkinson", email="jack.atkinson1000@gmail.com" },
 ]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Natural Language :: English",
+    "Development Status :: 3 - Alpha",
+#    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "black>=22.12.0",
+    "flake8==6.0.0",
+    "numpy>=1.20.3",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/jatkinson1000/archeryutils"
+"Bug Tracker" = "https://github.com/jatkinson1000/archeryutils/Issues"
+
+[tool.setuptools]
+# By default, include-package-data is true in pyproject.toml, so you do
+# NOT have to specify this line.
+include-package-data = true
+
+#[tool.setuptools.packages]
+#find = {}
+[tool.setuptools.packages.find]
+where = ["archeryutils",]  # list of folders that contain the packages (["."] by default)
+include = ["archeryutils*"]  # package names should match these glob patterns (["*"] by default)
+exclude = ["archeryutils.tests*", "examples.py"]  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
+[tool.setuptools.package-data]
+mypkg = ["* = *.json", "round_data_files/*.json"]
+
+#[options.extras_require]
+#tests = pytest
+
+[tool.flake8]
+# ignore = ['E231', 'E241']
+per-file-ignores = [
+    '__init__.py:F401',
+]
+max-line-length = 88
+count = true
+
