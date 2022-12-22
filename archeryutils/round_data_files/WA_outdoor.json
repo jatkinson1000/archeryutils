@@ -1,6 +1,6 @@
 [
   {"name" : "WA 1440 M",
-   "codename" : "wa1440_90",
+   "codename" : "wa1440_m",
    "location" : "outdoor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
@@ -9,7 +9,7 @@
               ]
   },
   {"name" : "WA 1440 F",
-   "codename" : "wa1440_70",
+   "codename" : "wa1440_f",
    "location" : "outdoor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
@@ -17,8 +17,8 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 60m",
-   "codename" : "wa1440_60",
+  {"name" : "WA 1440 Cdt",
+   "codename" : "wa1440_cdt",
    "location" : "outdoor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
@@ -29,7 +29,7 @@
 
 
   {"name" : "WA 1440 M Small",
-   "codename" : "wa1440_90_small",
+   "codename" : "wa1440_m_small",
    "location" : "outdoor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 70, "dist_unit" : "metre"},
@@ -38,7 +38,7 @@
               ]
   },
   {"name" : "WA 1440 F Small",
-   "codename" : "wa1440_70_small",
+   "codename" : "wa1440_f_small",
    "location" : "outdoor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 60, "dist_unit" : "metre"},
@@ -46,8 +46,8 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 60m Small",
-   "codename" : "wa1440_60_small",
+  {"name" : "WA 1440 C Small",
+   "codename" : "wa1440_c_small",
    "location" : "outdoor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 50, "dist_unit" : "metre"},
