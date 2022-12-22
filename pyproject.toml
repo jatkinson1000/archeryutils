@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 43"]
+requires = ["setuptools >= 43", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -30,6 +30,9 @@ dependencies = [
 "Homepage" = "https://github.com/jatkinson1000/archeryutils"
 "Bug Tracker" = "https://github.com/jatkinson1000/archeryutils/Issues"
 
+[project.optional-dependencies]
+TEST = ["pytest"]
+
 [tool.setuptools]
 # By default, include-package-data is true in pyproject.toml, so you do
 # NOT have to specify this line.
@@ -39,7 +42,7 @@ include-package-data = true
 #find = {}
 [tool.setuptools.packages.find]
 where = ["archeryutils",]  # list of folders that contain the packages (["."] by default)
-include = ["archeryutils*"]  # package names should match these glob patterns (["*"] by default)
+include = ["*"]  # package names should match these glob patterns (["*"] by default)
 exclude = ["archeryutils.tests*", "examples.py"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
