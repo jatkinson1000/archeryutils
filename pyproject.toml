@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 43", "wheel"]
+requires = ["setuptools >= 61"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -41,13 +41,13 @@ include-package-data = true
 #[tool.setuptools.packages]
 #find = {}
 [tool.setuptools.packages.find]
-where = ["archeryutils",]  # list of folders that contain the packages (["."] by default)
-include = ["*"]  # package names should match these glob patterns (["*"] by default)
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["archeryutils", "archeryutils.*"]  # package names should match these glob patterns (["*"] by default)
 exclude = ["archeryutils.tests*", "examples.py"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [tool.setuptools.package-data]
-mypkg = ["* = *.json", "round_data_files/*.json"]
+archeryutils = ["*.json", "round_data_files/*.json", "classifications/*.json"]
 
 #[options.extras_require]
 #tests = pytest
