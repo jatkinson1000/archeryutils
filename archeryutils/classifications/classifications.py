@@ -295,7 +295,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         score, all_outdoor_rounds[roundname], "AGB", hc_params, int_prec=True
     )
 
-    print(hc_from_score)
+    #print(hc_from_score)
 
     # is it a prestige round? If not remove MB as an option
     if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
@@ -322,9 +322,11 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
     for item in to_del:
         del HC2class[item]
 
-    classification_from_score = HC2class[list(HC2class.keys())[0]][0]
-
-    return classification_from_score
+    try:
+        classification_from_score = HC2class[list(HC2class.keys())[0]][0]
+        return classification_from_score
+    except IndexError:
+        return 'UC' 
 
 
 if __name__ == "__main__":
