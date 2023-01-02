@@ -19,7 +19,7 @@ from archeryutils import targets, rounds
 @dataclass
 class HcParams:
     # KEY PARAMETERS AND CONSTANTS FOR NEW AGB HANDICAP SCHEME
-    AGB_datum = 5.75  # offset required to set handicap 0 at desired score
+    AGB_datum = 6.0  # offset required to set handicap 0 at desired score
     AGB_step = 3.5  # percentage change in group size for each handicap step
     AGB_ang_0 = 5.0e-4  # baseline angle used for group size 0.5 [millirad]
     AGB_kd = 0.00365  # distance scaling factor [1/metres]
