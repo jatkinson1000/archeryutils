@@ -149,3 +149,96 @@ if __name__ == "__main__":
         filename="custom_table.dat",
         int_prec=True,
     )
+
+
+
+
+
+
+    # Print the continuous score that is comes from this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 51., "AGB", hc_params, round_score_up=False
+    )
+    print(
+        f"A handicap of 51. on a {rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
+    )
+
+        # Print the continuous score that is comes from this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 50.0, "AGB", hc_params, round_score_up=False
+    )
+    print(
+        f"A handicap of 50.0 on a {rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
+    )
+
+        # Print the continuous score that is comes from this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 49., "AGB", hc_params, round_score_up=False
+    )
+    print(
+        f"A handicap of 49. on a {rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
+    )
+
+    # Print the minimum discrete score that is required to get this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 51, "AGB", hc_params, round_score_up=True
+    )
+    print(
+        f"A handicap of 51 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {score_from_hc}."
+    )
+
+        # Print the minimum discrete score that is required to get this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 50, "AGB", hc_params, round_score_up=True
+    )
+    print(
+        f"A handicap of 50 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {score_from_hc}."
+    )
+
+        # Print the minimum discrete score that is required to get this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 49, "AGB", hc_params, round_score_up=True
+    )
+    print(
+        f"A handicap of 49 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {score_from_hc}."
+    )
+
+    # Print score for a certain handicap - continuous
+    hc_from_score = hc_func.handicap_from_score(
+        706, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=False
+    )
+    print(
+        f"A score of 706 on a {rounds.AGB_outdoor_imperial.york.name} is a continuous handicap of {hc_from_score}."
+    )
+    hc_from_score = hc_func.handicap_from_score(
+        705, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=False
+    )
+    print(
+        f"A score of 705 on a {rounds.AGB_outdoor_imperial.york.name} is a continuous handicap of {hc_from_score}."
+    )
+    hc_from_score = hc_func.handicap_from_score(
+        704, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=False
+    )
+    print(
+        f"A score of 704 on a {rounds.AGB_outdoor_imperial.york.name} is a continuous handicap of {hc_from_score}."
+    )
+
+    # Print score for a certain handicap - discrete
+    hc_from_score = hc_func.handicap_from_score(
+        704, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=True
+    )
+    print(
+        f"A score of 704 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
+    )
+    hc_from_score = hc_func.handicap_from_score(
+        705, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=True
+    )
+    print(
+        f"A score of 705 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
+    )
+    hc_from_score = hc_func.handicap_from_score(
+        706, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=True
+    )
+    print(
+        f"A score of 706 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
+    )

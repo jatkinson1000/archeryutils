@@ -322,20 +322,46 @@ def handicap_from_score(
             fcur = f_root(xcur, score, rnd, hc_sys, hc_dat, arw_d)
             hc = xcur
 
-        # Force integer precision if required. If Aus systems force down, other systems
-        # force up.
-        # Not trivial as we require asymmetric rounding, hence the if <0 clause
+        # Force integer precision if required.
+        # Not as subtle as simply rounding due to the discretisation!!
+        # Check the HC rounded down (or up for AUS) to be sure it doesn't require the
+        # same score under integer precision.
+        # If it does, return, if not round up (or down foe AUS)
+        #
+        # NB: added complexity - not trivial as we require asymmetric rounding.
+        #                        hence the if <0 clause
         if int_prec:
+            # Check we don't require this score (or lower) from the handicap
+            # rounded down under integer precision rules
             if np.sign(hc) < 0:
                 if hc_sys in ["AA", "AA2"]:
-                    hc = np.ceil(hc)
+                    hc_tmp = np.floor(hc)
                 else:
-                    hc = np.floor(hc)
+                    hc_tmp = np.ceil(hc)
             else:
                 if hc_sys in ["AA", "AA2"]:
-                    hc = np.floor(hc)
+                    hc_tmp = np.ceil(hc)
                 else:
-                    hc = np.ceil(hc)
+                    hc_tmp = np.floor(hc)
+
+            sc, _ = hc_eq.score_for_round(
+                rnd, hc_tmp, hc_sys, hc_dat, arw_d, round_score_up=True
+            )
+            if sc <= score:
+                hc = hc_tmp
+            else:
+                # if rounding down didn't tip over boundary to required score then 
+                # round up (or down for AUS)
+                if np.sign(hc) < 0:
+                    if hc_sys in ["AA", "AA2"]:
+                        hc = np.ceil(hc)
+                    else:
+                        hc = np.floor(hc)
+                else:
+                    if hc_sys in ["AA", "AA2"]:
+                        hc = np.floor(hc)
+                    else:
+                        hc = np.ceil(hc)
 
             # Check that you can't get the same score from a larger handicap when
             # working in integers
