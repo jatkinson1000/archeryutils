@@ -187,6 +187,7 @@ def handicap_from_score(
     ----------
     Brent's Method for Root Finding in Scipy
     - https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.brentq.html
+    - https://github.com/scipy/scipy/blob/dde39b7cc7dc231cec6bf5d882c8a8b5f40e73ad/scipy/optimize/Zeros/brentq.c
     """
     max_score = rnd.max_score()
     if score > max_score:
@@ -252,7 +253,7 @@ def handicap_from_score(
              f_root(x[1], score, rnd, hc_sys, hc_dat, arw_d)
              ]
         xtol = 1.0e-16
-        rtol = 0.001
+        rtol = 0.00
         xblk = 0.0
         fblk = 0.0
         scur = 0.0
@@ -272,7 +273,7 @@ def handicap_from_score(
             fpre = f[1]
             fcur = f[0]
 
-        for i in range(100):
+        for i in range(25):
             if ((fpre != 0.0) and (fcur != 0.0) and (np.sign(fpre) != np.sign(fcur))):
                 xblk = xpre
                 fblk = fpre
@@ -289,6 +290,11 @@ def handicap_from_score(
 
             delta = (xtol + rtol * abs(xcur))/2.0
             sbis = (xblk - xcur) / 2.0
+            
+            if (fcur == 0.0) or (abs(sbis) < delta):
+                hc = xcur
+                break
+            
             if ((abs(spre) > delta) and (abs(fcur) < abs(fpre))):
                 if (xpre == xblk):
                     stry = -fcur * (xcur - xpre) / (fcur - xpre)
@@ -323,45 +329,24 @@ def handicap_from_score(
             hc = xcur
 
         # Force integer precision if required.
-        # Not as subtle as simply rounding due to the discretisation!!
-        # Check the HC rounded down (or up for AUS) to be sure it doesn't require the
-        # same score under integer precision.
-        # If it does, return, if not round up (or down foe AUS)
-        #
         # NB: added complexity - not trivial as we require asymmetric rounding.
         #                        hence the if <0 clause
         if int_prec:
-            # Check we don't require this score (or lower) from the handicap
-            # rounded down under integer precision rules
             if np.sign(hc) < 0:
                 if hc_sys in ["AA", "AA2"]:
-                    hc_tmp = np.floor(hc)
+                    hc = np.ceil(hc)
                 else:
-                    hc_tmp = np.ceil(hc)
+                    hc = np.floor(hc)
             else:
                 if hc_sys in ["AA", "AA2"]:
-                    hc_tmp = np.ceil(hc)
+                    hc = np.floor(hc)
                 else:
-                    hc_tmp = np.floor(hc)
+                    hc = np.ceil(hc)
+
 
             sc, _ = hc_eq.score_for_round(
-                rnd, hc_tmp, hc_sys, hc_dat, arw_d, round_score_up=True
+                rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=True
             )
-            if sc <= score:
-                hc = hc_tmp
-            else:
-                # if rounding down didn't tip over boundary to required score then 
-                # round up (or down for AUS)
-                if np.sign(hc) < 0:
-                    if hc_sys in ["AA", "AA2"]:
-                        hc = np.ceil(hc)
-                    else:
-                        hc = np.floor(hc)
-                else:
-                    if hc_sys in ["AA", "AA2"]:
-                        hc = np.floor(hc)
-                    else:
-                        hc = np.ceil(hc)
 
             # Check that you can't get the same score from a larger handicap when
             # working in integers
@@ -377,7 +362,7 @@ def handicap_from_score(
                 )
                 if sc < score:
                     hc -= hstep  # undo the iteration that caused the flag to raise
-                    min_h_flag = True
+                min_h_flag = True
             return hc
 
         else:

@@ -242,3 +242,46 @@ if __name__ == "__main__":
     print(
         f"A score of 706 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
     )
+
+
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 50., "AGB", hc_params, round_score_up=False
+    )
+    print(
+        f"A handicap of 50. on a {rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
+    )
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 51., "AGB", hc_params, round_score_up=False
+    )
+    print(
+        f"A handicap of 51. on a {rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
+    )
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 52., "AGB", hc_params, round_score_up=False
+    )
+    print(
+        f"A handicap of 52. on a {rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
+    )
+
+
+
+
+    # Print score for a certain handicap - discrete
+    hc_from_score = hc_func.handicap_from_score(
+        684, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=True
+    )
+    print(
+        f"A score of 684 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
+    )
+    hc_from_score = hc_func.handicap_from_score(
+        683, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=True
+    )
+    print(
+        f"A score of 683 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
+    )
+    hc_from_score = hc_func.handicap_from_score(
+        682, rounds.AGB_outdoor_imperial.york, "AGB", hc_params, int_prec=True
+    )
+    print(
+        f"A score of 682 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
+    )
