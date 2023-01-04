@@ -5,7 +5,7 @@
   "AGB_kd" : 0.00365,
 
   "AGBo_datum" : 12.9,
-  "AGBo_step" : 3.5,
+  "AGBo_step" : 3.6,
   "AGBo_ang_0" : 5.0e-4,
   "AGBo_k1" : 1.429e-6,
   "AGBo_k2" : 1.07,

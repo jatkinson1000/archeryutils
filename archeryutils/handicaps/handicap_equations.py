@@ -26,7 +26,7 @@ class HcParams:
 
     # KEY PARAMETERS AND CONSTANTS FOR OLD AGB HANDICAP SCHEME
     AGBo_datum = 12.9  # offset required to set handicap 0 at desired score
-    AGBo_step = 3.5  # percentage change in group size for each handicap step
+    AGBo_step = 3.6  # percentage change in group size for each handicap step
     AGBo_ang_0 = 5.0e-4  # baseline angle used for group size 0.5 [millirad]
     AGBo_k1 = 1.429e-6  # constant used in handicap equation
     AGBo_k2 = 1.07  # constant used in handicap equation
