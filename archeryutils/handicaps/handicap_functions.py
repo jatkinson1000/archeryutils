@@ -263,10 +263,10 @@ def handicap_from_score(
         stry = 0.0
 
         if (abs(f[1])<=f[0]):
-            xcur = x[0]
-            xpre = x[1]
-            fcur = f[0]
-            fpre = f[1]
+            xcur = x[1]
+            xpre = x[0]
+            fcur = f[1]
+            fpre = f[0]
         else:
             xpre = x[1]
             xcur = x[0]
