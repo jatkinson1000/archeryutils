@@ -13,6 +13,7 @@ from archeryutils import (
     rounds,
     handicap_equations as hc_eq,
     handicap_functions as hc_func,
+    classifications as class_func,
 )
 
 if __name__ == "__main__":
@@ -284,4 +285,40 @@ if __name__ == "__main__":
     )
     print(
         f"A score of 682 on a {rounds.AGB_outdoor_imperial.york.name} is a discrete handicap of {hc_from_score}."
+    )
+
+
+    # Handicaps
+    # Print the continuous score that is comes from this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 41.5, "AGB", hc_params, round_score_up=False
+    )
+    print(
+        f"A handicap of 41.5 on a {rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
+    )
+
+    # Print the minimum discrete score that is required to get this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 52.5, "AGB", hc_params, round_score_up=True
+    )
+    print(
+        f"A handicap of 52.5 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {score_from_hc}."
+    )
+    # Print the minimum discrete score that is required to get this handicap
+    score_from_hc = hc_eq.score_for_round(
+        rounds.AGB_outdoor_imperial.york, 52, "AGB", hc_params, round_score_up=True
+    )
+    print(
+        f"A handicap of 52 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {score_from_hc}."
+    )
+
+
+    # Print the minimum discrete score that is required to get this handicap
+    class_from_score = class_func.calculate_AGB_outdoor_classification('york', 965, "recurve", "male", "50+")
+    print(
+        f"A score of 662 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {class_from_score}."
+    )
+    class_from_score = class_func.calculate_AGB_outdoor_classification('york', 964, "recurve", "male", "50+")
+    print(
+        f"A score of 662 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {class_from_score}."
     )

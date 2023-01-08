@@ -4,7 +4,6 @@ from pathlib import Path
 
 from archeryutils import rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
-from archeryutils.handicaps import handicap_functions as hc_func
 
 
 def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
@@ -13,11 +12,13 @@ def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
         ages = json.load(json_file)
     return ages
 
+
 def read_bowstyles_json(bowstyles_file=Path(__file__).parent / "AGB_bowstyles.json"):
     # Read in bowstyleclass info as list of dicts
     with open(bowstyles_file) as json_file:
         bowstyles = json.load(json_file)
     return bowstyles
+
 
 def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
     # Read in gender info as list
@@ -25,12 +26,12 @@ def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
         genders = json.load(json_file)["genders"]
     return genders
 
+
 def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
     # Read in classification names as dict
     with open(classes_file) as json_file:
         classes = json.load(json_file)
     return classes
-
 
 
 def _make_AGB_outdoor_classification_dict():
@@ -262,6 +263,8 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         f"{bowstyle.lower()}"
     )
 
+    hc_params = hc_eq.HcParams()
+
     # Dict mapping handicaps to classifications with min dist for each classification
     classes_file = Path(__file__).parent / "AGB_classes.json"
     with open(classes_file) as json_file:
@@ -282,51 +285,54 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
             dist_req = dist_req + [dists[max_dist_index + i]]
         except IndexError:
             dist_req = dist_req + [dists[-1]]
-    HC2class = dict(
-        zip(
-            AGB_outdoor_classifications[groupname]["class_HC"],
-            zip(AGB_classes, dist_req),
-        )
-    )
-
-    # calculate handicap
-    hc_params = hc_eq.HcParams()
-    hc_from_score = hc_func.handicap_from_score(
-        score, all_outdoor_rounds[roundname], "AGB", hc_params, int_prec=True
-    )
-
-    #print(hc_from_score)
+    class_data = {}
+    for i, class_i in enumerate(AGB_classes):
+        HC_for_class = AGB_outdoor_classifications[groupname]["class_HC"][i]
+        score_for_class = hc_eq.score_for_round(
+            all_outdoor_rounds[roundname],
+            HC_for_class,
+            "AGB",
+            hc_params,
+            round_score_up=True,
+        )[0]
+        dist_for_class = dist_req[i]
+        class_data[class_i] = {
+            "HC": HC_for_class,
+            "score": score_for_class,
+            "dist_req": dist_for_class,
+        }
 
     # is it a prestige round? If not remove MB as an option
     if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
         # TODO: a list of dictionary keys is super dodgy python...
         #   can this be improved?
-        for item in list(HC2class.keys())[0:3]:
-            del HC2class[item]
+        for item in list(class_data.keys())[0:3]:
+            del class_data[item]
 
         # If not prestige, what classes are eligible based on category and distance
         to_del = []
-        for item in HC2class:
+        for item in class_data:
             round_max_dist = all_outdoor_rounds[roundname].max_distance()
-            if HC2class[item][1] > round_max_dist:
+            if class_data[item]["dist_req"] > round_max_dist:
                 to_del.append(item)
         for item in to_del:
-            del HC2class[item]
+            del class_data[item]
 
-    # Of those remaining, what is the highest classification this score gets?
-    # Loop over dict of HC to class name
+    # Classification based on score - accounts for fractional HC
+    # TODO Make this its own function for later use in geberating tables?
+    # Of those classes remaining, what is the highest classification this score gets?
     to_del = []
-    for item in HC2class:
-        if item < hc_from_score:
+    for item in class_data:
+        if class_data[item]["score"] > score:
             to_del.append(item)
     for item in to_del:
-        del HC2class[item]
+        del class_data[item]
 
     try:
-        classification_from_score = HC2class[list(HC2class.keys())[0]][0]
+        classification_from_score = list(class_data.keys())[0]
         return classification_from_score
     except IndexError:
-        return 'UC' 
+        return "UC"
 
 
 if __name__ == "__main__":
