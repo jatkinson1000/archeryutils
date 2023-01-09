@@ -34,6 +34,37 @@ def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
     return classes
 
 
+def get_groupname(bowstyle, gender, age_group):
+    """
+    Subroutine to generate a single string id for a particular category
+
+    Parameters
+    ----------
+    bowstyle : str
+        archer's bowstyle under AGB outdoor target rules
+    gender : str
+        archer's gender under AGB outdoor target rules
+    age_group : str
+        archer's age group under AGB outdoor target rules
+
+    Returns
+    -------
+    groupname : str
+        single, lower case str id for this category
+
+    References
+    ----------
+    """
+
+    groupname = (
+        f"{age_group.lower().replace(' ', '')}_"
+        f"{gender.lower()}_"
+        f"{bowstyle.lower()}"
+    )
+
+    return groupname
+
+
 def _make_AGB_outdoor_classification_dict():
     """
     Subroutine to generate a dictionary of dictionaries providing handicaps for
@@ -101,6 +132,10 @@ def _make_AGB_outdoor_classification_dict():
         "metric_122_30",
     ]
 
+    # List of maximum distances for use in assigning maximum distance [metres]
+    # Use metres because corresponding yards distances are >= metric ones
+    dists = [90, 70, 60, 50, 40, 30]
+
     all_outdoor_rounds = rounds.read_json_to_round_dict(
         [
             "AGB_outdoor_imperial.json",
@@ -119,7 +154,9 @@ def _make_AGB_outdoor_classification_dict():
     # Read in gender info as list of dicts
     AGB_genders = read_genders_json()
     # Read in classification names as dict
-    AGB_classes = read_classes_json()["classes"]
+    AGB_classes_info = read_classes_json()
+    AGB_classes = AGB_classes_info["classes"]
+    AGB_classes_long = AGB_classes_info["classes_long"]
 
     # Generate dict of classifications
     # loop over bowstyles
@@ -140,8 +177,19 @@ def _make_AGB_outdoor_classification_dict():
                 else:
                     gender_steps = 0
 
+                groupname = get_groupname(
+                    bowstyle["bowstyle"], gender, age["age_group"]
+                )
+
+                # Get max dists for category from json file data
+                # Use metres as corresponding yards >= metric
+                max_dist = age[gender.lower()]
+                max_dist_index = dists.index(min(max_dist))
+
                 class_HC = np.empty(len(AGB_classes))
+                min_dists = np.empty(len(AGB_classes))
                 for i, classification in enumerate(AGB_classes):
+                    # Assign handicap for this classification
                     class_HC[i] = (
                         bowstyle["datum"]
                         + age_steps * bowstyle["ageStep"]
@@ -149,10 +197,20 @@ def _make_AGB_outdoor_classification_dict():
                         + (i - 2) * bowstyle["classStep"]
                     )
 
+                    # Assign minimum distance [metres] for this classification
+                    if i <= 2:
+                        # MB all require max distance:
+                        min_dists[i] = dists[max_dist_index]
+                    else:
+                        # Step down min dist from max at B1
+                        try:
+                            min_dists[i] = dists[max_dist_index + i - 3]
+                        except IndexError:
+                            min_dists[i] = dists[-1]
+
                 # Assign prestige rounds for the category
                 #  - check bowstyle, distance, and age
                 prestige_rounds = []
-                max_dist = age[gender.lower()]
 
                 # 720 rounds - bowstyle dependent
                 if bowstyle["bowstyle"].lower() == "compound":
@@ -198,14 +256,15 @@ def _make_AGB_outdoor_classification_dict():
                     if all_outdoor_rounds[roundname].max_distance() >= min(max_dist):
                         prestige_rounds.append(roundname)
 
-                dictkey = (
-                    f"{age['age_group'].lower().replace(' ', '')}_"
-                    f"{gender.lower()}_{bowstyle['bowstyle'].lower()}"
-                )
-                classification_dict[dictkey] = {
+                # TODO: class names and long are duplicated many times here
+                #   Consider a method to reduce this (affects other code)
+                classification_dict[groupname] = {
+                    "classes": AGB_classes,
                     "class_HC": class_HC,
                     "prestige_rounds": prestige_rounds,
                     "max_distance": max_dist,
+                    "min_dists": min_dists,
+                    "classes_long": AGB_classes_long,
                 }
 
     return classification_dict
@@ -257,50 +316,28 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         ]
     )
 
-    groupname = (
-        f"{age_group.lower().replace(' ', '')}_"
-        f"{gender.lower()}_"
-        f"{bowstyle.lower()}"
-    )
+    groupname = get_groupname(bowstyle, gender, age_group)
+    group_data = AGB_outdoor_classifications[groupname]
 
     hc_params = hc_eq.HcParams()
 
-    # Dict mapping handicaps to classifications with min dist for each classification
-    classes_file = Path(__file__).parent / "AGB_classes.json"
-    with open(classes_file) as json_file:
-        AGB_classes = json.load(json_file)["classes"]
-    dists = [90, 70, 60, 50, 40, 30]
-    max_dist_index = dists.index(
-        min(AGB_outdoor_classifications[groupname]["max_distance"])
+    # Get scores required on this round for each classification
+    class_scores = []
+    for i, class_i in enumerate(group_data["classes"]):
+        class_scores.append(
+            hc_eq.score_for_round(
+                all_outdoor_rounds[roundname],
+                group_data["class_HC"][i],
+                "AGB",
+                hc_params,
+                round_score_up=True,
+            )[0]
+        )
+
+    #
+    class_data = dict(
+        zip(group_data["classes"], zip(group_data["min_dists"], class_scores))
     )
-
-    # TODO: This could perhaps be made it's own function if useful elsewhere...
-    # Might require significant restructure of this function (which is overly large...)
-    # print(f'max_dist req. for {groupname} is {dists[max_dist_index]}')
-
-    # MB and B1 all require max distance:
-    dist_req = [dists[max_dist_index]] * 3
-    for i in range(6):
-        try:
-            dist_req = dist_req + [dists[max_dist_index + i]]
-        except IndexError:
-            dist_req = dist_req + [dists[-1]]
-    class_data = {}
-    for i, class_i in enumerate(AGB_classes):
-        HC_for_class = AGB_outdoor_classifications[groupname]["class_HC"][i]
-        score_for_class = hc_eq.score_for_round(
-            all_outdoor_rounds[roundname],
-            HC_for_class,
-            "AGB",
-            hc_params,
-            round_score_up=True,
-        )[0]
-        dist_for_class = dist_req[i]
-        class_data[class_i] = {
-            "HC": HC_for_class,
-            "score": score_for_class,
-            "dist_req": dist_for_class,
-        }
 
     # is it a prestige round? If not remove MB as an option
     if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
@@ -313,7 +350,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         to_del = []
         for item in class_data:
             round_max_dist = all_outdoor_rounds[roundname].max_distance()
-            if class_data[item]["dist_req"] > round_max_dist:
+            if class_data[item][0] > round_max_dist:
                 to_del.append(item)
         for item in to_del:
             del class_data[item]
@@ -323,7 +360,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
     # Of those classes remaining, what is the highest classification this score gets?
     to_del = []
     for item in class_data:
-        if class_data[item]["score"] > score:
+        if class_data[item][1] > score:
             to_del.append(item)
     for item in to_del:
         del class_data[item]
@@ -333,6 +370,75 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         return classification_from_score
     except IndexError:
         return "UC"
+
+
+def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
+    """
+    Subroutine to calculate classification scores for a specific category and round
+    Appropriate for 2023 ArcheryGB age groups and classifications
+
+    Parameters
+    ----------
+    roundname : str
+        name of round shot as given by 'codename' in json
+    bowstyle : str
+        archer's bowstyle under AGB outdoor target rules
+    gender : str
+        archer's gender under AGB outdoor target rules
+    age_group : str
+        archer's age group under AGB outdoor target rules
+
+    Returns
+    -------
+    classification_scores : ndarray
+        abbreviation of the classification appropriate for this score
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    """
+
+    # TODO: Should this be defined outside the function to reduce I/O or does
+    #   it have no effect?
+    all_outdoor_rounds = rounds.read_json_to_round_dict(
+        [
+            "AGB_outdoor_imperial.json",
+            "AGB_outdoor_metric.json",
+            "WA_outdoor.json",
+        ]
+    )
+
+    groupname = get_groupname(bowstyle, gender, age_group)
+    group_data = AGB_outdoor_classifications[groupname]
+
+    hc_params = hc_eq.HcParams()
+
+    # Get scores required on this round for each classification
+    class_scores = []
+    for i, class_i in enumerate(group_data["classes"]):
+        class_scores.append(
+            hc_eq.score_for_round(
+                all_outdoor_rounds[roundname],
+                group_data["class_HC"][i],
+                "AGB",
+                hc_params,
+                round_score_up=True,
+            )[0]
+        )
+
+    # Reduce list based on other criteria besides handicap
+    # is it a prestige round? If not remove MB scores
+    if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
+        class_scores[0:3] = [-9999] * 3
+
+        # If not prestige, what classes are eligible based on category and distance
+        for i, min_dist in enumerate(group_data["min_dists"]):
+            round_max_dist = all_outdoor_rounds[roundname].max_distance()
+            if min_dist > round_max_dist:
+                class_scores[i] = -9999
+
+    return class_scores
 
 
 if __name__ == "__main__":

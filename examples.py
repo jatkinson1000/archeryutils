@@ -316,11 +316,19 @@ if __name__ == "__main__":
     # Print the minimum discrete score that is required to get this handicap
     class_from_score = class_func.calculate_AGB_outdoor_classification('york', 965, "recurve", "male", "50+")
     print(
-        f"A score of 662 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {class_from_score}."
+        f"A score of 965 on a {rounds.AGB_outdoor_imperial.york.name} is class {class_from_score}."
     )
     class_from_score = class_func.calculate_AGB_outdoor_classification('york', 964, "recurve", "male", "50+")
     print(
-        f"A score of 662 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {class_from_score}."
+        f"A score of 964 on a {rounds.AGB_outdoor_imperial.york.name} is class {class_from_score}."
+    )
+    class_from_score = class_func.calculate_AGB_outdoor_classification('western', 864, "recurve", "male", "Adult")
+    print(
+        f"A score of 864 on a {rounds.AGB_outdoor_imperial.western.name} is class {class_from_score}."
+    )
+    class_from_score = class_func.calculate_AGB_outdoor_classification('western_30', 864, "recurve", "male", "Adult")
+    print(
+        f"A score of 864 on a {rounds.AGB_outdoor_imperial.western_30.name} is class {class_from_score}."
     )
 
 
