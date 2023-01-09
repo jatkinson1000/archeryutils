@@ -362,7 +362,7 @@ def handicap_from_score(
                 )
                 if sc < score:
                     hc -= hstep  # undo the iteration that caused the flag to raise
-                min_h_flag = True
+                    min_h_flag = True
             return hc
 
         else:

@@ -322,3 +322,11 @@ if __name__ == "__main__":
     print(
         f"A score of 662 on a {rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {class_from_score}."
     )
+
+
+    hc_from_score = hc_func.handicap_from_score(
+        1295, rounds.AGB_outdoor_imperial.bristol_i, "AGB", hc_params, int_prec=True
+    )
+    print(
+        f"A score of 1295 on a {rounds.AGB_outdoor_imperial.bristol_i.name} is a discrete handicap of {hc_from_score}."
+    )
