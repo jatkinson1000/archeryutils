@@ -104,7 +104,7 @@
    "passes" : [{"n_arrows" : 30, "diameter" : 40.64, "scoring" : "Worcester", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 40.64, "scoring" : "Worcester", "distance" : 20, "dist_unit" : "yard"}]
   },
-  {"name" : "Worcester 5-Centre",
+  {"name" : "Worcester 5-Spot",
    "codename" : "worcester_5_centre",
    "location" : "indoor",
    "body" : "AGB",
