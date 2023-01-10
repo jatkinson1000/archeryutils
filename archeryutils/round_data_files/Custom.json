@@ -1,4 +1,9 @@
 [
+  {"name" : "Frostbite",
+   "codename" : "frostbite",
+   "location" : "outdoor",
+   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}]
+  },
   {"name" : "252 100",
    "codename" : "c_252_100",
    "location" : "outdoor",

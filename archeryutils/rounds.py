@@ -122,7 +122,7 @@ class Round:
 
     """
 
-    def __init__(self, name, passes):
+    def __init__(self, name, passes, location=None):
         """
         Parameters
         ----------
@@ -130,10 +130,13 @@ class Round:
             Formal name of the round
         passes : list of Pass
             a list of Pass classes making up the round
+        location : str or None
+            string identifing where the round is shot
 
         """
         self.name = name
         self.passes = passes
+        self.location = location
 
     def get_info(self):
         """
@@ -146,7 +149,7 @@ class Round:
         Returns
         -------
         """
-        print(f"A {self.name} round consists of {len(self.passes)} passes:")
+        print(f"A {self.name} is a(n) {self.location} round consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
             print(
                 "\t- {} arrows at a {} cm target at {} {}s.".format(
@@ -241,10 +244,13 @@ def read_json_to_round_dict(json_filelist):
             if "location" not in round_i:
                 warnings.warn(
                     f"No location provided for round {round_i['name']}. "
-                    "Defaulting to outdoor."
+                    "Defaulting to None."
                 )
+                location = None
                 round_i["indoor"] = False
             elif round_i["location"] in [
+                "i",
+                "I",
                 "indoors",
                 "indoor",
                 "in",
@@ -255,7 +261,10 @@ def read_json_to_round_dict(json_filelist):
                 "Inside",
             ]:
                 round_i["indoor"] = True
+                location = "indoor"
             elif round_i["location"] in [
+                "o",
+                "O",
                 "outdoors",
                 "outdoor",
                 "out",
@@ -266,12 +275,24 @@ def read_json_to_round_dict(json_filelist):
                 "Outside",
             ]:
                 round_i["indoor"] = False
+                location = "outdoor"
+            elif round_i["location"] in [
+                "f",
+                "F",
+                "field",
+                "Field",
+                "woods",
+                "Woods",
+            ]:
+                round_i["indoor"] = False
+                location = "field"
             else:
                 warnings.warn(
                     f"Location not recognised for round {round_i['name']}. "
-                    "Defaulting to outdoor."
+                    "Defaulting to None"
                 )
                 round_i["indoor"] = False
+                location = None
 
             for pass_i in round_i["passes"]:
                 passes.append(
@@ -281,11 +302,11 @@ def read_json_to_round_dict(json_filelist):
                         pass_i["scoring"],
                         pass_i["distance"],
                         dist_unit=pass_i["dist_unit"],
-                    indoor=round_i["indoor"],
+                        indoor=round_i["indoor"],
                 )
             )
 
-            round_dict[round_i["codename"]] = Round(round_i["name"], passes)
+            round_dict[round_i["codename"]] = Round(round_i["name"], passes, location=location)
 
     return round_dict
 
