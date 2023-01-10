@@ -2,6 +2,7 @@
   {"name" : "Metric I",
    "codename" : "metric_i",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
@@ -11,6 +12,7 @@
   {"name" : "Metric II",
    "codename" : "metric_ii",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
@@ -20,6 +22,7 @@
   {"name" : "Metric III",
    "codename" : "metric_iii",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
@@ -29,6 +32,7 @@
   {"name" : "Metric IV",
    "codename" : "metric_iv",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"},
@@ -38,6 +42,7 @@
   {"name" : "Metric V",
    "codename" : "metric_v",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 15, "dist_unit" : "metre"},
@@ -49,6 +54,7 @@
   {"name" : "Long Metric Gents",
    "codename" : "long_metric_gents",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"}
               ]
@@ -56,6 +62,7 @@
   {"name" : "Long Metric Ladies",
    "codename" : "long_metric_ladies",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
               ]
@@ -63,6 +70,7 @@
   {"name" : "Long Metric I",
    "codename" : "long_metric_i",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
               ]
@@ -70,6 +78,7 @@
   {"name" : "Long Metric II",
    "codename" : "long_metric_ii",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]
@@ -77,6 +86,7 @@
     {"name" : "Long Metric III",
    "codename" : "long_metric_iii",
    "location" : "outdoor",
+   "body" : "AGB",
      "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
               ]
@@ -84,6 +94,7 @@
     {"name" : "Long Metric IV",
    "codename" : "long_metric_iv",
    "location" : "outdoor",
+   "body" : "AGB",
      "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
@@ -91,6 +102,7 @@
     {"name" : "Long Metric V",
    "codename" : "long_metric_v",
    "location" : "outdoor",
+   "body" : "AGB",
      "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"}
               ]
@@ -101,6 +113,7 @@
   {"name" : "Short Metric",
    "codename" : "short_metric",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
@@ -108,6 +121,7 @@
   {"name" : "Short Metric I",
    "codename" : "short_metric_i",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
@@ -115,6 +129,7 @@
   {"name" : "Short Metric II",
    "codename" : "short_metric_ii",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
@@ -122,6 +137,7 @@
   {"name" : "Short Metric III",
    "codename" : "short_metric_iii",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"}
               ]
@@ -129,6 +145,7 @@
   {"name" : "Short Metric IV",
    "codename" : "short_metric_iv",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 10, "dist_unit" : "metre"}
               ]
@@ -136,6 +153,7 @@
   {"name" : "Short Metric V",
    "codename" : "short_metric_v",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 15, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 10, "dist_unit" : "metre"}
               ]
@@ -145,6 +163,7 @@
   {"name" : "Metric 122-50",
    "codename" : "metric_122_50",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]
@@ -152,6 +171,7 @@
   {"name" : "Metric 122-40",
    "codename" : "metric_122_40",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
               ]
@@ -159,6 +179,7 @@
   {"name" : "Metric 122-30",
    "codename" : "metric_122_30",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
@@ -166,6 +187,7 @@
   {"name" : "Metric 80-40",
    "codename" : "metric_80_40",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
               ]
@@ -173,6 +195,7 @@
   {"name" : "Metric 80-30",
    "codename" : "metric_80_30",
    "location" : "outdoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]

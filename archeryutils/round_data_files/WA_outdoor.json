@@ -2,6 +2,7 @@
   {"name" : "WA 1440 (90m)",
    "codename" : "wa1440_90",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
@@ -11,6 +12,7 @@
   {"name" : "WA 1440 (70m)",
    "codename" : "wa1440_70",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
@@ -20,6 +22,7 @@
   {"name" : "WA 1440 (60m)",
    "codename" : "wa1440_60",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
@@ -31,6 +34,7 @@
   {"name" : "WA 1440 (90m) Small",
    "codename" : "wa1440_90_small",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 50, "dist_unit" : "metre"},
@@ -40,6 +44,7 @@
   {"name" : "WA 1440 (70m) Small",
    "codename" : "wa1440_70_small",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 50, "dist_unit" : "metre"},
@@ -49,6 +54,7 @@
   {"name" : "WA 1440 (60m) Small",
    "codename" : "wa1440_60_small",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone_6_ring", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 40, "dist_unit" : "metre"},
@@ -60,6 +66,7 @@
   {"name" : "WA 720 70m",
    "codename" : "wa720_70",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"}
               ]
@@ -67,6 +74,7 @@
   {"name" : "WA 720 60m",
    "codename" : "wa720_60",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
               ]
@@ -74,6 +82,7 @@
   {"name" : "WA 720 50m Compound",
    "codename" : "wa720_50_c",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]
@@ -81,6 +90,7 @@
   {"name" : "WA 720 50m Barebow",
    "codename" : "wa720_50_b",
    "location" : "outdoor",
+   "body" : "WA",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]

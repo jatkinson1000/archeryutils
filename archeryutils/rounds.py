@@ -122,7 +122,7 @@ class Round:
 
     """
 
-    def __init__(self, name, passes, location=None):
+    def __init__(self, name, passes, location=None, body=None):
         """
         Parameters
         ----------
@@ -132,11 +132,14 @@ class Round:
             a list of Pass classes making up the round
         location : str or None
             string identifing where the round is shot
+        body : str or None
+            string identifing the governing body the round belongs to
 
         """
         self.name = name
         self.passes = passes
         self.location = location
+        self.body = body
 
     def get_info(self):
         """
@@ -149,7 +152,7 @@ class Round:
         Returns
         -------
         """
-        print(f"A {self.name} is a(n) {self.location} round consists of {len(self.passes)} passes:")
+        print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
             print(
                 "\t- {} arrows at a {} cm target at {} {}s.".format(
@@ -240,13 +243,14 @@ def read_json_to_round_dict(json_filelist):
             data = json.load(json_round_file)
 
         for round_i in data:
-            passes = []
+
+            # Assign location
             if "location" not in round_i:
                 warnings.warn(
                     f"No location provided for round {round_i['name']}. "
                     "Defaulting to None."
                 )
-                location = None
+                round_i["location"] = None
                 round_i["indoor"] = False
             elif round_i["location"] in [
                 "i",
@@ -262,6 +266,7 @@ def read_json_to_round_dict(json_filelist):
             ]:
                 round_i["indoor"] = True
                 location = "indoor"
+                round_i["location"] = "indoor"
             elif round_i["location"] in [
                 "o",
                 "O",
@@ -275,7 +280,7 @@ def read_json_to_round_dict(json_filelist):
                 "Outside",
             ]:
                 round_i["indoor"] = False
-                location = "outdoor"
+                round_i["location"] = "outdoor"
             elif round_i["location"] in [
                 "f",
                 "F",
@@ -285,15 +290,26 @@ def read_json_to_round_dict(json_filelist):
                 "Woods",
             ]:
                 round_i["indoor"] = False
-                location = "field"
+                round_i["location"] = "field"
             else:
                 warnings.warn(
                     f"Location not recognised for round {round_i['name']}. "
                     "Defaulting to None"
                 )
                 round_i["indoor"] = False
-                location = None
+                round_i["location"] = None
 
+            # Assign governing body
+            if "body" not in round_i:
+                warnings.warn(
+                    f"No body provided for round {round_i['name']}. "
+                    "Defaulting to 'custom'."
+                )
+                round_i["body"] = "custom"
+                # TODO: Could do sanitisation here e.g. AGB vs agb etc or trust user...
+
+            # Assign passes
+            passes = []
             for pass_i in round_i["passes"]:
                 passes.append(
                     Pass(
@@ -306,7 +322,7 @@ def read_json_to_round_dict(json_filelist):
                 )
             )
 
-            round_dict[round_i["codename"]] = Round(round_i["name"], passes, location=location)
+            round_dict[round_i["codename"]] = Round(round_i["name"], passes, location=round_i["location"], body=round_i["body"])
 
     return round_dict
 
