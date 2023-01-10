@@ -249,9 +249,9 @@ def handicap_from_score(
             x = [-75, 300]
 
         f = [
-             f_root(x[0], score, rnd, hc_sys, hc_dat, arw_d),
-             f_root(x[1], score, rnd, hc_sys, hc_dat, arw_d)
-             ]
+            f_root(x[0], score, rnd, hc_sys, hc_dat, arw_d),
+            f_root(x[1], score, rnd, hc_sys, hc_dat, arw_d),
+        ]
         xtol = 1.0e-16
         rtol = 0.00
         xblk = 0.0
@@ -262,7 +262,7 @@ def handicap_from_score(
         dblk = 0.0
         stry = 0.0
 
-        if (abs(f[1])<=f[0]):
+        if abs(f[1]) <= f[0]:
             xcur = x[1]
             xpre = x[0]
             fcur = f[1]
@@ -274,12 +274,12 @@ def handicap_from_score(
             fcur = f[0]
 
         for i in range(25):
-            if ((fpre != 0.0) and (fcur != 0.0) and (np.sign(fpre) != np.sign(fcur))):
+            if (fpre != 0.0) and (fcur != 0.0) and (np.sign(fpre) != np.sign(fcur)):
                 xblk = xpre
                 fblk = fpre
                 spre = xcur - xpre
                 scur = xcur - xpre
-            if (abs(fblk) < abs(fcur)):
+            if abs(fblk) < abs(fcur):
                 xpre = xcur
                 xcur = xblk
                 xblk = xpre
@@ -288,22 +288,22 @@ def handicap_from_score(
                 fcur = fblk
                 fblk = fpre
 
-            delta = (xtol + rtol * abs(xcur))/2.0
+            delta = (xtol + rtol * abs(xcur)) / 2.0
             sbis = (xblk - xcur) / 2.0
-            
+
             if (fcur == 0.0) or (abs(sbis) < delta):
                 hc = xcur
                 break
-            
-            if ((abs(spre) > delta) and (abs(fcur) < abs(fpre))):
-                if (xpre == xblk):
+
+            if (abs(spre) > delta) and (abs(fcur) < abs(fpre)):
+                if xpre == xblk:
                     stry = -fcur * (xcur - xpre) / (fcur - xpre)
                 else:
                     dpre = (fpre - fcur) / (xpre - xcur)
                     dblk = (fblk - fcur) / (xblk - xcur)
                     stry = -fcur * (fblk - fpre) / (fblk * dpre - fpre * dblk)
 
-                if (2*abs(stry) < min(abs(spre), 3*abs(sbis) - delta)):
+                if 2 * abs(stry) < min(abs(spre), 3 * abs(sbis) - delta):
                     # accept step
                     spre = scur
                     scur = stry
@@ -317,7 +317,7 @@ def handicap_from_score(
                 scur = sbis
             xpre = xcur
             fpre = fcur
-            if (abs(scur) > delta):
+            if abs(scur) > delta:
                 xcur += scur
             else:
                 if sbis > 0:
@@ -342,7 +342,6 @@ def handicap_from_score(
                     hc = np.floor(hc)
                 else:
                     hc = np.ceil(hc)
-
 
             sc, _ = hc_eq.score_for_round(
                 rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=True

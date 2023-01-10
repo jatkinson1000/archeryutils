@@ -291,35 +291,27 @@ def _make_AGB_indoor_classification_dict():
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
 
-    all_outdoor_rounds = rounds.read_json_to_round_dict(
-        [
-            "AGB_indoor.json",
-            "WA_indoor.json",
-            # "Custom.json",
-        ]
-    )
-
     AGB_indoor_classes = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
     # Generate dict of classifications
     # for both bowstyles, for both genders
     classification_dict = {}
     classification_dict[get_groupname("Compound", "Male", "Adult")] = {
-            "classes": AGB_indoor_classes,
-            "class_HC": [5, 12, 24, 37, 49, 62, 73, 79],
-            }
+        "classes": AGB_indoor_classes,
+        "class_HC": [5, 12, 24, 37, 49, 62, 73, 79],
+    }
     classification_dict[get_groupname("Compound", "Female", "Adult")] = {
-            "classes": AGB_indoor_classes,
-            "class_HC": [12, 18, 30, 43, 55, 67, 79, 83],
-            }
+        "classes": AGB_indoor_classes,
+        "class_HC": [12, 18, 30, 43, 55, 67, 79, 83],
+    }
     classification_dict[get_groupname("Recurve", "Male", "Adult")] = {
-            "classes": AGB_indoor_classes,
-            "class_HC": [14, 21, 33, 46, 58, 70, 80, 85],
-            }
+        "classes": AGB_indoor_classes,
+        "class_HC": [14, 21, 33, 46, 58, 70, 80, 85],
+    }
     classification_dict[get_groupname("Recurve", "Female", "Adult")] = {
-            "classes": AGB_indoor_classes,
-            "class_HC": [21, 27, 39, 51, 64, 75, 85, 90],
-            }
+        "classes": AGB_indoor_classes,
+        "class_HC": [21, 27, 39, 51, 64, 75, 85, 90],
+    }
 
     return classification_dict
 
@@ -498,7 +490,9 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
     return class_scores
 
 
-def calculate_AGB_indoor_classification(roundname, score, bowstyle, gender, age_group, hc_scheme="AGBold"):
+def calculate_AGB_indoor_classification(
+    roundname, score, bowstyle, gender, age_group, hc_scheme="AGBold"
+):
     """
     Subroutine to calculate a classification from a score given suitable inputs
     Appropriate for 2023 ArcheryGB age groups and classifications
@@ -584,7 +578,9 @@ def calculate_AGB_indoor_classification(roundname, score, bowstyle, gender, age_
         return "unclassified"
 
 
-def AGB_indoor_classification_scores(roundname, bowstyle, gender, age_group, hc_scheme="AGBold"):
+def AGB_indoor_classification_scores(
+    roundname, bowstyle, gender, age_group, hc_scheme="AGBold"
+):
     """
     Subroutine to calculate classification scores for a specific category and round
     Appropriate ArcheryGB age groups and classifications

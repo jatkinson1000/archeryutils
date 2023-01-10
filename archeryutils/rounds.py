@@ -236,7 +236,7 @@ def read_json_to_round_dict(json_filelist):
     round_data_files = Path(__file__).parent.joinpath("round_data_files")
 
     round_dict = {}
-    
+
     for json_file in json_filelist:
         json_filepath = round_data_files.joinpath(json_file)
         with open(json_filepath) as json_round_file:
@@ -265,7 +265,6 @@ def read_json_to_round_dict(json_filelist):
                 "Inside",
             ]:
                 round_i["indoor"] = True
-                location = "indoor"
                 round_i["location"] = "indoor"
             elif round_i["location"] in [
                 "o",
@@ -319,10 +318,15 @@ def read_json_to_round_dict(json_filelist):
                         pass_i["distance"],
                         dist_unit=pass_i["dist_unit"],
                         indoor=round_i["indoor"],
+                    )
                 )
-            )
 
-            round_dict[round_i["codename"]] = Round(round_i["name"], passes, location=round_i["location"], body=round_i["body"])
+            round_dict[round_i["codename"]] = Round(
+                round_i["name"],
+                passes,
+                location=round_i["location"],
+                body=round_i["body"],
+            )
 
     return round_dict
 

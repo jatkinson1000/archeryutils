@@ -267,7 +267,9 @@ def arrow_score(
 
     if target.scoring_system == "5_zone":
         s_bar = (
-            9 - 2 * sum(
+            9
+            - 2
+            * sum(
                 np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 5)
             )
@@ -282,7 +284,8 @@ def arrow_score(
 
     elif target.scoring_system == "10_zone_6_ring":
         s_bar = (
-            10 - sum(
+            10
+            - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 6)
             )
@@ -291,7 +294,8 @@ def arrow_score(
 
     elif target.scoring_system == "10_zone_compound":
         s_bar = (
-            10 - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
+            10
+            - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
             - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 11)
@@ -300,7 +304,8 @@ def arrow_score(
 
     elif target.scoring_system == "10_zone_5_ring":
         s_bar = (
-            10 - sum(
+            10
+            - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 5)
             )
@@ -309,7 +314,8 @@ def arrow_score(
 
     elif target.scoring_system == "10_zone_5_ring_compound":
         s_bar = (
-            10 - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
+            10
+            - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
             - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 5)
@@ -319,7 +325,8 @@ def arrow_score(
 
     elif target.scoring_system == "WA_field":
         s_bar = (
-            6 - np.exp(-((((tar_dia / 20) + arw_rad) / sig_r) ** 2))
+            6
+            - np.exp(-((((tar_dia / 20) + arw_rad) / sig_r) ** 2))
             - sum(
                 np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 7)
@@ -328,7 +335,8 @@ def arrow_score(
 
     elif target.scoring_system == "IFAA_field":
         s_bar = (
-            5 - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            5
+            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - np.exp(-((((3 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - 3.0 * np.exp(-((((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
         )
@@ -344,7 +352,8 @@ def arrow_score(
 
     elif target.scoring_system == "Worcester_2_ring":
         s_bar = (
-            5 - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            5
+            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
             - 4.0 * np.exp(-((((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
         )
 
