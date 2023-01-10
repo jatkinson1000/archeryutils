@@ -2,21 +2,25 @@
   {"name" : "Bray I",
    "codename" : "bray_i",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Bray I Compound",
    "codename" : "bray_i_compound",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_compound", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Bray I Triple",
    "codename" : "bray_i_triple",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Bray I Compound Triple",
    "codename" : "bray_i_compound_triple",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring_compound", "distance" : 20, "dist_unit" : "yard"}]
   },
 
@@ -24,21 +28,25 @@
   {"name" : "Bray II",
    "codename" : "bray_ii",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 25, "dist_unit" : "yard"}]
   },
   {"name" : "Bray II Compound",
    "codename" : "bray_ii_compound",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_compound", "distance" : 25, "dist_unit" : "yard"}]
   },
   {"name" : "Bray II Triple",
    "codename" : "bray_ii_triple",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring", "distance" : 25, "dist_unit" : "yard"}]
   },
   {"name" : "Bray II Compound Triple",
    "codename" : "bray_ii_compound_triple",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring_compound", "distance" : 25, "dist_unit" : "yard"}]
   },
 
@@ -46,12 +54,14 @@
   {"name" : "Stafford",
    "codename" : "stafford",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}]
   },
   {"name" : "Stafford Compound",
    "codename" : "stafford_compound",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_compound", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_compound", "distance" : 30, "dist_unit" : "metre"}]
   },
@@ -60,24 +70,28 @@
   {"name" : "Portsmouth",
    "codename" : "portsmouth",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Portsmouth Compound",
    "codename" : "portsmouth_compound",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_compound", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_compound", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Portsmouth Triple",
    "codename" : "portsmouth_triple",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Portsmouth Compound Triple",
    "codename" : "portsmouth_compound_triple",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring_compound", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring_compound", "distance" : 20, "dist_unit" : "yard"}]
   },
@@ -86,12 +100,14 @@
   {"name" : "Worcester",
    "codename" : "worcester",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40.64, "scoring" : "Worcester", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 40.64, "scoring" : "Worcester", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Worcester 5-Centre",
    "codename" : "worcester_5_centre",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40.64, "scoring" : "Worcester_2_ring", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 40.64, "scoring" : "Worcester_2_ring", "distance" : 20, "dist_unit" : "yard"}]
   },
@@ -100,12 +116,14 @@
   {"name" : "Vegas",
    "codename" : "vegas",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 18, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 18, "dist_unit" : "metre"}]
   },
   {"name" : "Vegas Compound",
    "codename" : "vegas_compound",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring_compound", "distance" : 18, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring_compound", "distance" : 18, "dist_unit" : "metre"}]
   },
@@ -114,6 +132,7 @@
   {"name" : "Vegas 300",
    "codename" : "vegas_300",
    "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 18, "dist_unit" : "metre"}]
   }
 ]

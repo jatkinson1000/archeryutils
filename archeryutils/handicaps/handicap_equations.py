@@ -32,7 +32,7 @@ class HcParams:
     AGBo_k2 = 1.07  # constant used in handicap equation
     AGBo_k3 = 4.3  # constant used in handicap equation
     AGBo_p1 = 2.0  # exponent of distance scaling
-    AGB0_arw_d = 7.14e-3  # arrow diameter used in the old AGB algorithm by D. Lane
+    AGBo_arw_d = 7.14e-3  # arrow diameter used in the old AGB algorithm by D. Lane
 
     # KEY PARAMETERS AND CONSTANTS FOR THE ARCHERY AUSTRALIA SCHEME
     AA_k0 = 2.37  # offset required to set handicap 100 at desired score
@@ -66,7 +66,7 @@ class HcParams:
         json_HcParams.AGBo_k2 = paramsdict["AGBo_k2"]
         json_HcParams.AGBo_k3 = paramsdict["AGBo_k3"]
         json_HcParams.AGBo_p1 = paramsdict["AGBo_p1"]
-        json_HcParams.AGB0_arw_d = paramsdict["AGB0_arw_d"]
+        json_HcParams.AGBo_arw_d = paramsdict["AGBo_arw_d"]
         json_HcParams.AA_k0 = paramsdict["AA_k0"]
         json_HcParams.AA_ks = paramsdict["AA_ks"]
         json_HcParams.AA_kd = paramsdict["AA_kd"]
@@ -253,7 +253,7 @@ def arrow_score(
     # default from params based on in/out
     if arw_d is None:
         if hc_sys == "AGBold":
-            arw_rad = hc_dat.AGB0_arw_d / 2.0
+            arw_rad = hc_dat.AGBo_arw_d / 2.0
         else:
             if target.indoor:
                 arw_rad = hc_dat.arw_d_in / 2.0
@@ -410,6 +410,10 @@ def score_for_round(
     round_score = np.sum(pass_score, axis=0)
 
     if round_score_up:
-        round_score = np.ceil(round_score)
+        # Old AGB system uses plain rounding rather than ceil of other schemes
+        if hc_sys == "AGBold":
+            round_score = np.round(round_score)
+        else:
+            round_score = np.ceil(round_score)
 
     return round_score, pass_score
