@@ -270,9 +270,65 @@ def _make_AGB_outdoor_classification_dict():
     return classification_dict
 
 
+def _make_AGB_indoor_classification_dict():
+    """
+    Subroutine to generate a dictionary of dictionaries providing handicaps for
+    each classification band :and a list prestige rounds for each category from
+    data files.
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    classification_dict : dict of str : dict of str: list
+        dictionary indexed on group name (e.g 'adult_female_recurve')
+        containing list of handicaps associated with each classification
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    """
+
+    all_outdoor_rounds = rounds.read_json_to_round_dict(
+        [
+            "AGB_indoor.json",
+            "WA_indoor.json",
+            # "Custom.json",
+        ]
+    )
+
+    AGB_indoor_classes = ["A", "B", "C", "D", "E", "F", "G", "H"]
+
+    # Generate dict of classifications
+    # for both bowstyles, for both genders
+    classification_dict = {}
+    classification_dict[get_groupname("Compound", "Male", "Adult")] = {
+            "classes": AGB_indoor_classes,
+            "class_HC": [5, 12, 24, 37, 49, 62, 73, 79],
+            }
+    classification_dict[get_groupname("Compound", "Female", "Adult")] = {
+            "classes": AGB_indoor_classes,
+            "class_HC": [12, 18, 30, 43, 55, 67, 79, 83],
+            }
+    classification_dict[get_groupname("Recurve", "Male", "Adult")] = {
+            "classes": AGB_indoor_classes,
+            "class_HC": [14, 21, 33, 46, 58, 70, 80, 85],
+            }
+    classification_dict[get_groupname("Recurve", "Female", "Adult")] = {
+            "classes": AGB_indoor_classes,
+            "class_HC": [21, 27, 39, 51, 64, 75, 85, 90],
+            }
+
+    return classification_dict
+
+
 AGB_outdoor_classifications = _make_AGB_outdoor_classification_dict()
+AGB_indoor_classifications = _make_AGB_indoor_classification_dict()
 
 del _make_AGB_outdoor_classification_dict
+del _make_AGB_indoor_classification_dict
 
 
 def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age_group):
@@ -406,6 +462,7 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
             "AGB_outdoor_imperial.json",
             "AGB_outdoor_metric.json",
             "WA_outdoor.json",
+            "Custom.json",
         ]
     )
 
@@ -437,6 +494,156 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
             round_max_dist = all_outdoor_rounds[roundname].max_distance()
             if min_dist > round_max_dist:
                 class_scores[i] = -9999
+
+    return class_scores
+
+
+def calculate_AGB_indoor_classification(roundname, score, bowstyle, gender, age_group, hc_scheme="AGBold"):
+    """
+    Subroutine to calculate a classification from a score given suitable inputs
+    Appropriate for 2023 ArcheryGB age groups and classifications
+
+    Parameters
+    ----------
+    roundname : str
+        name of round shot as given by 'codename' in json
+    score : int
+        numerical score on the round to calculate classification for
+    bowstyle : str
+        archer's bowstyle under AGB outdoor target rules
+    gender : str
+        archer's gender under AGB outdoor target rules
+    age_group : str
+        archer's age group under AGB outdoor target rules
+    hc_scheme : str
+        handicap scheme to be used for legacy purposes. Default AGBold
+
+    Returns
+    -------
+    classification_from_score : str
+        the classification appropriate for this score
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    """
+
+    # TODO: Need routines to sanitise/deal with variety of user inputs
+
+    # TODO: Should this be defined outside the function to reduce I/O or does
+    #   it have no effect?
+    all_indoor_rounds = rounds.read_json_to_round_dict(
+        [
+            "AGB_indoor.json",
+            "WA_indoor.json",
+        ]
+    )
+
+    # deal with reduced categories:
+    age_group = "Adult"
+    if bowstyle.lower() not in ["compound"]:
+        bowstyle = "Recurve"
+
+    groupname = get_groupname(bowstyle, gender, age_group)
+    group_data = AGB_indoor_classifications[groupname]
+
+    hc_params = hc_eq.HcParams()
+
+    # Get scores required on this round for each classification
+    class_scores = []
+    for i, class_i in enumerate(group_data["classes"]):
+        class_scores.append(
+            hc_eq.score_for_round(
+                all_indoor_rounds[roundname],
+                group_data["class_HC"][i],
+                hc_scheme,
+                hc_params,
+                round_score_up=True,
+            )[0]
+        )
+
+    class_data = dict(zip(group_data["classes"], class_scores))
+
+    # What is the highest classification this score gets?
+    to_del = []
+    for item in class_data:
+        if class_data[item] > score:
+            to_del.append(item)
+    for item in to_del:
+        del class_data[item]
+
+    # NB No fiddle for Worcester required with this logic...
+    # Beware of this later on, however, if we wish to rectify the 'anomaly'
+
+    try:
+        classification_from_score = list(class_data.keys())[0]
+        return classification_from_score
+    except IndexError:
+        # return "UC"
+        return "unclassified"
+
+
+def AGB_indoor_classification_scores(roundname, bowstyle, gender, age_group, hc_scheme="AGBold"):
+    """
+    Subroutine to calculate classification scores for a specific category and round
+    Appropriate ArcheryGB age groups and classifications
+
+    Parameters
+    ----------
+    roundname : str
+        name of round shot as given by 'codename' in json
+    bowstyle : str
+        archer's bowstyle under AGB outdoor target rules
+    gender : str
+        archer's gender under AGB outdoor target rules
+    age_group : str
+        archer's age group under AGB outdoor target rules
+    hc_scheme : str
+        handicap scheme to be used for legacy purposes. Default AGBold
+
+    Returns
+    -------
+    classification_scores : ndarray
+        abbreviation of the classification appropriate for this score
+
+    References
+    ----------
+    ArcheryGB Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7
+    """
+
+    # TODO: Should this be defined outside the function to reduce I/O or does
+    #   it have no effect?
+    all_indoor_rounds = rounds.read_json_to_round_dict(
+        [
+            "AGB_indoor.json",
+            "WA_indoor.json",
+        ]
+    )
+
+    # deal with reduced categories:
+    age_group = "Adult"
+    if bowstyle.lower() not in ["compound"]:
+        bowstyle = "Recurve"
+
+    groupname = get_groupname(bowstyle, gender, age_group)
+    group_data = AGB_indoor_classifications[groupname]
+
+    hc_params = hc_eq.HcParams()
+
+    # Get scores required on this round for each classification
+    class_scores = []
+    for i, class_i in enumerate(group_data["classes"]):
+        class_scores.append(
+            hc_eq.score_for_round(
+                all_indoor_rounds[roundname],
+                group_data["class_HC"][i],
+                hc_scheme,
+                hc_params,
+                round_score_up=True,
+            )[0]
+        )
 
     return class_scores
 
