@@ -209,7 +209,7 @@ def _make_AGB_outdoor_classification_dict():
                             # U16 males and above step down for B2 and beyond
                             if gender.lower() in ["male"] and age[
                                 "age_group"
-                            ].lower().replace("", " ") in [
+                            ].lower().replace(" ", "") in [
                                 "adult",
                                 "50+",
                                 "under21",
