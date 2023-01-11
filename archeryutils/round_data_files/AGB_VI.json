@@ -1,0 +1,97 @@
+[
+  {"name" : "Burntwood York",
+   "codename" : "burntwood_york",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 72, "diameter" : 40, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 48, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 24, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood Hereford",
+   "codename" : "burntwood_hereford",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 72, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 48, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood Bristol",
+   "codename" : "burntwood_hereford",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 72, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 48, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood St. George",
+   "codename" : "burntwood_st_george",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 36, "diameter" : 40, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood Albion",
+   "codename" : "burntwood_albion",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 36, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood Windsor",
+   "codename" : "burntwood_windsor",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 36, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood Western",
+   "codename" : "burntwood_western",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 48, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 48, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood National",
+   "codename" : "burntwood_national",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 48, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 24, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood Warwick",
+   "codename" : "burntwood_warwick",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 24, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 24, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood American",
+   "codename" : "burntwood_american",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "Burntwood St. Nicholas",
+   "codename" : "burntwood_st_nicholas",
+   "location" : "outdoor",
+   "body" : "AGB-VI",
+   "passes" : [{"n_arrows" : 48, "diameter" : 80, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  }
+]

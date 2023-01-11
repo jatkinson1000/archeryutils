@@ -1,0 +1,28 @@
+[
+  {"name" : "WA 1440 (VI)",
+   "codename" : "1440_vi",
+   "location" : "outdoor",
+   "body" : "WA-VI",
+   "passes" : [{"n_arrows" : 36, "diameter" : 60, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 30m (VI)",
+   "codename" : "30_vi",
+   "location" : "outdoor",
+   "body" : "WA-VI",
+   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 18m (VI)",
+   "codename" : "30_vi",
+   "location" : "indoor",
+   "body" : "WA-VI",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 18, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 18, "dist_unit" : "metre"}
+              ]
+  }
+]
