@@ -184,6 +184,14 @@
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
+  {"name" : "Metric 80-50",
+   "codename" : "metric_80_50",
+   "location" : "outdoor",
+   "body" : "AGB",
+   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
+              ]
+  },
   {"name" : "Metric 80-40",
    "codename" : "metric_80_40",
    "location" : "outdoor",
