@@ -200,23 +200,39 @@ def _make_AGB_outdoor_classification_dict():
                     # Assign minimum distance [metres] for this classification
                     if i <= 3:
                         # All MB and B1 require max distance for everyone:
-                        min_dists[i, :] = padded_dists[max_dist_index:max_dist_index+3]
+                        min_dists[i, :] = padded_dists[
+                            max_dist_index: max_dist_index + 3
+                        ]
                     else:
                         try:
                             # Age group trickery:
                             # U16 males and above step down for B2 and beyond
-                            if gender.lower() in ["male"] and age["age_group"].lower().replace("", " ") in ["adult", "50+", "under21", "under18", "under16"]:
-                                min_dists[i, :] = padded_dists[max_dist_index + i - 3:max_dist_index + i]
+                            if gender.lower() in ["male"] and age[
+                                "age_group"
+                            ].lower().replace("", " ") in [
+                                "adult",
+                                "50+",
+                                "under21",
+                                "under18",
+                                "under16",
+                            ]:
+                                min_dists[i, :] = padded_dists[
+                                    max_dist_index + i - 3: max_dist_index + i
+                                ]
                             # All other categories require max dist for B1 and B2 then step down
                             else:
                                 try:
-                                    min_dists[i, :] = padded_dists[max_dist_index + i - 4:max_dist_index + i - 1]
+                                    min_dists[i, :] = padded_dists[
+                                        max_dist_index + i - 4: max_dist_index + i - 1
+                                    ]
                                 except ValueError:
                                     # Distances stack at the bottom end
                                     min_dists[i, :] = padded_dists[-3:]
                         except IndexError as e:
                             # Shouldn't really get here...
-                            print(f"{e} cannot select minimum distances for {gender} and {age['age_group']}")
+                            print(
+                                f"{e} cannot select minimum distances for {gender} and {age['age_group']}"
+                            )
                             min_dists[i, :] = dists[-3:]
 
                 # Assign prestige rounds for the category
@@ -392,13 +408,15 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
                 round_score_up=True,
             )[0]
         )
-    #class_data = dict(
+    # class_data = dict(
     #    zip(group_data["classes"], zip(group_data["min_dists"], class_scores))
-    #)
+    # )
     class_data = {}
     for i, class_i in enumerate(group_data["classes"]):
-        class_data[class_i] = {"min_dists": group_data["min_dists"][i, :], "score": class_scores[i]}
-
+        class_data[class_i] = {
+            "min_dists": group_data["min_dists"][i, :],
+            "score": class_scores[i],
+        }
 
     # is it a prestige round? If not remove MB as an option
     if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
