@@ -134,7 +134,8 @@ def _make_AGB_outdoor_classification_dict():
 
     # List of maximum distances for use in assigning maximum distance [metres]
     # Use metres because corresponding yards distances are >= metric ones
-    dists = [90, 70, 60, 50, 40, 30]
+    dists = [90, 70, 60, 50, 40, 30, 20, 15]
+    padded_dists = [90, 90] + dists
 
     all_outdoor_rounds = rounds.read_json_to_round_dict(
         [
@@ -166,13 +167,12 @@ def _make_AGB_outdoor_classification_dict():
     for bowstyle in AGB_bowstyles:
         for age in AGB_ages:
             for gender in AGB_genders:
-                # Perform fiddle in age steps where genders diverge at U15/U16
-                if gender.lower() == "female" and age["step"] >= 4:
-                    age_steps = age["step"] - 1
-                else:
-                    age_steps = age["step"]
+                # Get age steps from Adult
+                age_steps = age["step"]
 
-                if gender.lower() == "female":
+                # Get number of gender steps required
+                # Perform fiddle in age steps where genders diverge at U15/U16
+                if gender.lower() == "female" and age["step"] <= 3:
                     gender_steps = 1
                 else:
                     gender_steps = 0
@@ -187,7 +187,7 @@ def _make_AGB_outdoor_classification_dict():
                 max_dist_index = dists.index(min(max_dist))
 
                 class_HC = np.empty(len(AGB_classes))
-                min_dists = np.empty(len(AGB_classes))
+                min_dists = np.empty((len(AGB_classes), 3))
                 for i, classification in enumerate(AGB_classes):
                     # Assign handicap for this classification
                     class_HC[i] = (
@@ -198,15 +198,26 @@ def _make_AGB_outdoor_classification_dict():
                     )
 
                     # Assign minimum distance [metres] for this classification
-                    if i <= 2:
-                        # MB all require max distance:
-                        min_dists[i] = dists[max_dist_index]
+                    if i <= 3:
+                        # All MB and B1 require max distance for everyone:
+                        min_dists[i, :] = padded_dists[max_dist_index:max_dist_index+3]
                     else:
-                        # Step down min dist from max at B1
                         try:
-                            min_dists[i] = dists[max_dist_index + i - 3]
-                        except IndexError:
-                            min_dists[i] = dists[-1]
+                            # Age group trickery:
+                            # U16 males and above step down for B2 and beyond
+                            if gender.lower() in ["male"] and age["age_group"].lower().replace("", " ") in ["adult", "50+", "under21", "under18", "under16"]:
+                                min_dists[i, :] = padded_dists[max_dist_index + i - 3:max_dist_index + i]
+                            # All other categories require max dist for B1 and B2 then step down
+                            else:
+                                try:
+                                    min_dists[i, :] = padded_dists[max_dist_index + i - 4:max_dist_index + i - 1]
+                                except ValueError:
+                                    # Distances stack at the bottom end
+                                    min_dists[i, :] = padded_dists[-3:]
+                        except IndexError as e:
+                            # Shouldn't really get here...
+                            print(f"{e} cannot select minimum distances for {gender} and {age['age_group']}")
+                            min_dists[i, :] = dists[-3:]
 
                 # Assign prestige rounds for the category
                 #  - check bowstyle, distance, and age
@@ -381,11 +392,13 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
                 round_score_up=True,
             )[0]
         )
+    #class_data = dict(
+    #    zip(group_data["classes"], zip(group_data["min_dists"], class_scores))
+    #)
+    class_data = {}
+    for i, class_i in enumerate(group_data["classes"]):
+        class_data[class_i] = {"min_dists": group_data["min_dists"][i, :], "score": class_scores[i]}
 
-    #
-    class_data = dict(
-        zip(group_data["classes"], zip(group_data["min_dists"], class_scores))
-    )
 
     # is it a prestige round? If not remove MB as an option
     if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
@@ -396,9 +409,9 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
 
         # If not prestige, what classes are eligible based on category and distance
         to_del = []
+        round_max_dist = all_outdoor_rounds[roundname].max_distance()
         for item in class_data:
-            round_max_dist = all_outdoor_rounds[roundname].max_distance()
-            if class_data[item][0] > round_max_dist:
+            if class_data[item]["min_dists"][-1] > round_max_dist:
                 to_del.append(item)
         for item in to_del:
             del class_data[item]
@@ -408,7 +421,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
     # Of those classes remaining, what is the highest classification this score gets?
     to_del = []
     for item in class_data:
-        if class_data[item][1] > score:
+        if class_data[item]["score"] > score:
             to_del.append(item)
     for item in to_del:
         del class_data[item]
@@ -482,9 +495,9 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
         class_scores[0:3] = [-9999] * 3
 
         # If not prestige, what classes are eligible based on category and distance
-        for i, min_dist in enumerate(group_data["min_dists"]):
-            round_max_dist = all_outdoor_rounds[roundname].max_distance()
-            if min_dist > round_max_dist:
+        round_max_dist = all_outdoor_rounds[roundname].max_distance()
+        for i in range(3, len(class_scores)):
+            if min(group_data["min_dists"][i, :]) > round_max_dist:
                 class_scores[i] = -9999
 
     return class_scores
