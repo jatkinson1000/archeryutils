@@ -18,7 +18,7 @@
               ]
   },
   {"name" : "WA 18m (VI)",
-   "codename" : "30_vi",
+   "codename" : "18_vi",
    "location" : "indoor",
    "body" : "WA-VI",
    "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 18, "dist_unit" : "metre"},

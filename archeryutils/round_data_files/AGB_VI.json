@@ -18,7 +18,7 @@
               ]
   },
   {"name" : "Burntwood Bristol",
-   "codename" : "burntwood_hereford",
+   "codename" : "burntwood_bristol",
    "location" : "outdoor",
    "body" : "AGB-VI",
    "passes" : [{"n_arrows" : 72, "diameter" : 60, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "metre"},
