@@ -31,7 +31,7 @@
   },
 
 
-  {"name" : "WA 1440 (90m) Small",
+  {"name" : "WA 1440 (90m) 6-zone",
    "codename" : "wa1440_90_small",
    "location" : "outdoor",
    "body" : "WA",
@@ -41,7 +41,7 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 (70m) Small",
+  {"name" : "WA 1440 (70m) 6-zone",
    "codename" : "wa1440_70_small",
    "location" : "outdoor",
    "body" : "WA",
@@ -51,7 +51,7 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 (60m) Small",
+  {"name" : "WA 1440 (60m) 6-zone",
    "codename" : "wa1440_60_small",
    "location" : "outdoor",
    "body" : "WA",
