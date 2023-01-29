@@ -122,7 +122,7 @@ class Round:
 
     """
 
-    def __init__(self, name, passes, location=None, body=None):
+    def __init__(self, name, passes, location=None, body=None, family=None):
         """
         Parameters
         ----------
@@ -134,12 +134,15 @@ class Round:
             string identifing where the round is shot
         body : str or None
             string identifing the governing body the round belongs to
+        family : str or None
+            string identifing the family the round belongs to (e.g. wa1440, western, etc.)
 
         """
         self.name = name
         self.passes = passes
         self.location = location
         self.body = body
+        self.family = family
 
     def get_info(self):
         """
@@ -202,13 +205,19 @@ class Round:
         (max_dist, unit) : tuple (float, str)
             tuple of max_dist and string of unit
         """
-        max_dist = (
-            self.passes[0].distance / YARD_TO_METRE
-            if self.passes[0].native_dist_unit == "yard"
-            else self.passes[0].distance
-        )
+        max_dist = 0
+        for pass_i in self.passes:
+            dist = (
+                pass_i.distance / YARD_TO_METRE
+                if pass_i.native_dist_unit == "yard"
+                else pass_i.distance
+            )
+            if dist > max_dist:
+                max_dist = dist
+                d_unit = pass_i.native_dist_unit
+        
         if unit:
-            return (max_dist, self.passes[0].native_dist_unit)
+            return (max_dist, d_unit)
         else:
             return max_dist
 
@@ -306,6 +315,14 @@ def read_json_to_round_dict(json_filelist):
                 )
                 round_i["body"] = "custom"
                 # TODO: Could do sanitisation here e.g. AGB vs agb etc or trust user...
+            
+            # Assign round family
+            if "family" not in round_i:
+                warnings.warn(
+                    f"No family provided for round {round_i['name']}. "
+                    "Defaulting to ''."
+                )
+                round_i["family"] = ""
 
             # Assign passes
             passes = []
@@ -326,6 +343,7 @@ def read_json_to_round_dict(json_filelist):
                 passes,
                 location=round_i["location"],
                 body=round_i["body"],
+                family=round_i["family"],
             )
 
     return round_dict

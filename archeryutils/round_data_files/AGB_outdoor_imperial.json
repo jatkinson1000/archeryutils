@@ -3,6 +3,7 @@
    "codename" : "york",
    "location" :"outdoor",
    "body" : "AGB",
+   "family" : "york_hereford_bristol",
    "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
@@ -12,6 +13,7 @@
    "codename" : "hereford",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "york_hereford_bristol",
    "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
@@ -21,6 +23,7 @@
    "codename" : "bristol_i",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "york_hereford_bristol",
    "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
@@ -30,6 +33,7 @@
    "codename" : "bristol_ii",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "york_hereford_bristol",
    "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
@@ -39,6 +43,7 @@
    "codename" : "bristol_iii",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "york_hereford_bristol",
    "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
@@ -48,6 +53,7 @@
    "codename" : "bristol_iv",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "york_hereford_bristol",
    "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}
@@ -57,6 +63,7 @@
    "codename" : "bristol_v",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "york_hereford_bristol",
    "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 10, "dist_unit" : "yard"}
@@ -68,6 +75,7 @@
    "codename" : "st_george",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "stgeorge_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
@@ -77,6 +85,7 @@
    "codename" : "albion",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "stgeorge_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
@@ -86,6 +95,7 @@
    "codename" : "windsor",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "stgeorge_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
@@ -95,6 +105,7 @@
    "codename" : "windsor_50",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "stgeorge_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
@@ -104,6 +115,7 @@
    "codename" : "windsor_40",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "stgeorge_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}
@@ -113,6 +125,7 @@
    "codename" : "windsor_30",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "stgeorge_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 10, "dist_unit" : "yard"}
@@ -124,6 +137,7 @@
    "codename" : "new_western",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "western",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"}
               ]
@@ -132,6 +146,7 @@
    "codename" : "long_western",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "western",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
               ]
@@ -140,6 +155,7 @@
    "codename" : "western",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "western",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
               ]
@@ -148,6 +164,7 @@
    "codename" : "western_50",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "western",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
               ]
@@ -156,6 +173,7 @@
    "codename" : "western_40",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "western",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
               ]
@@ -164,6 +182,7 @@
    "codename" : "western_30",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "western",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}
               ]
@@ -175,6 +194,7 @@
    "codename" : "american",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
@@ -184,6 +204,7 @@
    "codename" : "st_nicholas",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
               ]
@@ -194,7 +215,8 @@
    "codename" : "new_national",
    "location" : "outdoor",
    "body" : "AGB",
-     "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
+   "family" : "national",
+   "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"}
               ]
   },
@@ -202,6 +224,7 @@
    "codename" : "long_national",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "national",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
               ]
@@ -210,6 +233,7 @@
    "codename" : "national",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "national",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
               ]
@@ -218,6 +242,7 @@
    "codename" : "national_50",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "national",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
               ]
@@ -226,6 +251,7 @@
    "codename" : "national_40",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "national",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
               ]
@@ -234,6 +260,7 @@
    "codename" : "national_30",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "national",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}
               ]
@@ -241,11 +268,12 @@
 
 
 
-    {"name" : "New Warwick",
+  {"name" : "New Warwick",
    "codename" : "new_warwick",
    "location" : "outdoor",
    "body" : "AGB",
-     "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
+   "family" : "warwick",
+   "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"}
               ]
   },
@@ -253,6 +281,7 @@
    "codename" : "long_warwick",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "warwick",
    "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
               ]
@@ -261,6 +290,7 @@
    "codename" : "warwick",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "warwick",
    "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
               ]
@@ -269,6 +299,7 @@
    "codename" : "warwick_50",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "warwick",
    "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
               ]
@@ -277,6 +308,7 @@
    "codename" : "warwick_40",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "warwick",
    "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
               ]
@@ -285,6 +317,7 @@
    "codename" : "warwick_30",
    "location" : "outdoor",
    "body" : "AGB",
+   "family" : "warwick",
    "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}
               ]
