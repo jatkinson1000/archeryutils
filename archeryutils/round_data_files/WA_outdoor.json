@@ -69,7 +69,7 @@
   },
 
 
-  {"name" : "WA 720 70m",
+  {"name" : "WA 70m",
    "codename" : "wa720_70",
    "location" : "outdoor",
    "body" : "WA",
@@ -78,7 +78,7 @@
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 720 60m",
+  {"name" : "WA 60m",
    "codename" : "wa720_60",
    "location" : "outdoor",
    "body" : "WA",
@@ -87,7 +87,7 @@
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 720 50m Compound",
+  {"name" : "WA 50m Compound",
    "codename" : "wa720_50_c",
    "location" : "outdoor",
    "body" : "WA",
@@ -96,7 +96,7 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 720 50m Barebow",
+  {"name" : "WA 50m Barebow",
    "codename" : "wa720_50_b",
    "location" : "outdoor",
    "body" : "WA",
