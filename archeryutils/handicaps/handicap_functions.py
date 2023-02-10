@@ -1,13 +1,17 @@
-# Author        : Jack Atkinson
-#
-# Contributors  : Jack Atkinson
-#
-# Date Created  : 2022-08-16
-# Last Modified : 2022-08-22 by Jack Atkinson
-#
-# Summary       : Code for doing things with archery handicap code
-#
+"""
+Code for doing things with archery handicap equations.
 
+Extended Summary
+----------------
+Code to add functionality to the basic handicap equations code
+in handicap_equations.py including inverse function and display.
+
+Routine Listings
+----------------
+print_handicap_table
+handicap_from_score
+
+"""
 import numpy as np
 import warnings
 from itertools import chain
@@ -33,7 +37,7 @@ def print_handicap_table(
     int_prec: bool = False,
 ) -> None:
     """
-    Subroutine to generate a handicap table
+    Generate a handicap table to screen and/or file.
 
     Parameters
     ----------
@@ -63,11 +67,7 @@ def print_handicap_table(
     Returns
     -------
     None
-
-    References
-    ----------
     """
-
     # Abbreviations to replace headings with in Handicap Tables to keep concise
     abbreviations = {
         "Compound": "C",
@@ -160,7 +160,7 @@ def handicap_from_score(
     int_prec: bool = False,
 ) -> Union[int, float]:
     """
-    Subroutine to return the handicap of a given score on a given round
+    Calculate the handicap of a given score on a given round using root-finding.
 
     Parameters
     ----------
@@ -206,21 +206,21 @@ def handicap_from_score(
         # start high and drop down until no longer ceiling to max score
         # (i.e. >= max_score - 1.0)
         if hc_sys in ["AA", "AA2"]:
-            hc = 175
+            hc = 175.0
             dhc = -0.01
         else:
-            hc = -75
+            hc = -75.0
             dhc = 0.01
         s_max, _ = hc_eq.score_for_round(
             rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=False
         )
         # Work down to where we would round up (ceil) to max score - ceiling approach
         while s_max > max_score - 1.0:
-            hc += dhc
+            hc = hc + dhc
             s_max, _ = hc_eq.score_for_round(
                 rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=False
             )
-        hc -= dhc  # Undo final iteration that overshoots
+        hc = hc - dhc  # Undo final iteration that overshoots
         if int_prec:
             if hc_sys in ["AA", "AA2"]:
                 hc = np.ceil(hc)
@@ -244,9 +244,9 @@ def handicap_from_score(
             return val - scr
 
         if hc_sys in ["AA", "AA2"]:
-            x = [-250, 175]
+            x = [-250.0, 175.0]
         else:
-            x = [-75, 300]
+            x = [-75.0, 300.0]
 
         f = [
             f_root(x[0], score, rnd, hc_sys, hc_dat, arw_d),

@@ -74,8 +74,8 @@ class Target:
 
         if scoring_system not in systems:
             raise ValueError(
-                "Invalid Target Face Type specified.\n"
-                "Please select from '{}'.".format("', '".join(systems))
+                f"""Invalid Target Face Type specified.\n"""
+                f"""Please select from '{"', '".join(systems)}'."""
             )
 
         if native_dist_unit in [
@@ -131,7 +131,7 @@ class Target:
         """
         if self.scoring_system in ["5_zone"]:
             return 9.0
-        elif self.scoring_system in [
+        if self.scoring_system in [
             "10_zone",
             "10_zone_compound",
             "10_zone_6_ring",
@@ -140,18 +140,17 @@ class Target:
             "10_zone_5_ring_compound",
         ]:
             return 10.0
-        elif self.scoring_system in ["WA_field"]:
+        if self.scoring_system in ["WA_field"]:
             return 6.0
-        elif self.scoring_system in [
+        if self.scoring_system in [
             "IFAA_field",
             "IFAA_field_expert",
             "Worcester",
             "Worcester_2_ring",
         ]:
             return 5.0
-        elif self.scoring_system in ["Beiter_hit_miss"]:
+        if self.scoring_system in ["Beiter_hit_miss"]:
             return 1.0
-        else:
-            raise ValueError(
-                f"target face '{self.scoring_system}' has no specified maximum score"
-            )
+        raise ValueError(
+            f"target face '{self.scoring_system}' has no specified maximum score"
+        )

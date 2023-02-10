@@ -8,10 +8,10 @@
 # Summary       : definition of classes to define rounds for archery applications
 #
 
-import numpy as np
 import json
 from pathlib import Path
 import warnings
+import numpy as np
 
 from archeryutils.targets import Target
 from archeryutils.constants import YARD_TO_METRE
@@ -157,20 +157,15 @@ class Round:
         """
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
+            if pass_i.native_dist_unit == "yard":
+                native_dist = pass_i.target.distance / YARD_TO_METRE
+            else:
+                native_dist = pass_i.distance
             print(
-                "\t- {} arrows at a {} cm target at {} {}s.".format(
-                    pass_i.n_arrows,
-                    pass_i.diameter * 100.0,
-                    (
-                        pass_i.target.distance / YARD_TO_METRE
-                        if pass_i.native_dist_unit == "yard"
-                        else pass_i.distance
-                    ),
-                    pass_i.native_dist_unit,
-                )
+                f"\t- {pass_i.n_arrows} arrows "
+                f"at a {pass_i.diameter * 100.0} cm target "
+                f"at {native_dist} {pass_i.native_dist_unit}s."
             )
-
-        return None
 
     def max_score(self):
         """
@@ -215,11 +210,10 @@ class Round:
             if dist > max_dist:
                 max_dist = dist
                 d_unit = pass_i.native_dist_unit
-        
+
         if unit:
             return (max_dist, d_unit)
-        else:
-            return max_dist
+        return max_dist
 
 
 def read_json_to_round_dict(json_filelist):
@@ -239,7 +233,7 @@ def read_json_to_round_dict(json_filelist):
     References
     ----------
     """
-    if type(json_filelist) is not list:
+    if not isinstance(json_filelist, list):
         json_filelist = [json_filelist]
 
     round_data_files = Path(__file__).parent.joinpath("round_data_files")
@@ -315,7 +309,7 @@ def read_json_to_round_dict(json_filelist):
                 )
                 round_i["body"] = "custom"
                 # TODO: Could do sanitisation here e.g. AGB vs agb etc or trust user...
-            
+
             # Assign round family
             if "family" not in round_i:
                 warnings.warn(
@@ -367,8 +361,7 @@ class DotDict(dict):
     def __getattr__(self, name):
         if name in self:
             return self[name]
-        else:
-            raise AttributeError(self._attribute_err_msg(name))
+        raise AttributeError(self._attribute_err_msg(name))
 
     def __setattr__(self, name, value):
         self[name] = value

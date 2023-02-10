@@ -1,6 +1,32 @@
-import numpy as np
+"""
+Code for doing things with archery handicap equations.
+
+Extended Summary
+----------------
+Code to add functionality to the basic handicap equations code
+in handicap_equations.py including inverse function and display.
+
+Routine Listings
+----------------
+read_ages_json
+read_bowstyles_json
+read_genders_json
+read_classes_json
+get_groupname
+_make_AGB_outdoor_classification_dict
+_make_AGB_indoor_classification_dict
+_make_AGB_field_classification_dict
+calculate_AGB_outdoor_classification
+AGB_outdoor_classification_scores
+calculate_AGB_indoor_classification
+AGB_indoor_classification_scores
+calculate_AGB_field_classification
+AGB_field_classification_scores
+
+"""
 import json
 from pathlib import Path
+import numpy as np
 
 from archeryutils import rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
@@ -8,35 +34,35 @@ from archeryutils.handicaps import handicap_equations as hc_eq
 
 def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
     # Read in age group info as list of dicts
-    with open(age_file) as json_file:
+    with open(age_file, encoding="utf-8") as json_file:
         ages = json.load(json_file)
     return ages
 
 
 def read_bowstyles_json(bowstyles_file=Path(__file__).parent / "AGB_bowstyles.json"):
     # Read in bowstyleclass info as list of dicts
-    with open(bowstyles_file) as json_file:
+    with open(bowstyles_file, encoding="utf-8") as json_file:
         bowstyles = json.load(json_file)
     return bowstyles
 
 
 def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
     # Read in gender info as list
-    with open(genders_file) as json_file:
+    with open(genders_file, encoding="utf-8") as json_file:
         genders = json.load(json_file)["genders"]
     return genders
 
 
 def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
     # Read in classification names as dict
-    with open(classes_file) as json_file:
+    with open(classes_file, encoding="utf-8") as json_file:
         classes = json.load(json_file)
     return classes
 
 
 def get_groupname(bowstyle, gender, age_group):
     """
-    Subroutine to generate a single string id for a particular category
+    Generate a single string id for a particular category.
 
     Parameters
     ----------
@@ -51,11 +77,7 @@ def get_groupname(bowstyle, gender, age_group):
     -------
     groupname : str
         single, lower case str id for this category
-
-    References
-    ----------
     """
-
     groupname = (
         f"{age_group.lower().replace(' ', '')}_"
         f"{gender.lower()}_"
@@ -67,13 +89,15 @@ def get_groupname(bowstyle, gender, age_group):
 
 def _make_AGB_outdoor_classification_dict():
     """
-    Subroutine to generate a dictionary of dictionaries providing handicaps for
-    each classification band and a list prestige rounds for each category from
-    data files.
-    Appropriate for 2023 ArcheryGB age groups and classifications
+    Generate AGB outdoor classification data.
+
+    Generate a dictionary of dictionaries providing handicaps for each
+    classification band and a list prestige rounds for each category from data files.
+    Appropriate for 2023 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
+    None
 
     Returns
     -------
@@ -88,7 +112,6 @@ def _make_AGB_outdoor_classification_dict():
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-
     # Lists of prestige rounds defined by 'codename' of 'Round' class
     # TODO: convert this to json?
     prestige_imperial = [
@@ -188,7 +211,7 @@ def _make_AGB_outdoor_classification_dict():
 
                 class_HC = np.empty(len(AGB_classes))
                 min_dists = np.empty((len(AGB_classes), 3))
-                for i, classification in enumerate(AGB_classes):
+                for i in range(len(AGB_classes)):
                     # Assign handicap for this classification
                     class_HC[i] = (
                         bowstyle["datum"]
@@ -231,7 +254,8 @@ def _make_AGB_outdoor_classification_dict():
                         except IndexError as e:
                             # Shouldn't really get here...
                             print(
-                                f"{e} cannot select minimum distances for {gender} and {age['age_group']}"
+                                f"{e} cannot select minimum distances for "
+                                f"{gender} and {age['age_group']}"
                             )
                             min_dists[i, :] = dists[-3:]
 
@@ -299,11 +323,14 @@ def _make_AGB_outdoor_classification_dict():
 
 def _make_AGB_indoor_classification_dict():
     """
-    Subroutine to generate a dictionary of dictionaries providing handicaps for
-    each classification band
+    Generate AGB outdoor classification data.
+    
+    Generate a dictionary of dictionaries providing handicaps for
+    each classification band.
 
     Parameters
     ----------
+    None
 
     Returns
     -------
@@ -316,7 +343,6 @@ def _make_AGB_indoor_classification_dict():
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-
     AGB_indoor_classes = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
     # Generate dict of classifications
@@ -344,11 +370,14 @@ def _make_AGB_indoor_classification_dict():
 
 def _make_AGB_field_classification_dict():
     """
-    Subroutine to generate a dictionary of dictionaries providing handicaps for
-    each classification band
+    Generate AGB outdoor classification data.
+    
+    Generate a dictionary of dictionaries providing handicaps for
+    each classification band.
 
     Parameters
     ----------
+    None
 
     Returns
     -------
@@ -361,7 +390,6 @@ def _make_AGB_field_classification_dict():
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-
     AGB_field_classes = [
         "Grand Master Bowman",
         "Master Bowman",
@@ -498,8 +526,10 @@ del _make_AGB_field_classification_dict
 
 def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age_group):
     """
-    Subroutine to calculate a classification from a score given suitable inputs
-    Appropriate for 2023 ArcheryGB age groups and classifications
+    Calculate AGB outdoor classification from score.
+    
+    Calculate a classification from a score given suitable inputs.
+    Appropriate for 2023 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -524,7 +554,6 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-
     # TODO: Need routines to sanitise/deal with variety of user inputs
 
     # TODO: Should this be defined outside the function to reduce I/O or does
@@ -571,8 +600,8 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
     if roundname not in AGB_outdoor_classifications[groupname]["prestige_rounds"]:
         # TODO: a list of dictionary keys is super dodgy python...
         #   can this be improved?
-        for item in list(class_data.keys())[0:3]:
-            del class_data[item]
+        for MB_class in list(class_data.keys())[0:3]:
+            del class_data[MB_class]
 
         # If not prestige, what classes are eligible based on category and distance
         to_del = []
@@ -602,8 +631,10 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
 
 def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
     """
-    Subroutine to calculate classification scores for a specific category and round
-    Appropriate for 2023 ArcheryGB age groups and classifications
+    Calculate AGB outdoor classification scores for category.
+    
+    Subroutine to calculate classification scores for a specific category and round.
+    Appropriate for 2023 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -626,7 +657,6 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
     all_outdoor_rounds = rounds.read_json_to_round_dict(
@@ -645,7 +675,7 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
 
     # Get scores required on this round for each classification
     class_scores = []
-    for i, class_i in enumerate(group_data["classes"]):
+    for i in range(len(group_data["classes"])):
         class_scores.append(
             hc_eq.score_for_round(
                 all_outdoor_rounds[roundname],
@@ -674,8 +704,10 @@ def calculate_AGB_indoor_classification(
     roundname, score, bowstyle, gender, age_group, hc_scheme="AGBold"
 ):
     """
-    Subroutine to calculate a classification from a score given suitable inputs
-    Appropriate for 2023 ArcheryGB age groups and classifications
+    Calculate AGB indoor classification from score.
+    
+    Subroutine to calculate a classification from a score given suitable inputs.
+    Appropriate for 2023 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -702,7 +734,6 @@ def calculate_AGB_indoor_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-
     # TODO: Need routines to sanitise/deal with variety of user inputs
 
     # TODO: Should this be defined outside the function to reduce I/O or does
@@ -741,11 +772,11 @@ def calculate_AGB_indoor_classification(
 
     # What is the highest classification this score gets?
     to_del = []
-    for item in class_data:
-        if class_data[item] > score:
+    for score_bound in class_data:
+        if class_data[score_bound] > score:
             to_del.append(item)
-    for item in to_del:
-        del class_data[item]
+    for del_class in to_del:
+        del class_data[del_class]
 
     # NB No fiddle for Worcester required with this logic...
     # Beware of this later on, however, if we wish to rectify the 'anomaly'
@@ -762,8 +793,10 @@ def AGB_indoor_classification_scores(
     roundname, bowstyle, gender, age_group, hc_scheme="AGBold"
 ):
     """
-    Subroutine to calculate classification scores for a specific category and round
-    Appropriate ArcheryGB age groups and classifications
+    Calculate AGB indoor classification scores for category.
+    
+    Subroutine to calculate classification scores for a specific category and round.
+    Appropriate ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -788,7 +821,6 @@ def AGB_indoor_classification_scores(
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
     """
-
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
     all_indoor_rounds = rounds.read_json_to_round_dict(
@@ -826,7 +858,9 @@ def AGB_indoor_classification_scores(
 
 def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_group):
     """
-    Subroutine to calculate a classification from a score given suitable inputs
+    Calculate AGB field classification from score.
+    
+    Subroutine to calculate a classification from a score given suitable inputs.
 
     Parameters
     ----------
@@ -851,7 +885,6 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-
     # TODO: Need routines to sanitise/deal with variety of user inputs
 
     # TODO: Should this be defined outside the function to reduce I/O or does
@@ -881,23 +914,25 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
         and roundname != "wa_field_24_blue"
     ):
         return "unclassified"
-    else:
-        # What is the highest classification this score gets?
-        class_scores = dict(zip(group_data["classes"], group_data["class_scores"]))
-        for item in class_scores:
-            if class_scores[item] > score:
-                pass
-            else:
-                return item
 
-        # if lower than 3rd class score return "UC"
-        return "unclassified"
+    # What is the highest classification this score gets?
+    class_scores = dict(zip(group_data["classes"], group_data["class_scores"]))
+    for item in class_scores:
+        if class_scores[item] > score:
+            pass
+        else:
+            return item
+
+    # if lower than 3rd class score return "UC"
+    return "unclassified"
 
 
 def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
     """
-    Subroutine to calculate classification scores for a specific category and round
-    Appropriate ArcheryGB age groups and classifications
+    Calculate AGB field classification scores for category.
+    
+    Subroutine to calculate classification scores for a specific category and round.
+    Appropriate ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -920,7 +955,6 @@ def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
     """
-
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
     all_field_rounds = rounds.read_json_to_round_dict(
