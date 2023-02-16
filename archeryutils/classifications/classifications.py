@@ -2,7 +2,7 @@ import numpy as np
 import json
 from pathlib import Path
 
-from archeryutils import rounds
+from archeryutils import rounds, load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
 
 
@@ -137,7 +137,7 @@ def _make_AGB_outdoor_classification_dict():
     dists = [90, 70, 60, 50, 40, 30, 20, 15]
     padded_dists = [90, 90] + dists
 
-    all_outdoor_rounds = rounds.read_json_to_round_dict(
+    all_outdoor_rounds = load_rounds.read_json_to_round_dict(
         [
             "AGB_outdoor_imperial.json",
             "AGB_outdoor_metric.json",
@@ -529,7 +529,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
 
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
-    all_outdoor_rounds = rounds.read_json_to_round_dict(
+    all_outdoor_rounds = load_rounds.read_json_to_round_dict(
         [
             "AGB_outdoor_imperial.json",
             "AGB_outdoor_metric.json",
@@ -629,7 +629,7 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
 
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
-    all_outdoor_rounds = rounds.read_json_to_round_dict(
+    all_outdoor_rounds = load_rounds.read_json_to_round_dict(
         [
             "AGB_outdoor_imperial.json",
             "AGB_outdoor_metric.json",
@@ -707,7 +707,7 @@ def calculate_AGB_indoor_classification(
 
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
-    all_indoor_rounds = rounds.read_json_to_round_dict(
+    all_indoor_rounds = load_rounds.read_json_to_round_dict(
         [
             "AGB_indoor.json",
             "WA_indoor.json",
@@ -791,7 +791,7 @@ def AGB_indoor_classification_scores(
 
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
-    all_indoor_rounds = rounds.read_json_to_round_dict(
+    all_indoor_rounds = load_rounds.read_json_to_round_dict(
         [
             "AGB_indoor.json",
             "WA_indoor.json",
@@ -856,7 +856,7 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
 
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
-    all_field_rounds = rounds.read_json_to_round_dict(
+    all_field_rounds = load_rounds.read_json_to_round_dict(
         [
             "WA_field.json",
         ]
@@ -923,7 +923,7 @@ def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
 
     # TODO: Should this be defined outside the function to reduce I/O or does
     #   it have no effect?
-    all_field_rounds = rounds.read_json_to_round_dict(
+    all_field_rounds = load_rounds.read_json_to_round_dict(
         [
             "WA_field.json",
         ]
