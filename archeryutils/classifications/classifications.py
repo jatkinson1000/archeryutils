@@ -324,7 +324,7 @@ def _make_AGB_outdoor_classification_dict():
 def _make_AGB_indoor_classification_dict():
     """
     Generate AGB outdoor classification data.
-    
+
     Generate a dictionary of dictionaries providing handicaps for
     each classification band.
 
@@ -371,7 +371,7 @@ def _make_AGB_indoor_classification_dict():
 def _make_AGB_field_classification_dict():
     """
     Generate AGB outdoor classification data.
-    
+
     Generate a dictionary of dictionaries providing handicaps for
     each classification band.
 
@@ -527,7 +527,7 @@ del _make_AGB_field_classification_dict
 def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age_group):
     """
     Calculate AGB outdoor classification from score.
-    
+
     Calculate a classification from a score given suitable inputs.
     Appropriate for 2023 ArcheryGB age groups and classifications.
 
@@ -632,7 +632,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
 def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
     """
     Calculate AGB outdoor classification scores for category.
-    
+
     Subroutine to calculate classification scores for a specific category and round.
     Appropriate for 2023 ArcheryGB age groups and classifications.
 
@@ -705,7 +705,7 @@ def calculate_AGB_indoor_classification(
 ):
     """
     Calculate AGB indoor classification from score.
-    
+
     Subroutine to calculate a classification from a score given suitable inputs.
     Appropriate for 2023 ArcheryGB age groups and classifications.
 
@@ -794,7 +794,7 @@ def AGB_indoor_classification_scores(
 ):
     """
     Calculate AGB indoor classification scores for category.
-    
+
     Subroutine to calculate classification scores for a specific category and round.
     Appropriate ArcheryGB age groups and classifications.
 
@@ -859,7 +859,7 @@ def AGB_indoor_classification_scores(
 def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_group):
     """
     Calculate AGB field classification from score.
-    
+
     Subroutine to calculate a classification from a score given suitable inputs.
 
     Parameters
@@ -930,7 +930,7 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
 def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
     """
     Calculate AGB field classification scores for category.
-    
+
     Subroutine to calculate classification scores for a specific category and round.
     Appropriate ArcheryGB age groups and classifications.
 

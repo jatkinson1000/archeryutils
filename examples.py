@@ -335,5 +335,3 @@ if __name__ == "__main__":
     print(
         f"A score of 1295 on a {load_rounds.AGB_outdoor_imperial.bristol_i.name} is a discrete handicap of {hc_from_score}."
     )
-   
-    rounds.AGB_outdoor_imperial.bristol_i.get_info()

@@ -83,6 +83,14 @@ def print_handicap_table(
         "Ladies": "L",
     }
 
+    if not isinstance(hcs, np.ndarray):
+        if isinstance(hcs, list):
+            hcs = np.array(hcs)
+        elif isinstance(hcs, float) or isinstance(hcs, int):
+            hcs = np.array([hcs])
+        else:
+            raise TypeError(f"Expected float or ndarray for hcs.")
+
     table = np.empty([len(hcs), len(round_list) + 1])
     table[:, 0] = hcs[:]
     for i, round_i in enumerate(round_list):
