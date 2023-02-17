@@ -8,8 +8,7 @@ from archeryutils.rounds import Pass, Round
 
 def read_json_to_round_dict(json_filelist):
     """
-    Subroutine to return round information read in from a json file as a dictionary of
-    rounds
+    Read round information from a json file into a dictionary of rounds.
 
     Parameters
     ----------
@@ -19,9 +18,6 @@ def read_json_to_round_dict(json_filelist):
     Returns
     -------
     round_dict : dict of str : rounds.Round
-
-    References
-    ----------
     """
     if not isinstance(json_filelist, list):
         json_filelist = [json_filelist]
@@ -135,28 +131,48 @@ def read_json_to_round_dict(json_filelist):
 
 class DotDict(dict):
     """
-    A subclass of dict to provide dot notation access to a dictionary
-
-    Attributes
-    ----------
-
-    Methods
-    -------
+    A subclass of dict to provide dot notation access to a dictionary.
 
     References
-    -------
+    ----------
     https://goodcode.io/articles/python-dict-object/
     """
 
     def __getattr__(self, name):
+        """
+        getter.
+
+        Parameters
+        ----------
+        name : str
+            name of attribute to look for in self
+        """
         if name in self:
             return self[name]
         raise AttributeError(self._attribute_err_msg(name))
 
     def __setattr__(self, name, value):
+        """
+        setter.
+        
+        Parameters
+        ----------
+        name : str
+            name of attribute to look for in self
+        value : any
+            value to set for attribute matching name
+        """
         self[name] = value
 
     def __delattr__(self, name):
+        """
+        delete.
+
+        Parameters
+        ----------
+        name : str
+            name of attribute to delete from self
+        """
         if name in self:
             del self[name]
         else:

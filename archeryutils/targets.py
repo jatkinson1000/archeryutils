@@ -1,32 +1,24 @@
-# Author        : Jack Atkinson
-#
-# Contributors  : Jack Atkinson
-#
-# Date Created  : 2022-08-16
-# Last Modified : 2022-08-18 by Jack Atkinson
-#
-# Summary       : definition of a target class for archery applications
-#
+"""Class to represent a Target for archery applications."""
 
 from archeryutils.constants import YARD_TO_METRE
 
 
 class Target:
     """
-    A class used to represent a target
+    Class to represent a target.
 
     Attributes
     ----------
     diameter : float
-        Target face diameter in [centimetres]
+        Target face diameter in [metres]
+    scoring_system : str
+        target face/scoring system type
     distance : float
-        Linear distance from archer to target
+        linear distance from archer to target
     native_dist_unit : str
         The native unit distance is measured in
-    scoring_system : str
-        the type of target face (scoring system) used
     indoor : bool
-        is this an indoor event (use large arrow diameter)
+        is round indoors for arrow diameter purposes? default = False
 
     Methods
     -------
@@ -42,20 +34,6 @@ class Target:
         native_dist_unit=None,
         indoor=False,
     ):
-        """
-        Parameters
-        ----------
-        diameter : float
-            face diameter in [metres]
-        scoring_system : str
-            target face/scoring system type
-        distance : float
-            linear distance from archer to target
-        native_dist_unit : str
-            The native unit distance is measured in
-        indoor : bool
-            is round indoors for arrow diameter purposes? default = False
-        """
         systems = [
             "5_zone",
             "10_zone",
@@ -118,14 +96,10 @@ class Target:
 
     def max_score(self):
         """
-        max_score
-        returns the maximum numerical score possible on this target (i.e. not X)
-
-        Parameters
-        ----------
+        Return the maximum numerical score possible on this target (i.e. not X).
 
         Returns
-        ----------
+        -------
         max_score : float
             maximum score possible on this target face
         """

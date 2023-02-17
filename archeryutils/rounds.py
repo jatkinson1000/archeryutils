@@ -1,13 +1,4 @@
-# Author        : Jack Atkinson
-#
-# Contributors  : Jack Atkinson
-#
-# Date Created  : 2022-08-16
-# Last Modified : 2022-08-22 by Jack Atkinson
-#
-# Summary       : definition of classes to define rounds for archery applications
-#
-
+"""Classes to define a Pass and Round for archery applications."""
 import numpy as np
 
 from archeryutils.targets import Target
@@ -16,15 +7,25 @@ from archeryutils.constants import YARD_TO_METRE
 
 class Pass:
     """
-    A class used to represent a Pass, a subunit of a Round
-      e.g. a single distance or half
+    A class used to represent a Pass.
+
+    This class represents a pass of arrows, i.e. a subunit of a Round.
+    e.g. a single distance or half
 
     Attributes
     ----------
-    target : Target
-        a Target class representing the target used
     n_arrows : int
-        the number of arrows shot at the target in this Pass
+        number of arrows in this pass
+    diameter : float
+        face diameter in [metres]
+    scoring_system : str
+        target face/scoring system type
+    distance : float
+        linear distance from archer to target
+    dist_unit : str
+        The unit distance is measured in. default = 'metres'
+    indoor : bool
+        is round indoors for arrow diameter purposes? default = False
 
     Methods
     -------
@@ -41,67 +42,52 @@ class Pass:
         dist_unit="metres",
         indoor=False,
     ):
-        """
-        Parameters
-        ----------
-        n_arrows : int
-            number of arrows in this pass
-        diameter : float
-            face diameter in [metres]
-        scoring_system : str
-            target face/scoring system type
-        distance : float
-            linear distance from archer to target
-        dist_unit : str
-            The unit distance is measured in. default = 'metres'
-        indoor : bool
-            is round indoors for arrow diameter purposes? default = False
-        """
-
         self.n_arrows = n_arrows
         self.target = Target(diameter, scoring_system, distance, dist_unit, indoor)
 
     @property
     def distance(self):
+        """Get distance."""
         return self.target.distance
 
     @property
     def native_dist_unit(self):
+        """Get native_dist_unit."""
         return self.target.native_dist_unit
 
     @property
     def diameter(self):
+        """Get diameter."""
         return self.target.diameter
 
     @property
     def scoring_system(self):
+        """Get scoring_system."""
         return self.target.scoring_system
 
     @property
     def indoor(self):
+        """Get indoor."""
         return self.target.indoor
 
     def max_score(self):
         """
-        max_score
-        returns the maximum numerical score possible on this pass (not counting x's)
-
-        Parameters
-        ----------
+        Return the maximum numerical score possible on this pass (not counting x's).
 
         Returns
-        ----------
+        -------
         max_score : float
             maximum score possible on this pass
         """
-
         return self.n_arrows * self.target.max_score()
 
 
 class Round:
     """
-    A class used to represent a Round
-    Made up of a number of Passes
+    Class representing a Round.
+
+    Describes an archer round made up of a number of Passes.
+    e.g. for different distances.
 
     Attributes
     ----------
@@ -109,6 +95,12 @@ class Round:
         Formal name of the round
     passes : list of Pass
         a list of Pass classes making up the round
+    location : str or None
+        string identifing where the round is shot
+    body : str or None
+        string identifing the governing body the round belongs to
+    family : str or None
+        string identifing the family the round belongs to (e.g. wa1440, western, etc.)
 
     Methods
     -------
@@ -119,22 +111,14 @@ class Round:
 
     """
 
-    def __init__(self, name, passes, location=None, body=None, family=None):
-        """
-        Parameters
-        ----------
-        name : str
-            Formal name of the round
-        passes : list of Pass
-            a list of Pass classes making up the round
-        location : str or None
-            string identifing where the round is shot
-        body : str or None
-            string identifing the governing body the round belongs to
-        family : str or None
-            string identifing the family the round belongs to (e.g. wa1440, western, etc.)
-
-        """
+    def __init__(
+        self,
+        name,
+        passes,
+        location=None,
+        body=None,
+        family=None,
+    ):
         self.name = name
         self.passes = passes
         self.location = location
@@ -142,16 +126,7 @@ class Round:
         self.family = family
 
     def get_info(self):
-        """
-        method get_info()
-        Prints information about the round
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        """
+        """Print information about the Round."""
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
             if pass_i.native_dist_unit == "yard":
@@ -166,24 +141,18 @@ class Round:
 
     def max_score(self):
         """
-        max_score
-        returns the maximum numerical score possible on this round (not counting x's)
-
-        Parameters
-        ----------
+        Return the maximum numerical score possible on this round (not counting x's).
 
         Returns
-        ----------
+        -------
         max_score : float
             maximum score possible on this round
         """
-
         return np.sum([pass_i.max_score() for pass_i in self.passes])
 
     def max_distance(self, unit=False):
         """
-        max_distance
-        returns the maximum distance shot on this round along with the unit (optional)
+        Return the maximum distance shot on this round along with the unit (optional).
 
         Parameters
         ----------
@@ -191,7 +160,7 @@ class Round:
             Return unit as well as numerical value?
 
         Returns
-        ----------
+        -------
         max_dist : float
             maximum distance shot in this round
         (max_dist, unit) : tuple (float, str)
