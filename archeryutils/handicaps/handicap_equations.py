@@ -186,8 +186,7 @@ def sigma_t(
     hc_dat: HcParams,
 ) -> Union[float, np.ndarray]:
     """
-    Calculate the angular deviation for a given handicap scheme, handicap value,
-    and distance.
+    Calculate angular deviation for given scheme, handicap, and distance.
 
     Parameters
     ----------
@@ -284,8 +283,11 @@ def sigma_r(
     hc_dat: HcParams,
 ) -> Union[float, np.ndarray]:
     """
-    Calculate the angular deviation for a given handicap scheme, handicap value,
-    and data. Wraps around sigma_t() and multiplies by distance.
+    Calculate deviation for a given scheme and handicap value.
+    
+    Standard deviation as a proxy for 'group size' based on
+    handicap parameters, scheme, and distance.
+    Wraps around sigma_t() and multiplies by distance.
 
     Parameters
     ----------
@@ -309,7 +311,7 @@ def sigma_r(
     return sig_r
 
 
-def arrow_score(
+def arrow_score(  # pylint: disable=too-many-branches
     target: targets.Target,
     handicap: Union[float, np.ndarray],
     hc_sys: str,
