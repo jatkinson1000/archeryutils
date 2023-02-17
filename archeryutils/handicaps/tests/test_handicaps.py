@@ -18,6 +18,7 @@ class TestSigmaT:
     test_agb_array()
         test if expected sigma_t returned for AGB from array of floats
     """
+
     def test_agb_float(self):
         """
         Check that sigma_t(handicap=float) returns expected value for a case.
@@ -70,6 +71,7 @@ class TestSigmaR:
     test_array()
         test if expected sigma_r returned for AGB from array of floats
     """
+
     def test_float(self):
         """
         Check that sigma_r(handicap=float) returns expected value for a case.

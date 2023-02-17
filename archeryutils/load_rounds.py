@@ -1,3 +1,4 @@
+"""Module to load round data from json files into DotDicts."""
 import json
 from pathlib import Path
 import warnings
@@ -22,7 +23,7 @@ def read_json_to_round_dict(json_filelist):
     References
     ----------
     """
-    if type(json_filelist) is not list:
+    if not isinstance(json_filelist, list):
         json_filelist = [json_filelist]
 
     round_data_files = Path(__file__).parent.joinpath("round_data_files")
@@ -31,7 +32,7 @@ def read_json_to_round_dict(json_filelist):
 
     for json_file in json_filelist:
         json_filepath = round_data_files.joinpath(json_file)
-        with open(json_filepath) as json_round_file:
+        with open(json_filepath, encoding="utf-8") as json_round_file:
             data = json.load(json_round_file)
 
         for round_i in data:
@@ -150,8 +151,7 @@ class DotDict(dict):
     def __getattr__(self, name):
         if name in self:
             return self[name]
-        else:
-            raise AttributeError(self._attribute_err_msg(name))
+        raise AttributeError(self._attribute_err_msg(name))
 
     def __setattr__(self, name, value):
         self[name] = value

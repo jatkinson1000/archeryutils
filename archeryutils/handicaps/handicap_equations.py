@@ -284,7 +284,7 @@ def sigma_r(
 ) -> Union[float, np.ndarray]:
     """
     Calculate deviation for a given scheme and handicap value.
-    
+
     Standard deviation as a proxy for 'group size' based on
     handicap parameters, scheme, and distance.
     Wraps around sigma_t() and multiplies by distance.
