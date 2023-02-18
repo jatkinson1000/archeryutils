@@ -1,5 +1,5 @@
 """
-Code for doing things with archery handicap equations.
+Code for calculating Archery GB classifications.
 
 Extended Summary
 ----------------
@@ -28,25 +28,74 @@ import json
 from pathlib import Path
 import numpy as np
 
-from archeryutils import rounds, load_rounds
+from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
 
 
 def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
-    # Read in age group info as list of dicts
+    """
+    Read AGB age categories in from neighbouring json file to list of dicts.
+
+    Parameters
+    ----------
+    age_file : Path
+        path to json file
+
+    Returns
+    -------
+    ages : list of dict
+        AGB age category data from file
+
+    References
+    ----------
+    Archery GB Rules of Shooting
+    """
     with open(age_file, encoding="utf-8") as json_file:
         ages = json.load(json_file)
     return ages
 
 
 def read_bowstyles_json(bowstyles_file=Path(__file__).parent / "AGB_bowstyles.json"):
-    # Read in bowstyleclass info as list of dicts
+    """
+    Read AGB  bowstyles in from neighbouring json file to list of dicts.
+
+    Parameters
+    ----------
+    bowstyles_file : Path
+        path to json file
+
+    Returns
+    -------
+    bowstyles : list of dict
+        AGB bowstyle category data from file
+
+    References
+    ----------
+    Archery GB Rules of Shooting
+    """
     with open(bowstyles_file, encoding="utf-8") as json_file:
         bowstyles = json.load(json_file)
     return bowstyles
 
 
 def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
+    """
+    Read AGB genders in from neighbouring json file to list of dicts.
+
+    Parameters
+    ----------
+    genders_file : Path
+        path to json file
+
+    Returns
+    -------
+    genders : list of dict
+        AGB gender data from file
+
+    References
+    ----------
+    Archery GB Rules of Shooting
+    """
     # Read in gender info as list
     with open(genders_file, encoding="utf-8") as json_file:
         genders = json.load(json_file)["genders"]
@@ -54,6 +103,23 @@ def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
 
 
 def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
+    """
+    Read AGB classes in from neighbouring json file to list of dicts.
+
+    Parameters
+    ----------
+    classes_file : Path
+        path to json file
+
+    Returns
+    -------
+    classes : list of dict
+        AGB classes data from file
+
+    References
+    ----------
+    Archery GB Rules of Shooting
+    """
     # Read in classification names as dict
     with open(classes_file, encoding="utf-8") as json_file:
         classes = json.load(json_file)
@@ -606,19 +672,19 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         # If not prestige, what classes are eligible based on category and distance
         to_del = []
         round_max_dist = all_outdoor_rounds[roundname].max_distance()
-        for item in class_data:
-            if class_data[item]["min_dists"][-1] > round_max_dist:
-                to_del.append(item)
-        for item in to_del:
-            del class_data[item]
+        for class_i in class_data.items():
+            if class_i[1]["min_dists"][-1] > round_max_dist:
+                to_del.append(class_i[0])
+        for class_i in to_del:
+            del class_data[class_i]
 
     # Classification based on score - accounts for fractional HC
     # TODO Make this its own function for later use in geberating tables?
     # Of those classes remaining, what is the highest classification this score gets?
     to_del = []
-    for item in class_data:
-        if class_data[item]["score"] > score:
-            to_del.append(item)
+    for item in class_data.items():
+        if item[1]["score"] > score:
+            to_del.append(item[0])
     for item in to_del:
         del class_data[item]
 
@@ -978,8 +1044,11 @@ def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
 
 if __name__ == "__main__":
 
-    for item in AGB_outdoor_classifications:
-        print(item, AGB_outdoor_classifications[item]["prestige_rounds"])
+    for classification in AGB_outdoor_classifications.items():
+        print(
+            classification[0],
+            classification[1]["prestige_rounds"],
+        )
 
     print(
         calculate_AGB_outdoor_classification(

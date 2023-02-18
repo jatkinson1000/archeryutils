@@ -154,7 +154,7 @@ class DotDict(dict):
     def __setattr__(self, name, value):
         """
         setter.
-        
+
         Parameters
         ----------
         name : str
