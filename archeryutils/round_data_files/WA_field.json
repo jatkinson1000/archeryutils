@@ -126,10 +126,10 @@
    "location" : "field",
    "body" : "WA",
    "family" : "wafield_24_unmarked",
-   "passes" : [{"n_arrows" : 9, "diameter" : 20, "scoring" : "WA_field", "distance" : 7.5, "dist_unit" : "metre"},
-               {"n_arrows" : 9, "diameter" : 40, "scoring" : "WA_field", "distance" : 15, "dist_unit" : "metre"},
-               {"n_arrows" : 9, "diameter" : 60, "scoring" : "WA_field", "distance" : 22.5, "dist_unit" : "metre"},
-               {"n_arrows" : 9, "diameter" : 80, "scoring" : "WA_field", "distance" : 40, "dist_unit" : "metre"}
+   "passes" : [{"n_arrows" : 18, "diameter" : 20, "scoring" : "WA_field", "distance" : 7.5, "dist_unit" : "metre"},
+               {"n_arrows" : 18, "diameter" : 40, "scoring" : "WA_field", "distance" : 15, "dist_unit" : "metre"},
+               {"n_arrows" : 18, "diameter" : 60, "scoring" : "WA_field", "distance" : 22.5, "dist_unit" : "metre"},
+               {"n_arrows" : 18, "diameter" : 80, "scoring" : "WA_field", "distance" : 40, "dist_unit" : "metre"}
 
               ]
   },
@@ -138,10 +138,10 @@
    "location" : "field",
    "body" : "WA",
    "family" : "wafield_12_unmarked",
-   "passes" : [{"n_arrows" : 18, "diameter" : 20, "scoring" : "WA_field", "distance" : 7.5, "dist_unit" : "metre"},
-               {"n_arrows" : 18, "diameter" : 40, "scoring" : "WA_field", "distance" : 15, "dist_unit" : "metre"},
-               {"n_arrows" : 18, "diameter" : 60, "scoring" : "WA_field", "distance" : 22.5, "dist_unit" : "metre"},
-               {"n_arrows" : 18, "diameter" : 80, "scoring" : "WA_field", "distance" : 37.5, "dist_unit" : "metre"}
+   "passes" : [{"n_arrows" : 9, "diameter" : 20, "scoring" : "WA_field", "distance" : 7.5, "dist_unit" : "metre"},
+               {"n_arrows" : 9, "diameter" : 40, "scoring" : "WA_field", "distance" : 15, "dist_unit" : "metre"},
+               {"n_arrows" : 9, "diameter" : 60, "scoring" : "WA_field", "distance" : 22.5, "dist_unit" : "metre"},
+               {"n_arrows" : 9, "diameter" : 80, "scoring" : "WA_field", "distance" : 37.5, "dist_unit" : "metre"}
               ]
   },
   {"name" : "WA Field 24 Blue Mixed",
@@ -161,10 +161,10 @@
                {"n_arrows" : 3, "diameter" : 80, "scoring" : "WA_field", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 3, "diameter" : 80, "scoring" : "WA_field", "distance" : 45, "dist_unit" : "metre"},
                {"n_arrows" : 3, "diameter" : 80, "scoring" : "WA_field", "distance" : 50, "dist_unit" : "metre"},
-               {"n_arrows" : 18, "diameter" : 20, "scoring" : "WA_field", "distance" : 7.5, "dist_unit" : "metre"},
-               {"n_arrows" : 18, "diameter" : 40, "scoring" : "WA_field", "distance" : 15, "dist_unit" : "metre"},
-               {"n_arrows" : 18, "diameter" : 60, "scoring" : "WA_field", "distance" : 22.5, "dist_unit" : "metre"},
-               {"n_arrows" : 18, "diameter" : 80, "scoring" : "WA_field", "distance" : 37.5, "dist_unit" : "metre"}
+               {"n_arrows" : 9, "diameter" : 20, "scoring" : "WA_field", "distance" : 7.5, "dist_unit" : "metre"},
+               {"n_arrows" : 9, "diameter" : 40, "scoring" : "WA_field", "distance" : 15, "dist_unit" : "metre"},
+               {"n_arrows" : 9, "diameter" : 60, "scoring" : "WA_field", "distance" : 22.5, "dist_unit" : "metre"},
+               {"n_arrows" : 9, "diameter" : 80, "scoring" : "WA_field", "distance" : 37.5, "dist_unit" : "metre"}
               ]
   },
   {"name" : "WA Field 24 Yellow Marked",
