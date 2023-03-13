@@ -30,7 +30,7 @@ class Target:
         self,
         diameter,
         scoring_system,
-        distance=None,
+        distance,
         native_dist_unit='metre',
         indoor=False,
     ):
