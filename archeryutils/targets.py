@@ -31,7 +31,7 @@ class Target:
         diameter,
         scoring_system,
         distance=None,
-        native_dist_unit=None,
+        native_dist_unit='metre',
         indoor=False,
     ):
         systems = [
@@ -82,7 +82,7 @@ class Target:
             native_dist_unit = "metre"
         else:
             raise ValueError(
-                f"distance unit '{native_dist_unit}' not recognised. "
+                f"Distance unit '{native_dist_unit}' not recognised. "
                 "Select from 'yard' or 'metre'."
             )
 
@@ -125,6 +125,7 @@ class Target:
             return 5.0
         if self.scoring_system in ["Beiter_hit_miss"]:
             return 1.0
+        # NB: Should be hard (but not impossible) to get here without catching earlier.
         raise ValueError(
-            f"target face '{self.scoring_system}' has no specified maximum score"
+            f"Target face '{self.scoring_system}' has no specified maximum score."
         )
