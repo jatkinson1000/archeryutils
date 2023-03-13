@@ -21,7 +21,7 @@ class Pass:
     scoring_system : str
         target face/scoring system type
     distance : float
-        linear distance from archer to target
+        linear distance from archer to target in [metres]
     dist_unit : str
         The unit distance is measured in. default = 'metres'
     indoor : bool
@@ -42,7 +42,7 @@ class Pass:
         dist_unit="metres",
         indoor=False,
     ):
-        self.n_arrows = n_arrows
+        self.n_arrows = abs(n_arrows)
         self.target = Target(diameter, scoring_system, distance, dist_unit, indoor)
 
     @property
@@ -125,20 +125,6 @@ class Round:
         self.body = body
         self.family = family
 
-    def get_info(self):
-        """Print information about the Round."""
-        print(f"A {self.name} consists of {len(self.passes)} passes:")
-        for pass_i in self.passes:
-            if pass_i.native_dist_unit == "yard":
-                native_dist = pass_i.target.distance / YARD_TO_METRE
-            else:
-                native_dist = pass_i.distance
-            print(
-                f"\t- {pass_i.n_arrows} arrows "
-                f"at a {pass_i.diameter * 100.0} cm target "
-                f"at {native_dist} {pass_i.native_dist_unit}s."
-            )
-
     def max_score(self):
         """
         Return the maximum numerical score possible on this round (not counting x's).
@@ -180,3 +166,17 @@ class Round:
         if unit:
             return (max_dist, d_unit)
         return max_dist
+
+    def get_info(self):
+        """Print information about the Round."""
+        print(f"A {self.name} consists of {len(self.passes)} passes:")
+        for pass_i in self.passes:
+            if pass_i.native_dist_unit == "yard":
+                native_dist = pass_i.target.distance / YARD_TO_METRE
+            else:
+                native_dist = pass_i.distance
+            print(
+                f"\t- {pass_i.n_arrows} arrows "
+                f"at a {pass_i.diameter * 100.0:.1f} cm target "
+                f"at {native_dist:.1f} {pass_i.native_dist_unit}s."
+            )
