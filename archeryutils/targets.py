@@ -39,7 +39,6 @@ class Target:
             "10_zone",
             "10_zone_compound",
             "10_zone_6_ring",
-            "10_zone_6_ring_compound",
             "10_zone_5_ring",
             "10_zone_5_ring_compound",
             "WA_field",

@@ -445,7 +445,7 @@ def arrow_score(  # pylint: disable=too-many-branches
     elif target.scoring_system == "Beiter_hit_miss":
         s_bar = 1 - np.exp(-((((tar_dia / 2) + arw_rad) / sig_r) ** 2))
 
-    elif target.scoring_system == "Worcester":
+    elif target.scoring_system in ["Worcester", "IFAA_field_expert"]:
         s_bar = 5 - sum(
             np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
             for n in range(1, 6)
