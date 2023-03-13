@@ -131,6 +131,8 @@ class HcParams:
     AA2_f2 = 0.185
     AA2_d0 = 50.0
 
+    AA_arw_d_out = 5.0e-3
+
     arw_d_in = 9.3e-3
     arw_d_out = 5.5e-3
 
@@ -173,6 +175,7 @@ class HcParams:
         json_hc_params.AA2_f1 = paramsdict["AA2_f1"]
         json_hc_params.AA2_f2 = paramsdict["AA2_f2"]
         json_hc_params.AA2_d0 = paramsdict["AA2_d0"]
+        json_hc_params.AA_arw_d_out = paramsdict["AA_arw_d_out"]
         json_hc_params.arw_d_in = paramsdict["arrow_diameter_indoors"]
         json_hc_params.arw_d_out = paramsdict["arrow_diameter_outdoors"]
 
@@ -344,8 +347,8 @@ def arrow_score(  # pylint: disable=too-many-branches
     - The construction of the graduated handicap tables for target archery
       Lane, D (2013)
     """
-    # Set arrow diameter. Use provided, if AGBold scheme set value, otherwise select
-    # default from params based on in/out
+    # Set arrow diameter. Use provided, if AGBold or AA/AA2 scheme set value,
+    # otherwise select default from params based on in-/out-doors
     if arw_d is None:
         if hc_sys == "AGBold":
             arw_rad = hc_dat.AGBo_arw_d / 2.0
@@ -353,7 +356,10 @@ def arrow_score(  # pylint: disable=too-many-branches
             if target.indoor:
                 arw_rad = hc_dat.arw_d_in / 2.0
             else:
-                arw_rad = hc_dat.arw_d_out / 2.0
+                if hc_sys in ["AA", "AA2"]:
+                    arw_rad = hc_dat.AA_arw_d_out / 2.0
+                else:
+                    arw_rad = hc_dat.arw_d_out / 2.0
     else:
         arw_rad = arw_d / 2.0
 
