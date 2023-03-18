@@ -967,11 +967,15 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
 
     # Check Round is appropriate:
     # Sighted can have any Red 24, unsightes can have any blue 24
-    if bowstyle.lower() in ["compound", "recurve"] and "wa_field_24_red_" not in roundname:
+    if (
+        bowstyle.lower() in ("compound", "recurve")
+        and "wa_field_24_red_" not in roundname
+    ):
         return "unclassified"
     if (
-        bowstyle.lower() in ["barebow", "longbow", "traditional", "flatbow"]
-        and "wa_field_24_blue_" not in roundname):
+        bowstyle.lower() in ("barebow", "longbow", "traditional", "flatbow")
+        and "wa_field_24_blue_" not in roundname
+    ):
         return "unclassified"
 
     # What is the highest classification this score gets?

@@ -58,6 +58,13 @@ wa1440_70 = Round(
         Pass(36, 0.8, "10_zone", 30, "metre", False),
     ],
 )
+wa720_70 = Round(
+    "WA 720 70m",
+    [
+        Pass(36, 1.22, "10_zone", 70, "metre", False),
+        Pass(36, 1.22, "10_zone", 70, "metre", False),
+    ],
+)
 metric122_30 = Round(
     "Metric 122-30",
     [
@@ -70,6 +77,10 @@ metric122_30 = Round(
 class TestSigmaT:
     """
     Class to test the sigma_t() function of handicap_equations.
+
+    Uses output of the code when run at a particular point in time and then
+    'frozen' to make sure future developments do not introduce unexpected changes.
+    Deliberate changes to the schemes may affect these values and require changes.
 
     Methods
     -------
@@ -152,6 +163,10 @@ class TestSigmaT:
 class TestSigmaR:
     """
     Class to test the sigma_r() function of handicap_equations.
+
+    Uses output of the code when run at a particular point in time and then
+    'frozen' to make sure future developments do not introduce unexpected changes.
+    Deliberate changes to the schemes may affect these values and require changes.
 
     Methods
     -------
@@ -236,6 +251,10 @@ class TestArrowScore:
     Class to test the arrow_score() function of handicap_equations.
 
     Tests all of the different types of target faces.
+    Uses output of the code when run at a particular point in time and then
+    'frozen' to make sure future developments do not introduce unexpected changes.
+    Deliberate changes to the schemes may affect these values and require changes.
+
 
     Methods
     -------
@@ -287,7 +306,8 @@ class TestArrowScore:
         self, hc_system, indoor, arrow_diameter, arrow_score_expected
     ):
         """
-        Check correct arrow scores returned for different handicap systems
+        Check arrow scores returned for different handicap systems and arrow diameters.
+
         """
         arrow_score = hc_eq.arrow_score(
             target=Target(0.40, "10_zone_5_ring_compound", 20.0, "metre", indoor),
@@ -334,6 +354,10 @@ class TestArrowScore:
 class TestScoreForRound:
     """
     Class to test the score_for_round() function of handicap_equations.
+
+    Uses output of the code when run at a particular point in time and then
+    'frozen' to make sure future developments do not introduce unexpected changes.
+    Deliberate changes to the schemes may affect these values and require changes.
 
     Methods
     -------
@@ -449,10 +473,7 @@ class TestHandicapFromScore:
     test_score_over_max()
     test_score_of_zero()
     test_score_below_zero()
-    test_maximum_score_metric_122_30()
-    test_maximum_score_western()
-    test_maximum_score_vegas300()
-    test_maximum_score_vegas300()
+    test_maximum_score()
 
     References
     ----------
@@ -540,55 +561,69 @@ class TestHandicapFromScore:
             hc_func.handicap_from_score(-9999, test_round, "AGB", hc_params)
 
     @pytest.mark.parametrize(
-        "hc_system,handicap_expected",
+        "hc_system,testround,max_score,handicap_expected",
         [
-            ("AGB", 11),
-            ("AA", 107),
-            # ("AA2", 107),
+            ("AGB", metric122_30, 720, 11),
+            ("AA", metric122_30, 720, 107),
+            # ("AA2", metric122_30, 720, 107),
+            ("AGB", western, 864, 9),
+            ("AGBold", western, 864, 6),
+            ("AGB", vegas300, 300, 3),
+            ("AA", vegas300, 300, 119),
+            # ("AA2", vegas300, 300, 119),
         ],
     )
-    def test_maximum_score_metric_122_30(self, hc_system, handicap_expected):
+    def test_maximum_score(self, hc_system, testround, max_score, handicap_expected):
         """
-        Check correct arrow scores returned for different handicap systems
+        Check correct handicap returned for max score.
         """
 
         handicap = hc_func.handicap_from_score(
-            720, metric122_30, hc_system, hc_params, None, True
+            max_score, testround, hc_system, hc_params, None, True
         )
 
         assert handicap == handicap_expected
 
     @pytest.mark.parametrize(
-        "hc_system,handicap_expected",
+        "hc_system,testround,testscore,handicap_expected",
         [
-            ("AGB", 9),
-            ("AGBold", 6),
+            # Generic scores:
+            ("AGB", wa720_70, 700, 1),
+            ("AGBold", wa720_70, 700, 1),
+            ("AA", wa720_70, 700, 119),
+            # ("AA2", wa720_70, 700, 107),
+            ("AGB", wa720_70, 500, 44),
+            ("AGBold", wa720_70, 500, 40),
+            ("AA", wa720_70, 500, 64),
+            # ("AA2", wa720_70, 500, 107),
+            # Score on the lower bound of a band:
+            ("AGB", wa720_70, 283, 63),
+            ("AGBold", wa720_70, 286, 53),
+            ("AA", wa720_70, 280, 39),
+            # ("AA2", wa720_70, 500, 107),
+            # Score on upper bound of a band:
+            ("AGB", wa720_70, 486, 46),
+            ("AGBold", wa720_70, 488, 41),
+            ("AA", wa720_70, 491, 62),
+            # ("AA2", wa720_70, 500, 107),
+            # Scores that give negative AGB handicaps:
+            ("AGB", wa720_70, 710, -5),
+            ("AGBold", wa720_70, 710, -5),
+            # ("AA", wa720_70, 491, 62)
+            # ("AA2", wa720_70, 500, 107),
+            # Scores that give 0 AA handicaps:
+            ("AA", wa720_70, 52, 0),
+            # ("AA2", wa720_70, 500, 107),
         ],
     )
-    def test_maximum_score_western(self, hc_system, handicap_expected):
+    def test_int_precision(self, hc_system, testround, testscore, handicap_expected):
         """
-        Check correct arrow scores returned for different handicap systems
+        Check correct handicap returned for various scores.
         """
         handicap = hc_func.handicap_from_score(
-            864, western, hc_system, hc_params, None, True
+            testscore, testround, hc_system, hc_params, None, True
         )
-        assert handicap == handicap_expected
 
-    @pytest.mark.parametrize(
-        "hc_system,handicap_expected",
-        [
-            ("AGB", 3),
-            ("AA", 119),
-            # ("AA2", 119),
-        ],
-    )
-    def test_maximum_score_vegas300(self, hc_system, handicap_expected):
-        """
-        Check correct arrow scores returned for different handicap systems
-        """
-        handicap = hc_func.handicap_from_score(
-            300, vegas300, hc_system, hc_params, None, True
-        )
         assert handicap == handicap_expected
 
     # def test_float_AA2(self):

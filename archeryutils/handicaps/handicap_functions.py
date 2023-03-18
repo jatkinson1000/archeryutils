@@ -343,19 +343,11 @@ def handicap_from_score(
         hc = xcur
 
     # Force integer precision if required.
-    # NB: added complexity - not trivial as we require asymmetric rounding.
-    #                        hence the if <0 clause
     if int_prec:
-        if np.sign(hc) < 0:
-            if hc_sys in ("AA", "AA2"):
-                hc = np.ceil(hc)
-            else:
-                hc = np.floor(hc)
+        if hc_sys in ("AA", "AA2"):
+            hc = np.floor(hc)
         else:
-            if hc_sys in ("AA", "AA2"):
-                hc = np.floor(hc)
-            else:
-                hc = np.ceil(hc)
+            hc = np.ceil(hc)
 
         sc, _ = hc_eq.score_for_round(
             rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=True
