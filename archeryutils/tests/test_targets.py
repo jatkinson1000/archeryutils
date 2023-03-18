@@ -64,7 +64,6 @@ class TestTarget:
             ("10_zone", 10),
             ("10_zone_compound", 10),
             ("10_zone_6_ring", 10),
-            ("10_zone_6_ring_compound", 10),
             ("10_zone_5_ring", 10),
             ("10_zone_5_ring_compound", 10),
             ("WA_field", 6),

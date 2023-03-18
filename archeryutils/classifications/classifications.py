@@ -296,15 +296,15 @@ def _make_AGB_outdoor_classification_dict():
                         try:
                             # Age group trickery:
                             # U16 males and above step down for B2 and beyond
-                            if gender.lower() in ["male"] and age[
+                            if gender.lower() in ("male") and age[
                                 "age_group"
-                            ].lower().replace(" ", "") in [
+                            ].lower().replace(" ", "") in (
                                 "adult",
                                 "50+",
                                 "under21",
                                 "under18",
                                 "under16",
-                            ]:
+                            ):
                                 min_dists[i, :] = padded_dists[
                                     max_dist_index + i - 3 : max_dist_index + i
                                 ]
@@ -359,10 +359,7 @@ def _make_AGB_outdoor_classification_dict():
                             prestige_rounds.append(roundname)
                     # Additional fix for Male 50+, U18, and U16
                     if gender.lower() == "male":
-                        if (
-                            age["age_group"].lower() == "50+"
-                            or age["age_group"].lower() == "under 18"
-                        ):
+                        if age["age_group"].lower() in ("50+", "under 18"):
                             prestige_rounds.append(prestige_720[1])
                         elif age["age_group"].lower() == "under 16":
                             prestige_rounds.append(prestige_720[2])
@@ -632,7 +629,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         ]
     )
 
-    if bowstyle.lower() in ["traditional", "flatbow"]:
+    if bowstyle.lower() in ("traditional", "flatbow"):
         bowstyle = "Barebow"
 
     groupname = get_groupname(bowstyle, gender, age_group)
@@ -641,17 +638,16 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
     hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
-    class_scores = []
-    for i, class_i in enumerate(group_data["classes"]):
-        class_scores.append(
-            hc_eq.score_for_round(
-                all_outdoor_rounds[roundname],
-                group_data["class_HC"][i],
-                "AGB",
-                hc_params,
-                round_score_up=True,
-            )[0]
-        )
+    class_scores = [
+        hc_eq.score_for_round(
+            all_outdoor_rounds[roundname],
+            group_data["class_HC"][i],
+            "AGB",
+            hc_params,
+            round_score_up=True,
+        )[0]
+        for i, class_i in enumerate(group_data["classes"])
+    ]
     # class_data = dict(
     #    zip(group_data["classes"], zip(group_data["min_dists"], class_scores))
     # )
@@ -740,17 +736,16 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
     hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
-    class_scores = []
-    for i in range(len(group_data["classes"])):
-        class_scores.append(
-            hc_eq.score_for_round(
-                all_outdoor_rounds[roundname],
-                group_data["class_HC"][i],
-                "AGB",
-                hc_params,
-                round_score_up=True,
-            )[0]
-        )
+    class_scores = [
+        hc_eq.score_for_round(
+            all_outdoor_rounds[roundname],
+            group_data["class_HC"][i],
+            "AGB",
+            hc_params,
+            round_score_up=True,
+        )[0]
+        for i in range(len(group_data["classes"]))
+    ]
 
     # Reduce list based on other criteria besides handicap
     # is it a prestige round? If not remove MB scores
@@ -813,7 +808,7 @@ def calculate_AGB_indoor_classification(
 
     # deal with reduced categories:
     age_group = "Adult"
-    if bowstyle.lower() not in ["compound"]:
+    if bowstyle.lower() not in ("compound"):
         bowstyle = "Recurve"
 
     groupname = get_groupname(bowstyle, gender, age_group)
@@ -822,17 +817,16 @@ def calculate_AGB_indoor_classification(
     hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
-    class_scores = []
-    for i, class_i in enumerate(group_data["classes"]):
-        class_scores.append(
-            hc_eq.score_for_round(
-                all_indoor_rounds[roundname],
-                group_data["class_HC"][i],
-                hc_scheme,
-                hc_params,
-                round_score_up=True,
-            )[0]
-        )
+    class_scores = [
+        hc_eq.score_for_round(
+            all_indoor_rounds[roundname],
+            group_data["class_HC"][i],
+            hc_scheme,
+            hc_params,
+            round_score_up=True,
+        )[0]
+        for i, class_i in enumerate(group_data["classes"])
+    ]
 
     class_data = dict(zip(group_data["classes"], class_scores))
 
@@ -840,7 +834,7 @@ def calculate_AGB_indoor_classification(
     to_del = []
     for score_bound in class_data:
         if class_data[score_bound] > score:
-            to_del.append(item)
+            to_del.append(score_bound)
     for del_class in to_del:
         del class_data[del_class]
 
@@ -898,7 +892,7 @@ def AGB_indoor_classification_scores(
 
     # deal with reduced categories:
     age_group = "Adult"
-    if bowstyle.lower() not in ["compound"]:
+    if bowstyle.lower() not in ("compound"):
         bowstyle = "Recurve"
 
     groupname = get_groupname(bowstyle, gender, age_group)
@@ -907,17 +901,16 @@ def AGB_indoor_classification_scores(
     hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
-    class_scores = []
-    for i, class_i in enumerate(group_data["classes"]):
-        class_scores.append(
-            hc_eq.score_for_round(
-                all_indoor_rounds[roundname],
-                group_data["class_HC"][i],
-                hc_scheme,
-                hc_params,
-                round_score_up=True,
-            )[0]
-        )
+    class_scores = [
+        hc_eq.score_for_round(
+            all_indoor_rounds[roundname],
+            group_data["class_HC"][i],
+            hc_scheme,
+            hc_params,
+            round_score_up=True,
+        )[0]
+        for i, class_i in enumerate(group_data["classes"])
+    ]
 
     return class_scores
 
@@ -962,7 +955,7 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
     )
 
     # deal with reduced categories:
-    if age_group.lower().replace(" ", "") in ["adult", "50+", "under21"]:
+    if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
         age_group = "Adult"
     else:
         age_group = "Under 18"
@@ -973,10 +966,10 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
     group_data = AGB_field_classifications[groupname]
 
     # Check Round is appropriate:
-    if bowstyle.lower() in ["compound", "recurve"] and roundname != "wa_field_24_red":
+    if bowstyle.lower() in ("compound", "recurve") and roundname != "wa_field_24_red":
         return "unclassified"
     if (
-        bowstyle.lower() in ["barebow", "longbow", "traditional", "flatbow"]
+        bowstyle.lower() in ("barebow", "longbow", "traditional", "flatbow")
         and roundname != "wa_field_24_blue"
     ):
         return "unclassified"
@@ -1030,7 +1023,7 @@ def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
     )
 
     # deal with reduced categories:
-    if age_group.lower().replace(" ", "") in ["adult", "50+", "under21"]:
+    if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
         age_group = "Adult"
     else:
         age_group = "Under 18"
@@ -1043,7 +1036,6 @@ def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
 
 
 if __name__ == "__main__":
-
     for classification in AGB_outdoor_classifications.items():
         print(
             classification[0],

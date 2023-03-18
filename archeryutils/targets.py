@@ -31,7 +31,7 @@ class Target:
         diameter,
         scoring_system,
         distance,
-        native_dist_unit='metre',
+        native_dist_unit="metre",
         indoor=False,
     ):
         systems = [
@@ -55,7 +55,7 @@ class Target:
                 f"""Please select from '{"', '".join(systems)}'."""
             )
 
-        if native_dist_unit in [
+        if native_dist_unit in (
             "Yard",
             "yard",
             "Yards",
@@ -66,9 +66,9 @@ class Target:
             "yd",
             "Yds",
             "yds",
-        ]:
+        ):
             native_dist_unit = "yard"
-        elif native_dist_unit in [
+        elif native_dist_unit in (
             "Metre",
             "metre",
             "Metres",
@@ -77,7 +77,7 @@ class Target:
             "m",
             "Ms",
             "ms",
-        ]:
+        ):
             native_dist_unit = "metre"
         else:
             raise ValueError(
@@ -102,27 +102,27 @@ class Target:
         max_score : float
             maximum score possible on this target face
         """
-        if self.scoring_system in ["5_zone"]:
+        if self.scoring_system in ("5_zone"):
             return 9.0
-        if self.scoring_system in [
+        if self.scoring_system in (
             "10_zone",
             "10_zone_compound",
             "10_zone_6_ring",
             "10_zone_6_ring_compound",
             "10_zone_5_ring",
             "10_zone_5_ring_compound",
-        ]:
+        ):
             return 10.0
-        if self.scoring_system in ["WA_field"]:
+        if self.scoring_system in ("WA_field"):
             return 6.0
-        if self.scoring_system in [
+        if self.scoring_system in (
             "IFAA_field",
             "IFAA_field_expert",
             "Worcester",
             "Worcester_2_ring",
-        ]:
+        ):
             return 5.0
-        if self.scoring_system in ["Beiter_hit_miss"]:
+        if self.scoring_system in ("Beiter_hit_miss"):
             return 1.0
         # NB: Should be hard (but not impossible) to get here without catching earlier.
         raise ValueError(

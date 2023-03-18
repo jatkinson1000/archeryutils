@@ -32,7 +32,6 @@ def read_json_to_round_dict(json_filelist):
             data = json.load(json_round_file)
 
         for round_i in data:
-
             # Assign location
             if "location" not in round_i:
                 warnings.warn(
@@ -41,7 +40,7 @@ def read_json_to_round_dict(json_filelist):
                 )
                 round_i["location"] = None
                 round_i["indoor"] = False
-            elif round_i["location"] in [
+            elif round_i["location"] in (
                 "i",
                 "I",
                 "indoors",
@@ -52,10 +51,10 @@ def read_json_to_round_dict(json_filelist):
                 "Indoor",
                 "In",
                 "Inside",
-            ]:
+            ):
                 round_i["indoor"] = True
                 round_i["location"] = "indoor"
-            elif round_i["location"] in [
+            elif round_i["location"] in (
                 "o",
                 "O",
                 "outdoors",
@@ -66,17 +65,17 @@ def read_json_to_round_dict(json_filelist):
                 "Outdoor",
                 "Out",
                 "Outside",
-            ]:
+            ):
                 round_i["indoor"] = False
                 round_i["location"] = "outdoor"
-            elif round_i["location"] in [
+            elif round_i["location"] in (
                 "f",
                 "F",
                 "field",
                 "Field",
                 "woods",
                 "Woods",
-            ]:
+            ):
                 round_i["indoor"] = False
                 round_i["location"] = "field"
             else:
@@ -105,18 +104,17 @@ def read_json_to_round_dict(json_filelist):
                 round_i["family"] = ""
 
             # Assign passes
-            passes = []
-            for pass_i in round_i["passes"]:
-                passes.append(
-                    Pass(
-                        pass_i["n_arrows"],
-                        pass_i["diameter"] / 100,
-                        pass_i["scoring"],
-                        pass_i["distance"],
-                        dist_unit=pass_i["dist_unit"],
-                        indoor=round_i["indoor"],
-                    )
+            passes = [
+                Pass(
+                    pass_i["n_arrows"],
+                    pass_i["diameter"] / 100,
+                    pass_i["scoring"],
+                    pass_i["distance"],
+                    dist_unit=pass_i["dist_unit"],
+                    indoor=round_i["indoor"],
                 )
+                for pass_i in round_i["passes"]
+            ]
 
             round_dict[round_i["codename"]] = Round(
                 round_i["name"],

@@ -3,6 +3,7 @@
     "AGB_step": 3.5,
     "AGB_ang_0": 5.0e-4,
     "AGB_kd": 0.00365,
+
     "AGBo_datum": 12.9,
     "AGBo_step": 3.6,
     "AGBo_ang_0": 5.0e-4,
@@ -11,14 +12,17 @@
     "AGBo_k3": 4.3,
     "AGBo_p1": 2.0,
     "AGBo_arw_d": 7.14e-3,
+
     "AA_k0": 2.37,
     "AA_ks": 0.027,
     "AA_kd": 0.004,
+    
     "AA2_k0": 2.57,
     "AA2_ks": 0.027,
     "AA2_f1": 0.815,
     "AA2_f2": 0.185,
     "AA2_d0": 50.0,
+    
     "AA_arw_d_out": 5.0e-3,
     "arrow_diameter_indoors": 9.3e-3,
     "arrow_diameter_outdoors": 5.5e-3

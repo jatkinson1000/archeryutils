@@ -92,7 +92,7 @@ def print_handicap_table(
             raise TypeError("Expected float or ndarray for hcs.")
 
     table = np.empty([len(hcs), len(round_list) + 1])
-    table[:, 0] = hcs[:]
+    table[:, 0] = hcs.copy()
     for i, round_i in enumerate(round_list):
         table[:, i + 1], _ = hc_eq.score_for_round(
             round_i, hcs, hc_sys, hc_dat, arrow_d, round_score_up=round_scores_up
@@ -155,8 +155,6 @@ def print_handicap_table(
             f.write(output_str)
         print("Done.")
 
-    return
-
 
 def handicap_from_score(
     score: float,
@@ -200,7 +198,7 @@ def handicap_from_score(
     max_score = rnd.max_score()
     if score > max_score:
         raise ValueError(
-            f"The score of {score} provided is greater that the maximum of {max_score} "
+            f"The score of {score} provided is greater than the maximum of {max_score} "
             f"for a {rnd.name}."
         )
     if score <= 0.0:
@@ -211,33 +209,40 @@ def handicap_from_score(
 
     if score == max_score:
         # Deal with max score before root finding
-        # start high and drop down until no longer ceiling to max score
-        # (i.e. >= max_score - 1.0)
-        if hc_sys in ["AA", "AA2"]:
+        # start high and drop down until no longer rounding to max score
+        # (i.e. >= max_score - 1.0 for AGB, and >= max_score - 0.5 for AA, AA2, and AGBold)
+        if hc_sys in ("AA", "AA2"):
             hc = 175.0
             dhc = -0.01
         else:
             hc = -75.0
             dhc = 0.01
+
+        # Set rounding limit
+        if hc_sys in ("AA", "AA2", "AGBold"):
+            round_lim = 0.5
+        else:
+            round_lim = 1.0
+
         s_max, _ = hc_eq.score_for_round(
             rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=False
         )
-        # Work down to where we would round up (ceil) to max score - ceiling approach
-        while s_max > max_score - 1.0:
+        # Work down to where we would round or ceil to max score
+        while s_max > max_score - round_lim:
             hc = hc + dhc
             s_max, _ = hc_eq.score_for_round(
                 rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=False
             )
         hc = hc - dhc  # Undo final iteration that overshoots
         if int_prec:
-            if hc_sys in ["AA", "AA2"]:
+            if hc_sys in ("AA", "AA2"):
                 hc = np.ceil(hc)
             else:
                 hc = np.floor(hc)
         else:
             warnings.warn(
                 "Handicap requested for maximum score without integer precision.\n"
-                "Value returned will be handicap required for score > max_score-1.\n"
+                "Value returned will be first handiucap that achieves this score.\n"
                 "This could cause issues if you are not working in integers.",
                 UserWarning,
             )
@@ -250,7 +255,7 @@ def handicap_from_score(
         )
         return val - scr
 
-    if hc_sys in ["AA", "AA2"]:
+    if hc_sys in ("AA", "AA2"):
         x = [-250.0, 175.0]
     else:
         x = [-75.0, 300.0]
@@ -342,12 +347,12 @@ def handicap_from_score(
     #                        hence the if <0 clause
     if int_prec:
         if np.sign(hc) < 0:
-            if hc_sys in ["AA", "AA2"]:
+            if hc_sys in ("AA", "AA2"):
                 hc = np.ceil(hc)
             else:
                 hc = np.floor(hc)
         else:
-            if hc_sys in ["AA", "AA2"]:
+            if hc_sys in ("AA", "AA2"):
                 hc = np.floor(hc)
             else:
                 hc = np.ceil(hc)
@@ -359,7 +364,7 @@ def handicap_from_score(
         # Check that you can't get the same score from a larger handicap when
         # working in integers
         min_h_flag = False
-        if hc_sys in ["AA", "AA2"]:
+        if hc_sys in ("AA", "AA2"):
             hstep = -1.0
         else:
             hstep = 1.0

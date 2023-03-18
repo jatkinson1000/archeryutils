@@ -105,6 +105,30 @@ if __name__ == "__main__":
     )
 
     hc_func.print_handicap_table(
+        np.arange(125.0, 9.0, -1.0),
+        "AA2",
+        [load_rounds.WA_outdoor.wa720_70, load_rounds.AGB_outdoor_metric.metric_122_50, load_rounds.AGB_outdoor_metric.metric_122_30, load_rounds.WA_outdoor.wa1440_90, load_rounds.AGB_outdoor_imperial.york],
+        hc_params,
+        printout=False,
+        round_scores_up=False,
+        clean_gaps=False,
+        filename="AA2_outdoor_metric_table.dat",
+        arrow_d=0.0,
+        int_prec=False,
+    )
+    hc_func.print_handicap_table(
+        np.arange(0.0, 151.0, 1.0),
+        "AGBold",
+        [load_rounds.WA_outdoor.wa720_70, load_rounds.AGB_outdoor_metric.metric_122_50, load_rounds.AGB_outdoor_metric.metric_122_30, load_rounds.WA_outdoor.wa1440_90],
+        hc_params,
+        printout=False,
+        round_scores_up=False,
+        clean_gaps=True,
+        filename="AGBold_outdoor_metric_table.dat",
+        int_prec=True,
+    )
+
+    hc_func.print_handicap_table(
         np.arange(0.0, 151.0, 1.0),
         "AGB",
         list(load_rounds.AGB_indoor.values()),
@@ -334,4 +358,15 @@ if __name__ == "__main__":
     )
     print(
         f"A score of 1295 on a {load_rounds.AGB_outdoor_imperial.bristol_i.name} is a discrete handicap of {hc_from_score}."
+    )
+    hc_func.print_handicap_table(
+        np.arange(125.0, 9.0, -1.0),
+        "AA2",
+        [load_rounds.WA_outdoor.wa720_70, load_rounds.AGB_outdoor_metric.metric_122_50, load_rounds.AGB_outdoor_metric.metric_122_30, load_rounds.WA_outdoor.wa1440_90, load_rounds.AGB_outdoor_imperial.york],
+        hc_params,
+        printout=False,
+        round_scores_up=False,
+        clean_gaps=False,
+        filename="AA2_outdoor_metric_table.dat",
+        int_prec=False,
     )

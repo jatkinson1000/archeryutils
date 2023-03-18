@@ -356,7 +356,7 @@ def arrow_score(  # pylint: disable=too-many-branches
             if target.indoor:
                 arw_rad = hc_dat.arw_d_in / 2.0
             else:
-                if hc_sys in ["AA", "AA2"]:
+                if hc_sys in ("AA", "AA2"):
                     arw_rad = hc_dat.AA_arw_d_out / 2.0
                 else:
                     arw_rad = hc_dat.arw_d_out / 2.0
@@ -445,7 +445,7 @@ def arrow_score(  # pylint: disable=too-many-branches
     elif target.scoring_system == "Beiter_hit_miss":
         s_bar = 1 - np.exp(-((((tar_dia / 2) + arw_rad) / sig_r) ** 2))
 
-    elif target.scoring_system in ["Worcester", "IFAA_field_expert"]:
+    elif target.scoring_system in ("Worcester", "IFAA_field_expert"):
         s_bar = 5 - sum(
             np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
             for n in range(1, 6)
@@ -507,19 +507,18 @@ def score_for_round(
         average score for each pass in the round
 
     """
-    pass_score = []
-    for pass_i in rnd.passes:
-        pass_score.append(
-            pass_i.n_arrows
-            * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
-        )
+    pass_score = [
+        pass_i.n_arrows
+        * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
+        for pass_i in rnd.passes
+    ]
 
     round_score = np.sum(pass_score, axis=0)
 
     if round_score_up:
         # Old AGB system uses plain rounding rather than ceil of other schemes
-        if hc_sys == "AGBold":
-            round_score = np.round(round_score)
+        if hc_sys in ("AGBold", "AA", "AA2"):
+            round_score = np.around(round_score)
         else:
             round_score = np.ceil(round_score)
 
