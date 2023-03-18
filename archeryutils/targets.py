@@ -1,32 +1,24 @@
-# Author        : Jack Atkinson
-#
-# Contributors  : Jack Atkinson
-#
-# Date Created  : 2022-08-16
-# Last Modified : 2022-08-18 by Jack Atkinson
-#
-# Summary       : definition of a target class for archery applications
-#
+"""Class to represent a Target for archery applications."""
 
 from archeryutils.constants import YARD_TO_METRE
 
 
 class Target:
     """
-    A class used to represent a target
+    Class to represent a target.
 
     Attributes
     ----------
     diameter : float
-        Target face diameter in [centimetres]
+        Target face diameter in [metres]
+    scoring_system : str
+        target face/scoring system type
     distance : float
-        Linear distance from archer to target
+        linear distance from archer to target
     native_dist_unit : str
         The native unit distance is measured in
-    scoring_system : str
-        the type of target face (scoring system) used
     indoor : bool
-        is this an indoor event (use large arrow diameter)
+        is round indoors for arrow diameter purposes? default = False
 
     Methods
     -------
@@ -38,30 +30,15 @@ class Target:
         self,
         diameter,
         scoring_system,
-        distance=None,
-        native_dist_unit=None,
+        distance,
+        native_dist_unit="metre",
         indoor=False,
     ):
-        """
-        Parameters
-        ----------
-        diameter : float
-            face diameter in [metres]
-        scoring_system : str
-            target face/scoring system type
-        distance : float
-            linear distance from archer to target
-        native_dist_unit : str
-            The native unit distance is measured in
-        indoor : bool
-            is round indoors for arrow diameter purposes? default = False
-        """
         systems = [
             "5_zone",
             "10_zone",
             "10_zone_compound",
             "10_zone_6_ring",
-            "10_zone_6_ring_compound",
             "10_zone_5_ring",
             "10_zone_5_ring_compound",
             "WA_field",
@@ -74,11 +51,11 @@ class Target:
 
         if scoring_system not in systems:
             raise ValueError(
-                "Invalid Target Face Type specified.\n"
-                "Please select from '{}'.".format("', '".join(systems))
+                f"""Invalid Target Face Type specified.\n"""
+                f"""Please select from '{"', '".join(systems)}'."""
             )
 
-        if native_dist_unit in [
+        if native_dist_unit in (
             "Yard",
             "yard",
             "Yards",
@@ -89,9 +66,9 @@ class Target:
             "yd",
             "Yds",
             "yds",
-        ]:
+        ):
             native_dist_unit = "yard"
-        elif native_dist_unit in [
+        elif native_dist_unit in (
             "Metre",
             "metre",
             "Metres",
@@ -100,11 +77,11 @@ class Target:
             "m",
             "Ms",
             "ms",
-        ]:
+        ):
             native_dist_unit = "metre"
         else:
             raise ValueError(
-                f"distance unit '{native_dist_unit}' not recognised. "
+                f"Distance unit '{native_dist_unit}' not recognised. "
                 "Select from 'yard' or 'metre'."
             )
 
@@ -118,40 +95,36 @@ class Target:
 
     def max_score(self):
         """
-        max_score
-        returns the maximum numerical score possible on this target (i.e. not X)
-
-        Parameters
-        ----------
+        Return the maximum numerical score possible on this target (i.e. not X).
 
         Returns
-        ----------
+        -------
         max_score : float
             maximum score possible on this target face
         """
-        if self.scoring_system in ["5_zone"]:
+        if self.scoring_system in ("5_zone"):
             return 9.0
-        elif self.scoring_system in [
+        if self.scoring_system in (
             "10_zone",
             "10_zone_compound",
             "10_zone_6_ring",
             "10_zone_6_ring_compound",
             "10_zone_5_ring",
             "10_zone_5_ring_compound",
-        ]:
+        ):
             return 10.0
-        elif self.scoring_system in ["WA_field"]:
+        if self.scoring_system in ("WA_field"):
             return 6.0
-        elif self.scoring_system in [
+        if self.scoring_system in (
             "IFAA_field",
             "IFAA_field_expert",
             "Worcester",
             "Worcester_2_ring",
-        ]:
+        ):
             return 5.0
-        elif self.scoring_system in ["Beiter_hit_miss"]:
+        if self.scoring_system in ("Beiter_hit_miss"):
             return 1.0
-        else:
-            raise ValueError(
-                f"target face '{self.scoring_system}' has no specified maximum score"
-            )
+        # NB: Should be hard (but not impossible) to get here without catching earlier.
+        raise ValueError(
+            f"Target face '{self.scoring_system}' has no specified maximum score."
+        )

@@ -1,100 +1,199 @@
-# Author        : Jack Atkinson
-#
-# Contributors  : Jack Atkinson
-#
-# Date Created  : 2022-08-15
-# Last Modified : 2022-08-22 by Jack Atkinson
-#
-# Summary       : Code for archery calculating handicaps using various systems
-#
+"""
+Code for archery handicap scheme calculations using various schemes.
 
-import numpy as np
+Extended Summary
+----------------
+Code to calculate information using a number of schemes:
+  - Old Archery GB (D Lane)
+  - New Archery GB (J Atkinson, 2023)
+  - Old Archery Australia (J Park)
+  - New Archery Australia (J Park)
+Calculates arrow and round scores for a variety of target faces of given
+distance and diameter:
+  - 5-zone
+  - 10-zone
+  - 10-zone 6-ring
+  - 10-zone compound
+  - 10-zone 5-ring
+  - 10-zone 5-ring compound
+  - WA_field
+  - IFAA_field
+  - Beiter-hit-miss
+  - Worcester
+  - Worcester 2-ring)
+
+Routine Listings
+----------------
+HcParams
+sigma_t
+sigma_r
+arrow_score
+score_for_round
+
+References
+----------
+Old AGB - D Lane
+New AGB - J Atkinson
+AA & AA2 - J Park
+"""
 import json
 from typing import Union, Optional, Tuple, List
 from dataclasses import dataclass
+import numpy as np
 
 from archeryutils import targets, rounds
 
 
 @dataclass
 class HcParams:
-    # KEY PARAMETERS AND CONSTANTS FOR NEW AGB HANDICAP SCHEME
-    AGB_datum = 6.0  # offset required to set handicap 0 at desired score
-    AGB_step = 3.5  # percentage change in group size for each handicap step
-    AGB_ang_0 = 5.0e-4  # baseline angle used for group size 0.5 [millirad]
-    AGB_kd = 0.00365  # distance scaling factor [1/metres]
+    """
+    Class to hold information for various handicap schemes.
 
-    # KEY PARAMETERS AND CONSTANTS FOR OLD AGB HANDICAP SCHEME
-    AGBo_datum = 12.9  # offset required to set handicap 0 at desired score
-    AGBo_step = 3.6  # percentage change in group size for each handicap step
-    AGBo_ang_0 = 5.0e-4  # baseline angle used for group size 0.5 [millirad]
-    AGBo_k1 = 1.429e-6  # constant used in handicap equation
-    AGBo_k2 = 1.07  # constant used in handicap equation
-    AGBo_k3 = 4.3  # constant used in handicap equation
-    AGBo_p1 = 2.0  # exponent of distance scaling
-    AGBo_arw_d = 7.14e-3  # arrow diameter used in the old AGB algorithm by D. Lane
+    Attributes
+    ----------
+    KEY PARAMETERS AND CONSTANTS FOR NEW AGB HANDICAP SCHEME
+    AGB_datum : float
+        offset required to set handicap 0 at desired score
+    AGB_step : float
+        percentage change in group size for each handicap step
+    AGB_ang_0 : float
+        baseline angle used for group size 0.5 [millirad]
+    AGB_kd : float
+        distance scaling factor [1/metres]
 
-    # KEY PARAMETERS AND CONSTANTS FOR THE ARCHERY AUSTRALIA SCHEME
-    AA_k0 = 2.37  # offset required to set handicap 100 at desired score
-    AA_ks = 0.027  # change with each step of geometric progression
-    AA_kd = 0.004  # distance scaling factor [1/metres]
+    KEY PARAMETERS AND CONSTANTS FOR OLD AGB HANDICAP SCHEME
+    AGBo_datum : float
+        offset required to set handicap 0 at desired score
+    AGBo_step : float
+        percentage change in group size for each handicap step
+    AGBo_ang_0 : float
+        baseline angle used for group size 0.5 [millirad]
+    AGBo_k1 : float
+        constant used in handicap equation
+    AGBo_k2 : float
+        constant used in handicap equation
+    AGBo_k3 : float
+        constant used in handicap equation
+    AGBo_p1 : float
+        exponent of distance scaling
+    AGBo_arw_d : float
+        arrow diameter used in the old AGB algorithm by D. Lane
 
-    # KEY PARAMETERS AND CONSTANTS FOR THE UPDATED ARCHERY AUSTRALIA SCHEME
-    AA2_k0 = 2.57  # offset required to set handicap 100 at desired score
-    AA2_ks = 0.027  # change with each step of geometric progression
-    AA2_f1 = 0.815  # 'linear' scaling factor
-    AA2_f2 = 0.185  # 'quadratic' scaling factor
-    AA2_d0 = 50.0  # Normalisation distance [metres]
+    KEY PARAMETERS AND CONSTANTS FOR THE ARCHERY AUSTRALIA SCHEME
+    AA_k0 : float
+        offset required to set handicap 100 at desired score
+    AA_ks : float
+        change with each step of geometric progression
+    AA_kd : float
+        distance scaling factor [1/metres]
 
-    # DEFAULT ARROW DIAMETER
-    arw_d_in = 9.3e-3  # Diameter of an indoor arrow [metres]
-    arw_d_out = 5.5e-3  # Diameter of an outdoor arrow [metres]
+    KEY PARAMETERS AND CONSTANTS FOR THE UPDATED ARCHERY AUSTRALIA SCHEME
+    AA2_k0 : float
+        offset required to set handicap 100 at desired score
+    AA2_ks : float
+        change with each step of geometric progression
+    AA2_f1 : float
+        'linear' scaling factor
+    AA2_f2 : float
+        'quadratic' scaling factor
+    AA2_d0 : float
+        Normalisation distance [metres]
+
+    DEFAULT ARROW DIAMETER
+    arw_d_in : float
+        Diameter of an indoor arrow [metres]
+    arw_d_out : float
+        Diameter of an outdoor arrow [metres]
+
+    """
+
+    AGB_datum = 6.0
+    AGB_step = 3.5
+    AGB_ang_0 = 5.0e-4
+    AGB_kd = 0.00365
+
+    AGBo_datum = 12.9
+    AGBo_step = 3.6
+    AGBo_ang_0 = 5.0e-4
+    AGBo_k1 = 1.429e-6
+    AGBo_k2 = 1.07
+    AGBo_k3 = 4.3
+    AGBo_p1 = 2.0
+    AGBo_arw_d = 7.14e-3
+
+    AA_k0 = 2.37
+    AA_ks = 0.027
+    AA_kd = 0.004
+
+    AA2_k0 = 2.57
+    AA2_ks = 0.027
+    AA2_f1 = 0.815
+    AA2_f2 = 0.185
+    AA2_d0 = 50.0
+
+    AA_arw_d_out = 5.0e-3
+
+    arw_d_in = 9.3e-3
+    arw_d_out = 5.5e-3
 
     @classmethod
     def load_json_params(cls, jsonpath):
-        json_HcParams = cls()
-        with open(jsonpath, "r") as read_file:
-            paramsdict = json.load(read_file)
-        json_HcParams.AGB_datum = paramsdict["AGB_datum"]
-        json_HcParams.AGB_step = paramsdict["AGB_step"]
-        json_HcParams.AGB_ang_0 = paramsdict["AGB_ang_0"]
-        json_HcParams.AGB_kd = paramsdict["AGB_kd"]
-        json_HcParams.AGBo_datum = paramsdict["AGBo_datum"]
-        json_HcParams.AGBo_step = paramsdict["AGBo_step"]
-        json_HcParams.AGBo_ang_0 = paramsdict["AGBo_ang_0"]
-        json_HcParams.AGBo_k1 = paramsdict["AGBo_k1"]
-        json_HcParams.AGBo_k2 = paramsdict["AGBo_k2"]
-        json_HcParams.AGBo_k3 = paramsdict["AGBo_k3"]
-        json_HcParams.AGBo_p1 = paramsdict["AGBo_p1"]
-        json_HcParams.AGBo_arw_d = paramsdict["AGBo_arw_d"]
-        json_HcParams.AA_k0 = paramsdict["AA_k0"]
-        json_HcParams.AA_ks = paramsdict["AA_ks"]
-        json_HcParams.AA_kd = paramsdict["AA_kd"]
-        json_HcParams.AA2_k0 = paramsdict["AA2_k0"]
-        json_HcParams.AA2_ks = paramsdict["AA2_ks"]
-        json_HcParams.AA2_f1 = paramsdict["AA2_f1"]
-        json_HcParams.AA2_f2 = paramsdict["AA2_f2"]
-        json_HcParams.AA2_d0 = paramsdict["AA2_d0"]
-        json_HcParams.arw_d_in = paramsdict["arrow_diameter_indoors"]
-        json_HcParams.arw_d_out = paramsdict["arrow_diameter_outdoors"]
+        """
+        Class method to load params from a json file.
 
-        return json_HcParams
+        Parameters
+        ----------
+        jsonpath : str
+            path to json file with handicap parameters
+
+        Returns
+        -------
+        json_hc_params : dataclass
+            dataclass of handicap parameters read from file
+
+        """
+        json_hc_params = cls()
+        with open(jsonpath, "r", encoding="utf-8") as read_file:
+            paramsdict = json.load(read_file)
+        json_hc_params.AGB_datum = paramsdict["AGB_datum"]
+        json_hc_params.AGB_step = paramsdict["AGB_step"]
+        json_hc_params.AGB_ang_0 = paramsdict["AGB_ang_0"]
+        json_hc_params.AGB_kd = paramsdict["AGB_kd"]
+        json_hc_params.AGBo_datum = paramsdict["AGBo_datum"]
+        json_hc_params.AGBo_step = paramsdict["AGBo_step"]
+        json_hc_params.AGBo_ang_0 = paramsdict["AGBo_ang_0"]
+        json_hc_params.AGBo_k1 = paramsdict["AGBo_k1"]
+        json_hc_params.AGBo_k2 = paramsdict["AGBo_k2"]
+        json_hc_params.AGBo_k3 = paramsdict["AGBo_k3"]
+        json_hc_params.AGBo_p1 = paramsdict["AGBo_p1"]
+        json_hc_params.AGBo_arw_d = paramsdict["AGBo_arw_d"]
+        json_hc_params.AA_k0 = paramsdict["AA_k0"]
+        json_hc_params.AA_ks = paramsdict["AA_ks"]
+        json_hc_params.AA_kd = paramsdict["AA_kd"]
+        json_hc_params.AA2_k0 = paramsdict["AA2_k0"]
+        json_hc_params.AA2_ks = paramsdict["AA2_ks"]
+        json_hc_params.AA2_f1 = paramsdict["AA2_f1"]
+        json_hc_params.AA2_f2 = paramsdict["AA2_f2"]
+        json_hc_params.AA2_d0 = paramsdict["AA2_d0"]
+        json_hc_params.AA_arw_d_out = paramsdict["AA_arw_d_out"]
+        json_hc_params.arw_d_in = paramsdict["arrow_diameter_indoors"]
+        json_hc_params.arw_d_out = paramsdict["arrow_diameter_outdoors"]
+
+        return json_hc_params
 
 
 def sigma_t(
-    h: Union[float, np.ndarray],
+    handicap: Union[float, np.ndarray],
     hc_sys: str,
     dist: Union[float, np.ndarray],
     hc_dat: HcParams,
 ) -> Union[float, np.ndarray]:
     """
-    function sigma_t
-    Calculates the angular deviation for a given handicap scheme, handicap value,
-    and distance.
+    Calculate angular deviation for given scheme, handicap, and distance.
 
     Parameters
     ----------
-    h : ndarray or float
+    handicap : ndarray or float
         handicap to calculate sigma_t at
     hc_sys : str
         identifier for handicap system
@@ -118,24 +217,23 @@ def sigma_t(
       Park, J (2014)
       https://doi.org/10.1177%2F1754337114539308
     """
-
     if hc_sys == "AGB":
         # New AGB (Archery GB) System
         # Written by Jack Atkinson
         sig_t = (
             hc_dat.AGB_ang_0
-            * ((1.0 + hc_dat.AGB_step / 100.0) ** (h + hc_dat.AGB_datum))
+            * ((1.0 + hc_dat.AGB_step / 100.0) ** (handicap + hc_dat.AGB_datum))
             * np.exp(hc_dat.AGB_kd * dist)
         )
 
     elif hc_sys == "AGBold":
         # Old AGB (Archery GB) System
         # Written by David Lane (2013)
-        K = hc_dat.AGBo_k1 * hc_dat.AGBo_k2 ** (h + hc_dat.AGBo_k3)
+        K = hc_dat.AGBo_k1 * hc_dat.AGBo_k2 ** (handicap + hc_dat.AGBo_k3)
         F = 1 + K * dist**hc_dat.AGBo_p1
         sig_t = (
             hc_dat.AGBo_ang_0
-            * ((1.0 + hc_dat.AGBo_step / 100.0) ** (h + hc_dat.AGBo_datum))
+            * ((1.0 + hc_dat.AGBo_step / 100.0) ** (handicap + hc_dat.AGBo_datum))
             * F
         )
 
@@ -149,7 +247,7 @@ def sigma_t(
         sig_t = (
             1.0e-3
             * np.sqrt(2)
-            * np.exp(hc_dat.AA_k0 - hc_dat.AA_ks * h + hc_dat.AA_kd * dist)
+            * np.exp(hc_dat.AA_k0 - hc_dat.AA_ks * handicap + hc_dat.AA_kd * dist)
         )
 
     elif hc_sys == "AA2":
@@ -162,7 +260,7 @@ def sigma_t(
         sig_t = (
             np.sqrt(2)
             * 1.0e-3
-            * np.exp(hc_dat.AA2_k0 - hc_dat.AA2_ks * h)
+            * np.exp(hc_dat.AA2_k0 - hc_dat.AA2_ks * handicap)
             * (hc_dat.AA2_f1 + hc_dat.AA2_f2 * dist / hc_dat.AA2_d0)
         )
 
@@ -182,19 +280,21 @@ def sigma_t(
 
 
 def sigma_r(
-    h: Union[float, np.ndarray],
+    handicap: Union[float, np.ndarray],
     hc_sys: str,
     dist: Union[float, np.ndarray],
     hc_dat: HcParams,
 ) -> Union[float, np.ndarray]:
     """
-    function sigma_r
-    Calculates the angular deviation for a given handicap scheme, handicap value
-    Wraps around sigma_t() and multiplies by distance
+    Calculate deviation for a given scheme and handicap value.
+
+    Standard deviation as a proxy for 'group size' based on
+    handicap parameters, scheme, and distance.
+    Wraps around sigma_t() and multiplies by distance.
 
     Parameters
     ----------
-    h : ndarray or float
+    handicap : ndarray or float
         handicap to calculate sigma_t at
     hc_sys : str
         identifier for handicap system
@@ -207,32 +307,28 @@ def sigma_r(
     -------
     sig_r : float or ndarray
         standard deviation of group size [metres]
-
-    References
-    ----------
     """
-    sig_t = sigma_t(h, hc_sys, dist, hc_dat)
+    sig_t = sigma_t(handicap, hc_sys, dist, hc_dat)
     sig_r = dist * sig_t
 
     return sig_r
 
 
-def arrow_score(
+def arrow_score(  # pylint: disable=too-many-branches
     target: targets.Target,
-    h: Union[float, np.ndarray],
+    handicap: Union[float, np.ndarray],
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
 ) -> float:
     """
-    Subroutine to calculate the average arrow score for a given
-    target and handicap rating.
+    Calculate the average arrow score for a given target and handicap rating.
 
     Parameters
     ----------
     target : targets.Target
         A Target class specifying the target to be used
-    h : ndarray or float
+    handicap : ndarray or float
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
@@ -248,9 +344,11 @@ def arrow_score(
 
     References
     ----------
+    - The construction of the graduated handicap tables for target archery
+      Lane, D (2013)
     """
-    # Set arrow diameter. Use provided, if AGBold scheme set value, otherwise select
-    # default from params based on in/out
+    # Set arrow diameter. Use provided, if AGBold or AA/AA2 scheme set value,
+    # otherwise select default from params based on in-/out-doors
     if arw_d is None:
         if hc_sys == "AGBold":
             arw_rad = hc_dat.AGBo_arw_d / 2.0
@@ -258,12 +356,15 @@ def arrow_score(
             if target.indoor:
                 arw_rad = hc_dat.arw_d_in / 2.0
             else:
-                arw_rad = hc_dat.arw_d_out / 2.0
+                if hc_sys in ("AA", "AA2"):
+                    arw_rad = hc_dat.AA_arw_d_out / 2.0
+                else:
+                    arw_rad = hc_dat.arw_d_out / 2.0
     else:
         arw_rad = arw_d / 2.0
 
     tar_dia = target.diameter
-    sig_r = sigma_r(h, hc_sys, target.distance, hc_dat)
+    sig_r = sigma_r(handicap, hc_sys, target.distance, hc_dat)
 
     if target.scoring_system == "5_zone":
         s_bar = (
@@ -344,7 +445,7 @@ def arrow_score(
     elif target.scoring_system == "Beiter_hit_miss":
         s_bar = 1 - np.exp(-((((tar_dia / 2) + arw_rad) / sig_r) ** 2))
 
-    elif target.scoring_system == "Worcester":
+    elif target.scoring_system in ("Worcester", "IFAA_field_expert"):
         s_bar = 5 - sum(
             np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
             for n in range(1, 6)
@@ -373,21 +474,20 @@ def arrow_score(
 
 def score_for_round(
     rnd: rounds.Round,
-    h: Union[float, np.ndarray],
+    handicap: Union[float, np.ndarray],
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
     round_score_up: bool = True,
 ) -> Tuple[float, List[float]]:
     """
-    Subroutine to calculate the average arrow score for a given
-    target and handicap rating.
+    Calculate the average arrow score for a given target and handicap rating.
 
     Parameters
     ----------
     rnd : rounds.Round
         A Round class specifying the round being shot
-    h : ndarray or float
+    handicap : ndarray or float
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
@@ -406,22 +506,19 @@ def score_for_round(
     pass_score : list of float
         average score for each pass in the round
 
-    References
-    ----------
     """
-
-    pass_score = []
-    for Pass_i in rnd.passes:
-        pass_score.append(
-            Pass_i.n_arrows * arrow_score(Pass_i.target, h, hc_sys, hc_dat, arw_d=arw_d)
-        )
+    pass_score = [
+        pass_i.n_arrows
+        * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
+        for pass_i in rnd.passes
+    ]
 
     round_score = np.sum(pass_score, axis=0)
 
     if round_score_up:
         # Old AGB system uses plain rounding rather than ceil of other schemes
-        if hc_sys == "AGBold":
-            round_score = np.round(round_score)
+        if hc_sys in ("AGBold", "AA", "AA2"):
+            round_score = np.around(round_score)
         else:
             round_score = np.ceil(round_score)
 
