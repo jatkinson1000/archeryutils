@@ -194,7 +194,7 @@
    "codename" : "american",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "",
+   "family" : "american",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
@@ -204,7 +204,7 @@
    "codename" : "st_nicholas",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "",
+   "family" : "stnicholas",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
               ]
