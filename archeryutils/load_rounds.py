@@ -1,3 +1,4 @@
+"""Module to load round data from json files into DotDicts."""
 import json
 from pathlib import Path
 import warnings
@@ -7,8 +8,7 @@ from archeryutils.rounds import Pass, Round
 
 def read_json_to_round_dict(json_filelist):
     """
-    Subroutine to return round information read in from a json file as a dictionary of
-    rounds
+    Read round information from a json file into a dictionary of rounds.
 
     Parameters
     ----------
@@ -18,11 +18,8 @@ def read_json_to_round_dict(json_filelist):
     Returns
     -------
     round_dict : dict of str : rounds.Round
-
-    References
-    ----------
     """
-    if type(json_filelist) is not list:
+    if not isinstance(json_filelist, list):
         json_filelist = [json_filelist]
 
     round_data_files = Path(__file__).parent.joinpath("round_data_files")
@@ -31,11 +28,10 @@ def read_json_to_round_dict(json_filelist):
 
     for json_file in json_filelist:
         json_filepath = round_data_files.joinpath(json_file)
-        with open(json_filepath) as json_round_file:
+        with open(json_filepath, encoding="utf-8") as json_round_file:
             data = json.load(json_round_file)
 
         for round_i in data:
-
             # Assign location
             if "location" not in round_i:
                 warnings.warn(
@@ -44,7 +40,7 @@ def read_json_to_round_dict(json_filelist):
                 )
                 round_i["location"] = None
                 round_i["indoor"] = False
-            elif round_i["location"] in [
+            elif round_i["location"] in (
                 "i",
                 "I",
                 "indoors",
@@ -55,10 +51,10 @@ def read_json_to_round_dict(json_filelist):
                 "Indoor",
                 "In",
                 "Inside",
-            ]:
+            ):
                 round_i["indoor"] = True
                 round_i["location"] = "indoor"
-            elif round_i["location"] in [
+            elif round_i["location"] in (
                 "o",
                 "O",
                 "outdoors",
@@ -69,17 +65,17 @@ def read_json_to_round_dict(json_filelist):
                 "Outdoor",
                 "Out",
                 "Outside",
-            ]:
+            ):
                 round_i["indoor"] = False
                 round_i["location"] = "outdoor"
-            elif round_i["location"] in [
+            elif round_i["location"] in (
                 "f",
                 "F",
                 "field",
                 "Field",
                 "woods",
                 "Woods",
-            ]:
+            ):
                 round_i["indoor"] = False
                 round_i["location"] = "field"
             else:
@@ -108,18 +104,17 @@ def read_json_to_round_dict(json_filelist):
                 round_i["family"] = ""
 
             # Assign passes
-            passes = []
-            for pass_i in round_i["passes"]:
-                passes.append(
-                    Pass(
-                        pass_i["n_arrows"],
-                        pass_i["diameter"] / 100,
-                        pass_i["scoring"],
-                        pass_i["distance"],
-                        dist_unit=pass_i["dist_unit"],
-                        indoor=round_i["indoor"],
-                    )
+            passes = [
+                Pass(
+                    pass_i["n_arrows"],
+                    pass_i["diameter"] / 100,
+                    pass_i["scoring"],
+                    pass_i["distance"],
+                    dist_unit=pass_i["dist_unit"],
+                    indoor=round_i["indoor"],
                 )
+                for pass_i in round_i["passes"]
+            ]
 
             round_dict[round_i["codename"]] = Round(
                 round_i["name"],
@@ -134,29 +129,48 @@ def read_json_to_round_dict(json_filelist):
 
 class DotDict(dict):
     """
-    A subclass of dict to provide dot notation access to a dictionary
-
-    Attributes
-    ----------
-
-    Methods
-    -------
+    A subclass of dict to provide dot notation access to a dictionary.
 
     References
-    -------
+    ----------
     https://goodcode.io/articles/python-dict-object/
     """
 
     def __getattr__(self, name):
+        """
+        getter.
+
+        Parameters
+        ----------
+        name : str
+            name of attribute to look for in self
+        """
         if name in self:
             return self[name]
-        else:
-            raise AttributeError(self._attribute_err_msg(name))
+        raise AttributeError(self._attribute_err_msg(name))
 
     def __setattr__(self, name, value):
+        """
+        setter.
+
+        Parameters
+        ----------
+        name : str
+            name of attribute to look for in self
+        value : any
+            value to set for attribute matching name
+        """
         self[name] = value
 
     def __delattr__(self, name):
+        """
+        delete.
+
+        Parameters
+        ----------
+        name : str
+            name of attribute to delete from self
+        """
         if name in self:
             del self[name]
         else:
