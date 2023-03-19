@@ -1,6 +1,7 @@
 """Tests for handicap equations and functions"""
 import numpy as np
 import pytest
+from typing import Tuple, Union, List
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func
@@ -92,7 +93,7 @@ class TestSigmaT:
         test if expected sigma_t returned from array of floats
     """
 
-    def test_invalid_system(self):
+    def test_invalid_system(self) -> None:
         """
         Check that sigma_t() returns error value for invalid system.
         """
@@ -105,7 +106,7 @@ class TestSigmaT:
         ):
             hc_eq.sigma_t(
                 handicap=10.0,
-                hc_sys=None,
+                hc_sys="InvalidSystem",
                 dist=10.0,
                 hc_dat=hc_params,
             )
@@ -128,7 +129,13 @@ class TestSigmaT:
             (200.0, "AA2", 10.0, 7.110517486e-05),
         ],
     )
-    def test_float(self, handicap, system, distance, theta_expected):
+    def test_float(
+        self,
+        handicap: float,
+        system: str,
+        distance: float,
+        theta_expected: float,
+    ) -> None:
         """
         Check that sigma_t(handicap=float) returns expected value for a case.
         """
@@ -141,19 +148,16 @@ class TestSigmaT:
 
         assert theta == pytest.approx(theta_expected)
 
-    def test_array(self):
+    def test_array(self) -> None:
         """
         Check that sigma_t(handicap=ndarray) returns expected value for a case.
         """
         handicap_array = np.array([25.46, -12.0, 200.0])
-        dist_array = np.array([100.0, 100.0, 10.0])
-        theta_expected_array = np.array(
-            [0.002125743670, 0.0005859295368, 0.620202925]
-        )
+        theta_expected_array = np.array([0.002125743670, 0.0005859295368, 0.861389448])
         theta_array = hc_eq.sigma_t(
             handicap=handicap_array,
             hc_sys="AGB",
-            dist=dist_array,
+            dist=100.0,
             hc_dat=hc_params,
         )
 
@@ -178,7 +182,7 @@ class TestSigmaR:
         test if expected sigma_r returned for from array of floats
     """
 
-    def test_invalid_system(self):
+    def test_invalid_system(self) -> None:
         """
         Check that sigma_r() returns error value for invalid system.
         """
@@ -191,7 +195,7 @@ class TestSigmaR:
         ):
             hc_eq.sigma_r(
                 handicap=10.0,
-                hc_sys=None,
+                hc_sys="InvalisHandicapSystem",
                 dist=10.0,
                 hc_dat=hc_params,
             )
@@ -214,7 +218,13 @@ class TestSigmaR:
             (200.0, "AA2", 10.0, 0.0007110517486),
         ],
     )
-    def test_float(self, handicap, system, distance, sigma_r_expected):
+    def test_float(
+        self,
+        handicap: float,
+        system: str,
+        distance: float,
+        sigma_r_expected: float,
+    ) -> None:
         """
         Check that sigma_r(handicap=float) returns expected value for a case.
         """
@@ -227,19 +237,16 @@ class TestSigmaR:
 
         assert sigma_r == pytest.approx(sigma_r_expected)
 
-    def test_array(self):
+    def test_array(self) -> None:
         """
         Check that sigma_r(handicap=ndarray) returns expected value for a case.
         """
         handicap_array = np.array([25.46, -12.0, 200.0])
-        dist_array = np.array([100.0, 56.54, 10.0])
-        sigma_r_expected_array = np.array(
-            [0.2125743670, 0.02826893819, 6.202029252]
-        )
+        sigma_r_expected_array = np.array([0.2125743670, 0.05859295, 86.1389448])
         sigma_r_array = hc_eq.sigma_r(
             handicap=handicap_array,
             hc_sys="AGB",
-            dist=dist_array,
+            dist=100.0,
             hc_dat=hc_params,
         )
 
@@ -266,7 +273,7 @@ class TestArrowScore:
         test if expected score returned for different faces
     """
 
-    def test_invalid_scoring_system(self):
+    def test_invalid_scoring_system(self) -> None:
         """
         Check that arrow_score() returns error value for invalid system.
         """
@@ -275,7 +282,7 @@ class TestArrowScore:
             match="No rule for calculating scoring for face type (.+).",
         ):
             target = Target(122.0, "5_zone", 100.0)
-            target.scoring_system = None
+            target.scoring_system = "InvalidScoringSystem"
 
             hc_eq.arrow_score(
                 target=target,
@@ -303,8 +310,12 @@ class TestArrowScore:
         ],
     )
     def test_different_handicap_systems(
-        self, hc_system, indoor, arrow_diameter, arrow_score_expected
-    ):
+        self,
+        hc_system: str,
+        indoor: bool,
+        arrow_diameter: float,
+        arrow_score_expected: float,
+    ) -> None:
         """
         Check arrow scores returned for different handicap systems and arrow diameters.
 
@@ -336,7 +347,9 @@ class TestArrowScore:
             ("Worcester_2_ring", 3.346414597),
         ],
     )
-    def test_different_target_faces(self, target_face, arrow_score_expected):
+    def test_different_target_faces(
+        self, target_face: str, arrow_score_expected: float
+    ) -> None:
         """
         Check correct arrow scores returned for different target faces
         """
@@ -400,7 +413,9 @@ class TestScoreForRound:
             ),
         ],
     )
-    def test_float_round_score(self, hc_system, round_score_expected):
+    def test_float_round_score(
+        self, hc_system: str, round_score_expected: Tuple[float, List[float]]
+    ) -> None:
         """
         Check appropriate expected round scores are returned not rounding.
 
@@ -415,12 +430,9 @@ class TestScoreForRound:
             ],
         )
 
-        assert (
-            hc_eq.score_for_round(
-                test_round, 20.0, hc_system, hc_eq.HcParams(), None, False
-            )[0]
-            == pytest.approx(round_score_expected[0])
-        )
+        assert hc_eq.score_for_round(
+            test_round, 20.0, hc_system, hc_eq.HcParams(), None, False
+        )[0] == pytest.approx(round_score_expected[0])
 
     @pytest.mark.parametrize(
         "hc_system,round_score_expected",
@@ -435,7 +447,9 @@ class TestScoreForRound:
             ),
         ],
     )
-    def test_rounded_round_score(self, hc_system, round_score_expected):
+    def test_rounded_round_score(
+        self, hc_system: str, round_score_expected: Tuple[float, List[float]]
+    ) -> None:
         """
         Check appropriate expected round scores are returned for rounding.
 
@@ -495,7 +509,7 @@ class TestHandicapFromScore:
         Currently no easily available data
     """
 
-    def test_score_over_max(self):
+    def test_score_over_max(self) -> None:
         """
         Check that handicap_from_score() returns error value for too large score.
         """
@@ -516,7 +530,7 @@ class TestHandicapFromScore:
 
             hc_func.handicap_from_score(9999, test_round, "AGB", hc_params)
 
-    def test_score_of_zero(self):
+    def test_score_of_zero(self) -> None:
         """
         Check that handicap_from_score() returns error for zero score.
         """
@@ -537,7 +551,7 @@ class TestHandicapFromScore:
 
             hc_func.handicap_from_score(0, test_round, "AGB", hc_params)
 
-    def test_score_below_zero(self):
+    def test_score_below_zero(self) -> None:
         """
         Check that handicap_from_score() returns error for negative score.
         """
@@ -573,7 +587,13 @@ class TestHandicapFromScore:
             # ("AA2", vegas300, 300, 119),
         ],
     )
-    def test_maximum_score(self, hc_system, testround, max_score, handicap_expected):
+    def test_maximum_score(
+        self,
+        hc_system: str,
+        testround: Round,
+        max_score: float,
+        handicap_expected: float,
+    ) -> None:
         """
         Check correct handicap returned for max score.
         """
@@ -632,7 +652,13 @@ class TestHandicapFromScore:
             # ("AA2", wa1440_90, 850, 53),
         ],
     )
-    def test_int_precision(self, hc_system, testround, testscore, handicap_expected):
+    def test_int_precision(
+        self,
+        hc_system: str,
+        testround: Round,
+        testscore: float,
+        handicap_expected: float,
+    ) -> None:
         """
         Check correct handicap returned for various scores.
         """
@@ -663,7 +689,13 @@ class TestHandicapFromScore:
             # ("AA2", wa1440_90, 850, 53),
         ],
     )
-    def test_decimal(self, hc_system, testround, testscore, handicap_expected):
+    def test_decimal(
+        self,
+        hc_system: str,
+        testround: Round,
+        testscore: float,
+        handicap_expected: float,
+    ) -> None:
         """
         Check correct handicap returned for various scores.
 

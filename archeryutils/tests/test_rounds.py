@@ -1,5 +1,6 @@
 """Tests for Pass and Round classes"""
 import pytest
+from typing import Union, Tuple
 
 from archeryutils.rounds import Pass, Round
 
@@ -22,28 +23,28 @@ class TestPass:
         test max score functionality of Pass
     """
 
-    def test_default_distance_unit(self):
+    def test_default_distance_unit(self) -> None:
         """
         Check that Pass() returns distance in metres when units not specified.
         """
         test_pass = Pass(36, 1.22, "5_zone", 50)
         assert test_pass.native_dist_unit == "metre"
 
-    def test_default_location(self):
+    def test_default_location(self) -> None:
         """
         Check that Pass() returns indoor=False when indoor not specified.
         """
         test_pass = Pass(36, 1.22, "5_zone", 50, "metre")
         assert test_pass.indoor is False
 
-    def test_negative_arrows(self):
+    def test_negative_arrows(self) -> None:
         """
         Check that Pass() uses abs(narrows).
         """
         test_pass = Pass(-36, 1.22, "5_zone", 50, "metre")
         assert test_pass.n_arrows == 36
 
-    def test_properties(self):
+    def test_properties(self) -> None:
         """
         Check that Pass properties are set correctly
         """
@@ -65,7 +66,11 @@ class TestPass:
             ("Beiter_hit_miss", 100),
         ],
     )
-    def test_max_score(self, face_type, max_score_expected):
+    def test_max_score(
+        self,
+        face_type: str,
+        max_score_expected: float,
+    ) -> None:
         """
         Check that Pass.max_score() method is functioning correctly
         """
@@ -89,7 +94,7 @@ class TestRound:
         test get_info functionality of Round
     """
 
-    def test_max_score(self):
+    def test_max_score(self) -> None:
         """
         Check that max score is calculated correctly for a Round
         """
@@ -113,7 +118,12 @@ class TestRound:
             ("yards", False, 100),
         ],
     )
-    def test_max_distance(self, unit, get_unit, max_dist_expected):
+    def test_max_distance(
+        self,
+        unit: str,
+        get_unit: bool,
+        max_dist_expected: Union[float, Tuple[float, str]],
+    ) -> None:
         """
         Check that max distance is calculated correctly for a Round.
 
@@ -132,7 +142,7 @@ class TestRound:
         )
         assert test_round.max_distance(unit=get_unit) == max_dist_expected
 
-    def test_max_distance_out_of_order(self):
+    def test_max_distance_out_of_order(self) -> None:
         """
         Check max distance correct for Round where Passes not in descending dist order.
         """
@@ -147,7 +157,7 @@ class TestRound:
         )
         assert test_round.max_distance() == 100
 
-    def test_get_info(self, capsys):
+    def test_get_info(self, capsys: pytest.CaptureFixture[str]) -> None:
         """
         Check printing info works as expected.
         """

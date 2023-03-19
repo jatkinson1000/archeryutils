@@ -37,11 +37,14 @@ New AGB - J Atkinson
 AA & AA2 - J Park
 """
 import json
-from typing import Union, Optional, Tuple, List
+from typing import Union, Optional, Tuple, List, Any, TypeVar
 from dataclasses import dataclass
 import numpy as np
+import numpy.typing as npt
 
 from archeryutils import targets, rounds
+
+AnyHcParams = TypeVar("AnyHcParams", bound="HcParams")
 
 
 @dataclass
@@ -107,37 +110,37 @@ class HcParams:
 
     """
 
-    AGB_datum = 6.0
-    AGB_step = 3.5
-    AGB_ang_0 = 5.0e-4
-    AGB_kd = 0.00365
+    AGB_datum: float = 6.0
+    AGB_step: float = 3.5
+    AGB_ang_0: float = 5.0e-4
+    AGB_kd: float = 0.00365
 
-    AGBo_datum = 12.9
-    AGBo_step = 3.6
-    AGBo_ang_0 = 5.0e-4
-    AGBo_k1 = 1.429e-6
-    AGBo_k2 = 1.07
-    AGBo_k3 = 4.3
-    AGBo_p1 = 2.0
-    AGBo_arw_d = 7.14e-3
+    AGBo_datum: float = 12.9
+    AGBo_step: float = 3.6
+    AGBo_ang_0: float = 5.0e-4
+    AGBo_k1: float = 1.429e-6
+    AGBo_k2: float = 1.07
+    AGBo_k3: float = 4.3
+    AGBo_p1: float = 2.0
+    AGBo_arw_d: float = 7.14e-3
 
-    AA_k0 = 2.37
-    AA_ks = 0.027
-    AA_kd = 0.004
+    AA_k0: float = 2.37
+    AA_ks: float = 0.027
+    AA_kd: float = 0.004
 
-    AA2_k0 = 2.57
-    AA2_ks = 0.027
-    AA2_f1 = 0.815
-    AA2_f2 = 0.185
-    AA2_d0 = 50.0
+    AA2_k0: float = 2.57
+    AA2_ks: float = 0.027
+    AA2_f1: float = 0.815
+    AA2_f2: float = 0.185
+    AA2_d0: float = 50.0
 
-    AA_arw_d_out = 5.0e-3
+    AA_arw_d_out: float = 5.0e-3
 
-    arw_d_in = 9.3e-3
-    arw_d_out = 5.5e-3
+    arw_d_in: float = 9.3e-3
+    arw_d_out: float = 5.5e-3
 
     @classmethod
-    def load_json_params(cls, jsonpath):
+    def load_json_params(cls: type[AnyHcParams], jsonpath: str) -> AnyHcParams:
         """
         Class method to load params from a json file.
 
@@ -183,11 +186,11 @@ class HcParams:
 
 
 def sigma_t(
-    handicap: Union[float, np.ndarray],
+    handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
-    dist: Union[float, np.ndarray],
+    dist: float,
     hc_dat: HcParams,
-) -> Union[float, np.ndarray]:
+) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     """
     Calculate angular deviation for given scheme, handicap, and distance.
 
@@ -197,7 +200,7 @@ def sigma_t(
         handicap to calculate sigma_t at
     hc_sys : str
         identifier for handicap system
-    dist : float or ndarray
+    dist : float
         distance to target [metres]
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
@@ -217,6 +220,9 @@ def sigma_t(
       Park, J (2014)
       https://doi.org/10.1177%2F1754337114539308
     """
+    # Declare sig_t type for mypy
+    sig_t: Union[float, npt.NDArray[np.float_]]
+
     if hc_sys == "AGB":
         # New AGB (Archery GB) System
         # Written by Jack Atkinson
@@ -230,7 +236,7 @@ def sigma_t(
         # Old AGB (Archery GB) System
         # Written by David Lane (2013)
         K = hc_dat.AGBo_k1 * hc_dat.AGBo_k2 ** (handicap + hc_dat.AGBo_k3)
-        F = 1 + K * dist**hc_dat.AGBo_p1
+        F = 1.0 + K * dist**hc_dat.AGBo_p1
         sig_t = (
             hc_dat.AGBo_ang_0
             * ((1.0 + hc_dat.AGBo_step / 100.0) ** (handicap + hc_dat.AGBo_datum))
@@ -246,7 +252,7 @@ def sigma_t(
         # convert to rad
         sig_t = (
             1.0e-3
-            * np.sqrt(2)
+            * np.sqrt(2.0)
             * np.exp(hc_dat.AA_k0 - hc_dat.AA_ks * handicap + hc_dat.AA_kd * dist)
         )
 
@@ -258,17 +264,11 @@ def sigma_t(
         # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so
         # convert to rad
         sig_t = (
-            np.sqrt(2)
+            np.sqrt(2.0)
             * 1.0e-3
             * np.exp(hc_dat.AA2_k0 - hc_dat.AA2_ks * handicap)
             * (hc_dat.AA2_f1 + hc_dat.AA2_f2 * dist / hc_dat.AA2_d0)
         )
-
-    # elif hc_sys == 'AA2AGB':
-    #     # AA2AGB System
-    #     # Same starting point HC0 as AGB, but using AA distance scaling
-    #     F = np.exp(ap.k_d * dist)
-    #     sig_t = ((1.0 + ap.step / 100.0) ** (h + ap.datum)) * ap.ang_0 * F
 
     else:
         raise ValueError(
@@ -280,11 +280,11 @@ def sigma_t(
 
 
 def sigma_r(
-    handicap: Union[float, np.ndarray],
+    handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
-    dist: Union[float, np.ndarray],
+    dist: float,
     hc_dat: HcParams,
-) -> Union[float, np.ndarray]:
+) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     """
     Calculate deviation for a given scheme and handicap value.
 
@@ -316,11 +316,11 @@ def sigma_r(
 
 def arrow_score(  # pylint: disable=too-many-branches
     target: targets.Target,
-    handicap: Union[float, np.ndarray],
+    handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
-) -> float:
+) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     """
     Calculate the average arrow score for a given target and handicap rating.
 
@@ -368,54 +368,54 @@ def arrow_score(  # pylint: disable=too-many-branches
 
     if target.scoring_system == "5_zone":
         s_bar = (
-            9
-            - 2
+            9.0
+            - 2.0
             * sum(
-                np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+                np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 5)
             )
-            - np.exp(-((((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            - np.exp(-((((5.0 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
         )
 
     elif target.scoring_system == "10_zone":
-        s_bar = 10 - sum(
-            np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+        s_bar = 10.0 - sum(
+            np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
             for n in range(1, 11)
         )
 
     elif target.scoring_system == "10_zone_6_ring":
         s_bar = (
-            10
+            10.0
             - sum(
-                np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+                np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 6)
             )
-            - 5.0 * np.exp(-((((6 * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+            - 5.0 * np.exp(-((((6.0 * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
         )
 
     elif target.scoring_system == "10_zone_compound":
         s_bar = (
-            10
-            - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
+            10.0
+            - np.exp(-((((tar_dia / 40.0) + arw_rad) / sig_r) ** 2))
             - sum(
-                np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+                np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 11)
             )
         )
 
     elif target.scoring_system == "10_zone_5_ring":
         s_bar = (
-            10
+            10.0
             - sum(
-                np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+                np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
                 for n in range(1, 5)
             )
-            - 6.0 * np.exp(-((((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2))
+            - 6.0 * np.exp(-((((5.0 * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
         )
 
     elif target.scoring_system == "10_zone_5_ring_compound":
         s_bar = (
-            10
+            10.0
             - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
             - sum(
                 np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
@@ -426,43 +426,37 @@ def arrow_score(  # pylint: disable=too-many-branches
 
     elif target.scoring_system == "WA_field":
         s_bar = (
-            6
-            - np.exp(-((((tar_dia / 20) + arw_rad) / sig_r) ** 2))
+            6.0
+            - np.exp(-((((tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
             - sum(
-                np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+                np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
                 for n in range(2, 7)
             )
         )
 
     elif target.scoring_system == "IFAA_field":
         s_bar = (
-            5
-            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
-            - np.exp(-((((3 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
-            - 3.0 * np.exp(-((((5 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            5.0
+            - np.exp(-((((tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
+            - np.exp(-((((3.0 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
+            - 3.0 * np.exp(-((((5.0 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
         )
 
     elif target.scoring_system == "Beiter_hit_miss":
-        s_bar = 1 - np.exp(-((((tar_dia / 2) + arw_rad) / sig_r) ** 2))
+        s_bar = 1.0 - np.exp(-((((tar_dia / 2.0) + arw_rad) / sig_r) ** 2))
 
     elif target.scoring_system in ("Worcester", "IFAA_field_expert"):
-        s_bar = 5 - sum(
-            np.exp(-((((n * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+        s_bar = 5.0 - sum(
+            np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
             for n in range(1, 6)
         )
 
     elif target.scoring_system == "Worcester_2_ring":
         s_bar = (
-            5
-            - np.exp(-((((tar_dia / 10) + arw_rad) / sig_r) ** 2))
-            - 4.0 * np.exp(-((((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2))
+            5.0
+            - np.exp(-((((tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
+            - 4.0 * np.exp(-((((2 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
         )
-
-    # elif target.scoring_system == 12:
-    # Worcester with an extra point for the 'x' ring
-    #     s_bar = 6 - np.exp(-(((tar_dia / 20.32) + arw_rad) / sig_r) ** 2) -\
-    #             np.exp(-(((tar_dia / 10) + arw_rad) / sig_r) ** 2)\
-    #             - 4.0 * np.exp(-(((2 * tar_dia / 10) + arw_rad) / sig_r) ** 2)
 
     else:
         raise ValueError(
@@ -474,12 +468,12 @@ def arrow_score(  # pylint: disable=too-many-branches
 
 def score_for_round(
     rnd: rounds.Round,
-    handicap: Union[float, np.ndarray],
+    handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
     round_score_up: bool = True,
-) -> Tuple[float, List[float]]:
+) -> Tuple[Union[float, np.float_, npt.NDArray[np.float_]], npt.NDArray[np.float_]]:
     """
     Calculate the average arrow score for a given target and handicap rating.
 
@@ -507,11 +501,13 @@ def score_for_round(
         average score for each pass in the round
 
     """
-    pass_score = [
-        pass_i.n_arrows
-        * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
-        for pass_i in rnd.passes
-    ]
+    pass_score = np.array(
+        [
+            pass_i.n_arrows
+            * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
+            for pass_i in rnd.passes
+        ]
+    )
 
     round_score = np.sum(pass_score, axis=0)
 
