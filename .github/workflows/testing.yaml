@@ -23,7 +23,7 @@ jobs:
       matrix:
         # latest python on Win/Mac/Lin
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-        python-version: ["3.10"]
+        python-version: ["3.11", "3.10"]
         # test older python versions on Linux only
         include:
         - os: ubuntu-latest
