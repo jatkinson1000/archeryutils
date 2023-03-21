@@ -26,13 +26,16 @@ AGB_field_classification_scores
 """
 import json
 from pathlib import Path
+from typing import List, Dict, Any
 import numpy as np
 
 from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
 
 
-def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
+def read_ages_json(
+    age_file: Path = Path(__file__).parent / "AGB_ages.json",
+) -> List[Dict[str, Any]]:
     """
     Read AGB age categories in from neighbouring json file to list of dicts.
 
@@ -52,10 +55,17 @@ def read_ages_json(age_file=Path(__file__).parent / "AGB_ages.json"):
     """
     with open(age_file, encoding="utf-8") as json_file:
         ages = json.load(json_file)
-    return ages
+    if isinstance(ages, list):
+        return ages
+    raise TypeError(
+        f"Unexpected ages input when reading from json file. "
+        f"Expected list(dict()) but got {type(ages)}. Check {age_file}."
+    )
 
 
-def read_bowstyles_json(bowstyles_file=Path(__file__).parent / "AGB_bowstyles.json"):
+def read_bowstyles_json(
+    bowstyles_file: Path = Path(__file__).parent / "AGB_bowstyles.json",
+) -> List[Dict[str, Any]]:
     """
     Read AGB  bowstyles in from neighbouring json file to list of dicts.
 
@@ -75,12 +85,19 @@ def read_bowstyles_json(bowstyles_file=Path(__file__).parent / "AGB_bowstyles.js
     """
     with open(bowstyles_file, encoding="utf-8") as json_file:
         bowstyles = json.load(json_file)
-    return bowstyles
+    if isinstance(bowstyles, list):
+        return bowstyles
+    raise TypeError(
+        f"Unexpected bowstyles input when reading from json file. "
+        f"Expected list(dict()) but got {type(bowstyles)}. Check {bowstyles_file}."
+    )
 
 
-def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
+def read_genders_json(
+    genders_file: Path = Path(__file__).parent / "AGB_genders.json",
+) -> List[str]:
     """
-    Read AGB genders in from neighbouring json file to list of dicts.
+    Read AGB genders in from neighbouring json file to list of dict.
 
     Parameters
     ----------
@@ -99,12 +116,19 @@ def read_genders_json(genders_file=Path(__file__).parent / "AGB_genders.json"):
     # Read in gender info as list
     with open(genders_file, encoding="utf-8") as json_file:
         genders = json.load(json_file)["genders"]
-    return genders
+    if isinstance(genders, list):
+        return genders
+    raise TypeError(
+        f"Unexpected genders input when reading from json file. "
+        f"Expected list() but got {type(genders)}. Check {genders_file}."
+    )
 
 
-def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
+def read_classes_json(
+    classes_file: Path = Path(__file__).parent / "AGB_classes.json",
+) -> Dict[str, Any]:
     """
-    Read AGB classes in from neighbouring json file to list of dicts.
+    Read AGB classes in from neighbouring json file to dict.
 
     Parameters
     ----------
@@ -113,7 +137,7 @@ def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
 
     Returns
     -------
-    classes : list of dict
+    classes : dict
         AGB classes data from file
 
     References
@@ -123,10 +147,15 @@ def read_classes_json(classes_file=Path(__file__).parent / "AGB_classes.json"):
     # Read in classification names as dict
     with open(classes_file, encoding="utf-8") as json_file:
         classes = json.load(json_file)
-    return classes
+    if isinstance(classes, dict):
+        return classes
+    raise TypeError(
+        f"Unexpected genders input when reading from json file. "
+        f"Expected dict() but got {type(classes)}. Check {classes_file}."
+    )
 
 
-def get_groupname(bowstyle, gender, age_group):
+def get_groupname(bowstyle: str, gender: str, age_group: str) -> str:
     """
     Generate a single string id for a particular category.
 
@@ -153,7 +182,7 @@ def get_groupname(bowstyle, gender, age_group):
     return groupname
 
 
-def _make_AGB_outdoor_classification_dict():
+def _make_AGB_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     """
     Generate AGB outdoor classification data.
 
@@ -384,7 +413,7 @@ def _make_AGB_outdoor_classification_dict():
     return classification_dict
 
 
-def _make_AGB_indoor_classification_dict():
+def _make_AGB_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     """
     Generate AGB outdoor classification data.
 
@@ -431,7 +460,7 @@ def _make_AGB_indoor_classification_dict():
     return classification_dict
 
 
-def _make_AGB_field_classification_dict():
+def _make_AGB_field_classification_dict() -> Dict[str, Dict[str, Any]]:
     """
     Generate AGB outdoor classification data.
 
@@ -587,7 +616,9 @@ del _make_AGB_indoor_classification_dict
 del _make_AGB_field_classification_dict
 
 
-def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age_group):
+def calculate_AGB_outdoor_classification(
+    roundname: str, score: float, bowstyle: str, gender: str, age_group: str
+) -> str:
     """
     Calculate AGB outdoor classification from score.
 
@@ -651,7 +682,7 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
     # class_data = dict(
     #    zip(group_data["classes"], zip(group_data["min_dists"], class_scores))
     # )
-    class_data = {}
+    class_data: Dict[str, Dict[str, Any]] = {}
     for i, class_i in enumerate(group_data["classes"]):
         class_data[class_i] = {
             "min_dists": group_data["min_dists"][i, :],
@@ -675,12 +706,12 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
             del class_data[class_i]
 
     # Classification based on score - accounts for fractional HC
-    # TODO Make this its own function for later use in geberating tables?
+    # TODO Make this its own function for later use in generating tables?
     # Of those classes remaining, what is the highest classification this score gets?
     to_del = []
-    for item in class_data.items():
-        if item[1]["score"] > score:
-            to_del.append(item[0])
+    for classname, classdata in class_data.items():
+        if classdata["score"] > score:
+            to_del.append(classname)
     for item in to_del:
         del class_data[item]
 
@@ -691,7 +722,9 @@ def calculate_AGB_outdoor_classification(roundname, score, bowstyle, gender, age
         return "UC"
 
 
-def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
+def AGB_outdoor_classification_scores(
+    roundname: str, bowstyle: str, gender: str, age_group: str
+) -> List[int]:
     """
     Calculate AGB outdoor classification scores for category.
 
@@ -758,12 +791,26 @@ def AGB_outdoor_classification_scores(roundname, bowstyle, gender, age_group):
             if min(group_data["min_dists"][i, :]) > round_max_dist:
                 class_scores[i] = -9999
 
-    return class_scores
+    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
+    if any(isinstance(x, np.ndarray) for x in class_scores):
+        raise TypeError(
+            "score_for_round is attempting to return an array when float expected."
+        )
+    # Score threshold should be int (score_for_round called with round=True)
+    # Enforce this for better code and to satisfy mypy
+    int_class_scores = [int(x) for x in class_scores]
+
+    return int_class_scores
 
 
 def calculate_AGB_indoor_classification(
-    roundname, score, bowstyle, gender, age_group, hc_scheme="AGBold"
-):
+    roundname: str,
+    score: float,
+    bowstyle: str,
+    gender: str,
+    age_group: str,
+    hc_scheme: str = "AGBold",
+) -> str:
     """
     Calculate AGB indoor classification from score.
 
@@ -828,13 +875,13 @@ def calculate_AGB_indoor_classification(
         for i, class_i in enumerate(group_data["classes"])
     ]
 
-    class_data = dict(zip(group_data["classes"], class_scores))
+    class_data: Dict[str, Any] = dict(zip(group_data["classes"], class_scores))
 
     # What is the highest classification this score gets?
     to_del = []
-    for score_bound in class_data:
-        if class_data[score_bound] > score:
-            to_del.append(score_bound)
+    for classname, classscore in class_data.items():
+        if classscore > score:
+            to_del.append(classname)
     for del_class in to_del:
         del class_data[del_class]
 
@@ -850,8 +897,12 @@ def calculate_AGB_indoor_classification(
 
 
 def AGB_indoor_classification_scores(
-    roundname, bowstyle, gender, age_group, hc_scheme="AGBold"
-):
+    roundname: str,
+    bowstyle: str,
+    gender: str,
+    age_group: str,
+    hc_scheme: str = "AGBold",
+) -> List[int]:
     """
     Calculate AGB indoor classification scores for category.
 
@@ -912,10 +963,21 @@ def AGB_indoor_classification_scores(
         for i, class_i in enumerate(group_data["classes"])
     ]
 
-    return class_scores
+    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
+    if any(isinstance(x, np.ndarray) for x in class_scores):
+        raise TypeError(
+            "score_for_round is attempting to return an array when float expected."
+        )
+    # Score threshold should be int (score_for_round called with round=True)
+    # Enforce this for better code and to satisfy mypy
+    int_class_scores = [int(x) for x in class_scores]
+
+    return int_class_scores
 
 
-def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_group):
+def calculate_AGB_field_classification(
+    roundname: str, score: float, bowstyle: str, gender: str, age_group: str
+) -> str:
     """
     Calculate AGB field classification from score.
 
@@ -979,7 +1041,9 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
         return "unclassified"
 
     # What is the highest classification this score gets?
-    class_scores = dict(zip(group_data["classes"], group_data["class_scores"]))
+    class_scores: Dict[str, Any] = dict(
+        zip(group_data["classes"], group_data["class_scores"])
+    )
     for item in class_scores:
         if class_scores[item] > score:
             pass
@@ -990,7 +1054,9 @@ def calculate_AGB_field_classification(roundname, score, bowstyle, gender, age_g
     return "unclassified"
 
 
-def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
+def AGB_field_classification_scores(
+    roundname: str, bowstyle: str, gender: str, age_group: str
+) -> List[int]:
     """
     Calculate AGB field classification scores for category.
 
@@ -1036,7 +1102,18 @@ def AGB_field_classification_scores(roundname, bowstyle, gender, age_group):
     group_data = AGB_field_classifications[groupname]
 
     # Get scores required on this round for each classification
-    return group_data["class_scores"]
+    class_scores = group_data["class_scores"]
+
+    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
+    if any(isinstance(x, np.ndarray) for x in class_scores):
+        raise TypeError(
+            "score_for_round is attempting to return an array when float expected."
+        )
+    # Score threshold should be int (score_for_round called with round=True)
+    # Enforce this for better code and to satisfy mypy
+    int_class_scores = [int(x) for x in class_scores]
+
+    return int_class_scores
 
 
 if __name__ == "__main__":

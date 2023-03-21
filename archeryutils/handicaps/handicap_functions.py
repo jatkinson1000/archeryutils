@@ -16,6 +16,7 @@ from typing import Union, Optional, List
 import warnings
 from itertools import chain
 import numpy as np
+import numpy.typing as npt
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 from archeryutils import rounds
@@ -24,7 +25,7 @@ FILL = -1000
 
 
 def print_handicap_table(
-    hcs: Union[float, np.ndarray],
+    hcs: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
     round_list: List[rounds.Round],
     hc_dat: hc_eq.HcParams,
@@ -34,7 +35,7 @@ def print_handicap_table(
     printout: bool = True,
     filename: Optional[str] = None,
     csvfile: Optional[str] = None,
-    int_prec: bool = False,
+    int_prec: Optional[bool] = False,
 ) -> None:
     """
     Generate a handicap table to screen and/or file.
@@ -132,13 +133,13 @@ def print_handicap_table(
     # To ensure both terminal and file output are the same, create a single string to
     # be used in either case
 
-    def abbreviate(name):
+    def abbreviate(name: str) -> str:
         return " ".join(abbreviations.get(i, i) for i in name.split())
 
     round_names = [abbreviate(r.name) for r in round_list]
     output_header = "".join(name.rjust(14) for name in chain(["Handicap"], round_names))
 
-    def format_row(row):
+    def format_row(row: npt.NDArray[Union[np.float_, np.int_]]) -> str:
         if int_prec:
             return "".join("".rjust(14) if x == FILL else f"{x:14d}" for x in row)
         return "".join("".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row)
@@ -157,7 +158,7 @@ def print_handicap_table(
 
 
 def handicap_from_score(
-    score: float,
+    score: Union[int, float],
     rnd: rounds.Round,
     hc_sys: str,
     hc_dat: hc_eq.HcParams,
@@ -249,11 +250,28 @@ def handicap_from_score(
         return hc
 
     # ROOT FINDING for general case (not max score)
-    def f_root(h, scr, rd, sys, hc_data, arw_dia):
+    def f_root(
+        h: float,
+        scr: Union[int, float],
+        rd: rounds.Round,
+        sys: str,
+        hc_data: hc_eq.HcParams,
+        arw_dia: Optional[float],
+    ) -> float:
         val, _ = hc_eq.score_for_round(
             rd, h, sys, hc_data, arw_dia, round_score_up=False
         )
-        return val - scr
+        # Ensure we return float, not np.ndarray
+        # These 9 lines replace `return val-scr` so as to satisfy mypy --strict.
+        # Should never be triggered in reality as h is type float.
+        if isinstance(val, np.float_):
+            val = val.item()
+        if isinstance(val, float):
+            return val - scr
+        raise TypeError(
+            f"f_root is attempting to return a {type(val)} type but expected float. "
+            f"Was it passed an array of handicaps?"
+        )
 
     if hc_sys in ("AA", "AA2"):
         x = [-250.0, 175.0]

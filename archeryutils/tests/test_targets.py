@@ -16,7 +16,7 @@ class TestTarget:
         test if invalid distance unit raises an error
     """
 
-    def test_invalid_system(self):
+    def test_invalid_system(self) -> None:
         """
         Check that Target() returns error value for invalid system.
         """
@@ -26,7 +26,7 @@ class TestTarget:
         ):
             Target(1.22, "InvalidScoringSystem", 50, "m", False)
 
-    def test_invalid_distance_unit(self):
+    def test_invalid_distance_unit(self) -> None:
         """
         Check that Target() returns error value for invalid distance units.
         """
@@ -36,21 +36,21 @@ class TestTarget:
         ):
             Target(1.22, "5_zone", 50, "InvalidDistanceUnit", False)
 
-    def test_default_distance_unit(self):
+    def test_default_distance_unit(self) -> None:
         """
         Check that Target() returns distance in metres when units not specified.
         """
         target = Target(1.22, "5_zone", 50)
         assert target.native_dist_unit == "metre"
 
-    def test_default_location(self):
+    def test_default_location(self) -> None:
         """
         Check that Target() returns indoor=False when indoor not specified.
         """
         target = Target(1.22, "5_zone", 50, "m")
         assert target.indoor is False
 
-    def test_yard_to_m_conversion(self):
+    def test_yard_to_m_conversion(self) -> None:
         """
         Check that Target() returns correct distance in metres when yards provided.
         """
@@ -74,14 +74,14 @@ class TestTarget:
             ("Beiter_hit_miss", 1),
         ],
     )
-    def test_max_score(self, face_type, max_score_expected):
+    def test_max_score(self, face_type: str, max_score_expected: float) -> None:
         """
         Check that Target() returns correct distance in metres when yards provided.
         """
         target = Target(1.22, face_type, 50, "metre", False)
         assert target.max_score() == max_score_expected
 
-    def test_max_score_invalid_face_type(self):
+    def test_max_score_invalid_face_type(self) -> None:
         """
         Check that Target() returns correct distance in metres when yards provided.
         """

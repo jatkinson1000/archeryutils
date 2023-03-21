@@ -1,5 +1,5 @@
 """Classes to define a Pass and Round for archery applications."""
-import numpy as np
+from typing import List, Union, Tuple
 
 from archeryutils.targets import Target
 from archeryutils.constants import YARD_TO_METRE
@@ -35,42 +35,42 @@ class Pass:
 
     def __init__(
         self,
-        n_arrows,
-        diameter,
-        scoring_system,
-        distance,
-        dist_unit="metres",
-        indoor=False,
-    ):
+        n_arrows: int,
+        diameter: float,
+        scoring_system: str,
+        distance: float,
+        dist_unit: str = "metres",
+        indoor: bool = False,
+    ) -> None:
         self.n_arrows = abs(n_arrows)
         self.target = Target(diameter, scoring_system, distance, dist_unit, indoor)
 
     @property
-    def distance(self):
+    def distance(self) -> float:
         """Get distance."""
         return self.target.distance
 
     @property
-    def native_dist_unit(self):
+    def native_dist_unit(self) -> str:
         """Get native_dist_unit."""
         return self.target.native_dist_unit
 
     @property
-    def diameter(self):
+    def diameter(self) -> float:
         """Get diameter."""
         return self.target.diameter
 
     @property
-    def scoring_system(self):
+    def scoring_system(self) -> str:
         """Get scoring_system."""
         return self.target.scoring_system
 
     @property
-    def indoor(self):
+    def indoor(self) -> bool:
         """Get indoor."""
         return self.target.indoor
 
-    def max_score(self):
+    def max_score(self) -> float:
         """
         Return the maximum numerical score possible on this pass (not counting x's).
 
@@ -113,19 +113,19 @@ class Round:
 
     def __init__(
         self,
-        name,
-        passes,
-        location=None,
-        body=None,
-        family=None,
-    ):
+        name: str,
+        passes: List[Pass],
+        location: Union[str, None] = None,
+        body: Union[str, None] = None,
+        family: Union[str, None] = None,
+    ) -> None:
         self.name = name
         self.passes = passes
         self.location = location
         self.body = body
         self.family = family
 
-    def max_score(self):
+    def max_score(self) -> float:
         """
         Return the maximum numerical score possible on this round (not counting x's).
 
@@ -134,9 +134,9 @@ class Round:
         max_score : float
             maximum score possible on this round
         """
-        return np.sum([pass_i.max_score() for pass_i in self.passes])
+        return sum(pass_i.max_score() for pass_i in self.passes)
 
-    def max_distance(self, unit=False):
+    def max_distance(self, unit: bool = False) -> Union[float, Tuple[float, str]]:
         """
         Return the maximum distance shot on this round along with the unit (optional).
 
@@ -152,7 +152,7 @@ class Round:
         (max_dist, unit) : tuple (float, str)
             tuple of max_dist and string of unit
         """
-        max_dist = 0
+        max_dist = 0.0
         for pass_i in self.passes:
             dist = (
                 pass_i.distance / YARD_TO_METRE
@@ -167,7 +167,7 @@ class Round:
             return (max_dist, d_unit)
         return max_dist
 
-    def get_info(self):
+    def get_info(self) -> None:
         """Print information about the Round."""
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
