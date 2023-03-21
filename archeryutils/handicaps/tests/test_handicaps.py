@@ -1,7 +1,7 @@
 """Tests for handicap equations and functions"""
+from typing import Tuple, List
 import numpy as np
 import pytest
-from typing import Tuple, Union, List
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func

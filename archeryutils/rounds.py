@@ -1,6 +1,5 @@
 """Classes to define a Pass and Round for archery applications."""
 from typing import List, Union, Tuple
-import numpy as np
 
 from archeryutils.targets import Target
 from archeryutils.constants import YARD_TO_METRE
@@ -135,7 +134,7 @@ class Round:
         max_score : float
             maximum score possible on this round
         """
-        return sum([pass_i.max_score() for pass_i in self.passes])
+        return sum(pass_i.max_score() for pass_i in self.passes)
 
     def max_distance(self, unit: bool = False) -> Union[float, Tuple[float, str]]:
         """

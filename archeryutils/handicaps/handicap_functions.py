@@ -264,15 +264,14 @@ def handicap_from_score(
         # Ensure we return float, not np.ndarray
         # These 9 lines replace `return val-scr` so as to satisfy mypy --strict.
         # Should never be triggered in reality as h is type float.
-        if type(val) is np.float_:
+        if isinstance(val, np.float_):
             val = val.item()
-        if type(val) is float:
+        if isinstance(val, float):
             return val - scr
-        else:
-            raise TypeError(
-                f"f_root is attempting to return a {type(val)} type. "
-                f"Was it passed an array of handicaps?"
-            )
+        raise TypeError(
+            f"f_root is attempting to return a {type(val)} type but expected float. "
+            f"Was it passed an array of handicaps?"
+        )
 
     if hc_sys in ("AA", "AA2"):
         x = [-250.0, 175.0]

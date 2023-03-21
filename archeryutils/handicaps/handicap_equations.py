@@ -37,7 +37,7 @@ New AGB - J Atkinson
 AA & AA2 - J Park
 """
 import json
-from typing import Union, Optional, Tuple, List, Any
+from typing import Union, Optional, Tuple
 from dataclasses import dataclass
 import numpy as np
 import numpy.typing as npt
