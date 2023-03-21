@@ -37,14 +37,12 @@ New AGB - J Atkinson
 AA & AA2 - J Park
 """
 import json
-from typing import Union, Optional, Tuple, List, Any, TypeVar
+from typing import Union, Optional, Tuple, List, Any
 from dataclasses import dataclass
 import numpy as np
 import numpy.typing as npt
 
 from archeryutils import targets, rounds
-
-AnyHcParams = TypeVar("AnyHcParams", bound="HcParams")
 
 
 @dataclass
@@ -140,7 +138,7 @@ class HcParams:
     arw_d_out: float = 5.5e-3
 
     @classmethod
-    def load_json_params(cls: type[AnyHcParams], jsonpath: str) -> AnyHcParams:
+    def load_json_params(cls, jsonpath: str) -> "HcParams":
         """
         Class method to load params from a json file.
 
@@ -151,11 +149,11 @@ class HcParams:
 
         Returns
         -------
-        json_hc_params : dataclass
+        json_hc_params : HcParams
             dataclass of handicap parameters read from file
 
         """
-        json_hc_params = cls()
+        json_hc_params: "HcParams" = cls()
         with open(jsonpath, "r", encoding="utf-8") as read_file:
             paramsdict = json.load(read_file)
         json_hc_params.AGB_datum = paramsdict["AGB_datum"]
