@@ -22,7 +22,7 @@ jobs:
       with:
         python-version: "3.10"
     - run: pip install black pylint pydocstyle mypy
-           pip install .
+           pip install .[lint]
 
     # annotate each step with `if: always` to run all regardless
     - name: Assert that code matches Black code style
