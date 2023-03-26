@@ -1,17 +1,25 @@
 # archeryutils
+
+![GitHub](https://img.shields.io/github/license/jatkinson1000/archeryutils?style=plastic)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jatkinson1000/archeryutils/testing.yaml?style=plastic)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 A collection of archery code and utilities in python.
+Designed to make the development of archery codes and apps easier.
 
 ## Installation
-To install at present clone the repository, navigate to /archeryutils
+To install clone the repository, navigate to `/archeryutils`
 from inside your environment, and run:  
 
-    python3 pip install .
+    python3 -m pip install .
+
+It is recommended to use a virtual environment.
 
 There are plans to host the library on PyPI in due course.
 
 ## Getting Started
 There are examples of some of the different functionalities in
-```examples.py```.
+`examples.py`.
 This can be run using 
 
     python3 examples.py
@@ -21,7 +29,30 @@ Contributions and collaborations are welcome from anyone with an
 interest in python and archery.
 Please get in touch.
 
+### Code of Conduct
+Everyone participating in the _archeryutils_ project, and in particular in the
+issue tracker, pull requests, and social media activity, is expected to treat other
+people with respect and more generally to follow the guidelines articulated in the
+[Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
+
 ## Usage
 Usage is allowed under the licensing specified.  
 We encourage usage and feel free to make feature requests.  
-It is appreciated if credit can be given in projects using ```archeryutils```.
+It is appreciated if credit can be given in projects using `archeryutils`.
+
+## Used by
+The following projects make use of this code in some way:
+[archerycalculator](https://archerycalculator.co.uk), MyTargets, Golden Records,
+Expert Archer.
+
+Are we missing anyone? Let us know.
+
+## Authors and Acknowledgment
+See [Contributors](https://github.com/jatkinson1000/archeryutils/graphs/contributors) for a list of contributors towards this project.
+
+If you use this software in your work, please cite
+
+Alternatively, [CITATION.cff](https://github.com/jatkinson1000/archeryutils/blob/master/CITATION.cff) provides citation metadata, which can also be accessed from [GitHub](https://github.com/jatkinson1000/archeryutils).
+
+## License
+archeryutils is distributed under the [MIT Licence](https://github.com/jatkinson1000/archeryutils/blob/main/LICENSE).
