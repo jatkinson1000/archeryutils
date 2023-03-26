@@ -2,7 +2,7 @@
 
 ![GitHub](https://img.shields.io/github/license/jatkinson1000/archeryutils?style=plastic)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jatkinson1000/archeryutils/testing.yaml?style=plastic)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=plastic)](https://github.com/psf/black)
 
 A collection of archery code and utilities in python.
 Designed to make the development of archery codes and apps easier.
@@ -52,7 +52,7 @@ See [Contributors](https://github.com/jatkinson1000/archeryutils/graphs/contribu
 
 If you use this software in your work, please cite
 
-Alternatively, [CITATION.cff](https://github.com/jatkinson1000/archeryutils/blob/master/CITATION.cff) provides citation metadata, which can also be accessed from [GitHub](https://github.com/jatkinson1000/archeryutils).
+Alternatively, [CITATION.cff](https://github.com/jatkinson1000/archeryutils/blob/main/CITATION.cff) provides citation metadata, which can also be accessed from [GitHub](https://github.com/jatkinson1000/archeryutils).
 
 ## License
 archeryutils is distributed under the [MIT Licence](https://github.com/jatkinson1000/archeryutils/blob/main/LICENSE).
