@@ -28,12 +28,12 @@ class Target:
 
     def __init__(
         self,
-        diameter,
-        scoring_system,
-        distance,
-        native_dist_unit="metre",
-        indoor=False,
-    ):
+        diameter: float,
+        scoring_system: str,
+        distance: float,
+        native_dist_unit: str = "metre",
+        indoor: bool = False,
+    ) -> None:
         systems = [
             "5_zone",
             "10_zone",
@@ -93,7 +93,7 @@ class Target:
         self.scoring_system = scoring_system
         self.indoor = indoor
 
-    def max_score(self):
+    def max_score(self) -> float:
         """
         Return the maximum numerical score possible on this target (i.e. not X).
 

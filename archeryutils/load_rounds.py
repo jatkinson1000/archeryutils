@@ -2,11 +2,12 @@
 import json
 from pathlib import Path
 import warnings
+from typing import Union, List, Dict, Any
 
 from archeryutils.rounds import Pass, Round
 
 
-def read_json_to_round_dict(json_filelist):
+def read_json_to_round_dict(json_filelist: Union[str, List[str]]) -> Dict[str, Round]:
     """
     Read round information from a json file into a dictionary of rounds.
 
@@ -127,7 +128,7 @@ def read_json_to_round_dict(json_filelist):
     return round_dict
 
 
-class DotDict(dict):
+class DotDict(Dict[str, Any]):
     """
     A subclass of dict to provide dot notation access to a dictionary.
 
@@ -136,7 +137,7 @@ class DotDict(dict):
     https://goodcode.io/articles/python-dict-object/
     """
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         """
         getter.
 
@@ -149,7 +150,7 @@ class DotDict(dict):
             return self[name]
         raise AttributeError(self._attribute_err_msg(name))
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Any) -> None:
         """
         setter.
 
@@ -162,7 +163,7 @@ class DotDict(dict):
         """
         self[name] = value
 
-    def __delattr__(self, name):
+    def __delattr__(self, name: str) -> None:
         """
         delete.
 
@@ -182,8 +183,6 @@ class DotDict(dict):
 
 
 # Generate a set of default rounds that come with this module, accessible as a DotDict:
-
-
 def _make_rounds_dict(json_name: str) -> DotDict:
     return DotDict(read_json_to_round_dict(json_name))
 

@@ -41,7 +41,11 @@ if __name__ == "__main__":
     # Handicaps
     # Print the continuous score that is comes from this handicap
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 38.25, "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        38.25,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 38.25 on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
@@ -49,7 +53,11 @@ if __name__ == "__main__":
 
     # Print the continuous score that is comes from this handicap
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 38, "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        38,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 38 on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
@@ -107,7 +115,13 @@ if __name__ == "__main__":
     hc_func.print_handicap_table(
         np.arange(125.0, 9.0, -1.0),
         "AA2",
-        [load_rounds.WA_outdoor.wa720_70, load_rounds.AGB_outdoor_metric.metric_122_50, load_rounds.AGB_outdoor_metric.metric_122_30, load_rounds.WA_outdoor.wa1440_90, load_rounds.AGB_outdoor_imperial.york],
+        [
+            load_rounds.WA_outdoor.wa720_70,
+            load_rounds.AGB_outdoor_metric.metric_122_50,
+            load_rounds.AGB_outdoor_metric.metric_122_30,
+            load_rounds.WA_outdoor.wa1440_90,
+            load_rounds.AGB_outdoor_imperial.york,
+        ],
         hc_params,
         printout=False,
         round_scores_up=False,
@@ -119,7 +133,12 @@ if __name__ == "__main__":
     hc_func.print_handicap_table(
         np.arange(0.0, 151.0, 1.0),
         "AGBold",
-        [load_rounds.WA_outdoor.wa720_70, load_rounds.AGB_outdoor_metric.metric_122_50, load_rounds.AGB_outdoor_metric.metric_122_30, load_rounds.WA_outdoor.wa1440_90],
+        [
+            load_rounds.WA_outdoor.wa720_70,
+            load_rounds.AGB_outdoor_metric.metric_122_50,
+            load_rounds.AGB_outdoor_metric.metric_122_30,
+            load_rounds.WA_outdoor.wa1440_90,
+        ],
         hc_params,
         printout=False,
         round_scores_up=False,
@@ -178,7 +197,11 @@ if __name__ == "__main__":
 
     # Print the continuous score that is comes from this handicap
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 51., "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        51.0,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 51. on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
@@ -186,7 +209,11 @@ if __name__ == "__main__":
 
     # Print the continuous score that is comes from this handicap
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 50.0, "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        50.0,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 50.0 on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
@@ -194,7 +221,11 @@ if __name__ == "__main__":
 
     # Print the continuous score that is comes from this handicap
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 49., "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        49.0,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 49. on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
@@ -265,19 +296,31 @@ if __name__ == "__main__":
     )
 
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 50., "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        50.0,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 50. on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
     )
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 51., "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        51.0,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 51. on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
     )
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 52., "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        52.0,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 52. on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
@@ -306,7 +349,11 @@ if __name__ == "__main__":
     # Handicaps
     # Print the continuous score that is comes from this handicap
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 41.5, "AGB", hc_params, round_score_up=False
+        load_rounds.AGB_outdoor_imperial.york,
+        41.5,
+        "AGB",
+        hc_params,
+        round_score_up=False,
     )
     print(
         f"A handicap of 41.5 on a {load_rounds.AGB_outdoor_imperial.york.name} is a continuous score of {score_from_hc}."
@@ -314,7 +361,11 @@ if __name__ == "__main__":
 
     # Print the minimum discrete score that is required to get this handicap
     score_from_hc = hc_eq.score_for_round(
-        load_rounds.AGB_outdoor_imperial.york, 52.5, "AGB", hc_params, round_score_up=True
+        load_rounds.AGB_outdoor_imperial.york,
+        52.5,
+        "AGB",
+        hc_params,
+        round_score_up=True,
     )
     print(
         f"A handicap of 52.5 on a {load_rounds.AGB_outdoor_imperial.york.name} requires a minimum score of {score_from_hc}."
@@ -354,7 +405,11 @@ if __name__ == "__main__":
     )
 
     hc_from_score = hc_func.handicap_from_score(
-        1295, load_rounds.AGB_outdoor_imperial.bristol_i, "AGB", hc_params, int_prec=True
+        1295,
+        load_rounds.AGB_outdoor_imperial.bristol_i,
+        "AGB",
+        hc_params,
+        int_prec=True,
     )
     print(
         f"A score of 1295 on a {load_rounds.AGB_outdoor_imperial.bristol_i.name} is a discrete handicap of {hc_from_score}."
@@ -362,7 +417,13 @@ if __name__ == "__main__":
     hc_func.print_handicap_table(
         np.arange(125.0, 9.0, -1.0),
         "AA2",
-        [load_rounds.WA_outdoor.wa720_70, load_rounds.AGB_outdoor_metric.metric_122_50, load_rounds.AGB_outdoor_metric.metric_122_30, load_rounds.WA_outdoor.wa1440_90, load_rounds.AGB_outdoor_imperial.york],
+        [
+            load_rounds.WA_outdoor.wa720_70,
+            load_rounds.AGB_outdoor_metric.metric_122_50,
+            load_rounds.AGB_outdoor_metric.metric_122_30,
+            load_rounds.WA_outdoor.wa1440_90,
+            load_rounds.AGB_outdoor_imperial.york,
+        ],
         hc_params,
         printout=False,
         round_scores_up=False,
