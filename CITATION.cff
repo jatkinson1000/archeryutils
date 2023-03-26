@@ -1,0 +1,21 @@
+# YAML 1.2
+---
+cff-version: 1.2.0
+title: "ArcheryUtils"
+license: MIT
+repository-code: "https://github.com/jatkinson1000/archeryutils"
+url: ""
+version: ""
+date-released: 2022-12-13
+type: software
+authors: 
+  - given-names: Jack
+    family-names: Atkinson
+    affiliation: The University of Cambridge
+    alias: jatkinson1000
+    orcid: "https://orcid.org/0000-0001-5001-4812"
+  - given-names: Liam
+    family-names: Pattinson
+    affiliation: The University of York
+    alias: LiamPattinson
+message: "If you use this software, please cite it using these metadata."
