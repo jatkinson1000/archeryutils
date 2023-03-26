@@ -22,6 +22,7 @@ jobs:
       with:
         python-version: "3.11"
     - run: pip install pytest coverage
+           pip install .
 
     # annotate each step with `if: always` to run all regardless
     - name: Check coverage
