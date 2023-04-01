@@ -31,7 +31,7 @@ def print_handicap_table(
     hc_dat: hc_eq.HcParams,
     arrow_d: Optional[float] = None,
     round_scores_up: bool = True,
-    clean_gaps: bool = False,
+    clean_gaps: bool = True,
     printout: bool = True,
     filename: Optional[str] = None,
     csvfile: Optional[str] = None,
