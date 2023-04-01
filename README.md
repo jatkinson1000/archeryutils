@@ -1,7 +1,7 @@
 # archeryutils
 
 ![GitHub](https://img.shields.io/github/license/jatkinson1000/archeryutils)
-[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jatkinson1000/archeryutils/testing.yaml)
 [![codecov](https://codecov.io/gh/jatkinson1000/archeryutils/branch/main/graph/badge.svg?token=AZU7G6H8T0)](https://codecov.io/gh/jatkinson1000/archeryutils)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -40,18 +40,16 @@ This can be run using:
     jupyter notebook examples.ipynb
 
 ### License
-Copyright &copy: Jack Atkinson
+Copyright &copy; Jack Atkinson
 
-archeryutils is distributed under the
+_archeryutils_ is distributed under the
 [MIT Licence](https://github.com/jatkinson1000/archeryutils/blob/main/LICENSE).
 
 ### Authors and Acknowledgment
 See [Contributors](https://github.com/jatkinson1000/archeryutils/graphs/contributors)
 for a list of contributors towards this project.
 
-If you use this software in your work, please cite
-
-Alternatively,
+If you use this software in your work, please provide visible credit/citation.
 [CITATION.cff](https://github.com/jatkinson1000/archeryutils/blob/main/CITATION.cff)
 provides citation metadata, which can also be accessed from
 [GitHub](https://github.com/jatkinson1000/archeryutils).
@@ -70,7 +68,6 @@ interest in python and archery.
 
 For bugs, feature requests, and clear suggestions for improvement please
 [open an issue](https://github.com/jatkinson1000/archeryutils/issues).
-
 For more abstract ideas for the project please
 [open a discussion](https://github.com/jatkinson1000/archeryutils/discussions).
 
