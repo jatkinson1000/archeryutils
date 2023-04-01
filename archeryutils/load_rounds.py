@@ -192,6 +192,10 @@ AGB_outdoor_metric = _make_rounds_dict("AGB_outdoor_metric.json")
 AGB_indoor = _make_rounds_dict("AGB_indoor.json")
 WA_outdoor = _make_rounds_dict("WA_outdoor.json")
 WA_indoor = _make_rounds_dict("WA_indoor.json")
+WA_field = _make_rounds_dict("WA_field.json")
+IFAA_field = _make_rounds_dict("IFAA_field.json")
+WA_VI = _make_rounds_dict("WA_VI.json")
+AGB_VI = _make_rounds_dict("AGB_VI.json")
 custom = _make_rounds_dict("Custom.json")
 
 del _make_rounds_dict
