@@ -99,6 +99,10 @@ def print_handicap_table(
             round_i, hcs, hc_sys, hc_dat, arrow_d, round_score_up=round_scores_up
         )
 
+    # If rounding scores up we don't want to display trailing zeros, so ensure int_prec
+    if round_scores_up:
+        int_prec = True
+
     if int_prec:
         table = table.astype(int)
 
