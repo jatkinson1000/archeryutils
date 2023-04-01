@@ -1,0 +1,33 @@
+name: Coverage
+
+on:
+  # run on every push to main
+  push:
+    branches:
+    - main
+  # run on every push (not commit) to a PR, plus open/reopen
+  pull_request:
+    types:
+    - synchronize
+    - opened
+    - reopened
+
+jobs:
+  coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    - run: pip install pytest coverage
+           pip install .
+
+    # annotate each step with `if: always` to run all regardless
+    - name: Check coverage
+      if: always()
+      run: coverage run -m pytest .
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
