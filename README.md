@@ -17,12 +17,12 @@ Contains:
 
 
 ## Usage
-Usage is allowed under the [licensing specified](https://github.com/jatkinson1000/archeryutils/tree/project-documentation#license).  
-We encourage usage and welcome feature requests.  
+Usage is allowed under the [licensing specified](https://github.com/jatkinson1000/archeryutils#license).
+We encourage usage and welcome feature requests.
 It is appreciated if visible credit is given by any projects using `archeryutils`.
 
 ### Installation
-To install clone the repository, navigate to `/archeryutils`, and run:  
+To install clone the repository, navigate to `/archeryutils`, and run:
 
     python3 -m pip install .
 
