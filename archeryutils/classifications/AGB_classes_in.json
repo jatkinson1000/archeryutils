@@ -1,4 +1,5 @@
 {
+  "location": "indoor",
   "classes" : ["MB1", "MB2", "B1", "B2", "A1", "A2"],
   "classes_long" : ["Master Bowman 1",
                     "Master Bowman 2",
