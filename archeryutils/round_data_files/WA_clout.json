@@ -1,0 +1,38 @@
+[
+  {"name" : "WA Clout (185m)",
+   "codename" : "wa_clout_185",
+   "location" : "clout",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 36, "diameter" : 1500, "scoring" : "metric_clout", "distance" : 185, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA Clout (165m)",
+   "codename" : "wa_clout_165",
+   "location" : "clout",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 36, "diameter" : 1500, "scoring" : "metric_clout", "distance" : 165, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA Clout (125m)",
+   "codename" : "wa_clout_125",
+   "location" : "clout",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 36, "diameter" : 1500, "scoring" : "metric_clout", "distance" : 125, "dist_unit" : "metre"}]
+  },
+  {"name" : "Metric Clout (110m)",
+   "codename" : "metric_clout_110",
+   "location" : "clout",
+   "body" : "AGB",
+   "passes" : [{"n_arrows" : 36, "diameter" : 1500, "scoring" : "metric_clout", "distance" : 110, "dist_unit" : "metre"}]
+  },
+  {"name" : "Metric Clout (90m)",
+   "codename" : "wa_clout_90",
+   "location" : "clout",
+   "body" : "AGB",
+   "passes" : [{"n_arrows" : 36, "diameter" : 1500, "scoring" : "metric_clout", "distance" : 90, "dist_unit" : "metre"}]
+  },
+  {"name" : "Metric Clout (75m)",
+   "codename" : "wa_clout_75",
+   "location" : "clout",
+   "body" : "AGB",
+   "passes" : [{"n_arrows" : 36, "diameter" : 1500, "scoring" : "metric_clout", "distance" : 75, "dist_unit" : "metre"}]
+  }
+]

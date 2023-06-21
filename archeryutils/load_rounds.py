@@ -79,6 +79,14 @@ def read_json_to_round_dict(json_filelist: Union[str, List[str]]) -> Dict[str, R
             ):
                 round_i["indoor"] = False
                 round_i["location"] = "field"
+            elif round_i["location"] in (
+                "c",
+                "C",
+                "clout",
+                "Clout",
+            ):
+                round_i["indoor"] = False
+                round_i["location"] = "clout"
             else:
                 warnings.warn(
                     f"Location not recognised for round {round_i['name']}. "
@@ -190,8 +198,10 @@ def _make_rounds_dict(json_name: str) -> DotDict:
 AGB_outdoor_imperial = _make_rounds_dict("AGB_outdoor_imperial.json")
 AGB_outdoor_metric = _make_rounds_dict("AGB_outdoor_metric.json")
 AGB_indoor = _make_rounds_dict("AGB_indoor.json")
+AGB_clout = _make_rounds_dict("AGB_clout.json")
 WA_outdoor = _make_rounds_dict("WA_outdoor.json")
 WA_indoor = _make_rounds_dict("WA_indoor.json")
+WA_clout = _make_rounds_dict("WA_clout.json")
 WA_field = _make_rounds_dict("WA_field.json")
 IFAA_field = _make_rounds_dict("IFAA_field.json")
 WA_VI = _make_rounds_dict("WA_VI.json")

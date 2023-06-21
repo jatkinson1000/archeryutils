@@ -1,0 +1,32 @@
+[
+  {"name" : "Imperial Clout (180y)",
+   "codename" : "imperial_clout_180",
+   "location" : "clout",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 36, "diameter" : 365.76, "scoring" : "imperial_clout", "distance" : 180, "dist_unit" : "yard"}]
+  },
+  {"name" : "Imperial Clout (140y)",
+   "codename" : "imperial_clout_140",
+   "location" : "clout",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 36, "diameter" : 365.76, "scoring" : "imperial_clout", "distance" : 140, "dist_unit" : "yard"}]
+  },
+  {"name" : "Imperial Clout (120y)",
+   "codename" : "imperial_clout_120",
+   "location" : "clout",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 36, "diameter" : 365.76, "scoring" : "imperial_clout", "distance" : 120, "dist_unit" : "yard"}]
+  },
+  {"name" : "Imperial Clout (100y)",
+   "codename" : "imperial_clout_100",
+   "location" : "clout",
+   "body" : "AGB",
+   "passes" : [{"n_arrows" : 36, "diameter" : 365.76, "scoring" : "imperial_clout", "distance" : 100, "dist_unit" : "yard"}]
+  },
+  {"name" : "Imperial Clout (80y)",
+   "codename" : "imperial_clout_80",
+   "location" : "clout",
+   "body" : "AGB",
+   "passes" : [{"n_arrows" : 36, "diameter" : 365.76, "scoring" : "imperial_clout", "distance" : 80, "dist_unit" : "yard"}]
+  }
+]
