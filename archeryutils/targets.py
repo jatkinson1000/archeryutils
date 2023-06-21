@@ -47,6 +47,8 @@ class Target:
             "Beiter_hit_miss",
             "Worcester",
             "Worcester_2_ring",
+            "imperial_clout",
+            "metric_clout",
         ]
 
         if scoring_system not in systems:
@@ -120,6 +122,8 @@ class Target:
             "IFAA_field_expert",
             "Worcester",
             "Worcester_2_ring",
+            "imperial_clout",
+            "metric_clout",
         ):
             return 5.0
         if self.scoring_system in ("Beiter_hit_miss"):

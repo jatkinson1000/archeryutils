@@ -20,7 +20,9 @@ distance and diameter:
   - IFAA_field
   - Beiter-hit-miss
   - Worcester
-  - Worcester 2-ring)
+  - Worcester (2-ring)
+  - Imperial Clout
+  - WA/Metric Clout
 
 Routine Listings
 ----------------
@@ -443,7 +445,7 @@ def arrow_score(  # pylint: disable=too-many-branches
     elif target.scoring_system == "Beiter_hit_miss":
         s_bar = 1.0 - np.exp(-((((tar_dia / 2.0) + arw_rad) / sig_r) ** 2))
 
-    elif target.scoring_system in ("Worcester", "IFAA_field_expert"):
+    elif target.scoring_system in ("Worcester", "IFAA_field_expert", "metric_clout"):
         s_bar = 5.0 - sum(
             np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
             for n in range(1, 6)
@@ -454,6 +456,16 @@ def arrow_score(  # pylint: disable=too-many-branches
             5.0
             - np.exp(-((((tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
             - 4.0 * np.exp(-((((2 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
+        )
+
+    elif target.scoring_system == "imperial_clout":
+        s_bar = (
+            5.0
+            - np.exp(-((((tar_dia / 16.0) + arw_rad) / sig_r) ** 2))
+            - sum(
+                np.exp(-((((n * tar_dia / 8.0) + arw_rad) / sig_r) ** 2))
+                for n in range(2, 6)
+            )
         )
 
     else:
