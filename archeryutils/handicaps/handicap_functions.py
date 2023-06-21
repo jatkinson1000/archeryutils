@@ -82,6 +82,9 @@ def print_handicap_table(
         "Small": "Sm",
         "Gents": "G",
         "Ladies": "L",
+        "Imperial": "I.",
+        "Metric Clout": "M. Clt",
+        "Clout": "Clt",
     }
 
     if not isinstance(hcs, np.ndarray):
