@@ -133,6 +133,6 @@
    "codename" : "vegas_300",
    "location" : "indoor",
    "body" : "AGB",
-   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 18, "dist_unit" : "metre"}]
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 20, "dist_unit" : "yard"}]
   }
 ]
