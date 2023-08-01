@@ -1,11 +1,13 @@
 {
   "location": "indoor",
-  "classes" : ["MB1", "MB2", "B1", "B2", "A1", "A2"],
-  "classes_long" : ["Master Bowman 1",
-                    "Master Bowman 2",
-                    "Bowman 1",
-                    "Bowman 2",
-                    "Archer 1",
-                    "Archer 2"
+  "classes" : ["GMB-I", "MB-I", "B1-I", "B2-I", "B3-I", "A1-I", "A2-I", "A3-I"],
+  "classes_long" : ["Grand Master Bowman (Indoor)",
+                    "Master Bowman (Indoor)",
+                    "Bowman 1 (Indoor)",
+                    "Bowman 2 (Indoor)",
+                    "Bowman 3 (Indoor)",
+                    "Archer 1 (Indoor)",
+                    "Archer 2 (Indoor)",
+                    "Archer 3 (Indoor)"
   ]
 }

@@ -5,7 +5,7 @@
    "genderStep_out" : 4,
    "ageStep_out" : 6,
    "datum_in" : 15,
-   "classStep_in" : 9,
+   "classStep_in" : 6,
    "genderStep_in" : 4,
    "ageStep_in" : 6
   },
@@ -15,7 +15,7 @@
    "genderStep_out" : 5,
    "ageStep_out" : 6.5,
    "datum_in" : 30,
-   "classStep_in" : 10.5,
+   "classStep_in" : 7,
    "genderStep_in" : 5,
    "ageStep_in" : 6.5
 
@@ -26,7 +26,7 @@
    "genderStep_out" : 5.5,
    "ageStep_out" : 5.5,
    "datum_in" : 47,
-   "classStep_in" : 8.25,
+   "classStep_in" : 5.5,
    "genderStep_in" : 5.5,
    "ageStep_in" : 5.5
 
@@ -37,7 +37,7 @@
    "genderStep_out" : 7,
    "ageStep_out" : 6,
    "datum_in" : 65,
-   "classStep_in" : 9,
+   "classStep_in" : 6,
    "genderStep_in" : 7,
    "ageStep_in" : 6
 

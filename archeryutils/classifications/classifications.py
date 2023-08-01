@@ -472,21 +472,9 @@ def _make_AGB_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    # Lists of prestige rounds defined by 'codename' of 'Round' class
-    # TODO: convert this to json?
     # For score purposes in classifications we use the full face, not the triple.
     # Option of having triple is handled in get classification function
     # Compound version of rounds is handled below.
-    prestige_imperial = [
-        "portsmouth",
-        "portsmouth_triple",
-    ]
-    prestige_metric = [
-        "wa18",
-        "wa18_triple",
-        "wa25",
-        "wa25_triple",
-    ]
 
     all_indoor_rounds = load_rounds.read_json_to_round_dict(
         [
@@ -543,25 +531,11 @@ def _make_AGB_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                         + (i - 1) * bowstyle["classStep_in"]
                     )
 
-                # Assign prestige rounds for the category
-                #  - no dependence on bowstyle, distance, and age
-                prestige_rounds = prestige_imperial + prestige_metric
-                if bowstyle["bowstyle"].lower() == "compound":
-                    prestige_rounds = [
-                        i + "_compound" if "triple" not in i else i
-                        for i in prestige_rounds
-                    ]
-                    prestige_rounds = [
-                        i.replace("_triple", "_compound_triple")
-                        for i in prestige_rounds
-                    ]
-
                 # TODO: class names and long are duplicated many times here
                 #   Consider a method to reduce this (affects other code)
                 classification_dict[groupname] = {
                     "classes": AGB_classes_in,
                     "class_HC": class_HC,
-                    "prestige_rounds": prestige_rounds,
                     "classes_long": AGB_classes_in_long,
                 }
 
@@ -1208,13 +1182,6 @@ def calculate_AGB_indoor_classification(
 
     class_data: Dict[str, Any] = dict(zip(group_data["classes"], class_scores))
 
-    # is it a prestige round? If not remove MB as an option
-    if roundname not in AGB_indoor_classifications[groupname]["prestige_rounds"]:
-        # TODO: a list of dictionary keys is super dodgy python...
-        #   can this be improved?
-        for MB_class in list(class_data.keys())[0:2]:
-            del class_data[MB_class]
-
     # What is the highest classification this score gets?
     to_del = []
     for classname, classscore in class_data.items():
@@ -1300,11 +1267,6 @@ def AGB_indoor_classification_scores(
         )[0]
         for i, class_i in enumerate(group_data["classes"])
     ]
-
-    # Reduce list based on other criteria besides handicap
-    # is it a prestige round? If not remove MB scores
-    if roundname not in AGB_indoor_classifications[groupname]["prestige_rounds"]:
-        class_scores[0:2] = [-9999] * 2
 
     # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
     if any(isinstance(x, np.ndarray) for x in class_scores):
