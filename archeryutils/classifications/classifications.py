@@ -540,7 +540,7 @@ def _make_AGB_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                         bowstyle["datum_in"]
                         + age_steps * bowstyle["ageStep_in"]
                         + gender_steps * bowstyle["genderStep_in"]
-                        + (i - 2) * bowstyle["classStep_in"]
+                        + (i - 1) * bowstyle["classStep_in"]
                     )
 
                 # Assign prestige rounds for the category
@@ -555,7 +555,7 @@ def _make_AGB_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                         i.replace("_triple", "_compound_triple")
                         for i in prestige_rounds
                     ]
-                print(prestige_rounds)
+
                 # TODO: class names and long are duplicated many times here
                 #   Consider a method to reduce this (affects other code)
                 classification_dict[groupname] = {
@@ -1208,6 +1208,13 @@ def calculate_AGB_indoor_classification(
 
     class_data: Dict[str, Any] = dict(zip(group_data["classes"], class_scores))
 
+    # is it a prestige round? If not remove MB as an option
+    if roundname not in AGB_indoor_classifications[groupname]["prestige_rounds"]:
+        # TODO: a list of dictionary keys is super dodgy python...
+        #   can this be improved?
+        for MB_class in list(class_data.keys())[0:2]:
+            del class_data[MB_class]
+
     # What is the highest classification this score gets?
     to_del = []
     for classname, classscore in class_data.items():
@@ -1293,6 +1300,11 @@ def AGB_indoor_classification_scores(
         )[0]
         for i, class_i in enumerate(group_data["classes"])
     ]
+
+    # Reduce list based on other criteria besides handicap
+    # is it a prestige round? If not remove MB scores
+    if roundname not in AGB_indoor_classifications[groupname]["prestige_rounds"]:
+        class_scores[0:2] = [-9999] * 2
 
     # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
     if any(isinstance(x, np.ndarray) for x in class_scores):
