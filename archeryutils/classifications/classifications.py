@@ -1172,50 +1172,28 @@ def calculate_AGB_indoor_classification(
     """
     # TODO: Need routines to sanitise/deal with variety of user inputs
 
-    # TODO: Should this be defined outside the function to reduce I/O or does
-    #   it have no effect?
-    all_indoor_rounds = load_rounds.read_json_to_round_dict(
-        [
-            "AGB_indoor.json",
-            "WA_indoor.json",
-        ]
+    # Get scores required on this round for each classification
+    # Enforcing full size face
+    all_class_scores = AGB_indoor_classification_scores(
+        roundname,
+        bowstyle,
+        gender,
+        age_group,
+        hc_scheme,
     )
-
-    # deal with reduced categories:
-    if bowstyle.lower() in ("flatbow", "traditional", "asiatic"):
-        bowstyle = "Barebow"
 
     groupname = get_groupname(bowstyle, gender, age_group)
     group_data = AGB_indoor_classifications[groupname]
-
-    hc_params = hc_eq.HcParams()
-
-    # Get scores required on this round for each classification
-    # Enforce full size face
-    class_scores = [
-        hc_eq.score_for_round(
-            all_indoor_rounds[strip_spots(roundname)],
-            group_data["class_HC"][i],
-            hc_scheme,
-            hc_params,
-            round_score_up=True,
-        )[0]
-        for i, class_i in enumerate(group_data["classes"])
-    ]
-
-    class_data: Dict[str, Any] = dict(zip(group_data["classes"], class_scores))
+    class_data: Dict[str, Any] = dict(zip(group_data["classes"], all_class_scores))
 
     # What is the highest classification this score gets?
+    # < 0 handles max scores, > score handles higher classifications
     to_del = []
     for classname, classscore in class_data.items():
-        if classscore > score:
+        if classscore < 0 or classscore > score:
             to_del.append(classname)
     for del_class in to_del:
         del class_data[del_class]
-
-    # NB No fiddle for Worcester required with this logic...
-    # Beware of this later on, however, if we wish to rectify the 'anomaly'
-    # TODO Treat indoor maximum scores
 
     try:
         classification_from_score = list(class_data.keys())[0]
@@ -1254,7 +1232,7 @@ def AGB_indoor_classification_scores(
     Returns
     -------
     classification_scores : ndarray
-        abbreviation of the classification appropriate for this score
+        scores required for each classification band
 
     References
     ----------
@@ -1300,6 +1278,19 @@ def AGB_indoor_classification_scores(
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
+
+    # Handle possibility of max scores by checking 1 HC point above current (floored to handle 0.5)
+    for i, (sc, hc) in enumerate(zip(int_class_scores, group_data["class_HC"])):
+        if sc == all_indoor_rounds[roundname].max_score():
+            next_score = hc_eq.score_for_round(
+                        all_indoor_rounds[strip_spots(roundname)],
+                        np.floor(hc) + 1,
+                        hc_scheme,
+                        hc_params,
+                        round_score_up=True,
+                    )[0]
+            if next_score == sc:
+                int_class_scores[i] = -9999
 
     return int_class_scores
 
