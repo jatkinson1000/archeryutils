@@ -1109,6 +1109,28 @@ def AGB_old_indoor_classification_scores(
     return int_class_scores
 
 
+def strip_spots(
+    roundname: str,
+) -> str:
+    """
+    Calculate AGB indoor classification from score.
+
+    Parameters
+    ----------
+    roundname : str
+        name of round shot as given by 'codename' in json
+
+    Returns
+    -------
+    roundname : str
+        name of round shot as given by 'codename' in json
+
+    """
+    roundname = roundname.replace("_triple", "")
+    roundname = roundname.replace("_5_centre", "")
+    return roundname
+    
+
 def calculate_AGB_indoor_classification(
     roundname: str,
     score: float,
@@ -1169,9 +1191,10 @@ def calculate_AGB_indoor_classification(
     hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
+    # Enforce full size face
     class_scores = [
         hc_eq.score_for_round(
-            all_indoor_rounds[roundname],
+            all_indoor_rounds[strip_spots(roundname)],
             group_data["class_HC"][i],
             hc_scheme,
             hc_params,
@@ -1257,9 +1280,10 @@ def AGB_indoor_classification_scores(
     hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
+    # Enforce full size face
     class_scores = [
         hc_eq.score_for_round(
-            all_indoor_rounds[roundname],
+            all_indoor_rounds[strip_spots(roundname)],
             group_data["class_HC"][i],
             hc_scheme,
             hc_params,
