@@ -1129,7 +1129,53 @@ def strip_spots(
     roundname = roundname.replace("_triple", "")
     roundname = roundname.replace("_5_centre", "")
     return roundname
-    
+
+
+def get_compound_codename(round_codenames):
+    """
+    convert any indoor rounds with special compound scoring to the compound format
+
+    Parameters
+    ----------
+    round_codenames : str or list of str
+        list of str round codenames to check
+
+    Returns
+    -------
+    round_codenames : str or list of str
+        list of amended round codenames for compound
+
+    References
+    ----------
+    """
+    notlistflag = False
+    if not isinstance(round_codenames, list):
+        round_codenames = [round_codenames]
+        notlistflag = True
+
+    convert_dict = {
+        "bray_i": "bray_i_compound",
+        "bray_i_triple": "bray_i_compound_triple",
+        "bray_ii": "bray_ii_compound",
+        "bray_ii_triple": "bray_ii_compound_triple",
+        "stafford": "stafford_compound",
+        "portsmouth": "portsmouth_compound",
+        "portsmouth_triple": "portsmouth_compound_triple",
+        "vegas": "vegas_compound",
+        "wa18": "wa18_compound",
+        "wa18_triple": "wa18_compound_triple",
+        "wa25": "wa25_compound",
+        "wa25_triple": "wa25_compound_triple",
+    }
+
+    for i, codename in enumerate(round_codenames):
+        if codename in convert_dict:
+            round_codenames[i] = convert_dict[codename]
+    if notlistflag:
+        return round_codenames[0]
+    else:
+        return round_codenames
+
 
 def calculate_AGB_indoor_classification(
     roundname: str,
@@ -1174,9 +1220,9 @@ def calculate_AGB_indoor_classification(
 
     if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
         bowstyle = "Barebow"
-    
+
     # Get scores required on this round for each classification
-    # Enforcing full size face
+    # Enforcing full size face and compound scoring (for compounds)
     all_class_scores = AGB_indoor_classification_scores(
         roundname,
         bowstyle,
@@ -1254,6 +1300,10 @@ def AGB_indoor_classification_scores(
     # deal with reduced categories:
     if bowstyle.lower() in ("flatbow", "traditional", "asiatic"):
         bowstyle = "Barebow"
+
+    # enforce compound scoring
+    if bowstyle.lower() in ("compound"):
+        roundname = get_compound_codename(round_codenames)
 
     groupname = get_groupname(bowstyle, gender, age_group)
     group_data = AGB_indoor_classifications[groupname]
