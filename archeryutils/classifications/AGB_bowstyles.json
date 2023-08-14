@@ -1,26 +1,45 @@
 [
   {"bowstyle" : "Compound",
-   "datum" : 15,
-   "classStep" : 6,
-   "genderStep" : 4,
-   "ageStep" : 6
+   "datum_out" : 15,
+   "classStep_out" : 6,
+   "genderStep_out" : 4,
+   "ageStep_out" : 6,
+   "datum_in" : 11,
+   "classStep_in" : 8,
+   "genderStep_in" : 4,
+   "ageStep_in" : 6
   },
   {"bowstyle" : "Recurve",
-   "datum" : 30,
-   "classStep" : 7,
-   "genderStep" : 5,
-   "ageStep" : 6.5
+   "datum_out" : 30,
+   "classStep_out" : 7,
+   "genderStep_out" : 5,
+   "ageStep_out" : 6.5,
+   "datum_in" : 29,
+   "classStep_in" : 7,
+   "genderStep_in" : 5,
+   "ageStep_in" : 6.5
+
   },
   {"bowstyle" : "Barebow",
-   "datum" : 47,
-   "classStep" : 5.5,
-   "genderStep" : 5.5,
-   "ageStep" : 5.5
+   "datum_out" : 47,
+   "classStep_out" : 5.5,
+   "genderStep_out" : 5.5,
+   "ageStep_out" : 5.5,
+   "datum_in" : 42,
+   "classStep_in" : 6.0,
+   "genderStep_in" : 5.5,
+   "ageStep_in" : 5.5
+
   },
   {"bowstyle" : "Longbow",
-   "datum" : 65,
-   "classStep" : 6,
-   "genderStep" : 7,
-   "ageStep" : 6
+   "datum_out" : 65,
+   "classStep_out" : 6,
+   "genderStep_out" : 7,
+   "ageStep_out" : 6,
+   "datum_in" : 61,
+   "classStep_in" : 6.5,
+   "genderStep_in" : 7,
+   "ageStep_in" : 6
+
   }
 ]
