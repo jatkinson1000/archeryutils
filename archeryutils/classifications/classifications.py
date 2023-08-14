@@ -1303,7 +1303,7 @@ def AGB_indoor_classification_scores(
 
     # enforce compound scoring
     if bowstyle.lower() in ("compound"):
-        roundname = get_compound_codename(round_codenames)
+        roundname = get_compound_codename(roundname)
 
     groupname = get_groupname(bowstyle, gender, age_group)
     group_data = AGB_indoor_classifications[groupname]
