@@ -1172,6 +1172,9 @@ def calculate_AGB_indoor_classification(
     """
     # TODO: Need routines to sanitise/deal with variety of user inputs
 
+    if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
+        bowstyle = "Barebow"
+    
     # Get scores required on this round for each classification
     # Enforcing full size face
     all_class_scores = AGB_indoor_classification_scores(
