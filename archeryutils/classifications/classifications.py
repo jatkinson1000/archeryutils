@@ -1336,12 +1336,12 @@ def AGB_indoor_classification_scores(
     for i, (sc, hc) in enumerate(zip(int_class_scores, group_data["class_HC"])):
         if sc == all_indoor_rounds[roundname].max_score():
             next_score = hc_eq.score_for_round(
-                        all_indoor_rounds[strip_spots(roundname)],
-                        np.floor(hc) + 1,
-                        hc_scheme,
-                        hc_params,
-                        round_score_up=True,
-                    )[0]
+                all_indoor_rounds[strip_spots(roundname)],
+                np.floor(hc) + 1,
+                hc_scheme,
+                hc_params,
+                round_score_up=True,
+            )[0]
             if next_score == sc:
                 int_class_scores[i] = -9999
 
