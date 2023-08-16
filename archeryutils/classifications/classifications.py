@@ -1332,18 +1332,25 @@ def AGB_indoor_classification_scores(
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
 
-    # Handle possibility of max scores by checking 1 HC point above current (floored to handle 0.5)
+    # Handle possibility of gaps in the tables or max scores by checking 1 HC point
+    # above current (floored to handle 0.5) and amending accordingly
     for i, (sc, hc) in enumerate(zip(int_class_scores, group_data["class_HC"])):
-        if sc == all_indoor_rounds[roundname].max_score():
-            next_score = hc_eq.score_for_round(
-                all_indoor_rounds[strip_spots(roundname)],
-                np.floor(hc) + 1,
-                hc_scheme,
-                hc_params,
-                round_score_up=True,
-            )[0]
-            if next_score == sc:
+        # if sc == all_indoor_rounds[roundname].max_score():
+        next_score = hc_eq.score_for_round(
+            all_indoor_rounds[strip_spots(roundname)],
+            np.floor(hc) + 1,
+            hc_scheme,
+            hc_params,
+            round_score_up=True,
+        )[0]
+        if next_score == sc:
+            # If already at max score this classification is impossible
+            if sc == all_indoor_rounds[roundname].max_score():
                 int_class_scores[i] = -9999
+            # If gap in table increase to next score
+            # (we assume here that no two classifications are only 1 point apart...)
+            else:
+                int_class_scores[i] += 1
 
     return int_class_scores
 
