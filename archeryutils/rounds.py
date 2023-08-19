@@ -32,6 +32,8 @@ class Pass:
     max_score()
         Returns the maximum score for Pass
     """
+    # Two too many arguments, but logically this structure makes sense => disable
+    # pylint: disable=too-many-arguments
 
     def __init__(
         self,
@@ -110,6 +112,8 @@ class Round:
         Returns the maximum score for Round
 
     """
+    # Two too many arguments, but logically this structure makes sense => disable
+    # pylint: disable=too-many-arguments
 
     def __init__(
         self,
