@@ -133,6 +133,12 @@
    "codename" : "vegas_300",
    "location" : "indoor",
    "body" : "AGB",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "yard"}]
+  },
+  {"name" : "Vegas 300 Triple",
+   "codename" : "vegas_300_triple",
+   "location" : "indoor",
+   "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 20, "dist_unit" : "yard"}]
   }
 ]
