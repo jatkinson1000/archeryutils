@@ -77,8 +77,6 @@ class HcParams:
         constant used in handicap equation
     AGBo_p1 : float
         exponent of distance scaling
-    AGBo_arw_d : float
-        arrow diameter used in the old AGB algorithm by D. Lane
 
     KEY PARAMETERS AND CONSTANTS FOR THE ARCHERY AUSTRALIA SCHEME
     AA_k0 : float
@@ -105,10 +103,14 @@ class HcParams:
         Diameter of an indoor arrow [metres]
     arw_d_out : float
         Diameter of an outdoor arrow [metres]
+    AGBo_arw_d : float
+        arrow diameter used in the old AGB algorithm by D. Lane [metres]
+    AA_arw_d_out : float
+        Diameter of an outdoor arrow in the Archery Australia scheme [metres]
 
     """
 
-    AGB_HC_DATA: dict[str, float] = field(
+    agb_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
                 "AGB_datum": 6.0,
@@ -119,7 +121,7 @@ class HcParams:
         )
     )
 
-    AGBo_HC_DATA: dict[str, float] = field(
+    agb_old_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
                 "AGBo_datum": 12.9,
@@ -133,7 +135,7 @@ class HcParams:
         )
     )
 
-    AA_HC_DATA: dict[str, float] = field(
+    aa_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
                 "AA_k0": 2.37,
@@ -143,7 +145,7 @@ class HcParams:
         )
     )
 
-    AA2_HC_DATA: dict[str, float] = field(
+    aa2_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
                 "AA2_k0": 2.57,
@@ -155,7 +157,7 @@ class HcParams:
         )
     )
 
-    ARW_D_DATA: dict[str, float] = field(
+    arw_d_data: dict[str, float] = field(
         default_factory=lambda: (
             {
                 "arw_d_in": 9.3e-3,
@@ -185,33 +187,33 @@ class HcParams:
         json_hc_params: "HcParams" = cls()
         with open(jsonpath, "r", encoding="utf-8") as read_file:
             paramsdict = json.load(read_file)
-        json_hc_params.AGB_HC_DATA["AGB_datum"] = paramsdict["AGB_datum"]
-        json_hc_params.AGB_HC_DATA["AGB_step"] = paramsdict["AGB_step"]
-        json_hc_params.AGB_HC_DATA["AGB_ang_0"] = paramsdict["AGB_ang_0"]
-        json_hc_params.AGB_HC_DATA["AGB_kd"] = paramsdict["AGB_kd"]
-        json_hc_params.AGBo_HC_DATA["AGBo_datum"] = paramsdict["AGBo_datum"]
-        json_hc_params.AGBo_HC_DATA["AGBo_step"] = paramsdict["AGBo_step"]
-        json_hc_params.AGBo_HC_DATA["AGBo_ang_0"] = paramsdict["AGBo_ang_0"]
-        json_hc_params.AGBo_HC_DATA["AGBo_k1"] = paramsdict["AGBo_k1"]
-        json_hc_params.AGBo_HC_DATA["AGBo_k2"] = paramsdict["AGBo_k2"]
-        json_hc_params.AGBo_HC_DATA["AGBo_k3"] = paramsdict["AGBo_k3"]
-        json_hc_params.AGBo_HC_DATA["AGBo_p1"] = paramsdict["AGBo_p1"]
-        json_hc_params.AA_HC_DATA["AA_k0"] = paramsdict["AA_k0"]
-        json_hc_params.AA_HC_DATA["AA_ks"] = paramsdict["AA_ks"]
-        json_hc_params.AA_HC_DATA["AA_kd"] = paramsdict["AA_kd"]
-        json_hc_params.AA2_HC_DATA["AA2_k0"] = paramsdict["AA2_k0"]
-        json_hc_params.AA2_HC_DATA["AA2_ks"] = paramsdict["AA2_ks"]
-        json_hc_params.AA2_HC_DATA["AA2_f1"] = paramsdict["AA2_f1"]
-        json_hc_params.AA2_HC_DATA["AA2_f2"] = paramsdict["AA2_f2"]
-        json_hc_params.AA2_HC_DATA["AA2_d0"] = paramsdict["AA2_d0"]
-        json_hc_params.ARW_D_DATA["arrow_diameter_indoors"] = paramsdict[
+        json_hc_params.agb_hc_data["AGB_datum"] = paramsdict["AGB_datum"]
+        json_hc_params.agb_hc_data["AGB_step"] = paramsdict["AGB_step"]
+        json_hc_params.agb_hc_data["AGB_ang_0"] = paramsdict["AGB_ang_0"]
+        json_hc_params.agb_hc_data["AGB_kd"] = paramsdict["AGB_kd"]
+        json_hc_params.agb_old_hc_data["AGBo_datum"] = paramsdict["AGBo_datum"]
+        json_hc_params.agb_old_hc_data["AGBo_step"] = paramsdict["AGBo_step"]
+        json_hc_params.agb_old_hc_data["AGBo_ang_0"] = paramsdict["AGBo_ang_0"]
+        json_hc_params.agb_old_hc_data["AGBo_k1"] = paramsdict["AGBo_k1"]
+        json_hc_params.agb_old_hc_data["AGBo_k2"] = paramsdict["AGBo_k2"]
+        json_hc_params.agb_old_hc_data["AGBo_k3"] = paramsdict["AGBo_k3"]
+        json_hc_params.agb_old_hc_data["AGBo_p1"] = paramsdict["AGBo_p1"]
+        json_hc_params.aa_hc_data["AA_k0"] = paramsdict["AA_k0"]
+        json_hc_params.aa_hc_data["AA_ks"] = paramsdict["AA_ks"]
+        json_hc_params.aa_hc_data["AA_kd"] = paramsdict["AA_kd"]
+        json_hc_params.aa2_hc_data["AA2_k0"] = paramsdict["AA2_k0"]
+        json_hc_params.aa2_hc_data["AA2_ks"] = paramsdict["AA2_ks"]
+        json_hc_params.aa2_hc_data["AA2_f1"] = paramsdict["AA2_f1"]
+        json_hc_params.aa2_hc_data["AA2_f2"] = paramsdict["AA2_f2"]
+        json_hc_params.aa2_hc_data["AA2_d0"] = paramsdict["AA2_d0"]
+        json_hc_params.arw_d_data["arrow_diameter_indoors"] = paramsdict[
             "arrow_diameter_indoors"
         ]
-        json_hc_params.ARW_D_DATA["arrow_diameter_outdoors"] = paramsdict[
+        json_hc_params.arw_d_data["arrow_diameter_outdoors"] = paramsdict[
             "arrow_diameter_outdoors"
         ]
-        json_hc_params.ARW_D_DATA["AGBo_arw_d"] = paramsdict["AGBo_arw_d"]
-        json_hc_params.ARW_D_DATA["AA_arw_d_out"] = paramsdict["AA_arw_d_out"]
+        json_hc_params.arw_d_data["AGBo_arw_d"] = paramsdict["AGBo_arw_d"]
+        json_hc_params.arw_d_data["AA_arw_d_out"] = paramsdict["AA_arw_d_out"]
 
         return json_hc_params
 
@@ -257,7 +259,7 @@ def sigma_t(
     if hc_sys == "AGB":
         # New AGB (Archery GB) System
         # Written by Jack Atkinson
-        hc_data = hc_dat.AGB_HC_DATA
+        hc_data = hc_dat.agb_hc_data
         sig_t = (
             hc_data["AGB_ang_0"]
             * ((1.0 + hc_data["AGB_step"] / 100.0) ** (handicap + hc_data["AGB_datum"]))
@@ -267,7 +269,7 @@ def sigma_t(
     elif hc_sys == "AGBold":
         # Old AGB (Archery GB) System
         # Written by David Lane (2013)
-        hc_data = hc_dat.AGBo_HC_DATA
+        hc_data = hc_dat.agb_old_hc_data
         k_factor = hc_data["AGBo_k1"] * hc_data["AGBo_k2"] ** (
             handicap + hc_data["AGBo_k3"]
         )
@@ -288,7 +290,7 @@ def sigma_t(
         # Required so code elsewhere is unchanged
         # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so
         # convert to rad
-        hc_data = hc_dat.AA_HC_DATA
+        hc_data = hc_dat.aa_hc_data
         sig_t = (
             1.0e-3
             * np.sqrt(2.0)
@@ -304,7 +306,7 @@ def sigma_t(
         # Required so code elsewhere is unchanged
         # Factor of 1.0e-3 due to AA algorithm specifying sigma t in milliradians, so
         # convert to rad
-        hc_data = hc_dat.AA2_HC_DATA
+        hc_data = hc_dat.aa2_hc_data
         sig_t = (
             np.sqrt(2.0)
             * 1.0e-3
@@ -393,15 +395,15 @@ def arrow_score(  # pylint: disable=too-many-branches
     # otherwise select default from params based on in-/out-doors
     if arw_d is None:
         if hc_sys == "AGBold":
-            arw_rad = hc_dat.ARW_D_DATA["AGBo_arw_d"] / 2.0
+            arw_rad = hc_dat.arw_d_data["AGBo_arw_d"] / 2.0
         else:
             if target.indoor:
-                arw_rad = hc_dat.ARW_D_DATA["arw_d_in"] / 2.0
+                arw_rad = hc_dat.arw_d_data["arw_d_in"] / 2.0
             else:
                 if hc_sys in ("AA", "AA2"):
-                    arw_rad = hc_dat.ARW_D_DATA["AA_arw_d_out"] / 2.0
+                    arw_rad = hc_dat.arw_d_data["AA_arw_d_out"] / 2.0
                 else:
-                    arw_rad = hc_dat.ARW_D_DATA["arw_d_out"] / 2.0
+                    arw_rad = hc_dat.arw_d_data["arw_d_out"] / 2.0
     else:
         arw_rad = arw_d / 2.0
 
