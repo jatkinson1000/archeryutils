@@ -69,6 +69,8 @@ def print_handicap_table(
     -------
     None
     """
+    # Cannot see any other way to handle the options required here => ignore
+    # pylint: ignore=too-many-arguments
     # Abbreviations to replace headings with in Handicap Tables to keep concise
     abbreviations = {
         "Compound": "C",
@@ -156,8 +158,8 @@ def print_handicap_table(
 
     if filename is not None:
         print("Writing handicap table to file...", end="")
-        with open(filename, "w") as f:
-            f.write(output_str)
+        with open(filename, "w", encoding="utf-8") as table_file:
+            table_file.write(output_str)
         print("Done.")
 
 
@@ -265,6 +267,9 @@ def handicap_from_score(
         val, _ = hc_eq.score_for_round(
             rd, h, sys, hc_data, arw_dia, round_score_up=False
         )
+        # Cannot see alt way to handle options required here at present => ignore
+        # pylint: ignore=too-many-arguments
+
         # Ensure we return float, not np.ndarray
         # These 9 lines replace `return val-scr` so as to satisfy mypy --strict.
         # Should never be triggered in reality as h is type float.
