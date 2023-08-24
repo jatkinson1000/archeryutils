@@ -217,7 +217,6 @@ def strip_spots(
     -------
     roundname : str
         name of round shot as given by 'codename' in json
-
     """
     roundname = roundname.replace("_triple", "")
     roundname = roundname.replace("_5_centre", "")
@@ -226,7 +225,7 @@ def strip_spots(
 
 def get_compound_codename(round_codenames):
     """
-    convert any indoor rounds with special compound scoring to the compound format
+    Convert any indoor rounds with special compound scoring to the compound format.
 
     Parameters
     ----------
@@ -237,9 +236,6 @@ def get_compound_codename(round_codenames):
     -------
     round_codenames : str or list of str
         list of amended round codenames for compound
-
-    References
-    ----------
     """
     notlistflag = False
     if not isinstance(round_codenames, list):

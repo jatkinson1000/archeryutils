@@ -3,9 +3,9 @@ Code for calculating Archery GB indoor classifications.
 
 Routine Listings
 ----------------
-_make_AGB_old_indoor_classification_dict
-calculate_AGB_indoor_classification
-AGB_indoor_classification_scores
+_make_agb_old_indoor_classification_dict
+calculate_agb_indoor_classification
+agb_indoor_classification_scores
 """
 from typing import List, Dict, Any
 import numpy as np
@@ -13,6 +13,14 @@ import numpy as np
 from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
 import archeryutils.classifications.classification_utils as cls_funcs
+
+
+ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
+    [
+        "AGB_indoor.json",
+        "WA_indoor.json",
+    ]
+)
 
 
 def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
@@ -77,10 +85,10 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
-                class_HC = np.empty(len(agb_classes_in))
+                class_hc = np.empty(len(agb_classes_in))
                 for i in range(len(agb_classes_in)):
                     # Assign handicap for this classification
-                    class_HC[i] = (
+                    class_hc[i] = (
                         bowstyle["datum_in"]
                         + age_steps * bowstyle["ageStep_in"]
                         + gender_steps * bowstyle["genderStep_in"]
@@ -91,7 +99,7 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                 #   Consider a method to reduce this (affects other code)
                 classification_dict[groupname] = {
                     "classes": agb_classes_in,
-                    "class_HC": class_HC,
+                    "class_HC": class_hc,
                     "classes_long": agb_classes_in_long,
                 }
 
@@ -139,8 +147,6 @@ def calculate_agb_indoor_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    # TODO: Need routines to sanitise/deal with variety of user inputs
-
     if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
         bowstyle = "Barebow"
 
@@ -207,15 +213,6 @@ def agb_indoor_classification_scores(
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
     """
-    # TODO: Should this be defined outside the function to reduce I/O or does
-    #   it have no effect?
-    all_indoor_rounds = load_rounds.read_json_to_round_dict(
-        [
-            "AGB_indoor.json",
-            "WA_indoor.json",
-        ]
-    )
-
     # deal with reduced categories:
     if bowstyle.lower() in ("flatbow", "traditional", "asiatic"):
         bowstyle = "Barebow"
@@ -234,7 +231,7 @@ def agb_indoor_classification_scores(
     # Enforce full size face
     class_scores = [
         hc_eq.score_for_round(
-            all_indoor_rounds[cls_funcs.strip_spots(roundname)],
+            ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
             hc_scheme,
             hc_params,
@@ -256,7 +253,7 @@ def agb_indoor_classification_scores(
     # above current (floored to handle 0.5) and amending accordingly
     for i, (sc, hc) in enumerate(zip(int_class_scores, group_data["class_HC"])):
         next_score = hc_eq.score_for_round(
-            all_indoor_rounds[cls_funcs.strip_spots(roundname)],
+            ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             np.floor(hc) + 1,
             hc_scheme,
             hc_params,
@@ -264,7 +261,7 @@ def agb_indoor_classification_scores(
         )[0]
         if next_score == sc:
             # If already at max score this classification is impossible
-            if sc == all_indoor_rounds[roundname].max_score():
+            if sc == ALL_INDOOR_ROUNDS[roundname].max_score():
                 int_class_scores[i] = -9999
             # If gap in table increase to next score
             # (we assume here that no two classifications are only 1 point apart...)

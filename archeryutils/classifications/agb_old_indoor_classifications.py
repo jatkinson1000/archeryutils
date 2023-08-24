@@ -15,6 +15,14 @@ from archeryutils.handicaps import handicap_equations as hc_eq
 import archeryutils.classifications.classification_utils as cls_funcs
 
 
+ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
+    [
+        "AGB_indoor.json",
+        "WA_indoor.json",
+    ]
+)
+
+
 def _make_agb_old_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     """
     Generate AGB outdoor classification data.
@@ -73,7 +81,6 @@ def calculate_agb_old_indoor_classification(
     bowstyle: str,
     gender: str,
     age_group: str,
-    hc_scheme: str = "AGBold",
 ) -> str:
     """
     Calculate AGB indoor classification from score.
@@ -93,8 +100,6 @@ def calculate_agb_old_indoor_classification(
         archer's gender under AGB outdoor target rules
     age_group : str
         archer's age group under AGB outdoor target rules
-    hc_scheme : str
-        handicap scheme to be used for legacy purposes. Default AGBold
 
     Returns
     -------
@@ -106,17 +111,6 @@ def calculate_agb_old_indoor_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    # TODO: Need routines to sanitise/deal with variety of user inputs
-
-    # TODO: Should this be defined outside the function to reduce I/O or does
-    #   it have no effect?
-    all_indoor_rounds = load_rounds.read_json_to_round_dict(
-        [
-            "AGB_indoor.json",
-            "WA_indoor.json",
-        ]
-    )
-
     # deal with reduced categories:
     age_group = "Adult"
     if bowstyle.lower() not in ("compound"):
@@ -130,9 +124,9 @@ def calculate_agb_old_indoor_classification(
     # Get scores required on this round for each classification
     class_scores = [
         hc_eq.score_for_round(
-            all_indoor_rounds[roundname],
+            ALL_INDOOR_ROUNDS[roundname],
             group_data["class_HC"][i],
-            hc_scheme,
+            "AGBold",
             hc_params,
             round_score_up=True,
         )[0]
@@ -165,7 +159,6 @@ def agb_old_indoor_classification_scores(
     bowstyle: str,
     gender: str,
     age_group: str,
-    hc_scheme: str = "AGBold",
 ) -> List[int]:
     """
     Calculate AGB indoor classification scores for category.
@@ -183,8 +176,6 @@ def agb_old_indoor_classification_scores(
         archer's gender under AGB outdoor target rules
     age_group : str
         archer's age group under AGB outdoor target rules
-    hc_scheme : str
-        handicap scheme to be used for legacy purposes. Default AGBold
 
     Returns
     -------
@@ -196,15 +187,6 @@ def agb_old_indoor_classification_scores(
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
     """
-    # TODO: Should this be defined outside the function to reduce I/O or does
-    #   it have no effect?
-    all_indoor_rounds = load_rounds.read_json_to_round_dict(
-        [
-            "AGB_indoor.json",
-            "WA_indoor.json",
-        ]
-    )
-
     # deal with reduced categories:
     age_group = "Adult"
     if bowstyle.lower() not in ("compound"):
@@ -218,9 +200,9 @@ def agb_old_indoor_classification_scores(
     # Get scores required on this round for each classification
     class_scores = [
         hc_eq.score_for_round(
-            all_indoor_rounds[roundname],
+            ALL_INDOOR_ROUNDS[roundname],
             group_data["class_HC"][i],
-            hc_scheme,
+            "AGBold",
             hc_params,
             round_score_up=True,
         )[0]

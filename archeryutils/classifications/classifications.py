@@ -1,5 +1,5 @@
 """
-Code for calculating Archery GB classifications.
+Code for calculating Archery classifications.
 
 Extended Summary
 ----------------
@@ -8,5 +8,6 @@ in handicap_equations.py including inverse function and display.
 
 Routine Listings
 ----------------
-
+The contents of this module have now been abstracted into several files.
+This is to keep them of a manageable size.
 """
