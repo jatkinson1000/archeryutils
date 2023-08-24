@@ -8,9 +8,9 @@ in handicap_equations.py including inverse function and display.
 
 Routine Listings
 ----------------
-_make_AGB_field_classification_dict
-calculate_AGB_field_classification
-AGB_field_classification_scores
+_make_agb_field_classification_dict
+calculate_agb_field_classification
+agb_field_classification_scores
 
 """
 from typing import List, Dict, Any
@@ -204,8 +204,6 @@ def calculate_agb_field_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    # TODO: Need routines to sanitise/deal with variety of user inputs
-
     # deal with reduced categories:
     if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
         age_group = "Adult"
