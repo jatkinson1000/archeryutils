@@ -14,8 +14,8 @@
    "classStep_out" : 7,
    "genderStep_out" : 5,
    "ageStep_out" : 6.5,
-   "datum_in" : 29,
-   "classStep_in" : 7,
+   "datum_in" : 28,
+   "classStep_in" : 7.5,
    "genderStep_in" : 5,
    "ageStep_in" : 6.5
 
