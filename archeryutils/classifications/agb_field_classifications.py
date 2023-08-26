@@ -13,10 +13,19 @@ calculate_agb_field_classification
 agb_field_classification_scores
 
 """
+import re
 from typing import List, Dict, Any
 import numpy as np
 
+from archeryutils import load_rounds
 import archeryutils.classifications.classification_utils as cls_funcs
+
+
+ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
+    [
+        "WA_field.json",
+    ]
+)
 
 
 def _make_agb_field_classification_dict() -> Dict[str, Dict[str, Any]]:
@@ -204,10 +213,17 @@ def calculate_agb_field_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
+    # Check score is valid
+    if score < 0 or score > ALL_AGBFIELD_ROUNDS[roundname].max_score():
+        raise ValueError(
+            f"Invalid score of {score} for a {roundname}. "
+            f"Should be in range 0-{ALL_AGBFIELD_ROUNDS[roundname].max_score()}."
+        )
+
     # deal with reduced categories:
     if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
         age_group = "Adult"
-    else:
+    elif re.compile("under(18|16|15|14|12)").match(age_group.lower().replace(" ", "")):
         age_group = "Under 18"
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
@@ -275,7 +291,7 @@ def agb_field_classification_scores(
     # deal with reduced categories:
     if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
         age_group = "Adult"
-    else:
+    elif re.compile("under(18|16|15|14|12)").match(age_group.lower().replace(" ", "")):
         age_group = "Under 18"
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
