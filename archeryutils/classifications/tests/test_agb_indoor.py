@@ -331,13 +331,13 @@ class TestCalculateAgbIndoorClassification:
                 12,  # On boundary
                 "Under 12",
                 "longbow",
-                "unclassified",
+                "UC",
             ),
             (
                 1,
                 "Under 12",
                 "longbow",
-                "unclassified",
+                "UC",
             ),
         ],
     )
