@@ -111,28 +111,23 @@ def calculate_agb_old_indoor_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    # deal with reduced categories:
-    age_group = "Adult"
-    if bowstyle.lower() not in ("compound"):
-        bowstyle = "Recurve"
+    # Check score is valid
+    if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
+        raise ValueError(
+            f"Invalid score of {score} for a {roundname}. "
+            f"Should be in range 0-{ALL_INDOOR_ROUNDS[roundname].max_score()}."
+        )
+
+    # Get scores required on this round for each classification
+    class_scores = agb_old_indoor_classification_scores(
+        roundname,
+        bowstyle,
+        gender,
+        age_group,
+    )
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
-
-    hc_params = hc_eq.HcParams()
-
-    # Get scores required on this round for each classification
-    class_scores = [
-        hc_eq.score_for_round(
-            ALL_INDOOR_ROUNDS[roundname],
-            group_data["class_HC"][i],
-            "AGBold",
-            hc_params,
-            round_score_up=True,
-        )[0]
-        for i, class_i in enumerate(group_data["classes"])
-    ]
-
     class_data: Dict[str, Any] = dict(zip(group_data["classes"], class_scores))
 
     # What is the highest classification this score gets?
@@ -150,8 +145,7 @@ def calculate_agb_old_indoor_classification(
         classification_from_score = list(class_data.keys())[0]
         return classification_from_score
     except IndexError:
-        # return "UC"
-        return "unclassified"
+        return "UC"
 
 
 def agb_old_indoor_classification_scores(
@@ -187,6 +181,10 @@ def agb_old_indoor_classification_scores(
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
     """
+    # enforce compound scoring
+    if bowstyle.lower() in ("compound"):
+        roundname = cls_funcs.get_compound_codename(roundname)
+
     # deal with reduced categories:
     age_group = "Adult"
     if bowstyle.lower() not in ("compound"):
