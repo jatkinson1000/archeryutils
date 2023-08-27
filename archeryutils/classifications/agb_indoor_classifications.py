@@ -180,8 +180,7 @@ def calculate_agb_indoor_classification(
         classification_from_score = list(class_data.keys())[0]
         return classification_from_score
     except IndexError:
-        # return "UC"
-        return "unclassified"
+        return "UC"
 
 
 def agb_indoor_classification_scores(
