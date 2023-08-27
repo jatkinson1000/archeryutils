@@ -1,1 +1,1 @@
-"Module providing tests for the classification functionalities."
+"""Module providing tests for the classification functionalities."""
