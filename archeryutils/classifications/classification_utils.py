@@ -220,6 +220,7 @@ def strip_spots(
     """
     roundname = roundname.replace("_triple", "")
     roundname = roundname.replace("_5_centre", "")
+    roundname = roundname.replace("_small", "")
     return roundname
 
 
