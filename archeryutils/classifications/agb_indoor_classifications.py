@@ -147,8 +147,12 @@ def calculate_agb_indoor_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
-        bowstyle = "Barebow"
+    # Check score is valid
+    if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
+        raise ValueError(
+            f"Invalid score of {score} for a {roundname}. "
+            f"Should be in range 0-{ALL_INDOOR_ROUNDS[roundname].max_score()}."
+        )
 
     # Get scores required on this round for each classification
     # Enforcing full size face and compound scoring (for compounds)
