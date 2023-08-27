@@ -281,8 +281,12 @@ def calculate_agb_outdoor_classification(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
-        bowstyle = "Barebow"
+    # Check score is valid
+    if score < 0 or score > ALL_OUTDOOR_ROUNDS[roundname].max_score():
+        raise ValueError(
+            f"Invalid score of {score} for a {roundname}. "
+            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}."
+        )
 
     # Get scores required on this round for each classification
     # Enforcing full size face and compound scoring (for compounds)
@@ -377,7 +381,7 @@ def agb_outdoor_classification_scores(
     # Get scores required on this round for each classification
     class_scores = [
         hc_eq.score_for_round(
-            ALL_OUTDOOR_ROUNDS[roundname],
+            ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
             "AGB",
             hc_params,
