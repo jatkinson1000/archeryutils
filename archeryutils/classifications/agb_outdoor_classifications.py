@@ -49,8 +49,181 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
+    # Read in age group info as list of dicts
+    agb_ages = cls_funcs.read_ages_json()
+    # Read in bowstyleclass info as list of dicts
+    agb_bowstyles = cls_funcs.read_bowstyles_json()
+    # Read in gender info as list of dicts
+    agb_genders = cls_funcs.read_genders_json()
+    # Read in classification names as dict
+    agb_classes_info_out = cls_funcs.read_classes_json("agb_outdoor")
+    agb_classes_out = agb_classes_info_out["classes"]
+    agb_classes_out_long = agb_classes_info_out["classes_long"]
+
+    # Generate dict of classifications
+    # loop over bowstyles
+    # loop over ages
+    # loop over genders
+    classification_dict = {}
+    for bowstyle in agb_bowstyles:
+        for age in agb_ages:
+            for gender in agb_genders:
+                # Get age steps from Adult
+                age_steps = age["step"]
+
+                # Get number of gender steps required
+                # Perform fiddle in age steps where genders diverge at U15/U16
+                if gender.lower() == "female" and age["step"] <= 3:
+                    gender_steps = 1
+                else:
+                    gender_steps = 0
+
+                groupname = cls_funcs.get_groupname(
+                    bowstyle["bowstyle"], gender, age["age_group"]
+                )
+
+                # Get max dists for category from json file data
+                # Use metres as corresponding yards >= metric
+                max_dist = age[gender.lower()]
+
+                class_hc = np.empty(len(agb_classes_out))
+                min_dists = np.empty((len(agb_classes_out)))
+                for i in range(len(agb_classes_out)):
+                    # Assign handicap for this classification
+                    class_hc[i] = (
+                        bowstyle["datum_out"]
+                        + age_steps * bowstyle["ageStep_out"]
+                        + gender_steps * bowstyle["genderStep_out"]
+                        + (i - 2) * bowstyle["classStep_out"]
+                    )
+
+                    # Get a list of the minimum distances that must be shot for this classification
+                    min_dists[i] = assign_min_dist(
+                        n_class=i,
+                        gender=gender,
+                        age_group=age["age_group"],
+                        max_dists=max_dist,
+                    )
+
+                # Assign prestige rounds for the category
+                prestige_rounds = assign_outdoor_prestige(
+                    bowstyle=bowstyle["bowstyle"],
+                    age=age["age_group"],
+                    gender=gender,
+                    max_dist=max_dist,
+                )
+
+                # TODO: class names and long are duplicated many times here
+                #   Consider a method to reduce this (affects other code)
+                classification_dict[groupname] = {
+                    "classes": agb_classes_out,
+                    "class_HC": class_hc,
+                    "prestige_rounds": prestige_rounds,
+                    "max_distance": max_dist,
+                    "min_dists": min_dists,
+                    "classes_long": agb_classes_out_long,
+                }
+
+    return classification_dict
+
+
+def assign_min_dist(
+    n_class: int,
+    gender: str,
+    age_group: str,
+    max_dists: List[int],
+) -> int:
+    """
+    Assign appropriate minimum distance required for a category and classification.
+
+    Appropriate for 2023 ArcheryGB age groups and classifications.
+
+    Parameters
+    ----------
+    n_class : int
+        integer corresponding to classification [0=EMB, 8=A3]
+    gender : str
+        string defining gender
+    age_group : str,
+        string defining age group
+    max_dists: List[int]
+        list of integers defining the maximum distances for category
+
+    Returns
+    -------
+    min_dist : int
+        minimum distance [m] required for this classification
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    """
+    # List of maximum distances for use in assigning maximum distance [metres]
+    # Use metres because corresponding yards distances are >= metric ones
+    dists = [90, 70, 60, 50, 40, 30, 20, 15]
+
+    max_dist_index = dists.index(np.min(max_dists))
+
+    # B1 and above
+    if n_class <= 3:
+        # All MB and B1 require max distance for everyone:
+        return dists[max_dist_index]
+
+    # Below B1
+    # Age group trickery:
+    # U16 males and above step down for B2 and beyond
+    if gender.lower() in ("male") and age_group.lower().replace(" ", "") in (
+        "adult",
+        "50+",
+        "under21",
+        "under18",
+        "under16",
+    ):
+        return dists[max_dist_index + (n_class - 3)]
+
+    # All other categories require max dist for B1 and B2 then step down
+    try:
+        return dists[max_dist_index + (n_class - 3) - 1]
+    except IndexError:
+        # Distances stack at the bottom end as we can't go below 15m
+        return dists[-1]
+
+
+def assign_outdoor_prestige(
+    bowstyle: str,
+    gender: str,
+    age: str,
+    max_dist: List[int],
+) -> List[str]:
+    """
+    Assign appropriate outdoor prestige rounds for a category.
+
+    Appropriate for 2023 ArcheryGB age groups and classifications.
+
+    Parameters
+    ----------
+    bowstyle : str
+        string defining bowstyle
+    gender : str
+        string defining gender
+    age : str,
+        string defining age group
+    max_dist: List[int]
+        list of integers defining the maximum distances for category
+
+    Returns
+    -------
+    prestige_rounds : list of str
+        list of perstige rounds for category defined by inputs
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    """
     # Lists of prestige rounds defined by 'codename' of 'Round' class
-    # TODO: convert this to json?
+    # WARNING: do not change these without also addressing the prestige round code.
     prestige_imperial = [
         "york",
         "hereford",
@@ -92,156 +265,47 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
         "metric_122_30",
     ]
 
-    # List of maximum distances for use in assigning maximum distance [metres]
-    # Use metres because corresponding yards distances are >= metric ones
-    dists = [90, 70, 60, 50, 40, 30, 20, 15]
-    padded_dists = [90, 90] + dists
+    # Assign prestige rounds for the category
+    #  - check bowstyle, distance, and age
+    prestige_rounds = []
+    distance_check: List[str] = []
 
-    # Read in age group info as list of dicts
-    agb_ages = cls_funcs.read_ages_json()
-    # Read in bowstyleclass info as list of dicts
-    agb_bowstyles = cls_funcs.read_bowstyles_json()
-    # Read in gender info as list of dicts
-    agb_genders = cls_funcs.read_genders_json()
-    # Read in classification names as dict
-    agb_classes_info_out = cls_funcs.read_classes_out_json()
-    agb_classes_out = agb_classes_info_out["classes"]
-    agb_classes_out_long = agb_classes_info_out["classes_long"]
+    # 720 rounds - bowstyle dependent
+    if bowstyle.lower() == "compound":
+        # Everyone gets the 'adult' 720
+        prestige_rounds.append(prestige_720_compound[0])
+        # Check rest for junior eligible shorter rounds
+        distance_check = distance_check + prestige_720_compound[1:]
 
-    # Generate dict of classifications
-    # loop over bowstyles
-    # loop over ages
-    # loop over genders
-    classification_dict = {}
-    for bowstyle in agb_bowstyles:
-        for age in agb_ages:
-            for gender in agb_genders:
-                # Get age steps from Adult
-                age_steps = age["step"]
+    elif bowstyle.lower() == "barebow":
+        # Everyone gets the 'adult' 720
+        prestige_rounds.append(prestige_720_barebow[0])
+        # Check rest for junior eligible shorter rounds
+        distance_check = distance_check + prestige_720_barebow[1:]
 
-                # Get number of gender steps required
-                # Perform fiddle in age steps where genders diverge at U15/U16
-                if gender.lower() == "female" and age["step"] <= 3:
-                    gender_steps = 1
-                else:
-                    gender_steps = 0
+    else:
+        # Everyone gets the 'adult' 720
+        prestige_rounds.append(prestige_720[0])
+        # Check rest for junior eligible shorter rounds
+        distance_check = distance_check + prestige_720[1:]
 
-                groupname = cls_funcs.get_groupname(
-                    bowstyle["bowstyle"], gender, age["age_group"]
-                )
+        # Additional fix for Male 50+, U18, and U16 recurve
+        if gender.lower() == "male":
+            if age.lower() in ("50+", "under 18"):
+                prestige_rounds.append(prestige_720[1])  # 60m
+            elif age.lower() == "under 16":
+                prestige_rounds.append(prestige_720[2])  # 50m
 
-                # Get max dists for category from json file data
-                # Use metres as corresponding yards >= metric
-                max_dist = age[gender.lower()]
-                max_dist_index = dists.index(min(max_dist))
+    # Imperial and 1440 rounds - Check based on distance
+    distance_check = distance_check + prestige_imperial
+    distance_check = distance_check + prestige_metric
 
-                class_hc = np.empty(len(agb_classes_out))
-                min_dists = np.empty((len(agb_classes_out), 3))
-                for i in range(len(agb_classes_out)):
-                    # Assign handicap for this classification
-                    class_hc[i] = (
-                        bowstyle["datum_out"]
-                        + age_steps * bowstyle["ageStep_out"]
-                        + gender_steps * bowstyle["genderStep_out"]
-                        + (i - 2) * bowstyle["classStep_out"]
-                    )
+    # Check all other rounds based on distance
+    for roundname in distance_check:
+        if ALL_OUTDOOR_ROUNDS[roundname].max_distance() >= np.min(max_dist):
+            prestige_rounds.append(roundname)
 
-                    # Assign minimum distance [metres] for this classification
-                    if i <= 3:
-                        # All MB and B1 require max distance for everyone:
-                        min_dists[i, :] = padded_dists[
-                            max_dist_index : max_dist_index + 3
-                        ]
-                    else:
-                        try:
-                            # Age group trickery:
-                            # U16 males and above step down for B2 and beyond
-                            if gender.lower() in ("male") and age[
-                                "age_group"
-                            ].lower().replace(" ", "") in (
-                                "adult",
-                                "50+",
-                                "under21",
-                                "under18",
-                                "under16",
-                            ):
-                                min_dists[i, :] = padded_dists[
-                                    max_dist_index + i - 3 : max_dist_index + i
-                                ]
-                            # All other categories require max dist for B1 and B2 then step down
-                            else:
-                                try:
-                                    min_dists[i, :] = padded_dists[
-                                        max_dist_index + i - 4 : max_dist_index + i - 1
-                                    ]
-                                except ValueError:
-                                    # Distances stack at the bottom end
-                                    min_dists[i, :] = padded_dists[-3:]
-                        except IndexError as err:
-                            # Shouldn't really get here...
-                            print(
-                                f"{err} cannot select minimum distances for "
-                                f"{gender} and {age['age_group']}"
-                            )
-                            min_dists[i, :] = dists[-3:]
-
-                # Assign prestige rounds for the category
-                #  - check bowstyle, distance, and age
-                prestige_rounds = []
-
-                # 720 rounds - bowstyle dependent
-                if bowstyle["bowstyle"].lower() == "compound":
-                    # Everyone gets the 'adult' 720
-                    prestige_rounds.append(prestige_720_compound[0])
-                    # Check for junior eligible shorter rounds
-                    for roundname in prestige_720_compound[1:]:
-                        if ALL_OUTDOOR_ROUNDS[roundname].max_distance() >= min(
-                            max_dist
-                        ):
-                            prestige_rounds.append(roundname)
-                elif bowstyle["bowstyle"].lower() == "barebow":
-                    # Everyone gets the 'adult' 720
-                    prestige_rounds.append(prestige_720_barebow[0])
-                    # Check for junior eligible shorter rounds
-                    for roundname in prestige_720_barebow[1:]:
-                        if ALL_OUTDOOR_ROUNDS[roundname].max_distance() >= min(
-                            max_dist
-                        ):
-                            prestige_rounds.append(roundname)
-                else:
-                    # Everyone gets the 'adult' 720
-                    prestige_rounds.append(prestige_720[0])
-                    # Check for junior eligible shorter rounds
-                    for roundname in prestige_720[1:]:
-                        if ALL_OUTDOOR_ROUNDS[roundname].max_distance() >= min(
-                            max_dist
-                        ):
-                            prestige_rounds.append(roundname)
-                    # Additional fix for Male 50+, U18, and U16
-                    if gender.lower() == "male":
-                        if age["age_group"].lower() in ("50+", "under 18"):
-                            prestige_rounds.append(prestige_720[1])
-                        elif age["age_group"].lower() == "under 16":
-                            prestige_rounds.append(prestige_720[2])
-
-                # Imperial and 1440 rounds
-                for roundname in prestige_imperial + prestige_metric:
-                    # Compare round dist
-                    if ALL_OUTDOOR_ROUNDS[roundname].max_distance() >= min(max_dist):
-                        prestige_rounds.append(roundname)
-
-                # TODO: class names and long are duplicated many times here
-                #   Consider a method to reduce this (affects other code)
-                classification_dict[groupname] = {
-                    "classes": agb_classes_out,
-                    "class_HC": class_hc,
-                    "prestige_rounds": prestige_rounds,
-                    "max_distance": max_dist,
-                    "min_dists": min_dists,
-                    "classes_long": agb_classes_out_long,
-                }
-
-    return classification_dict
+    return prestige_rounds
 
 
 agb_outdoor_classifications = _make_agb_outdoor_classification_dict()
@@ -303,7 +367,7 @@ def calculate_agb_outdoor_classification(
     class_data: Dict[str, Dict[str, Any]] = {}
     for i, class_i in enumerate(group_data["classes"]):
         class_data[class_i] = {
-            "min_dists": group_data["min_dists"][i, :],
+            "min_dist": group_data["min_dists"][i],
             "score": all_class_scores[i],
         }
 
@@ -311,20 +375,18 @@ def calculate_agb_outdoor_classification(
     if roundname not in agb_outdoor_classifications[groupname]["prestige_rounds"]:
         # TODO: a list of dictionary keys is super dodgy python...
         #   can this be improved?
-        for MB_class in list(class_data.keys())[0:3]:
-            del class_data[MB_class]
+        for mb_class in list(class_data.keys())[0:3]:
+            del class_data[mb_class]
 
         # If not prestige, what classes are eligible based on category and distance
         to_del = []
         round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
         for class_i in class_data.items():
-            if class_i[1]["min_dists"][-1] > round_max_dist:
+            if class_i[1]["min_dist"] > round_max_dist:
                 to_del.append(class_i[0])
         for class_i in to_del:
             del class_data[class_i]
 
-    # Classification based on score - accounts for fractional HC
-    # TODO Make this its own function for later use in generating tables?
     # Of those classes remaining, what is the highest classification this score gets?
     to_del = []
     for classname, classdata in class_data.items():
@@ -398,7 +460,7 @@ def agb_outdoor_classification_scores(
         # If not prestige, what classes are eligible based on category and distance
         round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
         for i in range(3, len(class_scores)):
-            if min(group_data["min_dists"][i, :]) > round_max_dist:
+            if group_data["min_dists"][i] > round_max_dist:
                 class_scores[i] = -9999
 
     # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
