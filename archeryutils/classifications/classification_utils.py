@@ -112,16 +112,17 @@ def read_genders_json(
     )
 
 
-def read_classes_out_json(
-    classes_file: Path = Path(__file__).parent / "AGB_classes_out.json",
+def read_classes_json(
+    class_system: str,
 ) -> Dict[str, Any]:
     """
-    Read AGB outdoor classes in from neighbouring json file to dict.
+    Read AGB classes in from neighbouring json file to dict.
 
     Parameters
     ----------
-    classes_file : Path
-        path to json file
+    class_system : str
+        string specifying class system to read:
+        'agb_indoor', 'agb_outdoor', 'agb_field'
 
     Returns
     -------
@@ -132,38 +133,20 @@ def read_classes_out_json(
     ----------
     Archery GB Rules of Shooting
     """
-    # Read in classification names as dict
-    with open(classes_file, encoding="utf-8") as json_file:
-        classes = json.load(json_file)
-    if isinstance(classes, dict):
-        return classes
-    raise TypeError(
-        f"Unexpected classes input when reading from json file. "
-        f"Expected dict() but got {type(classes)}. Check {classes_file}."
-    )
+    if class_system == "agb_indoor":
+        filename = "AGB_classes_in.json"
+    elif class_system == "agb_outdoor":
+        filename = "AGB_classes_out.json"
+    # elif class_system == 'agb_field':
+    #     filename = "AGB_classes_field.json"
+    else:
+        raise ValueError(
+            "Unexpected classification system specified. "
+            "Expected one of 'agb_indoor', 'agb_outdoor', 'aqb_field'."
+        )
 
+    classes_file = Path(__file__).parent / filename
 
-# TODO This could (should) be condensed into one method with the above function
-def read_classes_in_json(
-    classes_file: Path = Path(__file__).parent / "AGB_classes_in.json",
-) -> Dict[str, Any]:
-    """
-    Read AGB indoor classes in from neighbouring json file to dict.
-
-    Parameters
-    ----------
-    classes_file : Path
-        path to json file
-
-    Returns
-    -------
-    classes : dict
-        AGB classes data from file
-
-    References
-    ----------
-    Archery GB Rules of Shooting
-    """
     # Read in classification names as dict
     with open(classes_file, encoding="utf-8") as json_file:
         classes = json.load(json_file)
@@ -224,25 +207,20 @@ def strip_spots(
     return roundname
 
 
-def get_compound_codename(round_codenames):
+def get_compound_codename(round_codename: str) -> str:
     """
     Convert any indoor rounds with special compound scoring to the compound format.
 
     Parameters
     ----------
-    round_codenames : str or list of str
-        list of str round codenames to check
+    round_codenames : str
+        str round codename to check
 
     Returns
     -------
-    round_codenames : str or list of str
-        list of amended round codenames for compound
+    round_codename : str
+        amended round codename for compound
     """
-    notlistflag = False
-    if not isinstance(round_codenames, list):
-        round_codenames = [round_codenames]
-        notlistflag = True
-
     convert_dict = {
         "bray_i": "bray_i_compound",
         "bray_i_triple": "bray_i_compound_triple",
@@ -258,9 +236,7 @@ def get_compound_codename(round_codenames):
         "wa25_triple": "wa25_compound_triple",
     }
 
-    for i, codename in enumerate(round_codenames):
-        if codename in convert_dict:
-            round_codenames[i] = convert_dict[codename]
-    if notlistflag:
-        return round_codenames[0]
-    return round_codenames
+    if convert_dict.get(round_codename) is not None:
+        round_codename = convert_dict[round_codename]
+
+    return round_codename
