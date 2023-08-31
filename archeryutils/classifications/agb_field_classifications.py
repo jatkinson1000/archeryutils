@@ -288,6 +288,9 @@ def agb_field_classification_scores(
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
     """
+    # Unused roundname argument to keep consistency with other classification functions
+    # pylint: disable=unused-argument
+
     # deal with reduced categories:
     if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
         age_group = "Adult"
