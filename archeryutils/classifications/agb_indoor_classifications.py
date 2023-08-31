@@ -69,39 +69,38 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     # loop over genders
     classification_dict = {}
     for bowstyle in agb_bowstyles:
-        for age in agb_ages:
-            for gender in agb_genders:
-                # Get age steps from Adult
-                age_steps = age["step"]
-
-                # Get number of gender steps required
-                # Perform fiddle in age steps where genders diverge at U15/U16
-                if gender.lower() == "female" and age["step"] <= 3:
-                    gender_steps = 1
-                else:
-                    gender_steps = 0
+        for gender in agb_genders:
+            for age in agb_ages:
 
                 groupname = cls_funcs.get_groupname(
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
-                class_hc = np.empty(len(agb_classes_in))
-                for i in range(len(agb_classes_in)):
-                    # Assign handicap for this classification
-                    class_hc[i] = (
-                        bowstyle["datum_in"]
-                        + age_steps * bowstyle["ageStep_in"]
-                        + gender_steps * bowstyle["genderStep_in"]
-                        + (i - 1) * bowstyle["classStep_in"]
-                    )
-
                 # TODO: class names and long are duplicated many times here
                 #   Consider a method to reduce this (affects other code)
                 classification_dict[groupname] = {
                     "classes": agb_classes_in,
-                    "class_HC": class_hc,
                     "classes_long": agb_classes_in_long,
                 }
+
+                # set step from datum based on age and gender steps required
+                delta_hc_age_gender = cls_funcs.get_age_gender_step(
+                    gender,
+                    age["step"],
+                    bowstyle["ageStep_in"],
+                    bowstyle["genderStep_in"],
+                )
+
+                classification_dict[groupname]["class_HC"] = np.empty(
+                    len(agb_classes_in)
+                )
+                for i in range(len(agb_classes_in)):
+                    # Assign handicap for this classification
+                    classification_dict[groupname]["class_HC"][i] = (
+                        bowstyle["datum_in"]
+                        + delta_hc_age_gender
+                        + (i - 1) * bowstyle["classStep_in"]
+                    )
 
     return classification_dict
 

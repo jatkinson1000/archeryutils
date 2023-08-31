@@ -185,6 +185,48 @@ def get_groupname(bowstyle: str, gender: str, age_group: str) -> str:
     return groupname
 
 
+def get_age_gender_step(
+    gender: str,
+    age_cat: int,
+    age_step: float,
+    gender_step: float,
+) -> float:
+    """
+    Calculate AGB indoor age and gender step for classification dictionaries.
+
+    Contains a tricky fiddle for aligning Male and Female under 15 scores and below,
+    and a necessary check to ensure that gender step doesnt overtake age step when
+    doing this.
+
+    Parameters
+    ----------
+    gender : str
+        gender this classification applies to
+    age_cat : int
+        age category as an integer (number of age steps below adult e.g. 50+=1, U14=5)
+    age_step : float
+        age group handicap step for this category
+    gender_step : float
+        gender handicap step for this category
+
+    Returns
+    -------
+    delta_hc_age_gender : float
+        age and gender handicap step for this category's MB relative to datum
+    """
+    # There is a danger that gender step overtakes age step at U15/U16
+    # interface. If this happens set to age step to align U16 with U16
+    if gender.lower() == "female" and age_cat == 3 and age_step < gender_step:
+        return age_cat * age_step + age_step
+
+    # For females <=3 (Under 16 or older) apply gender step and age steps
+    if gender.lower() == "female" and age_cat <= 3:
+        return gender_step + age_cat * age_step
+
+    # Default case for males, and females aged >3 (Under 15 or younger) apply age steps
+    return age_cat * age_step
+
+
 def strip_spots(
     roundname: str,
 ) -> str:

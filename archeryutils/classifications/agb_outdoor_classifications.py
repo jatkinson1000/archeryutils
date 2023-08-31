@@ -62,21 +62,12 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
 
     # Generate dict of classifications
     # loop over bowstyles
-    # loop over ages
     # loop over genders
+    # loop over ages
     classification_dict = {}
     for bowstyle in agb_bowstyles:
-        for age in agb_ages:
-            for gender in agb_genders:
-                # Get age steps from Adult
-                age_steps = age["step"]
-
-                # Get number of gender steps required
-                # Perform fiddle in age steps where genders diverge at U15/U16
-                if gender.lower() == "female" and age["step"] <= 3:
-                    gender_steps = 1
-                else:
-                    gender_steps = 0
+        for gender in agb_genders:
+            for age in agb_ages:
 
                 groupname = cls_funcs.get_groupname(
                     bowstyle["bowstyle"], gender, age["age_group"]
@@ -86,19 +77,38 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                 # Use metres as corresponding yards >= metric
                 max_dist = age[gender.lower()]
 
-                class_hc = np.empty(len(agb_classes_out))
-                min_dists = np.empty((len(agb_classes_out)))
+                # TODO: class names and long are duplicated many times here
+                #   Consider a method to reduce this (affects other code)
+                classification_dict[groupname] = {
+                    "classes": agb_classes_out,
+                    "max_distance": max_dist,
+                    "classes_long": agb_classes_out_long,
+                }
+
+                # set step from datum based on age and gender steps required
+                delta_hc_age_gender = cls_funcs.get_age_gender_step(
+                    gender,
+                    age["step"],
+                    bowstyle["ageStep_out"],
+                    bowstyle["genderStep_out"],
+                )
+
+                classification_dict[groupname]["class_HC"] = np.empty(
+                    len(agb_classes_out)
+                )
+                classification_dict[groupname]["min_dists"] = np.empty(
+                    len(agb_classes_out)
+                )
                 for i in range(len(agb_classes_out)):
                     # Assign handicap for this classification
-                    class_hc[i] = (
+                    classification_dict[groupname]["class_HC"][i] = (
                         bowstyle["datum_out"]
-                        + age_steps * bowstyle["ageStep_out"]
-                        + gender_steps * bowstyle["genderStep_out"]
+                        + delta_hc_age_gender
                         + (i - 2) * bowstyle["classStep_out"]
                     )
 
-                    # Get a list of the minimum distances that must be shot for this classification
-                    min_dists[i] = assign_min_dist(
+                    # Get minimum distance that must be shot for this classification
+                    classification_dict[groupname]["min_dists"][i] = assign_min_dist(
                         n_class=i,
                         gender=gender,
                         age_group=age["age_group"],
@@ -106,23 +116,14 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     )
 
                 # Assign prestige rounds for the category
-                prestige_rounds = assign_outdoor_prestige(
+                classification_dict[groupname][
+                    "prestige_rounds"
+                ] = assign_outdoor_prestige(
                     bowstyle=bowstyle["bowstyle"],
                     age=age["age_group"],
                     gender=gender,
                     max_dist=max_dist,
                 )
-
-                # TODO: class names and long are duplicated many times here
-                #   Consider a method to reduce this (affects other code)
-                classification_dict[groupname] = {
-                    "classes": agb_classes_out,
-                    "class_HC": class_hc,
-                    "prestige_rounds": prestige_rounds,
-                    "max_distance": max_dist,
-                    "min_dists": min_dists,
-                    "classes_long": agb_classes_out_long,
-                }
 
     return classification_dict
 
@@ -396,8 +397,8 @@ def calculate_agb_outdoor_classification(
         del class_data[item]
 
     try:
-        classification_from_score = list(class_data.keys())[0]
-        return classification_from_score
+        # TODO Remove classification_from_score = list(class_data.keys())[0]
+        return list(class_data.keys())[0]
     except IndexError:
         return "UC"
 
