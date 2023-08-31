@@ -59,7 +59,7 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     # Read in gender info as list of dicts
     agb_genders = cls_funcs.read_genders_json()
     # Read in classification names as dict
-    agb_classes_info_in = cls_funcs.read_classes_in_json()
+    agb_classes_info_in = cls_funcs.read_classes_json("agb_indoor")
     agb_classes_in = agb_classes_info_in["classes"]
     agb_classes_in_long = agb_classes_info_in["classes_long"]
 
