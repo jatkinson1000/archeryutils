@@ -27,6 +27,7 @@ class Target:
     min_score()
         Returns the minimum score ring value (excluding miss)
     """
+
     # One too many arguments, but logically this structure makes sense => disable
     # pylint: disable=too-many-arguments
 
@@ -162,9 +163,7 @@ class Target:
             "10_zone_5_ring_compound",
         ):
             return 6.0
-        if self.scoring_system in (
-            "Worcester_2_ring",
-        ):
+        if self.scoring_system in ("Worcester_2_ring",):
             return 4.0
         if self.scoring_system in ("Beiter_hit_miss"):
             # For Beiter options are hit and miss, so return 0 here
