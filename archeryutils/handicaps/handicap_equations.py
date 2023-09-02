@@ -206,10 +206,10 @@ class HcParams:
         json_hc_params.aa2_hc_data["AA2_f1"] = paramsdict["AA2_f1"]
         json_hc_params.aa2_hc_data["AA2_f2"] = paramsdict["AA2_f2"]
         json_hc_params.aa2_hc_data["AA2_d0"] = paramsdict["AA2_d0"]
-        json_hc_params.arw_d_data["arrow_diameter_indoors"] = paramsdict[
+        json_hc_params.arw_d_data["arw_d_in"] = paramsdict[
             "arrow_diameter_indoors"
         ]
-        json_hc_params.arw_d_data["arrow_diameter_outdoors"] = paramsdict[
+        json_hc_params.arw_d_data["arw_d_out"] = paramsdict[
             "arrow_diameter_outdoors"
         ]
         json_hc_params.arw_d_data["AGBo_arw_d"] = paramsdict["AGBo_arw_d"]

@@ -76,6 +76,65 @@ metric122_30 = Round(
 )
 
 
+@pytest.fixture
+def mocker_HcParams_json(mocker):
+    """
+    Override open with a fake HCParams json file.
+    """
+    mocked_json_file = mocker.mock_open(
+        read_data="""{
+    "AGB_datum": 1.0,
+    "AGB_step": 1.0,
+    "AGB_ang_0": 1.0,
+    "AGB_kd": 1.0,
+
+    "AGBo_datum": 1.0,
+    "AGBo_step": 1.0,
+    "AGBo_ang_0": 1.0,
+    "AGBo_k1": 1.0,
+    "AGBo_k2": 1.0,
+    "AGBo_k3": 1.0,
+    "AGBo_p1": 1.0,
+    "AGBo_arw_d": 3.0,
+
+    "AA_k0": 2.0,
+    "AA_ks": 2.0,
+    "AA_kd": 2.0,
+
+    "AA2_k0": 2.0,
+    "AA2_ks": 2.0,
+    "AA2_f1": 2.0,
+    "AA2_f2": 2.0,
+    "AA2_d0": 2.0,
+
+    "AA_arw_d_out": 3.0,
+    "arrow_diameter_indoors": 3.0,
+    "arrow_diameter_outdoors": 3.0
+    }"""
+    )
+    mocker.patch("builtins.open", mocked_json_file)
+
+
+class TestHcParams:
+    def test_load_json_params(self, mocker_HcParams_json) -> None:
+        """
+        Check that sigma_t() returns error value for invalid system.
+        """
+        handicap_params = hc_eq.HcParams()
+        handicap_params = handicap_params.load_json_params("fakefile.json")
+
+        for val in handicap_params.agb_hc_data.values():
+            assert val == 1.0
+        for val in handicap_params.agb_old_hc_data.values():
+            assert val == 1.0
+        for val in handicap_params.aa_hc_data.values():
+            assert val == 2.0
+        for val in handicap_params.aa2_hc_data.values():
+            assert val == 2.0
+        for val in handicap_params.arw_d_data.values():
+            assert val == 3.0
+
+
 class TestSigmaT:
     """
     Class to test the sigma_t() function of handicap_equations.
