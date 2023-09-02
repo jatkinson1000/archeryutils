@@ -167,6 +167,40 @@ class TestAgbIndoorClassificationScores:
         assert scores == scores_expected[::-1]
 
     @pytest.mark.parametrize(
+        "bowstyle,scores_expected",
+        [
+            (
+                "flatbow",
+                [331, 387, 433, 472, 503, 528, 549, 565],
+            ),
+            (
+                "traditional",
+                [331, 387, 433, 472, 503, 528, 549, 565],
+            ),
+            (
+                "asiatic",
+                [331, 387, 433, 472, 503, 528, 549, 565],
+            ),
+        ],
+    )
+    def test_agb_indoor_classification_scores_nonbowstyles(
+        self,
+        bowstyle: str,
+        scores_expected: List[int],
+    ) -> None:
+        """
+        Check that barebow scores returned for valid but non-indoor styles.
+        """
+        scores = class_funcs.agb_indoor_classification_scores(
+            roundname="portsmouth",
+            bowstyle=bowstyle,
+            gender="male",
+            age_group="adult",
+        )
+
+        assert scores == scores_expected[::-1]
+
+    @pytest.mark.parametrize(
         "roundname,scores_expected",
         [
             (
