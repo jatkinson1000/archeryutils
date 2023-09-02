@@ -21,7 +21,7 @@ jobs:
     - uses: actions/setup-python@v4
       with:
         python-version: "3.11"
-    - run: pip install pytest coverage
+    - run: pip install pytest pytest-mock coverage
            pip install .
 
     # annotate each step with `if: always` to run all regardless
