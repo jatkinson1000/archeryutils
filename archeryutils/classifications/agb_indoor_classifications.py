@@ -76,8 +76,6 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
-                # TODO: class names and long are duplicated many times here
-                #   Consider a method to reduce this (affects other code)
                 classification_dict[groupname] = {
                     "classes": agb_classes_in,
                     "classes_long": agb_classes_in_long,
@@ -253,17 +251,19 @@ def agb_indoor_classification_scores(
 
     # Handle possibility of gaps in the tables or max scores by checking 1 HC point
     # above current (floored to handle 0.5) and amending accordingly
-    for i, (sc, hc) in enumerate(zip(int_class_scores, group_data["class_HC"])):
+    for i, (score, handicap) in enumerate(
+        zip(int_class_scores, group_data["class_HC"])
+    ):
         next_score = hc_eq.score_for_round(
             ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
-            np.floor(hc) + 1,
+            np.floor(handicap) + 1,
             hc_scheme,
             hc_params,
             round_score_up=True,
         )[0]
-        if next_score == sc:
+        if next_score == score:
             # If already at max score this classification is impossible
-            if sc == ALL_INDOOR_ROUNDS[roundname].max_score():
+            if score == ALL_INDOOR_ROUNDS[roundname].max_score():
                 int_class_scores[i] = -9999
             # If gap in table increase to next score
             # (we assume here that no two classifications are only 1 point apart...)

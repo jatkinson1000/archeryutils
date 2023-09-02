@@ -8,6 +8,7 @@ calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
 from typing import List, Dict, Any
+from collections import OrderedDict
 import numpy as np
 
 from archeryutils import load_rounds
@@ -77,8 +78,6 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                 # Use metres as corresponding yards >= metric
                 max_dist = age[gender.lower()]
 
-                # TODO: class names and long are duplicated many times here
-                #   Consider a method to reduce this (affects other code)
                 classification_dict[groupname] = {
                     "classes": agb_classes_out,
                     "max_distance": max_dist,
@@ -365,30 +364,19 @@ def calculate_agb_outdoor_classification(
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
 
-    class_data: Dict[str, Dict[str, Any]] = {}
+    # We iterate over class_data keys, so convert use OrderedDict
+    class_data: OrderedDict[str, Dict[str, Any]] = OrderedDict([])
     for i, class_i in enumerate(group_data["classes"]):
         class_data[class_i] = {
             "min_dist": group_data["min_dists"][i],
             "score": all_class_scores[i],
         }
 
-    # is it a prestige round? If not remove MB as an option
-    if roundname not in agb_outdoor_classifications[groupname]["prestige_rounds"]:
-        # TODO: a list of dictionary keys is super dodgy python...
-        #   can this be improved?
-        for mb_class in list(class_data.keys())[0:3]:
-            del class_data[mb_class]
+    # Check if this is a prestige round and appropriate distances
+    # remove ineligible classes from class_data
+    class_data = check_prestige_distance(roundname, groupname, class_data)
 
-        # If not prestige, what classes are eligible based on category and distance
-        to_del = []
-        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
-        for class_i in class_data.items():
-            if class_i[1]["min_dist"] > round_max_dist:
-                to_del.append(class_i[0])
-        for class_i in to_del:
-            del class_data[class_i]
-
-    # Of those classes remaining, what is the highest classification this score gets?
+    # Of the classes remaining, what is the highest classification this score gets?
     to_del = []
     for classname, classdata in class_data.items():
         if classdata["score"] > score:
@@ -397,10 +385,54 @@ def calculate_agb_outdoor_classification(
         del class_data[item]
 
     try:
-        # TODO Remove classification_from_score = list(class_data.keys())[0]
         return list(class_data.keys())[0]
     except IndexError:
         return "UC"
+
+
+def check_prestige_distance(
+    roundname: str, groupname: str, class_data: OrderedDict[str, Dict[str, Any]]
+) -> OrderedDict[str, Dict[str, Any]]:
+    """
+    Check available classifications for eligibility based on distance and prestige..
+
+    Remove MB tier if not a prestige round.
+    Remove any classifications where round is not far enough.
+
+    Parameters
+    ----------
+    roundname : str
+        name of round shot as given by 'codename' in json
+    groupname : str
+        identifier for the category
+    class_data : OrderedDict
+        classification information for each category.
+
+    Returns
+    -------
+    class_data : OrderedDict
+        updated classification information for each category.
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    """
+    # is it a prestige round? If not remove MB as an option
+    if roundname not in agb_outdoor_classifications[groupname]["prestige_rounds"]:
+        for mb_class in list(class_data.keys())[0:3]:
+            del class_data[mb_class]
+
+        # If not prestige, what classes are ineligible based on distance
+        to_del: List[str] = []
+        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
+        for class_i_name, class_i_data in class_data.items():
+            if class_i_data["min_dist"] > round_max_dist:
+                to_del.append(class_i_name)
+        for class_i in to_del:
+            del class_data[class_i]
+
+    return class_data
 
 
 def agb_outdoor_classification_scores(
