@@ -34,6 +34,7 @@ lint = [
     "mypy>=1.0.0",
     "coverage",
     "pytest>=7.2.0",
+    "pytest-mock",
 ]
 
 [project.urls]
