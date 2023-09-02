@@ -3,6 +3,7 @@ from typing import Tuple, List, Union
 import numpy as np
 from numpy.typing import NDArray
 import pytest
+from pytest_mock import MockerFixture
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func
@@ -77,7 +78,7 @@ metric122_30 = Round(
 
 
 @pytest.fixture
-def mocker_HcParams_json(mocker):
+def mocker_hcparams_json(mocker: MockerFixture) -> None:
     """
     Override open with a fake HCParams json file.
     """
@@ -115,24 +116,26 @@ def mocker_HcParams_json(mocker):
     mocker.patch("builtins.open", mocked_json_file)
 
 
-class TestHcParams:
-    def test_load_json_params(self, mocker_HcParams_json) -> None:
-        """
-        Check that sigma_t() returns error value for invalid system.
-        """
-        handicap_params = hc_eq.HcParams()
-        handicap_params = handicap_params.load_json_params("fakefile.json")
+def test_load_json_hcparams(mocker_hcparams_json: MockerFixture) -> None:
+    """
+    Test loading of HcParams from file using mock.
+    """
+    # pylint cannot understand mocker as variable name used from fixture => disable
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=unused-argument
+    handicap_params = hc_eq.HcParams()
+    handicap_params = handicap_params.load_json_params("fakefile.json")
 
-        for val in handicap_params.agb_hc_data.values():
-            assert val == 1.0
-        for val in handicap_params.agb_old_hc_data.values():
-            assert val == 1.0
-        for val in handicap_params.aa_hc_data.values():
-            assert val == 2.0
-        for val in handicap_params.aa2_hc_data.values():
-            assert val == 2.0
-        for val in handicap_params.arw_d_data.values():
-            assert val == 3.0
+    for val in handicap_params.agb_hc_data.values():
+        assert val == 1.0
+    for val in handicap_params.agb_old_hc_data.values():
+        assert val == 1.0
+    for val in handicap_params.aa_hc_data.values():
+        assert val == 2.0
+    for val in handicap_params.aa2_hc_data.values():
+        assert val == 2.0
+    for val in handicap_params.arw_d_data.values():
+        assert val == 3.0
 
 
 class TestSigmaT:
