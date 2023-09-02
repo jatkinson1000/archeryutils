@@ -8,8 +8,10 @@ in handicap_equations.py including inverse function and display.
 
 Routine Listings
 ----------------
-print_handicap_table
 handicap_from_score
+print_handicap_table
+abbreviate
+format_row
 
 """
 from typing import Union, Optional, List
@@ -21,146 +23,7 @@ import numpy.typing as npt
 import archeryutils.handicaps.handicap_equations as hc_eq
 from archeryutils import rounds
 
-FILL = -1000
-
-
-def print_handicap_table(
-    hcs: Union[float, npt.NDArray[np.float_]],
-    hc_sys: str,
-    round_list: List[rounds.Round],
-    hc_dat: hc_eq.HcParams,
-    arrow_d: Optional[float] = None,
-    round_scores_up: bool = True,
-    clean_gaps: bool = True,
-    printout: bool = True,
-    filename: Optional[str] = None,
-    csvfile: Optional[str] = None,
-    int_prec: Optional[bool] = False,
-) -> None:
-    """
-    Generate a handicap table to screen and/or file.
-
-    Parameters
-    ----------
-    hcs : ndarray or float
-        handicap value(s) to calculate score(s) for
-    hc_sys : string
-        identifier for the handicap system
-    round_list : list of rounds.Round
-        List of Round classes to calculate scores for
-    hc_dat : handicaps.handicap_equations.HcParams
-        dataclass containing parameters for handicap equations
-    arrow_d : float
-        arrow diameter in [metres] default = None
-    round_scores_up : bool
-        round scores up to nearest integer? default = True
-    clean_gaps : bool
-        Remove all instances of a score except the first? default = False
-    printout : bool
-        Print to screen? default = True
-    filename : str
-        filepath to save table to. default = None
-    csvfile : str
-        csv filepath to save to. default = None
-    int_prec : bool
-        display results as integers? default = False, with decimal to 2dp
-
-    Returns
-    -------
-    None
-    """
-    # Cannot see any other way to handle the options required here => ignore
-    # pylint: ignore=too-many-arguments
-    # Abbreviations to replace headings with in Handicap Tables to keep concise
-    abbreviations = {
-        "Compound": "C",
-        "Recurve": "R",
-        "Triple": "Tr",
-        "Centre": "C",
-        "Portsmouth": "Ports",
-        "Worcester": "Worc",
-        "Short": "St",
-        "Long": "Lg",
-        "Small": "Sm",
-        "Gents": "G",
-        "Ladies": "L",
-    }
-
-    if not isinstance(hcs, np.ndarray):
-        if isinstance(hcs, list):
-            hcs = np.array(hcs)
-        elif isinstance(hcs, (float, int)):
-            hcs = np.array([hcs])
-        else:
-            raise TypeError("Expected float or ndarray for hcs.")
-
-    table = np.empty([len(hcs), len(round_list) + 1])
-    table[:, 0] = hcs.copy()
-    for i, round_i in enumerate(round_list):
-        table[:, i + 1], _ = hc_eq.score_for_round(
-            round_i, hcs, hc_sys, hc_dat, arrow_d, round_score_up=round_scores_up
-        )
-
-    # If rounding scores up we don't want to display trailing zeros, so ensure int_prec
-    if round_scores_up:
-        int_prec = True
-
-    if int_prec:
-        table = table.astype(int)
-
-    if clean_gaps:
-        # TODO: This assumes scores are running highest to lowest.
-        #  AA and AA2 will only work if hcs passed in reverse order (large to small)
-        for irow, row in enumerate(table[:-1, :]):
-            for jscore in range(len(row)):
-                if table[irow, jscore] == table[irow + 1, jscore]:
-                    if int_prec:
-                        table[irow, jscore] = FILL
-                    else:
-                        table[irow, jscore] = np.nan
-
-    # Write to CSV
-
-    if csvfile is not None:
-        print("Writing handicap table to csv...", end="")
-        np.savetxt(
-            csvfile,
-            table,
-            delimiter=", ",
-            header=f"handicap, {','.join([round_i.name for round_i in round_list])}'",
-        )
-        print("Done.")
-
-    # Write to terminal/string
-    # Return early if this isn't required
-    if filename is None and not printout:
-        return
-
-    # To ensure both terminal and file output are the same, create a single string to
-    # be used in either case
-
-    def abbreviate(name: str) -> str:
-        return " ".join(abbreviations.get(i, i) for i in name.split())
-
-    round_names = [abbreviate(r.name) for r in round_list]
-    output_header = "".join(name.rjust(14) for name in chain(["Handicap"], round_names))
-
-    def format_row(row: npt.NDArray[Union[np.float_, np.int_]]) -> str:
-        if int_prec:
-            return "".join("".rjust(14) if x == FILL else f"{x:14d}" for x in row)
-        return "".join("".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row)
-
-    output_rows = [format_row(row) for row in table]
-    output_str = "\n".join(chain([output_header], output_rows))
-
-    if printout:
-        print(output_str)
-
-    if filename is not None:
-        print("Writing handicap table to file...", end="")
-        with open(filename, "w", encoding="utf-8") as table_file:
-            table_file.write(output_str)
-        print("Done.")
+FILL = -9999
 
 
 def handicap_from_score(
@@ -171,6 +34,9 @@ def handicap_from_score(
     arw_d: Optional[float] = None,
     int_prec: bool = False,
 ) -> Union[int, float]:
+    # One too many arguments. Makes sense at the moment => disable
+    # Could try and simplify hc_sys and hc_dat in future refactor
+    # pylint: disable=too-many-arguments
     """
     Calculate the handicap of a given score on a given round using root-finding.
 
@@ -219,11 +85,11 @@ def handicap_from_score(
         # start high and drop down until no longer rounding to max score
         # (i.e. >= max_score - 1.0 for AGB, and >= max_score - 0.5 for AA, AA2, and AGBold)
         if hc_sys in ("AA", "AA2"):
-            hc = 175.0
-            dhc = -0.01
+            handicap = 175.0
+            delta_hc = -0.01
         else:
-            hc = -75.0
-            dhc = 0.01
+            handicap = -75.0
+            delta_hc = 0.01
 
         # Set rounding limit
         if hc_sys in ("AA", "AA2", "AGBold"):
@@ -232,20 +98,20 @@ def handicap_from_score(
             round_lim = 1.0
 
         s_max, _ = hc_eq.score_for_round(
-            rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=False
+            rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
         )
         # Work down to where we would round or ceil to max score
         while s_max > max_score - round_lim:
-            hc = hc + dhc
+            handicap = handicap + delta_hc
             s_max, _ = hc_eq.score_for_round(
-                rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=False
+                rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
             )
-        hc = hc - dhc  # Undo final iteration that overshoots
+        handicap = handicap - delta_hc  # Undo final iteration that overshoots
         if int_prec:
             if hc_sys in ("AA", "AA2"):
-                hc = np.ceil(hc)
+                handicap = np.ceil(handicap)
             else:
-                hc = np.floor(hc)
+                handicap = np.floor(handicap)
         else:
             warnings.warn(
                 "Handicap requested for maximum score without integer precision.\n"
@@ -253,43 +119,17 @@ def handicap_from_score(
                 "This could cause issues if you are not working in integers.",
                 UserWarning,
             )
-        return hc
+        return handicap
 
     # ROOT FINDING for general case (not max score)
-    def f_root(
-        h: float,
-        scr: Union[int, float],
-        rd: rounds.Round,
-        sys: str,
-        hc_data: hc_eq.HcParams,
-        arw_dia: Optional[float],
-    ) -> float:
-        val, _ = hc_eq.score_for_round(
-            rd, h, sys, hc_data, arw_dia, round_score_up=False
-        )
-        # Cannot see alt way to handle options required here at present => ignore
-        # pylint: ignore=too-many-arguments
-
-        # Ensure we return float, not np.ndarray
-        # These 9 lines replace `return val-scr` so as to satisfy mypy --strict.
-        # Should never be triggered in reality as h is type float.
-        if isinstance(val, np.float_):
-            val = val.item()
-        if isinstance(val, float):
-            return val - scr
-        raise TypeError(
-            f"f_root is attempting to return a {type(val)} type but expected float. "
-            f"Was it passed an array of handicaps?"
-        )
-
     if hc_sys in ("AA", "AA2"):
-        x = [-250.0, 175.0]
+        x_init = [-250.0, 175.0]
     else:
-        x = [-75.0, 300.0]
+        x_init = [-75.0, 300.0]
 
-    f = [
-        f_root(x[0], score, rnd, hc_sys, hc_dat, arw_d),
-        f_root(x[1], score, rnd, hc_sys, hc_dat, arw_d),
+    f_init = [
+        f_root(x_init[0], score, rnd, hc_sys, hc_dat, arw_d),
+        f_root(x_init[1], score, rnd, hc_sys, hc_dat, arw_d),
     ]
     xtol = 1.0e-16
     rtol = 0.00
@@ -301,16 +141,16 @@ def handicap_from_score(
     dblk = 0.0
     stry = 0.0
 
-    if abs(f[1]) <= f[0]:
-        xcur = x[1]
-        xpre = x[0]
-        fcur = f[1]
-        fpre = f[0]
+    if abs(f_init[1]) <= f_init[0]:
+        xcur = x_init[1]
+        xpre = x_init[0]
+        fcur = f_init[1]
+        fpre = f_init[0]
     else:
-        xpre = x[1]
-        xcur = x[0]
-        fpre = f[1]
-        fcur = f[0]
+        xpre = x_init[1]
+        xcur = x_init[0]
+        fpre = f_init[1]
+        fcur = f_init[0]
 
     for _ in range(25):
         if (fpre != 0.0) and (fcur != 0.0) and (np.sign(fpre) != np.sign(fcur)):
@@ -333,7 +173,7 @@ def handicap_from_score(
         sbis = (xblk - xcur) / 2.0
 
         if (fcur == 0.0) or (abs(sbis) < delta):
-            hc = xcur
+            handicap = xcur
             break
 
         if (abs(spre) > delta) and (abs(fcur) < abs(fpre)):
@@ -367,17 +207,17 @@ def handicap_from_score(
                 xcur -= delta
 
         fcur = f_root(xcur, score, rnd, hc_sys, hc_dat, arw_d)
-        hc = xcur
+        handicap = xcur
 
     # Force integer precision if required.
     if int_prec:
         if hc_sys in ("AA", "AA2"):
-            hc = np.floor(hc)
+            handicap = np.floor(handicap)
         else:
-            hc = np.ceil(hc)
+            handicap = np.ceil(handicap)
 
-        sc, _ = hc_eq.score_for_round(
-            rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=True
+        sc_int, _ = hc_eq.score_for_round(
+            rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
         )
 
         # Check that you can't get the same score from a larger handicap when
@@ -388,12 +228,267 @@ def handicap_from_score(
         else:
             hstep = 1.0
         while not min_h_flag:
-            hc += hstep
-            sc, _ = hc_eq.score_for_round(
-                rnd, hc, hc_sys, hc_dat, arw_d, round_score_up=True
+            handicap += hstep
+            sc_int, _ = hc_eq.score_for_round(
+                rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
             )
-            if sc < score:
-                hc -= hstep  # undo the iteration that caused the flag to raise
+            if sc_int < score:
+                handicap -= hstep  # undo the iteration that caused flag to raise
                 min_h_flag = True
 
-    return hc
+    return handicap
+
+
+def f_root(
+    hc_est: float,
+    score_est: Union[int, float],
+    round_est: rounds.Round,
+    sys: str,
+    hc_data: hc_eq.HcParams,
+    arw_dia: Optional[float],
+) -> float:
+    """
+    Return error between predicted score and desired score.
+
+    Parameters
+    ----------
+    hc_est : float
+        current estimate of handicap
+    score_est : float
+        current estimate of score based on hc_est
+    round_est : rounds.Round
+        round being used
+    sys : str
+        identifier for the handicap system
+    hc_data : handicaps.handicap_equations.HcParams
+        dataclass containing parameters for handicap equations
+    arw_dia : float
+        arrow diameter in [metres] default = None
+
+    Returns
+    -------
+    val-score_est : float
+        difference between desired value and score estimate
+    """
+    # One too many arguments. Makes sense at the moment => disable
+    # Could try and simplify hc_sys and hc_dat in future refactor
+    # pylint: disable=too-many-arguments
+
+    val, _ = hc_eq.score_for_round(
+        round_est, hc_est, sys, hc_data, arw_dia, round_score_up=False
+    )
+
+    # Ensure we return float, not np.ndarray
+    # These 8 lines replace `return val-scr` so as to satisfy mypy --strict.
+    # Should never be triggered in reality as h is type float.
+    if isinstance(val, np.float_):
+        val = val.item()
+    if isinstance(val, float):
+        return val - score_est
+    raise TypeError(
+        f"f_root is attempting to return a {type(val)} type but expected float. "
+        f"Was it passed an array of handicaps?"
+    )
+
+
+def print_handicap_table(
+    hcs: Union[float, npt.NDArray[np.float_]],
+    hc_sys: str,
+    round_list: List[rounds.Round],
+    hc_dat: hc_eq.HcParams,
+    arrow_d: Optional[float] = None,
+    round_scores_up: bool = True,
+    clean_gaps: bool = True,
+    printout: bool = True,
+    filename: Optional[str] = None,
+    csvfile: Optional[str] = None,
+    int_prec: Optional[bool] = False,
+) -> None:
+    """
+    Generate a handicap table to screen and/or file.
+
+    Parameters
+    ----------
+    hcs : ndarray or float
+        handicap value(s) to calculate score(s) for
+    hc_sys : string
+        identifier for the handicap system
+    round_list : list of rounds.Round
+        List of Round classes to calculate scores for
+    hc_dat : handicaps.handicap_equations.HcParams
+        dataclass containing parameters for handicap equations
+    arrow_d : float
+        arrow diameter in [metres] default = None
+    round_scores_up : bool
+        round scores up to nearest integer? default = True
+    clean_gaps : bool
+        Remove all instances of a score except the first? default = False
+    printout : bool
+        Print to screen? default = True
+    filename : str
+        filepath to save table to. default = None
+    csvfile : str
+        csv filepath to save to. default = None
+    int_prec : bool
+        display results as integers? default = False, with decimal to 2dp
+
+    Returns
+    -------
+    None
+    """
+    # Cannot see any other way to handle the options required here => ignore
+    # pylint: disable=too-many-arguments
+    # Knock-on effect is too many local variables raised => ignore
+    # pylint: disable=too-many-locals
+
+    if not isinstance(hcs, np.ndarray):
+        if isinstance(hcs, list):
+            hcs = np.array(hcs)
+        elif isinstance(hcs, (float, int)):
+            hcs = np.array([hcs])
+        else:
+            raise TypeError("Expected float or ndarray for hcs.")
+
+    table: npt.NDArray[Union[np.float_, np.int_]] = np.empty(
+        [len(hcs), len(round_list) + 1]
+    )
+    table[:, 0] = hcs.copy()
+    for i, round_i in enumerate(round_list):
+        table[:, i + 1], _ = hc_eq.score_for_round(
+            round_i,
+            hcs,
+            hc_sys,
+            hc_dat,
+            arrow_d,
+            round_score_up=round_scores_up,
+        )
+
+    # If rounding scores up we don't want to display trailing zeros, so ensure int_prec
+    if round_scores_up:
+        int_prec = True
+
+    if int_prec:
+        table = table.astype(int)
+
+    if clean_gaps:
+        table = clean_repeated(table, int_prec)
+
+    # Write to CSV
+    if csvfile is not None:
+        print("Writing handicap table to csv...", end="")
+        np.savetxt(
+            csvfile,
+            table,
+            delimiter=", ",
+            header=f"handicap, {','.join([round_i.name for round_i in round_list])}'",
+        )
+        print("Done.")
+
+    # Write to terminal/string
+    # Return early if this isn't required
+    if filename is None and not printout:
+        return
+
+    # To ensure both terminal and file output are the same, create a single string to
+    # be used in either case
+
+    round_names = [abbreviate(r.name) for r in round_list]
+    output_header = "".join(name.rjust(14) for name in chain(["Handicap"], round_names))
+
+    output_rows = [format_row(row, int_prec) for row in table]
+    output_str = "\n".join(chain([output_header], output_rows))
+
+    if printout:
+        print(output_str)
+
+    if filename is not None:
+        print("Writing handicap table to file...", end="")
+        with open(filename, "w", encoding="utf-8") as table_file:
+            table_file.write(output_str)
+        print("Done.")
+
+
+def clean_repeated(
+    table: npt.NDArray[Union[np.float_, np.int_]],
+    int_prec: Optional[bool] = False,
+) -> npt.NDArray[Union[np.float_, np.int_]]:
+    """
+    Keep only the first instance of a score in the handicap tables.
+
+    Parameters
+    ----------
+    table : np.ndarray
+        handicap table of scores
+    int_prec : bool
+        return integers, not floats?
+
+    Returns
+    -------
+    table : np.ndarray
+        handicap table of scores with repetitions filtered
+    """
+    # TODO: This assumes scores are running highest to lowest.
+    #  AA and AA2 will only work if hcs passed in reverse order (large to small)
+    for irow, row in enumerate(table[:-1, :]):
+        for jscore in range(len(row)):
+            if table[irow, jscore] == table[irow + 1, jscore]:
+                if int_prec:
+                    table[irow, jscore] = FILL
+                else:
+                    table[irow, jscore] = np.nan
+    return table
+
+
+def abbreviate(name: str) -> str:
+    """
+    Replace headings within Handicap Tables with abbreviations to keep concise.
+
+    Parameters
+    ----------
+    name : str
+        full, long round name as appears currently
+
+    Returns
+    -------
+    shortname : str
+        abbreviated round name to replace with
+    """
+    abbreviations = {
+        "Compound": "C",
+        "Recurve": "R",
+        "Triple": "Tr",
+        "Centre": "C",
+        "Portsmouth": "Ports",
+        "Worcester": "Worc",
+        "Short": "St",
+        "Long": "Lg",
+        "Small": "Sm",
+        "Gents": "G",
+        "Ladies": "L",
+    }
+
+    return " ".join(abbreviations.get(i, i) for i in name.split())
+
+
+def format_row(
+    row: npt.NDArray[Union[np.float_, np.int_]],
+    int_prec: Optional[bool] = False,
+) -> str:
+    """
+    Fornat appearance of handicap table row to look nice.
+
+    Parameters
+    ----------
+    row : NDArray
+        numpy array of table row
+    int_prec : bool
+        return integers, not floats?
+
+    Returns
+    -------
+    formatted_row : str
+        pretty string based on input array data
+    """
+    if int_prec:
+        return "".join("".rjust(14) if x == FILL else f"{x:14d}" for x in row)
+    return "".join("".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row)

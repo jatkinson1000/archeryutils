@@ -358,13 +358,15 @@ def sigma_r(
     return sig_r
 
 
-def arrow_score(  # pylint: disable=too-many-branches
+def arrow_score(
     target: targets.Target,
     handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
 ) -> Union[float, np.float_, npt.NDArray[np.float_]]:
+    # Six too many branches. Makes sense due to different target faces => disable
+    # pylint: disable=too-many-branches
     """
     Calculate the average arrow score for a given target and handicap rating.
 
