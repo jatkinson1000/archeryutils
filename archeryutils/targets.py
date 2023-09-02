@@ -148,7 +148,6 @@ class Target:
             "10_zone",
             "10_zone_compound",
             "WA_field",
-            "IFAA_field",
             "IFAA_field_expert",
             "Worcester",
         ):
@@ -165,6 +164,8 @@ class Target:
             return 6.0
         if self.scoring_system in ("Worcester_2_ring",):
             return 4.0
+        if self.scoring_system in ("IFAA_field",):
+            return 3.0
         if self.scoring_system in ("Beiter_hit_miss"):
             # For Beiter options are hit and miss, so return 0 here
             return 0.0
