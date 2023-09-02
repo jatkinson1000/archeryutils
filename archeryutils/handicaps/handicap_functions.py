@@ -141,7 +141,6 @@ def get_max_score_handicap(
     handicap : float
         appropriate handicap for this maximum score
     """
-
     max_score = rnd.max_score()
 
     if hc_sys in ("AA", "AA2"):
