@@ -1,4 +1,8 @@
 """Tests for agb indoor classification functions"""
+# Due to structure of similar classification schemes they may trigger duplicate code.
+# => disable for classification files and tests
+# pylint: disable=duplicate-code
+
 from typing import List
 import pytest
 

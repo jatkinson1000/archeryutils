@@ -7,6 +7,10 @@ _make_agb_outdoor_classification_dict
 calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
+# Due to structure of similar classification schemes they may trigger duplicate code.
+# => disable for classification files and tests
+# pylint: disable=duplicate-code
+
 from typing import List, Dict, Any
 from collections import OrderedDict
 import numpy as np
