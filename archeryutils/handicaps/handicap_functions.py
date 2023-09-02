@@ -529,6 +529,8 @@ def abbreviate(name: str) -> str:
     """
     Replace headings within Handicap Tables with abbreviations to keep concise.
 
+    NB: This function only works with names containing space-separated words.
+
     Parameters
     ----------
     name : str
@@ -576,5 +578,5 @@ def format_row(
         pretty string based on input array data
     """
     if int_prec:
-        return "".join("".rjust(14) if x == FILL else f"{x:14d}" for x in row)
+        return "".join("".rjust(14) if x == FILL else f"{int(x):14d}" for x in row)
     return "".join("".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row)
