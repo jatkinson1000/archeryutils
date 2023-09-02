@@ -60,14 +60,8 @@ def handicap_from_score(
     -------
     hc: int or float
         Handicap. Has type int if int_prec is True, and otherwise has type false.
-
-    References
-    ----------
-    Brent's Method for Root Finding in Scipy
-    - https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.brentq.html
-    - https://github.com/scipy/scipy/blob/dde39b7cc7dc231cec6bf5d882c8a8b5f40e73ad/
-      scipy/optimize/Zeros/brentq.c
     """
+    # Check we have a valid score
     max_score = rnd.max_score()
     if score > max_score:
         raise ValueError(
@@ -82,46 +76,155 @@ def handicap_from_score(
 
     if score == max_score:
         # Deal with max score before root finding
-        # start high and drop down until no longer rounding to max score
-        # (i.e. >= max_score - 1.0 for AGB, and >= max_score - 0.5 for AA, AA2, and AGBold)
+        return get_max_score_handicap(rnd, hc_sys, hc_dat, arw_d, int_prec)
+
+    handicap = rootfind_score_handicap(score, rnd, hc_sys, hc_dat, arw_d)
+
+    # Force integer precision if required.
+    if int_prec:
         if hc_sys in ("AA", "AA2"):
-            handicap = 175.0
-            delta_hc = -0.01
+            handicap = np.floor(handicap)
         else:
-            handicap = -75.0
-            delta_hc = 0.01
+            handicap = np.ceil(handicap)
 
-        # Set rounding limit
-        if hc_sys in ("AA", "AA2", "AGBold"):
-            round_lim = 0.5
+        sc_int, _ = hc_eq.score_for_round(
+            rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
+        )
+
+        # Check that you can't get the same score from a larger handicap when
+        # working in integers
+        min_h_flag = False
+        if hc_sys in ("AA", "AA2"):
+            hstep = -1.0
         else:
-            round_lim = 1.0
+            hstep = 1.0
+        while not min_h_flag:
+            handicap += hstep
+            sc_int, _ = hc_eq.score_for_round(
+                rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
+            )
+            if sc_int < score:
+                handicap -= hstep  # undo the iteration that caused flag to raise
+                min_h_flag = True
 
+    return handicap
+
+
+def get_max_score_handicap(
+    rnd: rounds.Round,
+    hc_sys: str,
+    hc_dat: hc_eq.HcParams,
+    arw_d: Optional[float],
+    int_prec: bool = False,
+) -> float:
+    """
+    Get handicap for maximum score on a round.
+
+    Start high and drop down until no longer rounding to max score.
+    i.e. >= max_score - 1.0 for AGB, and >= max_score - 0.5 for AA, AA2, and AGBold.
+
+    Parameters
+    ----------
+    rnd : rounds.Round
+        round being used
+    hc_sys : str
+        identifier for the handicap system
+    hc_dat : handicaps.handicap_equations.HcParams
+        dataclass containing parameters for handicap equations
+    arw_d : float
+        arrow diameter in [metres] default = None
+    int_prec : bool
+        display results as integers? default = False
+
+    Returns
+    -------
+    handicap : float
+        appropriate handicap for this maximum score
+    """
+
+    max_score = rnd.max_score()
+
+    if hc_sys in ("AA", "AA2"):
+        handicap = 175.0
+        delta_hc = -0.01
+    else:
+        handicap = -75.0
+        delta_hc = 0.01
+
+    # Set rounding limit
+    if hc_sys in ("AA", "AA2", "AGBold"):
+        round_lim = 0.5
+    else:
+        round_lim = 1.0
+
+    s_max, _ = hc_eq.score_for_round(
+        rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
+    )
+    # Work down to where we would round or ceil to max score
+    while s_max > max_score - round_lim:
+        handicap = handicap + delta_hc
         s_max, _ = hc_eq.score_for_round(
             rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
         )
-        # Work down to where we would round or ceil to max score
-        while s_max > max_score - round_lim:
-            handicap = handicap + delta_hc
-            s_max, _ = hc_eq.score_for_round(
-                rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
-            )
-        handicap = handicap - delta_hc  # Undo final iteration that overshoots
-        if int_prec:
-            if hc_sys in ("AA", "AA2"):
-                handicap = np.ceil(handicap)
-            else:
-                handicap = np.floor(handicap)
+    handicap = handicap - delta_hc  # Undo final iteration that overshoots
+    if int_prec:
+        if hc_sys in ("AA", "AA2"):
+            handicap = np.ceil(handicap)
         else:
-            warnings.warn(
-                "Handicap requested for maximum score without integer precision.\n"
-                "Value returned will be first handiucap that achieves this score.\n"
-                "This could cause issues if you are not working in integers.",
-                UserWarning,
-            )
-        return handicap
+            handicap = np.floor(handicap)
+    else:
+        warnings.warn(
+            "Handicap requested for maximum score without integer precision.\n"
+            "Value returned will be first handiucap that achieves this score.\n"
+            "This could cause issues if you are not working in integers.",
+            UserWarning,
+        )
+    return handicap
 
-    # ROOT FINDING for general case (not max score)
+
+def rootfind_score_handicap(
+    score: float,
+    rnd: rounds.Round,
+    hc_sys: str,
+    hc_dat: hc_eq.HcParams,
+    arw_d: Optional[float],
+) -> float:
+    """
+    Get handicap for general score on a round through rootfinding algorithm.
+
+    Parameters
+    ----------
+    score : float
+        score to get handicap for
+    rnd : rounds.Round
+        round being used
+    hc_sys : str
+        identifier for the handicap system
+    hc_dat : handicaps.handicap_equations.HcParams
+        dataclass containing parameters for handicap equations
+    arw_d : float
+        arrow diameter in [metres] default = None
+
+    Returns
+    -------
+    handicap : float
+        appropriate accurate handicap for this score
+
+    References
+    ----------
+    Brent's Method for Root Finding in Scipy
+    - https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.brentq.html
+    - https://github.com/scipy/scipy/blob/dde39b7cc7dc231cec6bf5d882c8a8b5f40e73ad/
+      scipy/optimize/Zeros/brentq.c
+
+    """
+    # The rootfinding algorithm here raises pylint errors for
+    # too many statements (64/50), branches (17/12), and variables(23/15).
+    # However, it is a single enclosed algorithm => disable
+    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-branches
+    # pylint: disable=too-many-statements
+
     if hc_sys in ("AA", "AA2"):
         x_init = [-250.0, 175.0]
     else:
@@ -208,33 +311,6 @@ def handicap_from_score(
 
         fcur = f_root(xcur, score, rnd, hc_sys, hc_dat, arw_d)
         handicap = xcur
-
-    # Force integer precision if required.
-    if int_prec:
-        if hc_sys in ("AA", "AA2"):
-            handicap = np.floor(handicap)
-        else:
-            handicap = np.ceil(handicap)
-
-        sc_int, _ = hc_eq.score_for_round(
-            rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
-        )
-
-        # Check that you can't get the same score from a larger handicap when
-        # working in integers
-        min_h_flag = False
-        if hc_sys in ("AA", "AA2"):
-            hstep = -1.0
-        else:
-            hstep = 1.0
-        while not min_h_flag:
-            handicap += hstep
-            sc_int, _ = hc_eq.score_for_round(
-                rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
-            )
-            if sc_int < score:
-                handicap -= hstep  # undo the iteration that caused flag to raise
-                min_h_flag = True
 
     return handicap
 
@@ -371,7 +447,7 @@ def print_handicap_table(
         table = table.astype(int)
 
     if clean_gaps:
-        table = clean_repeated(table, int_prec)
+        table = clean_repeated(table, int_prec, hc_sys)
 
     # Write to CSV
     if csvfile is not None:
@@ -411,6 +487,7 @@ def print_handicap_table(
 def clean_repeated(
     table: npt.NDArray[Union[np.float_, np.int_]],
     int_prec: Optional[bool] = False,
+    hc_sys: Optional[str] = "AGB",
 ) -> npt.NDArray[Union[np.float_, np.int_]]:
     """
     Keep only the first instance of a score in the handicap tables.
@@ -421,14 +498,20 @@ def clean_repeated(
         handicap table of scores
     int_prec : bool
         return integers, not floats?
+    hc_sys : str
+        handicap system used - assume AGB (high -> low) unless specified
 
     Returns
     -------
     table : np.ndarray
         handicap table of scores with repetitions filtered
     """
-    # TODO: This assumes scores are running highest to lowest.
-    #  AA and AA2 will only work if hcs passed in reverse order (large to small)
+    # NB: This assumes scores are running highest to lowest.
+    # :. Flip AA and AA2 tables before operating.
+
+    if hc_sys in ("AA", "AA2"):
+        table = np.flip(table, axis=1)
+
     for irow, row in enumerate(table[:-1, :]):
         for jscore in range(len(row)):
             if table[irow, jscore] == table[irow + 1, jscore]:
@@ -436,6 +519,10 @@ def clean_repeated(
                     table[irow, jscore] = FILL
                 else:
                     table[irow, jscore] = np.nan
+
+    if hc_sys in ("AA", "AA2"):
+        table = np.flip(table, axis=1)
+
     return table
 
 
