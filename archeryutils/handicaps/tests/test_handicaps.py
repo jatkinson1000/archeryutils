@@ -1,6 +1,7 @@
 """Tests for handicap equations and functions"""
-from typing import Tuple, List
+from typing import Tuple, List, Union
 import numpy as np
+from numpy.typing import NDArray
 import pytest
 
 import archeryutils.handicaps.handicap_equations as hc_eq
@@ -509,6 +510,41 @@ class TestHandicapFromScore:
         Currently no easily available data
     """
 
+    @pytest.mark.parametrize(
+        "testround,hc_system,int_prec,handicap_expected",
+        [
+            (metric122_30, "AGB", True, 11),
+            (metric122_30, "AA", True, 107),
+            # (metric122_30, "AA2", True, 107),
+            # ------------------------------
+            (western, "AGB", False, 9.89),
+            (western, "AGBold", True, 6),
+            # ------------------------------
+            (vegas300, "AGB", True, 3),
+            (vegas300, "AA", False, 118.38),
+            # (vegas300, "AA2", True, 119),
+        ],
+    )
+    def test_get_max_score_handicap(
+        self,
+        testround: Round,
+        hc_system: str,
+        int_prec: bool,
+        handicap_expected: float,
+    ) -> None:
+        """
+        Check that get_max_score_handicap() returns expected handicap.
+        """
+        handicap = hc_func.get_max_score_handicap(
+            testround,
+            hc_system,
+            hc_params,
+            None,
+            int_prec,
+        )
+
+        assert pytest.approx(handicap) == handicap_expected
+
     def test_score_over_max(self) -> None:
         """
         Check that handicap_from_score() returns error value for too large score.
@@ -714,3 +750,110 @@ class TestHandicapFromScore:
         )
 
         assert handicap == pytest.approx(handicap_expected)
+
+
+class TestHandicapTable:
+    """
+    Class to test the handicap table functionalities of handicap_functions.
+
+    Methods
+    -------
+
+    References
+    ----------
+    """
+
+    @pytest.mark.parametrize(
+        "input_arr,int_prec,expected",
+        [
+            (
+                np.array([1, 20.0, 23.0]),
+                False,
+                "    1.00000000   20.00000000   23.00000000",
+            ),
+            (
+                np.array([1, 20.0, 23.0]),
+                True,
+                "             1            20            23",
+            ),
+        ],
+    )
+    def test_format_row(
+        self,
+        input_arr: NDArray[Union[np.int_, np.float_]],
+        int_prec: bool,
+        expected: str,
+    ) -> None:
+        """
+        Check that format_row returns expected results for float and int.
+        """
+        assert hc_func.format_row(input_arr, int_prec) == expected
+
+    @pytest.mark.parametrize(
+        "input_str,expected",
+        [
+            ("Compound", "C"),
+            ("Recurve Triple Portsmouth", "R Tr Ports"),
+            ("Recurve Triple Portsmouth", "R Tr Ports"),
+            ("Short Gents Worcester", "St G Worc"),
+        ],
+    )
+    def test_abbreviate(
+        self,
+        input_str: str,
+        expected: str,
+    ) -> None:
+        """
+        Check that abbreviate returns expected results.
+        """
+        assert hc_func.abbreviate(input_str) == expected
+
+    @pytest.mark.parametrize(
+        "input_table,int_prec,sys,expected",
+        [
+            (
+                np.array([[0, 11, 12, 13], [1, 10, 12, 12]]),
+                True,
+                "AGB",
+                np.array([[0, 11, -9999, 13], [1, 10, 12, 12]]),
+            ),
+            (
+                np.array([[0, 13], [5, 12], [10, 12], [15, 11]]),
+                True,
+                "AGB",
+                np.array([[0, 13], [5, -9999], [10, 12], [15, 11]]),
+            ),
+            (
+                np.array([[4, 13], [3, 12], [2, 12], [1, 11]]),
+                True,
+                "AA",
+                np.array([[4, 13], [3, 12], [2, -9999], [1, 11]]),
+            ),
+            (
+                np.array([[0.0, 11.0, 12.0, 13.0], [1.0, 10.0, 12.0, 12.0]]),
+                False,
+                "AGB",
+                np.array([[0.0, 11.0, np.nan, 13.0], [1.0, 10.0, 12.0, 12.0]]),
+            ),
+            (
+                np.array([[0.0, 11.5, 12.5, 13.5], [1.0, 11.5, 12.0, 13.5]]),
+                False,
+                "AGB",
+                np.array([[0.0, np.nan, 12.5, np.nan], [1.0, 11.5, 12.0, 13.5]]),
+            ),
+        ],
+    )
+    def test_clean_repeated(
+        self,
+        input_table: NDArray[Union[np.int_, np.float_]],
+        int_prec: bool,
+        sys: str,
+        expected: NDArray[Union[np.int_, np.float_]],
+    ) -> None:
+        """
+        Check that abbreviate returns expected results.
+        """
+        print(hc_func.clean_repeated(input_table, int_prec, sys))
+        np.testing.assert_allclose(
+            hc_func.clean_repeated(input_table, int_prec, sys), expected
+        )
