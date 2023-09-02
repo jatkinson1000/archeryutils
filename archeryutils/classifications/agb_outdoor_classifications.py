@@ -69,7 +69,6 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     for bowstyle in agb_bowstyles:
         for gender in agb_genders:
             for age in agb_ages:
-
                 groupname = cls_funcs.get_groupname(
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
