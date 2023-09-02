@@ -509,7 +509,7 @@ def clean_repeated(
     # :. Flip AA and AA2 tables before operating.
 
     if hc_sys in ("AA", "AA2"):
-        table = np.flip(table, axis=1)
+        table = np.flip(table, axis=0)
 
     for irow, row in enumerate(table[:-1, :]):
         for jscore in range(len(row)):
@@ -520,7 +520,7 @@ def clean_repeated(
                     table[irow, jscore] = np.nan
 
     if hc_sys in ("AA", "AA2"):
-        table = np.flip(table, axis=1)
+        table = np.flip(table, axis=0)
 
     return table
 
