@@ -374,11 +374,11 @@ def print_handicap_table(
     hc_dat: hc_eq.HcParams,
     arrow_d: Optional[float] = None,
     round_scores_up: bool = True,
-    clean_gaps: Optional[bool] = True,
-    printout: Optional[bool] = True,
+    clean_gaps: bool = True,
+    printout: bool = True,
     filename: Optional[str] = None,
     csvfile: Optional[str] = None,
-    int_prec: Optional[bool] = False,
+    int_prec: bool = False,
 ) -> None:
     """
     Generate a handicap table to screen and/or file.
@@ -479,7 +479,7 @@ def print_handicap_table(
 def check_print_table_inputs(
     hcs: Union[float, NDArray[np.float_]],
     round_list: list[rounds.Round],
-    clean_gaps: Optional[bool] = True,
+    clean_gaps: bool = True,
 ) -> NDArray[np.float_]:
     """
     Sanitise and format inputs to handicap printing code.
@@ -521,8 +521,8 @@ def check_print_table_inputs(
 
 def clean_repeated(
     table: NDArray[Union[np.float_, np.int_]],
-    int_prec: Optional[bool] = False,
-    hc_sys: Optional[str] = "AGB",
+    int_prec: bool = False,
+    hc_sys: str = "AGB",
 ) -> NDArray[Union[np.float_, np.int_]]:
     """
     Keep only the first instance of a score in the handicap tables.
@@ -598,7 +598,7 @@ def table_as_str(
     round_list: List[rounds.Round],
     hcs: NDArray[Union[np.float_, np.int_]],
     table: NDArray[Union[np.float_, np.int_]],
-    int_prec: Optional[bool] = False,
+    int_prec: bool = False,
 ) -> str:
     """
     Convert the handicap table to a string.
@@ -638,8 +638,8 @@ def table_as_str(
 
 def format_row(
     row: NDArray[Union[np.float_, np.int_]],
-    hc_dp: Optional[int] = 0,
-    int_prec: Optional[bool] = False,
+    hc_dp: int = 0,
+    int_prec: bool = False,
 ) -> str:
     """
     Fornat appearance of handicap table row to look nice.
