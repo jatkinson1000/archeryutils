@@ -17,8 +17,9 @@ format_row
 from typing import Union, Optional, List
 import warnings
 from itertools import chain
+import decimal
 import numpy as np
-import numpy.typing as npt
+from numpy.typing import NDArray
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 from archeryutils import rounds
@@ -367,14 +368,14 @@ def f_root(
 
 
 def print_handicap_table(
-    hcs: Union[float, npt.NDArray[np.float_]],
+    hcs: Union[float, NDArray[np.float_]],
     hc_sys: str,
     round_list: List[rounds.Round],
     hc_dat: hc_eq.HcParams,
     arrow_d: Optional[float] = None,
     round_scores_up: bool = True,
-    clean_gaps: bool = True,
-    printout: bool = True,
+    clean_gaps: Optional[bool] = True,
+    printout: Optional[bool] = True,
     filename: Optional[str] = None,
     csvfile: Optional[str] = None,
     int_prec: Optional[bool] = False,
@@ -414,17 +415,12 @@ def print_handicap_table(
     # Cannot see any other way to handle the options required here => ignore
     # pylint: disable=too-many-arguments
     # Knock-on effect is too many local variables raised => ignore
-    # pylint: disable=too-many-locals
 
-    if not isinstance(hcs, np.ndarray):
-        if isinstance(hcs, list):
-            hcs = np.array(hcs)
-        elif isinstance(hcs, (float, int)):
-            hcs = np.array([hcs])
-        else:
-            raise TypeError("Expected float or ndarray for hcs.")
+    # Sanitise inputs
+    hcs = check_print_table_inputs(hcs, round_list, clean_gaps)
 
-    table: npt.NDArray[Union[np.float_, np.int_]] = np.empty(
+    # Set up empty handicap table and populate
+    table: NDArray[Union[np.float_, np.int_]] = np.empty(
         [len(hcs), len(round_list) + 1]
     )
     table[:, 0] = hcs.copy()
@@ -439,14 +435,20 @@ def print_handicap_table(
         )
 
     # If rounding scores up we don't want to display trailing zeros, so ensure int_prec
-    if round_scores_up:
+    if round_scores_up and not int_prec:
+        warnings.warn(
+            "Handicap Table incompatible options.\n"
+            "Requesting scores to be rounded up but without integer precision.\n"
+            "Setting integer precision (`int_prec`) as true.",
+            UserWarning,
+        )
         int_prec = True
 
     if int_prec:
-        table = table.astype(int)
+        table[:, 1:] = table[:, 1:].astype(int)
 
     if clean_gaps:
-        table = clean_repeated(table, int_prec, hc_sys)
+        table = clean_repeated(table, int_prec, hc_sys)[1:-1, :]
 
     # Write to CSV
     if csvfile is not None:
@@ -464,30 +466,64 @@ def print_handicap_table(
     if filename is None and not printout:
         return
 
-    # To ensure both terminal and file output are the same, create a single string to
-    # be used in either case
-
-    round_names = [abbreviate(r.name) for r in round_list]
-    output_header = "".join(name.rjust(14) for name in chain(["Handicap"], round_names))
-
-    output_rows = [format_row(row, int_prec) for row in table]
-    output_str = "\n".join(chain([output_header], output_rows))
+    # Generate string to output to file or display
+    output_str = table_as_str(round_list, hcs, table, int_prec)
 
     if printout:
         print(output_str)
 
     if filename is not None:
-        print("Writing handicap table to file...", end="")
-        with open(filename, "w", encoding="utf-8") as table_file:
-            table_file.write(output_str)
-        print("Done.")
+        table_to_file(filename, output_str)
+
+
+def check_print_table_inputs(
+    hcs: Union[float, NDArray[np.float_]],
+    round_list: list[rounds.Round],
+    clean_gaps: Optional[bool] = True,
+) -> NDArray[np.float_]:
+    """
+    Sanitise and format inputs to handicap printing code.
+
+    Parameters
+    ----------
+    hcs : ndarray or float
+        handicap value(s) to calculate score(s) for
+    round_list : list of rounds.Round
+        List of Round classes to calculate scores for
+    clean_gaps : bool
+        Remove all instances of a score except the first? default = False
+
+    Returns
+    -------
+    hcs : ndarray
+        handicaps prepared for use in table printing routines
+    """
+    if not isinstance(hcs, np.ndarray):
+        if isinstance(hcs, list):
+            hcs = np.array(hcs)
+        elif isinstance(hcs, (float, int)):
+            hcs = np.array([hcs])
+        else:
+            raise TypeError("Expected float or ndarray for hcs.")
+
+    if len(round_list) == 0:
+        raise ValueError("No rounds provided for handicap table.")
+
+    # if cleaning gaps add row to top/bottom of table to catch out of range repeats
+    if clean_gaps:
+        delta_s = hcs[1] - hcs[0] if len(hcs) > 1 else 1.0
+        delta_e = hcs[-1] - hcs[-2] if len(hcs) > 1 else 1.0
+        hcs = np.insert(hcs, 0, hcs[0] - delta_s)
+        hcs = np.append(hcs, hcs[-1] + delta_e)
+
+    return hcs
 
 
 def clean_repeated(
-    table: npt.NDArray[Union[np.float_, np.int_]],
+    table: NDArray[Union[np.float_, np.int_]],
     int_prec: Optional[bool] = False,
     hc_sys: Optional[str] = "AGB",
-) -> npt.NDArray[Union[np.float_, np.int_]]:
+) -> NDArray[Union[np.float_, np.int_]]:
     """
     Keep only the first instance of a score in the handicap tables.
 
@@ -558,8 +594,51 @@ def abbreviate(name: str) -> str:
     return " ".join(abbreviations.get(i, i) for i in name.split())
 
 
+def table_as_str(
+    round_list: List[rounds.Round],
+    hcs: NDArray[Union[np.float_, np.int_]],
+    table: NDArray[Union[np.float_, np.int_]],
+    int_prec: Optional[bool] = False,
+) -> str:
+    """
+    Convert the handicap table to a string.
+
+    Parameters
+    ----------
+    round_list : list of rounds.Round
+        List of Round classes to calculate scores for
+    hcs : ndarray
+        handicap value(s) to calculate score(s) for
+    table : ndarray
+        handicap table as array
+    int_prec : bool
+        return integers, not floats?
+
+    Returns
+    -------
+    output_str : str
+        Handicap table formatted as a string
+    """
+    # To ensure both terminal and file output are the same, create a single string
+    round_names = [abbreviate(r.name) for r in round_list]
+    output_header = "".join(name.rjust(14) for name in chain(["Handicap"], round_names))
+    # Auto-set the number of decimal places to display handicaps to
+    if np.max(hcs % 1.0) <= 0.0:
+        hc_dp = 0
+    else:
+        hc_dp = np.max(
+            np.abs([decimal.Decimal(str(d)).as_tuple().exponent for d in hcs])
+        )
+    # Format each row appropriately
+    output_rows = [format_row(row, hc_dp, int_prec) for row in table]
+    output_str = "\n".join(chain([output_header], output_rows))
+
+    return output_str
+
+
 def format_row(
-    row: npt.NDArray[Union[np.float_, np.int_]],
+    row: NDArray[Union[np.float_, np.int_]],
+    hc_dp: Optional[int] = 0,
     int_prec: Optional[bool] = False,
 ) -> str:
     """
@@ -569,6 +648,8 @@ def format_row(
     ----------
     row : NDArray
         numpy array of table row
+    hc_dp : int
+        handicap decimal places
     int_prec : bool
         return integers, not floats?
 
@@ -577,6 +658,36 @@ def format_row(
     formatted_row : str
         pretty string based on input array data
     """
+    if hc_dp == 0:
+        handicap_str = f"{int(row[0]):14d}"
+    else:
+        handicap_str = f"{row[0]:14.{hc_dp}f}"
+
     if int_prec:
-        return "".join("".rjust(14) if x == FILL else f"{int(x):14d}" for x in row)
-    return "".join("".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row)
+        return handicap_str + "".join(
+            "".rjust(14) if x == FILL else f"{int(x):14d}" for x in row[1:]
+        )
+    return handicap_str + "".join(
+        "".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row[1:]
+    )
+
+
+def table_to_file(filename: str, output_str: str) -> None:
+    """
+    Fornat appearance of handicap table row to look nice.
+
+    Parameters
+    ----------
+    filename : str
+        name of file to save handicap table to
+    output_str : str
+        handicap table as string to save to file
+
+    Returns
+    -------
+    None
+    """
+    print("Writing handicap table to file...", end="")
+    with open(filename, "w", encoding="utf-8") as table_file:
+        table_file.write(output_str)
+    print("Done.")
