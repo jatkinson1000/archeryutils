@@ -1,10 +1,17 @@
 """
-Code for calculating Archery GB field classifications.
+Code for calculating old Archery GB classifications.
+
+Extended Summary
+----------------
+Code to add functionality to the basic handicap equations code
+in handicap_equations.py including inverse function and display.
 
 Routine Listings
 ----------------
-calculate_agb_field_classification
-agb_field_classification_scores
+_make_old_agb_field_classification_dict
+calculate_old_agb_field_classification
+old_agb_field_classification_scores
+
 """
 
 import re
@@ -27,7 +34,7 @@ class GroupData(TypedDict):
     class_scores: list[int]
 
 
-def _make_agb_field_classification_dict() -> dict[str, GroupData]:
+def _make_old_agb_field_classification_dict() -> dict[str, GroupData]:
     """
     Generate AGB outdoor classification data.
 
@@ -97,17 +104,13 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
     return classification_dict
 
 
-agb_field_classifications = _make_agb_field_classification_dict()
+old_agb_field_classifications = _make_old_agb_field_classification_dict()
 
-del _make_agb_field_classification_dict
+del _make_old_agb_field_classification_dict
 
 
-def calculate_agb_field_classification(
-    score: float,
-    roundname: str,
-    bowstyle: str,
-    gender: str,
-    age_group: str,
+def calculate_old_agb_field_classification(
+    roundname: str, score: float, bowstyle: str, gender: str, age_group: str
 ) -> str:
     """
     Calculate AGB field classification from score.
@@ -172,7 +175,7 @@ def calculate_agb_field_classification(
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
 
     # Get scores required on this round for each classification
-    group_data = agb_field_classifications[groupname]
+    group_data = old_agb_field_classifications[groupname]
 
     # Check Round is appropriate:
     # Sighted can have any Red 24, unsightes can have any blue 24
@@ -201,7 +204,7 @@ def calculate_agb_field_classification(
     return "unclassified"
 
 
-def agb_field_classification_scores(
+def old_agb_field_classification_scores(
     roundname: str,  # noqa: ARG001 Unused argument for consistency with other classification schemes
     bowstyle: str,
     gender: str,
@@ -253,7 +256,7 @@ def agb_field_classification_scores(
         age_group = "Under 18"
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
-    group_data = agb_field_classifications[groupname]
+    group_data = old_agb_field_classifications[groupname]
 
     # Get scores required on this round for each classification
     return group_data["class_scores"]
