@@ -1,4 +1,4 @@
-"""Tests for agb field classification functions."""
+"""Tests for old agb field classification functions"""
 
 import pytest
 
@@ -12,7 +12,7 @@ ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-class TestAgbFieldClassificationScores:
+class TestOldAgbFieldClassificationScores:
     """
     Class to test the field classification scores function.
 
@@ -58,14 +58,16 @@ class TestAgbFieldClassificationScores:
             ),
         ],
     )
-    def test_agb_field_classification_scores_ages(
+    def test_old_agb_field_classification_scores_ages(
         self,
         roundname: str,
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        """
+        Check that field classification returns expected value for a case.
+        """
+        scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
             gender="male",
@@ -103,15 +105,17 @@ class TestAgbFieldClassificationScores:
             ),
         ],
     )
-    def test_agb_field_classification_scores_genders(
+    def test_old_agb_field_classification_scores_genders(
         self,
         roundname: str,
         gender: str,
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        """
+        Check that field classification returns expected value for a case.
+        """
+        scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
             gender=gender,
@@ -156,14 +160,16 @@ class TestAgbFieldClassificationScores:
             ),
         ],
     )
-    def test_agb_field_classification_scores_bowstyles(
+    def test_old_agb_field_classification_scores_bowstyles(
         self,
         roundname: str,
         bowstyle: str,
         scores_expected: list[int],
     ) -> None:
-        """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        """
+        Check that field classification returns expected value for a case.
+        """
+        scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle=bowstyle,
             gender="male",
@@ -196,7 +202,7 @@ class TestAgbFieldClassificationScores:
             ),
         ],
     )
-    def test_agb_field_classification_scores_invalid(
+    def test_old_agb_field_classification_scores_invalid(
         self,
         roundname: str,
         bowstyle: str,
@@ -211,7 +217,7 @@ class TestAgbFieldClassificationScores:
                 f"{gender.lower()}_{bowstyle.lower()}"
             ),
         ):
-            _ = class_funcs.agb_field_classification_scores(
+            _ = class_funcs.old_agb_field_classification_scores(
                 roundname=roundname,
                 bowstyle=bowstyle,
                 gender=gender,
@@ -219,7 +225,7 @@ class TestAgbFieldClassificationScores:
             )
 
 
-class TestCalculateAgbFieldClassification:
+class TestCalculateOldAgbFieldClassification:
     """
     Class to test the field classification function.
 
@@ -285,7 +291,7 @@ class TestCalculateAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
+    def test_calculate_old_agb_field_classification(
         self,
         roundname: str,
         score: float,
@@ -293,10 +299,13 @@ class TestCalculateAgbFieldClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """Check that field classification returns expected value for a few cases."""
-        class_returned = class_funcs.calculate_agb_field_classification(
-            score=score,
+        """
+        Check that field classification returns expected value for a few cases.
+        """
+        # pylint: disable=too-many-arguments
+        class_returned = class_funcs.calculate_old_agb_field_classification(
             roundname=roundname,
+            score=score,
             bowstyle=bowstyle,
             gender="male",
             age_group=age_group,
@@ -321,17 +330,19 @@ class TestCalculateAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_agb_field_classification_invalid_rounds(
+    def test_calculate_old_agb_field_classification_invalid_rounds(
         self,
         roundname: str,
         score: float,
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """Check field classification returns unclassified for inappropriate rounds."""
-        class_returned = class_funcs.calculate_agb_field_classification(
-            score=score,
+        """
+        Check that field classification returns unclassified for inappropriate rounds.
+        """
+        class_returned = class_funcs.calculate_old_agb_field_classification(
             roundname=roundname,
+            score=score,
             bowstyle=bowstyle,
             gender="male",
             age_group="adult",
@@ -360,7 +371,7 @@ class TestCalculateAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_agb_field_classification_invalid_scores(
+    def test_calculate_old_agb_field_classification_invalid_scores(
         self,
         roundname: str,
         score: float,
@@ -373,7 +384,7 @@ class TestCalculateAgbFieldClassification:
                 f"Should be in range 0-{ALL_AGBFIELD_ROUNDS[roundname].max_score()}."
             ),
         ):
-            _ = class_funcs.calculate_agb_field_classification(
+            _ = class_funcs.calculate_old_agb_field_classification(
                 score=score,
                 roundname=roundname,
                 bowstyle="barebow",
