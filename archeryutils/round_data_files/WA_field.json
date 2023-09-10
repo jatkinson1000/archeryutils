@@ -289,7 +289,7 @@
               ]
   },
   {"name" : "WA Field 24 White Unmarked",
-   "codename" : "wa_field_24_white unmarked",
+   "codename" : "wa_field_24_white_unmarked",
    "location" : "field",
    "body" : "WA",
    "family" : "wafield_24_unmarked",

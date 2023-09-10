@@ -191,8 +191,9 @@ def read_classes_json(
         filename = "AGB_classes_in.json"
     elif class_system == "agb_outdoor":
         filename = "AGB_classes_out.json"
-    # elif class_system == 'agb_field':
-    #     filename = "AGB_classes_field.json"
+    elif class_system == "agb_field":
+        # Field classifications are same as outdoor
+        filename = "AGB_classes_out.json"
     else:
         msg = (
             "Unexpected classification system specified. "
