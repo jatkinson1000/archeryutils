@@ -16,6 +16,10 @@ from .agb_outdoor_classifications import (
     agb_outdoor_classification_scores,
     calculate_agb_outdoor_classification,
 )
+from .agb_field_classifications import (
+    calculate_agb_field_classification,
+    agb_field_classification_scores,
+)
 from .agb_old_field_classifications import (
     calculate_old_agb_field_classification,
     old_agb_field_classification_scores,
