@@ -1,4 +1,4 @@
-"""Tests for old agb field classification functions"""
+"""Tests for old agb field classification functions."""
 
 import pytest
 
@@ -51,9 +51,7 @@ class TestOldAgbFieldClassificationScores:
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that field classification returns expected value for a case.
-        """
+        """Check that field classification returns expected value for a case."""
         scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
@@ -99,9 +97,7 @@ class TestOldAgbFieldClassificationScores:
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that field classification returns expected value for a case.
-        """
+        """Check that field classification returns expected value for a case."""
         scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
@@ -158,9 +154,7 @@ class TestOldAgbFieldClassificationScores:
         bowstyle: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that field classification returns expected value for a case.
-        """
+        """Check that field classification returns expected value for a case."""
         scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle=bowstyle,
@@ -281,7 +275,7 @@ class TestCalculateOldAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_old_agb_field_classification(
+    def test_calculate_old_agb_field_classification(  # noqa: PLR0913 Too many arguments
         self,
         roundname: str,
         score: float,
@@ -289,9 +283,7 @@ class TestCalculateOldAgbFieldClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that field classification returns expected value for a few cases.
-        """
+        """Check that field classification returns expected value for a few cases."""
         # pylint: disable=too-many-arguments
         class_returned = class_funcs.calculate_old_agb_field_classification(
             roundname=roundname,
@@ -327,9 +319,7 @@ class TestCalculateOldAgbFieldClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that field classification returns unclassified for inappropriate rounds.
-        """
+        """Check field classification returns unclassified for inappropriate rounds."""
         class_returned = class_funcs.calculate_old_agb_field_classification(
             roundname=roundname,
             score=score,
