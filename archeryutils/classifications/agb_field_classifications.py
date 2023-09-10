@@ -8,14 +8,14 @@ calculate_agb_field_classification
 agb_field_classification_scores
 """
 
-from typing import List, Dict, Any
 from collections import OrderedDict
+from typing import Any, Dict, List
+
 import numpy as np
 
-from archeryutils import load_rounds
-import archeryutils.handicaps as hc
 import archeryutils.classifications.classification_utils as cls_funcs
-
+import archeryutils.handicaps as hc
+from archeryutils import load_rounds
 
 ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -194,10 +194,11 @@ def calculate_agb_field_classification(
     """
     # Check score is valid
     if score < 0 or score > ALL_FIELD_ROUNDS[roundname].max_score():
-        raise ValueError(
+        msg = (
             f"Invalid score of {score} for a {roundname}. "
             f"Should be in range 0-{ALL_FIELD_ROUNDS[roundname].max_score()}."
         )
+        raise ValueError(msg)
 
     # Enforce unmarked/mixed being same score as marked
     roundname = roundname.replace("unmarked", "marked")
@@ -206,6 +207,10 @@ def calculate_agb_field_classification(
     # Check round is long enough
     if "12" in roundname:
         return "UC"
+
+    group_data = agb_field_classifications[
+        cls_funcs.get_groupname(bowstyle, gender, age_group)
+    ]
 
     # Check if this round is an appropriate distance
     round_max_dist = ALL_FIELD_ROUNDS[roundname].max_distance()
@@ -223,29 +228,18 @@ def calculate_agb_field_classification(
         age_group,
     )
 
-    group_data = agb_field_classifications[
-        cls_funcs.get_groupname(bowstyle, gender, age_group)
-    ]
-
-    # We iterate over class_data keys, so convert use OrderedDict
-    class_data: OrderedDict[str, Dict[str, Any]] = OrderedDict([])
-    for i, class_i in enumerate(group_data["classes"]):
-        class_data[class_i] = {
-            "score": all_class_scores[i],
-        }
+    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    group_data = agb_field_classifications[groupname]
+    class_data = dict(zip(group_data["classes"], all_class_scores))
 
     # Of the classes remaining, what is the highest classification this score gets?
-    to_del = []
-    for classname, classdata in class_data.items():
-        if classdata["score"] > score:
-            to_del.append(classname)
-    for item in to_del:
-        del class_data[item]
-
-    try:
-        return list(class_data.keys())[0]
-    except IndexError:
-        return "UC"
+    # < 0 handles max scores, > score handles higher classifications
+    for classname, classscore in class_data.items():
+        if classscore < 0 or classscore > score:
+            continue
+        else:
+            return classname
+    return "UC"
 
 
 def agb_field_classification_scores(
@@ -305,16 +299,16 @@ def agb_field_classification_scores(
     for i, _ in enumerate(class_scores):
         if "12" in roundname:
             class_scores[i] = -9999
-        if round_max_dist < group_data["dists"][0]:
-            class_scores[i] = -9999
-        elif round_max_dist > group_data["dists"][1]:
+        if (
+            round_max_dist < group_data["dists"][0]
+            or round_max_dist > group_data["dists"][1]
+        ):
             class_scores[i] = -9999
 
     # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
     if any(isinstance(x, np.ndarray) for x in class_scores):
-        raise TypeError(
-            "score_for_round is attempting to return an array when float expected."
-        )
+        msg = "score_for_round is attempting to return an array when float expected."
+        raise TypeError(msg)
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
