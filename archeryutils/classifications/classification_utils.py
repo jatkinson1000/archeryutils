@@ -197,7 +197,7 @@ def read_classes_json(
     else:
         msg = (
             "Unexpected classification system specified. "
-            "Expected one of 'agb_indoor', 'agb_outdoor', 'aqb_field'."
+            "Expected one of 'agb_indoor', 'agb_outdoor', 'agb_field'."
         )
         raise ValueError(msg)
 

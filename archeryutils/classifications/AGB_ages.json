@@ -24,8 +24,8 @@
   {"age_group" : "Under 18",
    "male" : [70, 80],
    "female" : [60, 60],
-   "red" : [50, 60],
-   "blue" : [40, 50],
+   "red" : [60, 60],
+   "blue" : [50, 50],
    "step" : 2
   },
   {"age_group" : "Under 16",
@@ -38,14 +38,14 @@
   {"age_group" : "Under 15",
    "male" : [50, 50],
    "female" : [50, 50],
-   "red" : [50, 60],
+   "red" : [40, 60],
    "blue" : [30, 50],
    "step" : 4
   },
   {"age_group" : "Under 14",
    "male" : [40, 40],
    "female" : [40, 40],
-   "red" : [50, 60],
+   "red" : [30, 60],
    "blue" : [30, 50],
    "step" : 5
   },
