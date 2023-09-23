@@ -56,7 +56,7 @@ def _make_agb_field_classification_dict() -> Dict[str, Dict[str, Any]]:
         item
         for item in agb_ages
         if item["age_group"].lower().replace(" ", "")
-        in ["50+", "adult", "under21", "under18", "under15", "under12"]
+        not in ["under21"]
     ]
     # Read in bowstyleclass info as list of dicts
     agb_bowstyles = cls_funcs.read_bowstyles_json()
