@@ -24,7 +24,12 @@ class Target:
     -------
     max_score()
         Returns the maximum score ring value
+    min_score()
+        Returns the minimum score ring value (excluding miss)
     """
+
+    # One too many arguments, but logically this structure makes sense => disable
+    # pylint: disable=too-many-arguments
 
     def __init__(
         self,
@@ -127,4 +132,44 @@ class Target:
         # NB: Should be hard (but not impossible) to get here without catching earlier.
         raise ValueError(
             f"Target face '{self.scoring_system}' has no specified maximum score."
+        )
+
+    def min_score(self) -> float:
+        """
+        Return the minimum numerical score possible on this target (excluding miss/0).
+
+        Returns
+        -------
+        min_score : float
+            minimum score possible on this target face
+        """
+        if self.scoring_system in (
+            "5_zone",
+            "10_zone",
+            "10_zone_compound",
+            "WA_field",
+            "IFAA_field_expert",
+            "Worcester",
+        ):
+            return 1.0
+        if self.scoring_system in (
+            "10_zone_6_ring",
+            "10_zone_6_ring_compound",
+        ):
+            return 5.0
+        if self.scoring_system in (
+            "10_zone_5_ring",
+            "10_zone_5_ring_compound",
+        ):
+            return 6.0
+        if self.scoring_system in ("Worcester_2_ring",):
+            return 4.0
+        if self.scoring_system in ("IFAA_field",):
+            return 3.0
+        if self.scoring_system in ("Beiter_hit_miss"):
+            # For Beiter options are hit and miss, so return 0 here
+            return 0.0
+        # NB: Should be hard (but not impossible) to get here without catching earlier.
+        raise ValueError(
+            f"Target face '{self.scoring_system}' has no specified minimum score."
         )

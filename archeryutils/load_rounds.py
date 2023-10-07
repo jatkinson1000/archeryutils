@@ -94,7 +94,6 @@ def read_json_to_round_dict(json_filelist: Union[str, List[str]]) -> Dict[str, R
                     "Defaulting to 'custom'."
                 )
                 round_i["body"] = "custom"
-                # TODO: Could do sanitisation here e.g. AGB vs agb etc or trust user...
 
             # Assign round family
             if "family" not in round_i:

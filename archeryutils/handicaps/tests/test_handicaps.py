@@ -1,7 +1,12 @@
 """Tests for handicap equations and functions"""
+# Due to defining some rounds to use in testing duplicate code may trigger.
+# => disable for handicap tests
+# pylint: disable=duplicate-code
+
 from typing import Tuple, List
 import numpy as np
 import pytest
+from pytest_mock import MockerFixture
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func
@@ -73,6 +78,67 @@ metric122_30 = Round(
         Pass(36, 1.22, "10_zone", 30, "metre", False),
     ],
 )
+
+
+@pytest.fixture
+def mocker_hcparams_json(mocker: MockerFixture) -> None:
+    """
+    Override open with a fake HCParams json file.
+    """
+    mocked_json_file = mocker.mock_open(
+        read_data="""{
+    "AGB_datum": 1.0,
+    "AGB_step": 1.0,
+    "AGB_ang_0": 1.0,
+    "AGB_kd": 1.0,
+
+    "AGBo_datum": 1.0,
+    "AGBo_step": 1.0,
+    "AGBo_ang_0": 1.0,
+    "AGBo_k1": 1.0,
+    "AGBo_k2": 1.0,
+    "AGBo_k3": 1.0,
+    "AGBo_p1": 1.0,
+    "AGBo_arw_d": 3.0,
+
+    "AA_k0": 2.0,
+    "AA_ks": 2.0,
+    "AA_kd": 2.0,
+
+    "AA2_k0": 2.0,
+    "AA2_ks": 2.0,
+    "AA2_f1": 2.0,
+    "AA2_f2": 2.0,
+    "AA2_d0": 2.0,
+
+    "AA_arw_d_out": 3.0,
+    "arrow_diameter_indoors": 3.0,
+    "arrow_diameter_outdoors": 3.0
+    }"""
+    )
+    mocker.patch("builtins.open", mocked_json_file)
+
+
+def test_load_json_hcparams(mocker_hcparams_json: MockerFixture) -> None:
+    """
+    Test loading of HcParams from file using mock.
+    """
+    # pylint cannot understand mocker as variable name used from fixture => disable
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=unused-argument
+    handicap_params = hc_eq.HcParams()
+    handicap_params = handicap_params.load_json_params("fakefile.json")
+
+    for val in handicap_params.agb_hc_data.values():
+        assert val == 1.0
+    for val in handicap_params.agb_old_hc_data.values():
+        assert val == 1.0
+    for val in handicap_params.aa_hc_data.values():
+        assert val == 2.0
+    for val in handicap_params.aa2_hc_data.values():
+        assert val == 2.0
+    for val in handicap_params.arw_d_data.values():
+        assert val == 3.0
 
 
 class TestSigmaT:
@@ -508,6 +574,41 @@ class TestHandicapFromScore:
     Archery Australia 2
         Currently no easily available data
     """
+
+    @pytest.mark.parametrize(
+        "testround,hc_system,int_prec,handicap_expected",
+        [
+            (metric122_30, "AGB", True, 11),
+            (metric122_30, "AA", True, 107),
+            # (metric122_30, "AA2", True, 107),
+            # ------------------------------
+            (western, "AGB", False, 9.89),
+            (western, "AGBold", True, 6),
+            # ------------------------------
+            (vegas300, "AGB", True, 3),
+            (vegas300, "AA", False, 118.38),
+            # (vegas300, "AA2", True, 119),
+        ],
+    )
+    def test_get_max_score_handicap(
+        self,
+        testround: Round,
+        hc_system: str,
+        int_prec: bool,
+        handicap_expected: float,
+    ) -> None:
+        """
+        Check that get_max_score_handicap() returns expected handicap.
+        """
+        handicap = hc_func.get_max_score_handicap(
+            testround,
+            hc_system,
+            hc_params,
+            None,
+            int_prec,
+        )
+
+        assert pytest.approx(handicap) == handicap_expected
 
     def test_score_over_max(self) -> None:
         """
