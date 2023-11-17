@@ -5,6 +5,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jatkinson1000/archeryutils/testing.yaml)
 [![codecov](https://codecov.io/gh/jatkinson1000/archeryutils/branch/main/graph/badge.svg?token=AZU7G6H8T0)](https://codecov.io/gh/jatkinson1000/archeryutils)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jatkinson1000/archeryutils/HEAD?labpath=examples.ipynb)
 
 A collection of archery code and utilities in python.
 Designed to make the development of archery codes and apps easier.
@@ -20,6 +21,13 @@ Contains:
 Usage is allowed under the [licensing specified](https://github.com/jatkinson1000/archeryutils#license).
 We encourage usage and welcome feature requests.
 It is appreciated if visible credit is given by any projects using `archeryutils`.
+
+## Try now!
+You can play with this library as a
+[binder instance](https://mybinder.org/v2/gh/jatkinson1000/archeryutils/HEAD?labpath=examples.ipynb)
+right now without installing anything.  
+If you want to use it locally in your own code follow the instructions below for
+installation and getting started.
 
 ### Installation
 To install clone the repository, navigate to `/archeryutils`, and run:
