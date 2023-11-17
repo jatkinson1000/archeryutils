@@ -17,17 +17,18 @@ Contains:
 - calculation of Archery GB classifications
 
 
-## Usage
-Usage is allowed under the [licensing specified](https://github.com/jatkinson1000/archeryutils#license).
-We encourage usage and welcome feature requests.
-It is appreciated if visible credit is given by any projects using `archeryutils`.
-
 ## Try now!
 You can play with this library as a
 [binder instance](https://mybinder.org/v2/gh/jatkinson1000/archeryutils/HEAD?labpath=examples.ipynb)
 right now without installing anything.  
-If you want to use it locally in your own code follow the instructions below for
-installation and getting started.
+If you want to use it locally in your own code follow the usage instructions below for
+[installation](#installation) and getting started.
+
+
+## Usage
+Usage is allowed under the [licensing specified](https://github.com/jatkinson1000/archeryutils#license).
+We encourage usage and welcome feature requests.
+It is appreciated if visible credit is given by any projects using `archeryutils`.
 
 ### Installation
 To install clone the repository, navigate to `/archeryutils`, and run:
