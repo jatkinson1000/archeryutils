@@ -207,7 +207,7 @@ def agb_old_indoor_classification_scores(
             "AGBold",
             hc_params,
             round_score_up=True,
-        )[0]
+        )
         for i, class_i in enumerate(group_data["classes"])
     ]
 

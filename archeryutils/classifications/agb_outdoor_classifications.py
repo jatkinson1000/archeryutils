@@ -484,7 +484,7 @@ def agb_outdoor_classification_scores(
             "AGB",
             hc_params,
             round_score_up=True,
-        )[0]
+        )
         for i in range(len(group_data["classes"]))
     ]
 

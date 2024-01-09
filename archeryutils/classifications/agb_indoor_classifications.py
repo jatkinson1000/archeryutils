@@ -239,7 +239,7 @@ def agb_indoor_classification_scores(
             hc_scheme,
             hc_params,
             round_score_up=True,
-        )[0]
+        )
         for i, class_i in enumerate(group_data["classes"])
     ]
 
@@ -263,7 +263,7 @@ def agb_indoor_classification_scores(
             hc_scheme,
             hc_params,
             round_score_up=True,
-        )[0]
+        )
         if next_score == score:
             # If already at max score this classification is impossible
             if score == ALL_INDOOR_ROUNDS[roundname].max_score():
