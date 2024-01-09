@@ -88,7 +88,7 @@ def handicap_from_score(
         else:
             handicap = np.ceil(handicap)
 
-        sc_int, _ = hc_eq.score_for_round(
+        sc_int = hc_eq.score_for_round(
             rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
         )
 
@@ -101,7 +101,7 @@ def handicap_from_score(
             hstep = 1.0
         while not min_h_flag:
             handicap += hstep
-            sc_int, _ = hc_eq.score_for_round(
+            sc_int = hc_eq.score_for_round(
                 rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
             )
             if sc_int < score:
@@ -157,13 +157,13 @@ def get_max_score_handicap(
     else:
         round_lim = 1.0
 
-    s_max, _ = hc_eq.score_for_round(
+    s_max = hc_eq.score_for_round(
         rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
     )
     # Work down to where we would round or ceil to max score
     while s_max > max_score - round_lim:
         handicap = handicap + delta_hc
-        s_max, _ = hc_eq.score_for_round(
+        s_max = hc_eq.score_for_round(
             rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
         )
     handicap = handicap - delta_hc  # Undo final iteration that overshoots
@@ -350,7 +350,7 @@ def f_root(
     # Could try and simplify hc_sys and hc_dat in future refactor
     # pylint: disable=too-many-arguments
 
-    val, _ = hc_eq.score_for_round(
+    val = hc_eq.score_for_round(
         round_est, hc_est, sys, hc_data, arw_dia, round_score_up=False
     )
 
@@ -425,7 +425,7 @@ def print_handicap_table(
     )
     table[:, 0] = hcs.copy()
     for i, round_i in enumerate(round_list):
-        table[:, i + 1], _ = hc_eq.score_for_round(
+        table[:, i + 1] = hc_eq.score_for_round(
             round_i,
             hcs,
             hc_sys,

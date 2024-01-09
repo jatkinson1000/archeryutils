@@ -37,7 +37,7 @@ New AGB - J Atkinson
 AA & AA2 - J Park
 """
 import json
-from typing import Union, Optional, Tuple
+from typing import Union, Optional
 from dataclasses import dataclass, field
 import numpy as np
 import numpy.typing as npt
@@ -508,6 +508,47 @@ def arrow_score(
     return s_bar
 
 
+def score_for_passes(
+    rnd: rounds.Round,
+    handicap: Union[float, npt.NDArray[np.float_]],
+    hc_sys: str,
+    hc_dat: HcParams,
+    arw_d: Optional[float] = None,
+) -> npt.NDArray[np.float_]:
+    """
+    Calculate the expected score for all passes in a round at a given handicap rating.
+
+    Parameters
+    ----------
+    rnd : rounds.Round
+        A Round class specifying the round being shot
+    handicap : ndarray or float
+        handicap value to calculate score for
+    hc_sys : string
+        identifier for the handicap system
+    hc_dat : HcParams
+        dataclass containing parameters for handicap equations
+    arw_d : float
+        arrow diameter in [metres] default = None -> (use defaults)
+
+
+    Returns
+    -------
+    pass_scores : list of float
+        average score for each pass in the round (unrounded decimal)
+
+    """
+    pass_scores = np.array(
+        [
+            pass_i.n_arrows
+            * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
+            for pass_i in rnd.passes
+        ]
+    )
+
+    return pass_scores
+
+
 def score_for_round(
     rnd: rounds.Round,
     handicap: Union[float, npt.NDArray[np.float_]],
@@ -515,9 +556,9 @@ def score_for_round(
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
     round_score_up: bool = True,
-) -> Tuple[Union[float, np.float_, npt.NDArray[np.float_]], npt.NDArray[np.float_]]:
+) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     """
-    Calculate the average arrow score for a given target and handicap rating.
+    Calculate the expected score for a round at a given handicap rating.
 
     Parameters
     ----------
@@ -532,29 +573,20 @@ def score_for_round(
     arw_d : float
         arrow diameter in [metres] default = None -> (use defaults)
     round_score_up : bool
-        round score up to nearest integer value
+        round score up to nearest integer value?
 
 
     Returns
     -------
     round_score : float
         average score of the round for this set of parameters
-    pass_score : list of float
-        average score for each pass in the round
 
     """
     # Two too many arguments. Makes sense at the moment => disable
     # Could try and simplify hc_sys and hc_dat in future refactor
     # pylint: disable=too-many-arguments
-    pass_score = np.array(
-        [
-            pass_i.n_arrows
-            * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
-            for pass_i in rnd.passes
-        ]
-    )
 
-    round_score = np.sum(pass_score, axis=0)
+    round_score = np.sum(score_for_passes(rnd, handicap, hc_sys, hc_dat, arw_d), axis=0)
 
     if round_score_up:
         # Old AGB system uses plain rounding rather than ceil of other schemes
@@ -563,4 +595,4 @@ def score_for_round(
         else:
             round_score = np.ceil(round_score)
 
-    return round_score, pass_score
+    return round_score

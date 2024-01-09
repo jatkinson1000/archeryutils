@@ -498,7 +498,7 @@ class TestScoreForRound:
 
         assert hc_eq.score_for_round(
             test_round, 20.0, hc_system, hc_eq.HcParams(), None, False
-        )[0] == pytest.approx(round_score_expected[0])
+        ) == pytest.approx(round_score_expected[0])
 
     @pytest.mark.parametrize(
         "hc_system,round_score_expected",
@@ -534,7 +534,7 @@ class TestScoreForRound:
         assert (
             hc_eq.score_for_round(
                 test_round, 20.0, hc_system, hc_eq.HcParams(), None, True
-            )[0]
+            )
             == round_score_expected[0]
         )
 
