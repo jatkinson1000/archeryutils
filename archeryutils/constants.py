@@ -40,7 +40,8 @@ CM_ALIASES = (
 )
 
 
-class DistanceUnits(SimpleNamespace):
-    yard = YARD_ALIASES
-    metre = METRE_ALIASES
-    cm = CM_ALIASES
+DistanceUnits = SimpleNamespace(
+    yard = YARD_ALIASES,
+    metre = METRE_ALIASES,
+    cm = CM_ALIASES,
+)
