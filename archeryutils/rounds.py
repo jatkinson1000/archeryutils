@@ -2,7 +2,7 @@
 from typing import List, Union, Tuple
 
 from archeryutils.targets import Target
-from archeryutils.constants import YARD_TO_METRE, INCH_TO_METRE, CM_TO_METRE
+from archeryutils.constants import TO_METRES
 
 
 class Pass:
@@ -166,11 +166,7 @@ class Round:
         """
         max_dist = 0.0
         for pass_i in self.passes:
-            dist = (
-                pass_i.distance / YARD_TO_METRE
-                if pass_i.native_dist_unit == "yard"
-                else pass_i.distance
-            )
+            dist = pass_i.distance / TO_METRES[pass_i.native_dist_unit]
             if dist > max_dist:
                 max_dist = dist
                 d_unit = pass_i.native_dist_unit
@@ -183,22 +179,11 @@ class Round:
         """Print information about the Round."""
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            if pass_i.native_dist_unit == "yard":
-                native_dist = pass_i.target.distance / YARD_TO_METRE
-            else:
-                native_dist = pass_i.distance
-
-            # time to generalise unit conversion rather than repeat here and
-            # in target constructor
-            if (diam_unit := pass_i.native_diam_unit) == "inch":
-                native_diam = pass_i.target.diameter / INCH_TO_METRE
-            elif diam_unit == "cm":
-                native_diam = pass_i.target.diameter / CM_TO_METRE
-            else:
-                native_diam = pass_i.target.diameter
+            native_dist = pass_i.target.distance / TO_METRES[pass_i.native_dist_unit]
+            native_diam = pass_i.target.diameter / TO_METRES[pass_i.native_diam_unit]
 
             print(
                 f"\t- {pass_i.n_arrows} arrows "
-                f"at a {native_diam:.1f} {diam_unit} target "
+                f"at a {native_diam:.1f} {pass_i.native_diam_unit} target "
                 f"at {native_dist:.1f} {pass_i.native_dist_unit}s."
             )

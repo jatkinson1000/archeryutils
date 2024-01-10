@@ -1,11 +1,14 @@
 """Constants used in the archeryutils package."""
 from types import SimpleNamespace
 
-YARD_TO_METRE = 0.9144
-CM_TO_METRE = 0.01
-INCH_TO_METRE = 0.0254
+TO_METRES = {
+    "metre": 1.0,
+    "yard": 0.9144,
+    "cm": 0.01,
+    "inch": 0.0254,
+}
 
-YARD_ALIASES = (
+YARD_ALIASES = {
     "Yard",
     "yard",
     "Yards",
@@ -16,9 +19,9 @@ YARD_ALIASES = (
     "yd",
     "Yds",
     "yds",
-)
+}
 
-METRE_ALIASES = (
+METRE_ALIASES = {
     "Metre",
     "metre",
     "Metres",
@@ -27,9 +30,9 @@ METRE_ALIASES = (
     "m",
     "Ms",
     "ms",
-)
+}
 
-CM_ALIASES = (
+CM_ALIASES = {
     "Centimeter",
     "centimeter",
     "Centimeters",
@@ -38,14 +41,14 @@ CM_ALIASES = (
     "cm",
     "CMs",
     "cms",
-)
+}
 
-INCH_ALIASES = (
+INCH_ALIASES = {
     "Inch",
     "inch",
     "Inches",
     "inches",
-)
+}
 
 
 DistanceUnits = SimpleNamespace(
@@ -54,3 +57,15 @@ DistanceUnits = SimpleNamespace(
     cm = CM_ALIASES,
     inch = INCH_ALIASES,
 )
+
+def normalise_unit_name(unit: str) -> str | None:
+    """Convert any supported unit name alias into a cannonical string representation"""
+    if unit in YARD_ALIASES:
+        return 'yard'
+    if unit in METRE_ALIASES:
+        return 'metre'
+    if unit in CM_ALIASES:
+        return 'cm'
+    if unit in INCH_ALIASES:
+        return 'inch'
+    return None

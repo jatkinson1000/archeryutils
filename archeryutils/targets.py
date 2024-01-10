@@ -1,6 +1,6 @@
 """Class to represent a Target for archery applications."""
 
-from archeryutils.constants import CM_TO_METRE, YARD_TO_METRE, INCH_TO_METRE, DistanceUnits
+from archeryutils.constants import TO_METRES, normalise_unit_name, DistanceUnits
 
 
 class Target:
@@ -63,31 +63,21 @@ class Target:
                 f"""Invalid Target Face Type specified.\n"""
                 f"""Please select from '{"', '".join(systems)}'."""
             )
-
-        if native_dist_unit in DistanceUnits.yard:
-            native_dist_unit = "yard"
-            distance *= YARD_TO_METRE
-        elif native_dist_unit in DistanceUnits.metre:
-            native_dist_unit = "metre"
-        else:
+        if native_dist_unit not in DistanceUnits.yard | DistanceUnits.metre:
             raise ValueError(
                 f"Distance unit '{native_dist_unit}' not recognised. "
                 "Select from 'yard' or 'metre'."
             )
+        native_dist_unit = normalise_unit_name(native_dist_unit)
+        distance *= TO_METRES[native_dist_unit]
 
-        if native_diameter_unit in DistanceUnits.cm:
-            native_diameter_unit = "cm"
-            diameter *= CM_TO_METRE
-        elif native_diameter_unit in DistanceUnits.inch:
-            native_diameter_unit = "inch"
-            diameter *= INCH_TO_METRE
-        elif native_diameter_unit in DistanceUnits.metre:
-            native_diameter_unit = "metre"
-        else:
+        if native_diameter_unit not in DistanceUnits.cm | DistanceUnits.inch | DistanceUnits.metre:
             raise ValueError(
                 f"Diameter unit '{native_diameter_unit}' not recognised. "
                 "Select from 'cm', 'inch' or 'metre'"
             )
+        native_diameter_unit = normalise_unit_name(native_diameter_unit)
+        diameter *= TO_METRES[native_diameter_unit]
 
         self.native_dist_unit = native_dist_unit
         self.distance = distance
