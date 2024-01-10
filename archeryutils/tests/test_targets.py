@@ -24,7 +24,7 @@ class TestTarget:
             ValueError,
             match="Invalid Target Face Type specified.\nPlease select from '(.+)'.",
         ):
-            Target(1.22, "InvalidScoringSystem", 50, "m", False)
+            Target(122, "InvalidScoringSystem", 50, "m", False)
 
     def test_invalid_distance_unit(self) -> None:
         """
@@ -34,28 +34,43 @@ class TestTarget:
             ValueError,
             match="Distance unit '(.+)' not recognised. Select from 'yard' or 'metre'.",
         ):
-            Target(1.22, "5_zone", 50, "InvalidDistanceUnit", False)
+            Target(122, "5_zone", 50, "InvalidDistanceUnit", False)
 
     def test_default_distance_unit(self) -> None:
         """
         Check that Target() returns distance in metres when units not specified.
         """
-        target = Target(1.22, "5_zone", 50)
+        target = Target(122, "5_zone", 50)
         assert target.native_dist_unit == "metre"
-
-    def test_default_location(self) -> None:
-        """
-        Check that Target() returns indoor=False when indoor not specified.
-        """
-        target = Target(1.22, "5_zone", 50, "m")
-        assert target.indoor is False
 
     def test_yard_to_m_conversion(self) -> None:
         """
         Check that Target() returns correct distance in metres when yards provided.
         """
-        target = Target(1.22, "5_zone", 50, "yards")
+        target = Target(122, "5_zone", 50, "yards")
         assert target.distance == 50.0 * 0.9144
+
+    def test_invalid_diameter_unit(self) -> None:
+        with pytest.raises(ValueError):
+            Target(122, "5_zone", 50, "yards", diameter_unit="InvalidDiamterUnit")
+
+    @pytest.mark.xfail(
+        reason="Only implemented cm conversions in #27",
+        raises=ValueError,
+    )
+    def test_unsupported_diameter_unit(self) -> None:
+        Target(16, "Worcester", 20, "yards", indoor=True, diameter_unit="inches")
+
+    def test_default_diameter_unit_and_conversion(self) -> None:
+        target = Target(80, "10_zone_5_ring_compound", 50, "metres", diameter_unit="cm")
+        assert target.diameter == 80 * 0.01
+
+    def test_default_location(self) -> None:
+        """
+        Check that Target() returns indoor=False when indoor not specified.
+        """
+        target = Target(122, "5_zone", 50, "m")
+        assert target.indoor is False
 
     @pytest.mark.parametrize(
         "face_type,max_score_expected",
@@ -78,7 +93,7 @@ class TestTarget:
         """
         Check that Target() returns correct max score.
         """
-        target = Target(1.22, face_type, 50, "metre", False)
+        target = Target(122, face_type, 50, "metre", False)
         assert target.max_score() == max_score_expected
 
     def test_max_score_invalid_face_type(self) -> None:
@@ -89,7 +104,7 @@ class TestTarget:
             ValueError,
             match="Target face '(.+)' has no specified maximum score.",
         ):
-            target = Target(1.22, "5_zone", 50, "metre", False)
+            target = Target(122, "5_zone", 50, "metre", False)
             # Requires manual resetting of scoring system to get this error.
             target.scoring_system = "InvalidScoringSystem"
             target.max_score()
@@ -115,7 +130,7 @@ class TestTarget:
         """
         Check that Target() returns correct min score.
         """
-        target = Target(1.22, face_type, 50, "metre", False)
+        target = Target(122, face_type, 50, "metre", False)
         assert target.min_score() == min_score_expected
 
     def test_min_score_invalid_face_type(self) -> None:
@@ -126,7 +141,7 @@ class TestTarget:
             ValueError,
             match="Target face '(.+)' has no specified minimum score.",
         ):
-            target = Target(1.22, "5_zone", 50, "metre", False)
+            target = Target(122, "5_zone", 50, "metre", False)
             # Requires manual resetting of scoring system to get this error.
             target.scoring_system = "InvalidScoringSystem"
             target.min_score()
