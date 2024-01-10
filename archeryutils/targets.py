@@ -1,6 +1,6 @@
 """Class to represent a Target for archery applications."""
 
-from archeryutils.constants import YARD_TO_METRE
+from archeryutils.constants import CM_TO_METRE, YARD_TO_METRE, DistanceUnits
 
 
 class Target:
@@ -19,7 +19,9 @@ class Target:
         The native unit distance is measured in
     indoor : bool
         is round indoors for arrow diameter purposes? default = False
-
+    diamter_unit : str
+        Native unit the target size is measured in.
+        Converts diameter and stores in [meteres]
     Methods
     -------
     max_score()
@@ -38,6 +40,7 @@ class Target:
         distance: float,
         native_dist_unit: str = "metre",
         indoor: bool = False,
+        diameter_unit: str = "cm",
     ) -> None:
         systems = [
             "5_zone",
@@ -60,29 +63,10 @@ class Target:
                 f"""Please select from '{"', '".join(systems)}'."""
             )
 
-        if native_dist_unit in (
-            "Yard",
-            "yard",
-            "Yards",
-            "yards",
-            "Y",
-            "y",
-            "Yd",
-            "yd",
-            "Yds",
-            "yds",
-        ):
+        if native_dist_unit in DistanceUnits.yard:
             native_dist_unit = "yard"
-        elif native_dist_unit in (
-            "Metre",
-            "metre",
-            "Metres",
-            "metres",
-            "M",
-            "m",
-            "Ms",
-            "ms",
-        ):
+            distance *= YARD_TO_METRE
+        elif native_dist_unit in DistanceUnits.metre:
             native_dist_unit = "metre"
         else:
             raise ValueError(
@@ -90,11 +74,21 @@ class Target:
                 "Select from 'yard' or 'metre'."
             )
 
-        self.diameter = diameter
+        if diameter_unit in DistanceUnits.cm:
+            diameter_unit = "cm"
+            diameter *= CM_TO_METRE
+        elif diameter_unit in DistanceUnits.metre:
+            diameter_unit = "metre"
+        else:
+            raise ValueError(
+                f"Diamter unit '{diameter_unit} not recognised. "
+                "Select from 'cm' or 'metre'"
+            )
+
         self.native_dist_unit = native_dist_unit
-        self.distance = (
-            distance * YARD_TO_METRE if self.native_dist_unit == "yard" else distance
-        )
+        self.distance = distance
+        self.diameter_unit = diameter_unit
+        self.diameter = diameter
         self.scoring_system = scoring_system
         self.indoor = indoor
 
