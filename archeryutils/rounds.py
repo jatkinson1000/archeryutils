@@ -1,8 +1,8 @@
 """Classes to define a Pass and Round for archery applications."""
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 
-from archeryutils.targets import Target
 from archeryutils.constants import YARD_TO_METRE
+from archeryutils.targets import Target
 
 
 class Pass:
@@ -17,7 +17,7 @@ class Pass:
     n_arrows : int
         number of arrows in this pass
     diameter : float
-        face diameter in [metres]
+        face diameter in [centimetres]
     scoring_system : str
         target face/scoring system type
     distance : float

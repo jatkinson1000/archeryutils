@@ -1,5 +1,6 @@
 """Tests for Pass and Round classes"""
-from typing import Union, Tuple
+from typing import Tuple, Union
+
 import pytest
 
 from archeryutils.rounds import Pass, Round
@@ -27,28 +28,28 @@ class TestPass:
         """
         Check that Pass() returns distance in metres when units not specified.
         """
-        test_pass = Pass(36, 1.22, "5_zone", 50)
+        test_pass = Pass(36, 122, "5_zone", 50)
         assert test_pass.native_dist_unit == "metre"
 
     def test_default_location(self) -> None:
         """
         Check that Pass() returns indoor=False when indoor not specified.
         """
-        test_pass = Pass(36, 1.22, "5_zone", 50, "metre")
+        test_pass = Pass(36, 122, "5_zone", 50, "metre")
         assert test_pass.indoor is False
 
     def test_negative_arrows(self) -> None:
         """
         Check that Pass() uses abs(narrows).
         """
-        test_pass = Pass(-36, 1.22, "5_zone", 50, "metre")
+        test_pass = Pass(-36, 122, "5_zone", 50, "metre")
         assert test_pass.n_arrows == 36
 
     def test_properties(self) -> None:
         """
         Check that Pass properties are set correctly
         """
-        test_pass = Pass(36, 1.22, "5_zone", 50, "metre", False)
+        test_pass = Pass(36, 122, "5_zone", 50, "metre", False)
         assert test_pass.distance == 50.0
         assert test_pass.native_dist_unit == "metre"
         assert test_pass.diameter == 1.22
@@ -74,7 +75,7 @@ class TestPass:
         """
         Check that Pass.max_score() method is functioning correctly
         """
-        test_pass = Pass(100, 1.22, face_type, 50, "metre", False)
+        test_pass = Pass(100, 122, face_type, 50, "metre", False)
         assert test_pass.max_score() == max_score_expected
 
 
@@ -102,9 +103,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(100, 1.22, "5_zone", 50, "metre", False),
-                Pass(100, 1.22, "5_zone", 40, "metre", False),
-                Pass(100, 1.22, "5_zone", 30, "metre", False),
+                Pass(100, 122, "5_zone", 50, "metre", False),
+                Pass(100, 122, "5_zone", 40, "metre", False),
+                Pass(100, 122, "5_zone", 30, "metre", False),
             ],
         )
         assert test_round.max_score() == 2700
@@ -135,9 +136,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, 1.22, "5_zone", 100, unit, False),
-                Pass(10, 1.22, "5_zone", 80, unit, False),
-                Pass(10, 1.22, "5_zone", 60, unit, False),
+                Pass(10, 122, "5_zone", 100, unit, False),
+                Pass(10, 122, "5_zone", 80, unit, False),
+                Pass(10, 122, "5_zone", 60, unit, False),
             ],
         )
         assert test_round.max_distance(unit=get_unit) == max_dist_expected
@@ -150,9 +151,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, 1.22, "5_zone", 80, "metre", False),
-                Pass(10, 1.22, "5_zone", 100, "metre", False),
-                Pass(10, 1.22, "5_zone", 60, "metre", False),
+                Pass(10, 122, "5_zone", 80, "metre", False),
+                Pass(10, 122, "5_zone", 100, "metre", False),
+                Pass(10, 122, "5_zone", 60, "metre", False),
             ],
         )
         assert test_round.max_distance() == 100
@@ -164,9 +165,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, 1.22, "5_zone", 100, "metre", False),
-                Pass(20, 1.22, "5_zone", 80, "yards", False),
-                Pass(30, 0.80, "5_zone", 60, "metre", False),
+                Pass(10, 122, "5_zone", 100, "metre", False),
+                Pass(20, 122, "5_zone", 80, "yards", False),
+                Pass(30, 80, "5_zone", 60, "metre", False),
             ],
         )
         test_round.get_info()
