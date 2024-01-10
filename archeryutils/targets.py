@@ -1,6 +1,6 @@
 """Class to represent a Target for archery applications."""
 
-from archeryutils.constants import CM_TO_METRE, YARD_TO_METRE, DistanceUnits
+from archeryutils.constants import CM_TO_METRE, YARD_TO_METRE, INCH_TO_METRE, DistanceUnits
 
 
 class Target:
@@ -78,17 +78,20 @@ class Target:
         if native_diameter_unit in DistanceUnits.cm:
             native_diameter_unit = "cm"
             diameter *= CM_TO_METRE
+        elif native_diameter_unit in DistanceUnits.inch:
+            native_diameter_unit = "inch"
+            diameter *= INCH_TO_METRE
         elif native_diameter_unit in DistanceUnits.metre:
             native_diameter_unit = "metre"
         else:
             raise ValueError(
                 f"Diameter unit '{native_diameter_unit}' not recognised. "
-                "Select from 'cm' or 'metre'"
+                "Select from 'cm', 'inch' or 'metre'"
             )
 
         self.native_dist_unit = native_dist_unit
         self.distance = distance
-        self.diameter_unit = native_diameter_unit
+        self.native_diameter_unit = native_diameter_unit
         self.diameter = diameter
         self.scoring_system = scoring_system
         self.indoor = indoor

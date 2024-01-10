@@ -3,6 +3,7 @@ from types import SimpleNamespace
 
 YARD_TO_METRE = 0.9144
 CM_TO_METRE = 0.01
+INCH_TO_METRE = 0.0254
 
 YARD_ALIASES = (
     "Yard",
@@ -39,9 +40,17 @@ CM_ALIASES = (
     "cms",
 )
 
+INCH_ALIASES = (
+    "Inch",
+    "inch",
+    "Inches",
+    "inches",
+)
+
 
 DistanceUnits = SimpleNamespace(
     yard = YARD_ALIASES,
     metre = METRE_ALIASES,
     cm = CM_ALIASES,
+    inch = INCH_ALIASES,
 )
