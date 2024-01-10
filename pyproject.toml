@@ -64,6 +64,3 @@ archeryutils = ["*.json", "round_data_files/*.json", "classifications/*.json"]
 [tool.mypy]
 warn_unused_configs = true
 plugins = ["numpy.typing.mypy_plugin"]
-
-[tool.pytest]
-xfail_strict = true

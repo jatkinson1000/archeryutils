@@ -19,7 +19,7 @@ class Target:
         The native unit distance is measured in
     indoor : bool
         is round indoors for arrow diameter purposes? default = False
-    diamter_unit : str
+    native_diameter_unit : str
         Native unit the target size is measured in.
         Converts diameter and stores in [meteres]
 
@@ -41,7 +41,7 @@ class Target:
         distance: float,
         native_dist_unit: str = "metre",
         indoor: bool = False,
-        diameter_unit: str = "cm",
+        native_diameter_unit: str = "cm",
     ) -> None:
         systems = [
             "5_zone",
@@ -75,20 +75,20 @@ class Target:
                 "Select from 'yard' or 'metre'."
             )
 
-        if diameter_unit in DistanceUnits.cm:
-            diameter_unit = "cm"
+        if native_diameter_unit in DistanceUnits.cm:
+            native_diameter_unit = "cm"
             diameter *= CM_TO_METRE
-        elif diameter_unit in DistanceUnits.metre:
-            diameter_unit = "metre"
+        elif native_diameter_unit in DistanceUnits.metre:
+            native_diameter_unit = "metre"
         else:
             raise ValueError(
-                f"Diamter unit '{diameter_unit} not recognised. "
+                f"Diameter unit '{native_diameter_unit}' not recognised. "
                 "Select from 'cm' or 'metre'"
             )
 
         self.native_dist_unit = native_dist_unit
         self.distance = distance
-        self.diameter_unit = diameter_unit
+        self.diameter_unit = native_diameter_unit
         self.diameter = diameter
         self.scoring_system = scoring_system
         self.indoor = indoor

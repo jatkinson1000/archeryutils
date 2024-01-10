@@ -51,19 +51,28 @@ class TestTarget:
         assert target.distance == 50.0 * 0.9144
 
     def test_invalid_diameter_unit(self) -> None:
-        with pytest.raises(ValueError):
-            Target(122, "5_zone", 50, "yards", diameter_unit="InvalidDiamterUnit")
+        """
+        Check that Target() raises an error when called with invalid/unsupported diameter units.
+        """
+        with pytest.raises(
+            ValueError,
+            match="Diameter unit '(.+)' not recognised. Select from 'cm' or 'metre'",
+        ):
+            Target(122, "5_zone", 50, "yards", native_diameter_unit="InvalidDiamterUnit")
 
-    @pytest.mark.xfail(
-        reason="Only implemented cm conversions in #27",
-        raises=ValueError,
-    )
-    def test_unsupported_diameter_unit(self) -> None:
-        Target(16, "Worcester", 20, "yards", indoor=True, diameter_unit="inches")
-
-    def test_default_diameter_unit_and_conversion(self) -> None:
-        target = Target(80, "10_zone_5_ring_compound", 50, "metres", diameter_unit="cm")
+    def test_default_diameter_unit(self) -> None:
+        """
+        Check that Target() is using centimetres by default for diameter.
+        """
+        target = Target(80, "10_zone_5_ring_compound", 50, "metres")
         assert target.diameter == 80 * 0.01
+
+    def test_diameter_metres_not_converted(self) -> None:
+        """
+        Check that Target() is storing diameter in metres
+        """
+        target = Target(0.04, "Beiter_hit_miss", 18, native_diameter_unit="m")
+        assert target.diameter == 0.04
 
     def test_default_location(self) -> None:
         """
