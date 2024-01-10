@@ -4,10 +4,9 @@
 # pylint: disable=duplicate-code
 
 from typing import Union
-
 import numpy as np
-import pytest
 from numpy.typing import NDArray
+import pytest
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func

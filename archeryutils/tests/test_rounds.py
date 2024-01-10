@@ -1,6 +1,5 @@
 """Tests for Pass and Round classes"""
-from typing import Tuple, Union
-
+from typing import Union, Tuple
 import pytest
 
 from archeryutils.rounds import Pass, Round

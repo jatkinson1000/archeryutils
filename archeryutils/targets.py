@@ -22,6 +22,7 @@ class Target:
     diamter_unit : str
         Native unit the target size is measured in.
         Converts diameter and stores in [meteres]
+
     Methods
     -------
     max_score()

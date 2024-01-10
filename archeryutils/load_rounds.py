@@ -1,8 +1,8 @@
 """Module to load round data from json files into DotDicts."""
 import json
-import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Union
+import warnings
+from typing import Union, List, Dict, Any
 
 from archeryutils.rounds import Pass, Round
 

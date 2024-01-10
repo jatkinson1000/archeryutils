@@ -3,16 +3,16 @@
 # => disable for handicap tests
 # pylint: disable=duplicate-code
 
-from typing import List, Tuple
-
+from typing import Tuple, List
 import numpy as np
 import pytest
 from pytest_mock import MockerFixture
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func
-from archeryutils.rounds import Pass, Round
 from archeryutils.targets import Target
+from archeryutils.rounds import Round, Pass
+
 
 hc_params = hc_eq.HcParams()
 

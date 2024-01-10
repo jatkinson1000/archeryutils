@@ -1,8 +1,8 @@
 """Classes to define a Pass and Round for archery applications."""
-from typing import List, Tuple, Union
+from typing import List, Union, Tuple
 
-from archeryutils.constants import YARD_TO_METRE
 from archeryutils.targets import Target
+from archeryutils.constants import YARD_TO_METRE
 
 
 class Pass:
