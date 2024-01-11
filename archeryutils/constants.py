@@ -1,14 +1,13 @@
 """Constants used in the archeryutils package."""
-from types import SimpleNamespace
 
-TO_METRES = {
+_CONVERSIONS = {
     "metre": 1.0,
     "yard": 0.9144,
     "cm": 0.01,
     "inch": 0.0254,
 }
 
-YARD_ALIASES = {
+_YARD_ALIASES = {
     "Yard",
     "yard",
     "Yards",
@@ -21,7 +20,7 @@ YARD_ALIASES = {
     "yds",
 }
 
-METRE_ALIASES = {
+_METRE_ALIASES = {
     "Metre",
     "metre",
     "Metres",
@@ -32,7 +31,7 @@ METRE_ALIASES = {
     "ms",
 }
 
-CM_ALIASES = {
+_CM_ALIASES = {
     "Centimeter",
     "centimeter",
     "Centimeters",
@@ -43,29 +42,46 @@ CM_ALIASES = {
     "cms",
 }
 
-INCH_ALIASES = {
+_INCH_ALIASES = {
     "Inch",
     "inch",
     "Inches",
     "inches",
 }
 
-
-DistanceUnits = SimpleNamespace(
-    yard = YARD_ALIASES,
-    metre = METRE_ALIASES,
-    cm = CM_ALIASES,
-    inch = INCH_ALIASES,
+_ALIASES = dict(
+    yard = _YARD_ALIASES,
+    metre = _METRE_ALIASES,
+    cm = _CM_ALIASES,
+    inch = _INCH_ALIASES,
 )
 
-def normalise_unit_name(unit: str) -> str | None:
-    """Convert any supported unit name alias into a cannonical string representation"""
-    if unit in YARD_ALIASES:
-        return 'yard'
-    if unit in METRE_ALIASES:
-        return 'metre'
-    if unit in CM_ALIASES:
-        return 'cm'
-    if unit in INCH_ALIASES:
-        return 'inch'
-    return None
+class Length:
+    yard = _YARD_ALIASES
+    metre = _METRE_ALIASES
+    cm = _CM_ALIASES
+    inch = _INCH_ALIASES
+
+    _reversed = {
+        alias: name
+        for name in _CONVERSIONS
+        for alias in _ALIASES[name]
+    }
+
+    _conversions = {
+        alias: factor
+        for name, factor in _CONVERSIONS.items()
+        for alias in _ALIASES[name]
+    }
+
+    @classmethod
+    def to_metres(cls, value: float, unit: str) -> float:
+        return cls._conversions[unit] * value
+
+    @classmethod
+    def from_metres(cls, metre_value: float, unit: str) -> float:
+        return metre_value / cls._conversions[unit]
+
+    @classmethod
+    def definitive_name(cls, alias: str) -> str:
+        return cls._reversed[alias]

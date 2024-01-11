@@ -2,7 +2,7 @@
 from typing import List, Union, Tuple
 
 from archeryutils.targets import Target
-from archeryutils.constants import TO_METRES
+from archeryutils.constants import Length
 
 
 class Pass:
@@ -166,7 +166,7 @@ class Round:
         """
         max_dist = 0.0
         for pass_i in self.passes:
-            dist = pass_i.distance / TO_METRES[pass_i.native_dist_unit]
+            dist = Length.from_metres(pass_i.distance, pass_i.native_dist_unit)
             if dist > max_dist:
                 max_dist = dist
                 d_unit = pass_i.native_dist_unit
@@ -179,8 +179,8 @@ class Round:
         """Print information about the Round."""
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            native_dist = pass_i.target.distance / TO_METRES[pass_i.native_dist_unit]
-            native_diam = pass_i.target.diameter / TO_METRES[pass_i.native_diam_unit]
+            native_dist = Length.from_metres(pass_i.target.distance, pass_i.native_dist_unit)
+            native_diam = Length.from_metres(pass_i.target.diameter, pass_i.native_diam_unit)
 
             print(
                 f"\t- {pass_i.n_arrows} arrows "
