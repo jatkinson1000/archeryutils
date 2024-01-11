@@ -172,6 +172,17 @@ class TestRound:
         )
         assert test_round.max_distance() == 100
 
+    def test_max_distance_mixed_units(self) -> None:
+        """
+        Check that max distance accounts for different units in round
+        """
+        pyards = Pass(36, 122, "5_zone", 80, 'yard')
+        pmetric = Pass(36, 122, "5_zone", 75, 'metres')
+        test_round = Round('test', [pyards, pmetric])
+
+        assert pmetric.distance > pyards.distance
+        assert test_round.max_distance() == 75
+
     def test_get_info(self, capsys: pytest.CaptureFixture[str]) -> None:
         """
         Check printing info works as expected.

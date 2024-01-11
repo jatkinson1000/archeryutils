@@ -166,11 +166,11 @@ class Round:
         """
         max_dist = 0.0
         for pass_i in self.passes:
-            dist = Length.from_metres(pass_i.distance, pass_i.native_dist_unit)
-            if dist > max_dist:
+            if (dist := pass_i.distance) > max_dist:
                 max_dist = dist
                 d_unit = pass_i.native_dist_unit
 
+        max_dist = Length.from_metres(max_dist, d_unit)
         if unit:
             return (max_dist, d_unit)
         return max_dist
