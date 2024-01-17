@@ -59,7 +59,7 @@ _ALIASES = {
 
 class Length:
     """
-    Utility class for Length unit conversions
+    Utility class for Length unit conversions.
 
     Contains common abbreviations, pluralisations and capitilizations for supported
     units as sets to allow easy membership checks in combination.
@@ -98,7 +98,7 @@ class Length:
     @classmethod
     def to_metres(cls, value: float, unit: str) -> float:
         """
-        Convert value in metres to given unit
+        Convert value in metres to given unit.
 
         Parameters
         ----------
@@ -122,7 +122,7 @@ class Length:
     @classmethod
     def from_metres(cls, metre_value: float, unit: str) -> float:
         """
-        Convert value in given unit to metres
+        Convert value in given unit to metres.
 
         Parameters
         ----------
@@ -146,7 +146,7 @@ class Length:
     @classmethod
     def definitive_unit(cls, alias: str) -> str:
         """
-        Convert alias for unit into a single definied name set in constants
+        Convert alias for unit into a single definied name set in constants.
 
         Parameters
         ----------
