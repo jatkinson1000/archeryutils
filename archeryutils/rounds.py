@@ -168,8 +168,8 @@ class Round:
         """
         max_dist = 0.0
         for pass_i in self.passes:
-            if (dist := pass_i.distance) > max_dist:
-                max_dist = dist
+            if pass_i.distance > max_dist:
+                max_dist = pass_i.distance
                 d_unit = pass_i.native_dist_unit
 
         max_dist = Length.from_metres(max_dist, d_unit)
