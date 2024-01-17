@@ -32,10 +32,10 @@ _METRE_ALIASES = {
 }
 
 _CM_ALIASES = {
-    "Centimeter",
-    "centimeter",
-    "Centimeters",
-    "centimeters",
+    "Centimetre",
+    "centimetre",
+    "Centimetres",
+    "centimetres",
     "CM",
     "cm",
     "CMs",
