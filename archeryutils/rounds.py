@@ -47,7 +47,9 @@ class Pass:
         diam_unit: str = "cm",
     ) -> None:
         self.n_arrows = abs(n_arrows)
-        self.target = Target(diameter, scoring_system, distance, dist_unit, indoor, diam_unit)
+        self.target = Target(
+            diameter, scoring_system, distance, dist_unit, indoor, diam_unit
+        )
 
     @property
     def distance(self) -> float:
@@ -179,8 +181,12 @@ class Round:
         """Print information about the Round."""
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            native_dist = Length.from_metres(pass_i.target.distance, pass_i.native_dist_unit)
-            native_diam = Length.from_metres(pass_i.target.diameter, pass_i.native_diam_unit)
+            native_dist = Length.from_metres(
+                pass_i.target.distance, pass_i.native_dist_unit
+            )
+            native_diam = Length.from_metres(
+                pass_i.target.diameter, pass_i.native_diam_unit
+            )
 
             print(
                 f"\t- {pass_i.n_arrows} arrows "

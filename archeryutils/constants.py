@@ -50,11 +50,12 @@ _INCH_ALIASES = {
 }
 
 _ALIASES = {
-    "yard" : _YARD_ALIASES,
-    "metre" : _METRE_ALIASES,
-    "cm" : _CM_ALIASES,
-    "inch" : _INCH_ALIASES,
+    "yard": _YARD_ALIASES,
+    "metre": _METRE_ALIASES,
+    "cm": _CM_ALIASES,
+    "inch": _INCH_ALIASES,
 }
+
 
 class Length:
     """
@@ -86,11 +87,7 @@ class Length:
     cm = _CM_ALIASES
     inch = _INCH_ALIASES
 
-    _reversed = {
-        alias: name
-        for name in _CONVERSIONS_TO_M
-        for alias in _ALIASES[name]
-    }
+    _reversed = {alias: name for name in _CONVERSIONS_TO_M for alias in _ALIASES[name]}
 
     _conversions = {
         alias: factor

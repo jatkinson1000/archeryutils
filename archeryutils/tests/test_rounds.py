@@ -35,7 +35,9 @@ class TestPass:
         Check that Pass() has same default diameter units as Target.
         """
         test_pass = Pass(36, 122, "5_zone", 50)
-        assert test_pass.native_diam_unit == test_pass.target.native_diameter_unit == "cm"
+        assert (
+            test_pass.native_diam_unit == test_pass.target.native_diameter_unit == "cm"
+        )
 
     def test_diameter_units_passed_to_target(self) -> None:
         """
@@ -176,9 +178,9 @@ class TestRound:
         """
         Check that max distance accounts for different units in round
         """
-        pyards = Pass(36, 122, "5_zone", 80, 'yard')
-        pmetric = Pass(36, 122, "5_zone", 75, 'metres')
-        test_round = Round('test', [pyards, pmetric])
+        pyards = Pass(36, 122, "5_zone", 80, "yard")
+        pmetric = Pass(36, 122, "5_zone", 75, "metres")
+        test_round = Round("test", [pyards, pmetric])
 
         assert pmetric.distance > pyards.distance
         assert test_round.max_distance() == 75

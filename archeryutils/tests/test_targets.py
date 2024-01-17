@@ -78,7 +78,9 @@ class TestTarget:
         """
         Check that Target() converts diameters in inches correctly.
         """
-        target = Target(16, "Worcester", 20, "yards", indoor=True, native_diameter_unit="inches")
+        target = Target(
+            16, "Worcester", 20, "yards", indoor=True, native_diameter_unit="inches"
+        )
         assert target.diameter == 16 * 0.0254
 
     def test_diameter_distance_units_coerced_to_definitive_names(self) -> None:
@@ -86,8 +88,16 @@ class TestTarget:
         Check that Target coerces aliased distance units into standard names
         """
 
-        imperial_target = Target(16, "Worcester", 20, "Yards", indoor=True, native_diameter_unit="Inches")
-        metric_target = Target(80, "10_zone", 30, native_dist_unit="Metres", native_diameter_unit="Centimetres")
+        imperial_target = Target(
+            16, "Worcester", 20, "Yards", indoor=True, native_diameter_unit="Inches"
+        )
+        metric_target = Target(
+            80,
+            "10_zone",
+            30,
+            native_dist_unit="Metres",
+            native_diameter_unit="Centimetres",
+        )
 
         assert imperial_target.native_dist_unit == "yard"
         assert imperial_target.native_diameter_unit == "inch"
