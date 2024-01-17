@@ -1,6 +1,6 @@
 """Class to represent a Target for archery applications."""
 
-from archeryutils.constants import YARD_TO_METRE
+from archeryutils.constants import Length
 
 
 class Target:
@@ -19,6 +19,9 @@ class Target:
         The native unit distance is measured in
     indoor : bool
         is round indoors for arrow diameter purposes? default = False
+    native_diameter_unit : str
+        Native unit the target size is measured in.
+        Converts diameter and stores in [meteres]
 
     Methods
     -------
@@ -38,6 +41,7 @@ class Target:
         distance: float,
         native_dist_unit: str = "metre",
         indoor: bool = False,
+        native_diameter_unit: str = "cm",
     ) -> None:
         systems = [
             "5_zone",
@@ -59,42 +63,24 @@ class Target:
                 f"""Invalid Target Face Type specified.\n"""
                 f"""Please select from '{"', '".join(systems)}'."""
             )
-
-        if native_dist_unit in (
-            "Yard",
-            "yard",
-            "Yards",
-            "yards",
-            "Y",
-            "y",
-            "Yd",
-            "yd",
-            "Yds",
-            "yds",
-        ):
-            native_dist_unit = "yard"
-        elif native_dist_unit in (
-            "Metre",
-            "metre",
-            "Metres",
-            "metres",
-            "M",
-            "m",
-            "Ms",
-            "ms",
-        ):
-            native_dist_unit = "metre"
-        else:
+        if native_dist_unit not in Length.yard | Length.metre:
             raise ValueError(
                 f"Distance unit '{native_dist_unit}' not recognised. "
                 "Select from 'yard' or 'metre'."
             )
+        distance = Length.to_metres(distance, native_dist_unit)
 
+        if native_diameter_unit not in Length.cm | Length.inch | Length.metre:
+            raise ValueError(
+                f"Diameter unit '{native_diameter_unit}' not recognised. "
+                "Select from 'cm', 'inch' or 'metre'"
+            )
+        diameter = Length.to_metres(diameter, native_diameter_unit)
+
+        self.native_dist_unit = Length.definitive_unit(native_dist_unit)
+        self.distance = distance
+        self.native_diameter_unit = Length.definitive_unit(native_diameter_unit)
         self.diameter = diameter
-        self.native_dist_unit = native_dist_unit
-        self.distance = (
-            distance * YARD_TO_METRE if self.native_dist_unit == "yard" else distance
-        )
         self.scoring_system = scoring_system
         self.indoor = indoor
 

@@ -20,62 +20,62 @@ hc_params = hc_eq.HcParams()
 york = Round(
     "York",
     [
-        Pass(72, 1.22, "5_zone", 100, "yard", False),
-        Pass(48, 1.22, "5_zone", 80, "yard", False),
-        Pass(24, 1.22, "5_zone", 60, "yard", False),
+        Pass(72, 122, "5_zone", 100, "yard", False),
+        Pass(48, 122, "5_zone", 80, "yard", False),
+        Pass(24, 122, "5_zone", 60, "yard", False),
     ],
 )
 hereford = Round(
     "Hereford",
     [
-        Pass(72, 1.22, "5_zone", 80, "yard", False),
-        Pass(48, 1.22, "5_zone", 60, "yard", False),
-        Pass(24, 1.22, "5_zone", 50, "yard", False),
+        Pass(72, 122, "5_zone", 80, "yard", False),
+        Pass(48, 122, "5_zone", 60, "yard", False),
+        Pass(24, 122, "5_zone", 50, "yard", False),
     ],
 )
 western = Round(
     "Western",
     [
-        Pass(48, 1.22, "5_zone", 60, "yard", False),
-        Pass(48, 1.22, "5_zone", 50, "yard", False),
+        Pass(48, 122, "5_zone", 60, "yard", False),
+        Pass(48, 122, "5_zone", 50, "yard", False),
     ],
 )
 vegas300 = Round(
     "Vegas 300",
     [
-        Pass(30, 0.4, "10_zone", 20, "yard", True),
+        Pass(30, 40, "10_zone", 20, "yard", True),
     ],
 )
 wa1440_90 = Round(
     "WA1440 90m",
     [
-        Pass(36, 1.22, "10_zone", 90, "metre", False),
-        Pass(36, 1.22, "10_zone", 70, "metre", False),
-        Pass(36, 0.8, "10_zone", 50, "metre", False),
-        Pass(36, 0.8, "10_zone", 30, "metre", False),
+        Pass(36, 122, "10_zone", 90, "metre", False),
+        Pass(36, 122, "10_zone", 70, "metre", False),
+        Pass(36, 80, "10_zone", 50, "metre", False),
+        Pass(36, 80, "10_zone", 30, "metre", False),
     ],
 )
 wa1440_70 = Round(
     "WA1440 70m",
     [
-        Pass(36, 1.22, "10_zone", 70, "metre", False),
-        Pass(36, 1.22, "10_zone", 60, "metre", False),
-        Pass(36, 0.8, "10_zone", 50, "metre", False),
-        Pass(36, 0.8, "10_zone", 30, "metre", False),
+        Pass(36, 122, "10_zone", 70, "metre", False),
+        Pass(36, 122, "10_zone", 60, "metre", False),
+        Pass(36, 80, "10_zone", 50, "metre", False),
+        Pass(36, 80, "10_zone", 30, "metre", False),
     ],
 )
 wa720_70 = Round(
     "WA 720 70m",
     [
-        Pass(36, 1.22, "10_zone", 70, "metre", False),
-        Pass(36, 1.22, "10_zone", 70, "metre", False),
+        Pass(36, 122, "10_zone", 70, "metre", False),
+        Pass(36, 122, "10_zone", 70, "metre", False),
     ],
 )
 metric122_30 = Round(
     "Metric 122-30",
     [
-        Pass(36, 1.22, "10_zone", 30, "metre", False),
-        Pass(36, 1.22, "10_zone", 30, "metre", False),
+        Pass(36, 122, "10_zone", 30, "metre", False),
+        Pass(36, 122, "10_zone", 30, "metre", False),
     ],
 )
 
@@ -387,7 +387,7 @@ class TestArrowScore:
 
         """
         arrow_score = hc_eq.arrow_score(
-            target=Target(0.40, "10_zone_5_ring_compound", 20.0, "metre", indoor),
+            target=Target(40, "10_zone_5_ring_compound", 20.0, "metre", indoor),
             handicap=20.0,
             hc_sys=hc_system,
             hc_dat=hc_params,
@@ -420,7 +420,7 @@ class TestArrowScore:
         Check correct arrow scores returned for different target faces
         """
         arrow_score = hc_eq.arrow_score(
-            target=Target(0.80, target_face, 50.0, "metre", False),
+            target=Target(80, target_face, 50.0, "metre", False),
             handicap=38.0,
             hc_sys="AGB",
             hc_dat=hc_params,
@@ -490,9 +490,9 @@ class TestScoreForRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, 1.22, "10_zone", 100, "metre", False),
-                Pass(10, 0.80, "10_zone", 80, "metre", False),
-                Pass(10, 1.22, "5_zone", 60, "metre", False),
+                Pass(10, 122, "10_zone", 100, "metre", False),
+                Pass(10, 80, "10_zone", 80, "metre", False),
+                Pass(10, 122, "5_zone", 60, "metre", False),
             ],
         )
 
@@ -525,9 +525,9 @@ class TestScoreForRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, 1.22, "10_zone", 100, "metre", False),
-                Pass(10, 0.80, "10_zone", 80, "metre", False),
-                Pass(10, 1.22, "5_zone", 60, "metre", False),
+                Pass(10, 122, "10_zone", 100, "metre", False),
+                Pass(10, 80, "10_zone", 80, "metre", False),
+                Pass(10, 122, "5_zone", 60, "metre", False),
             ],
         )
 
@@ -624,8 +624,8 @@ class TestHandicapFromScore:
             test_round = Round(
                 "TestRound",
                 [
-                    Pass(10, 1.22, "10_zone", 50, "metre", False),
-                    Pass(10, 0.80, "10_zone", 50, "metre", False),
+                    Pass(10, 122, "10_zone", 50, "metre", False),
+                    Pass(10, 80, "10_zone", 50, "metre", False),
                 ],
             )
 
@@ -645,8 +645,8 @@ class TestHandicapFromScore:
             test_round = Round(
                 "TestRound",
                 [
-                    Pass(10, 1.22, "10_zone", 50, "metre", False),
-                    Pass(10, 0.80, "10_zone", 50, "metre", False),
+                    Pass(10, 122, "10_zone", 50, "metre", False),
+                    Pass(10, 80, "10_zone", 50, "metre", False),
                 ],
             )
 
@@ -666,8 +666,8 @@ class TestHandicapFromScore:
             test_round = Round(
                 "TestRound",
                 [
-                    Pass(10, 1.22, "10_zone", 50, "metre", False),
-                    Pass(10, 0.80, "10_zone", 50, "metre", False),
+                    Pass(10, 122, "10_zone", 50, "metre", False),
+                    Pass(10, 80, "10_zone", 50, "metre", False),
                 ],
             )
 

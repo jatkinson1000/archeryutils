@@ -10,8 +10,7 @@ import pytest
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func
-from archeryutils.rounds import Round, Pass
-
+from archeryutils.rounds import Pass, Round
 
 hc_params = hc_eq.HcParams()
 
@@ -19,24 +18,24 @@ hc_params = hc_eq.HcParams()
 york = Round(
     "York",
     [
-        Pass(72, 1.22, "5_zone", 100, "yard", False),
-        Pass(48, 1.22, "5_zone", 80, "yard", False),
-        Pass(24, 1.22, "5_zone", 60, "yard", False),
+        Pass(72, 122, "5_zone", 100, "yard", False),
+        Pass(48, 122, "5_zone", 80, "yard", False),
+        Pass(24, 122, "5_zone", 60, "yard", False),
     ],
 )
 hereford = Round(
     "Hereford",
     [
-        Pass(72, 1.22, "5_zone", 80, "yard", False),
-        Pass(48, 1.22, "5_zone", 60, "yard", False),
-        Pass(24, 1.22, "5_zone", 50, "yard", False),
+        Pass(72, 122, "5_zone", 80, "yard", False),
+        Pass(48, 122, "5_zone", 60, "yard", False),
+        Pass(24, 122, "5_zone", 50, "yard", False),
     ],
 )
 metric122_30 = Round(
     "Metric 122-30",
     [
-        Pass(36, 1.22, "10_zone", 30, "metre", False),
-        Pass(36, 1.22, "10_zone", 30, "metre", False),
+        Pass(36, 122, "10_zone", 30, "metre", False),
+        Pass(36, 122, "10_zone", 30, "metre", False),
     ],
 )
 

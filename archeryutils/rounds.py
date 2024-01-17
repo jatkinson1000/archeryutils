@@ -2,7 +2,7 @@
 from typing import List, Union, Tuple
 
 from archeryutils.targets import Target
-from archeryutils.constants import YARD_TO_METRE
+from archeryutils.constants import Length
 
 
 class Pass:
@@ -17,7 +17,7 @@ class Pass:
     n_arrows : int
         number of arrows in this pass
     diameter : float
-        face diameter in [metres]
+        face diameter in [centimetres]
     scoring_system : str
         target face/scoring system type
     distance : float
@@ -26,6 +26,8 @@ class Pass:
         The unit distance is measured in. default = 'metres'
     indoor : bool
         is round indoors for arrow diameter purposes? default = False
+    diameter_unit : str
+        The unit face diameter is measured in. default = 'centimetres'
 
     Methods
     -------
@@ -44,9 +46,12 @@ class Pass:
         distance: float,
         dist_unit: str = "metres",
         indoor: bool = False,
+        diameter_unit: str = "cm",
     ) -> None:
         self.n_arrows = abs(n_arrows)
-        self.target = Target(diameter, scoring_system, distance, dist_unit, indoor)
+        self.target = Target(
+            diameter, scoring_system, distance, dist_unit, indoor, diameter_unit
+        )
 
     @property
     def distance(self) -> float:
@@ -62,6 +67,11 @@ class Pass:
     def diameter(self) -> float:
         """Get diameter."""
         return self.target.diameter
+
+    @property
+    def native_diameter_unit(self) -> str:
+        """Get native_diameter unit."""
+        return self.target.native_diameter_unit
 
     @property
     def scoring_system(self) -> str:
@@ -160,15 +170,11 @@ class Round:
         """
         max_dist = 0.0
         for pass_i in self.passes:
-            dist = (
-                pass_i.distance / YARD_TO_METRE
-                if pass_i.native_dist_unit == "yard"
-                else pass_i.distance
-            )
-            if dist > max_dist:
-                max_dist = dist
+            if pass_i.distance > max_dist:
+                max_dist = pass_i.distance
                 d_unit = pass_i.native_dist_unit
 
+        max_dist = Length.from_metres(max_dist, d_unit)
         if unit:
             return (max_dist, d_unit)
         return max_dist
@@ -177,12 +183,15 @@ class Round:
         """Print information about the Round."""
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            if pass_i.native_dist_unit == "yard":
-                native_dist = pass_i.target.distance / YARD_TO_METRE
-            else:
-                native_dist = pass_i.distance
+            native_dist = Length.from_metres(
+                pass_i.target.distance, pass_i.native_dist_unit
+            )
+            native_diam = Length.from_metres(
+                pass_i.target.diameter, pass_i.native_diameter_unit
+            )
+
             print(
                 f"\t- {pass_i.n_arrows} arrows "
-                f"at a {pass_i.diameter * 100.0:.1f} cm target "
+                f"at a {native_diam:.1f} {pass_i.native_diameter_unit} target "
                 f"at {native_dist:.1f} {pass_i.native_dist_unit}s."
             )
