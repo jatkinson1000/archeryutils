@@ -32,7 +32,7 @@ class Pass:
     Methods
     -------
     max_score()
-      Returns the maximum score for Pass
+        Returns the maximum score for Pass
     """
 
     # Two too many arguments, but logically this structure makes sense => disable
