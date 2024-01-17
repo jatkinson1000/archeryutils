@@ -68,4 +68,4 @@ class TestLengths:
     )
     def test_unit_name_coercion(self, unit, result):
         """Test unit name standardisation available on Length class"""
-        assert Length.definitive_name(unit) == result
+        assert Length.definitive_unit(unit) == result

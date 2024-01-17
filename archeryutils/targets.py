@@ -77,9 +77,9 @@ class Target:
             )
         diameter = Length.to_metres(diameter, native_diameter_unit)
 
-        self.native_dist_unit = Length.definitive_name(native_dist_unit)
+        self.native_dist_unit = Length.definitive_unit(native_dist_unit)
         self.distance = distance
-        self.native_diameter_unit = Length.definitive_name(native_diameter_unit)
+        self.native_diameter_unit = Length.definitive_unit(native_diameter_unit)
         self.diameter = diameter
         self.scoring_system = scoring_system
         self.indoor = indoor

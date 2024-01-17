@@ -97,15 +97,70 @@ class Length:
 
     @classmethod
     def to_metres(cls, value: float, unit: str) -> float:
-        """Convert value in metres to given unit"""
+        """
+        Convert value in metres to given unit
+
+        Parameters
+        ----------
+        value : float
+            scalar value of distance to be converted to metres
+        unit : str
+            units of distance to be converted to metres
+
+        Returns
+        -------
+        float
+            scalar value of converted distance in metres
+
+        Examples
+        --------
+        >>> Length.to_metres(10, "inches")
+        0.254
+        """
         return cls._conversions[unit] * value
 
     @classmethod
     def from_metres(cls, metre_value: float, unit: str) -> float:
-        """Convert value in given unit to metres"""
+        """
+        Convert value in given unit to metres
+
+        Parameters
+        ----------
+        metre_value : float
+            scalar value of distance in metres to be converted
+        unit : str
+            units distance is to be converted TO
+
+        Returns
+        -------
+        float
+            scalar value of converted distance in the provided unit
+
+        Examples
+        --------
+        >>> Length.from_metres(18.3, "yards")
+        20.0131
+        """
         return metre_value / cls._conversions[unit]
 
     @classmethod
-    def definitive_name(cls, alias: str) -> str:
-        """Convert alias for unit into a single definied name set in constants"""
+    def definitive_unit(cls, alias: str) -> str:
+        """
+        Convert alias for unit into a single definied name set in constants
+
+        Parameters
+        ----------
+        alias : str
+            name of unit to be converted
+
+        Returns
+        -------
+        str
+            definitive name of unit
+
+        Examples
+        --------
+        >>> Length.definitive_unit("Metres")
+        "metre"
+        """
         return cls._reversed[alias]
