@@ -1,6 +1,6 @@
 """Constants used in the archeryutils package."""
 
-_CONVERSIONS = {
+_CONVERSIONS_TO_M = {
     "metre": 1.0,
     "yard": 0.9144,
     "cm": 0.01,
@@ -88,13 +88,13 @@ class Length:
 
     _reversed = {
         alias: name
-        for name in _CONVERSIONS
+        for name in _CONVERSIONS_TO_M
         for alias in _ALIASES[name]
     }
 
     _conversions = {
         alias: factor
-        for name, factor in _CONVERSIONS.items()
+        for name, factor in _CONVERSIONS_TO_M.items()
         for alias in _ALIASES[name]
     }
 
