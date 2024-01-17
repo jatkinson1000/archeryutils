@@ -26,11 +26,13 @@ class Pass:
         The unit distance is measured in. default = 'metres'
     indoor : bool
         is round indoors for arrow diameter purposes? default = False
+    diameter_unit : str
+        The unit face diameter is measured in. default = 'centimetres'
 
     Methods
     -------
     max_score()
-        Returns the maximum score for Pass
+      Returns the maximum score for Pass
     """
 
     # Two too many arguments, but logically this structure makes sense => disable
@@ -44,11 +46,11 @@ class Pass:
         distance: float,
         dist_unit: str = "metres",
         indoor: bool = False,
-        diam_unit: str = "cm",
+        diameter_unit: str = "cm",
     ) -> None:
         self.n_arrows = abs(n_arrows)
         self.target = Target(
-            diameter, scoring_system, distance, dist_unit, indoor, diam_unit
+            diameter, scoring_system, distance, dist_unit, indoor, diameter_unit
         )
 
     @property
@@ -67,7 +69,7 @@ class Pass:
         return self.target.diameter
 
     @property
-    def native_diam_unit(self) -> str:
+    def native_diameter_unit(self) -> str:
         """Get native_diameter unit."""
         return self.target.native_diameter_unit
 
@@ -185,11 +187,11 @@ class Round:
                 pass_i.target.distance, pass_i.native_dist_unit
             )
             native_diam = Length.from_metres(
-                pass_i.target.diameter, pass_i.native_diam_unit
+                pass_i.target.diameter, pass_i.native_diameter_unit
             )
 
             print(
                 f"\t- {pass_i.n_arrows} arrows "
-                f"at a {native_diam:.1f} {pass_i.native_diam_unit} target "
+                f"at a {native_diam:.1f} {pass_i.native_diameter_unit} target "
                 f"at {native_dist:.1f} {pass_i.native_dist_unit}s."
             )

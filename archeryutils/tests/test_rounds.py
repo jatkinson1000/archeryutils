@@ -36,14 +36,18 @@ class TestPass:
         """
         test_pass = Pass(36, 122, "5_zone", 50)
         assert (
-            test_pass.native_diam_unit == test_pass.target.native_diameter_unit == "cm"
+            test_pass.native_diameter_unit
+            == test_pass.target.native_diameter_unit
+            == "cm"
         )
 
     def test_diameter_units_passed_to_target(self) -> None:
         """
         Check that Pass() passes on diameter units to Target object.
         """
-        test_pass = Pass(60, 16, "Worcester", 20, dist_unit="yards", diam_unit="inches")
+        test_pass = Pass(
+            60, 16, "Worcester", 20, dist_unit="yards", diameter_unit="inches"
+        )
         assert test_pass.target.native_diameter_unit == "inch"
 
     def test_default_location(self) -> None:
@@ -70,7 +74,7 @@ class TestPass:
         assert test_pass.diameter == 1.22
         assert test_pass.scoring_system == "5_zone"
         assert test_pass.indoor is False
-        assert test_pass.native_diam_unit == "cm"
+        assert test_pass.native_diameter_unit == "cm"
 
     @pytest.mark.parametrize(
         "face_type,max_score_expected",
