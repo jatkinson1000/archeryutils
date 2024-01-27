@@ -30,7 +30,7 @@ test = [
     "pytest-mock",
 ]
 lint = [
-    "black>=22.12.0",
+    "black>=24.1.0",
     "pylint",
     "mypy>=1.0.0",
     "coverage",
