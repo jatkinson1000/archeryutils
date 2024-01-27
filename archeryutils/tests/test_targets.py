@@ -1,4 +1,5 @@
 """Tests for Target class"""
+
 import pytest
 
 from archeryutils.targets import Target

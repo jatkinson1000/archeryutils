@@ -7,6 +7,7 @@ _make_AGB_old_indoor_classification_dict
 calculate_AGB_old_indoor_classification
 AGB_old_indoor_classification_scores
 """
+
 # Due to structure of similar classification schemes they may trigger duplicate code.
 # => disable for classification files and tests
 # pylint: disable=duplicate-code

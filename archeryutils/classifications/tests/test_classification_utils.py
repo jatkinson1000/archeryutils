@@ -1,4 +1,5 @@
 """Tests for classification utilities"""
+
 import pytest
 
 import archeryutils.classifications.classification_utils as class_utils

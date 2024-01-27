@@ -1,4 +1,5 @@
 """Module to load round data from json files into DotDicts."""
+
 import json
 from pathlib import Path
 import warnings

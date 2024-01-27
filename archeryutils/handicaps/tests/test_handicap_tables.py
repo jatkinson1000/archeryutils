@@ -1,4 +1,5 @@
 """Tests for handicap table printing"""
+
 # Due to defining some rounds to use in testing duplicate code may trigger.
 # => disable for handicap tests
 # pylint: disable=duplicate-code

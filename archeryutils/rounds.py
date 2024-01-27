@@ -1,4 +1,5 @@
 """Classes to define a Pass and Round for archery applications."""
+
 from typing import List, Union, Tuple
 
 from archeryutils.targets import Target

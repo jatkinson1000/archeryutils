@@ -7,6 +7,7 @@ _make_agb_outdoor_classification_dict
 calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
+
 # Due to structure of similar classification schemes they may trigger duplicate code.
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
@@ -118,13 +119,13 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     )
 
                 # Assign prestige rounds for the category
-                classification_dict[groupname][
-                    "prestige_rounds"
-                ] = assign_outdoor_prestige(
-                    bowstyle=bowstyle["bowstyle"],
-                    age=age["age_group"],
-                    gender=gender,
-                    max_dist=max_dist,
+                classification_dict[groupname]["prestige_rounds"] = (
+                    assign_outdoor_prestige(
+                        bowstyle=bowstyle["bowstyle"],
+                        age=age["age_group"],
+                        gender=gender,
+                        max_dist=max_dist,
+                    )
                 )
 
     return classification_dict

@@ -1,4 +1,5 @@
 """Module providing various classification functionalities."""
+
 from .agb_outdoor_classifications import (
     calculate_agb_outdoor_classification,
     agb_outdoor_classification_scores,

@@ -1,4 +1,5 @@
 """Class to represent a Target for archery applications."""
+
 from typing import Union, Tuple
 
 from archeryutils.constants import Length
