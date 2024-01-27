@@ -16,10 +16,10 @@ class Pass:
     ----------
     n_arrows : int
         number of arrows in this pass
-    diameter : float
-        face diameter in [centimetres]
     scoring_system : str
         target face/scoring system type
+    diameter : float
+        face diameter in [centimetres]
     distance : float
         linear distance from archer to target in [metres]
     dist_unit : str
@@ -35,23 +35,19 @@ class Pass:
         Returns the maximum score for Pass
     """
 
-    # Two too many arguments, but logically this structure makes sense => disable
+    # One too many arguments, but logically this structure makes sense => disable
     # pylint: disable=too-many-arguments
 
     def __init__(
         self,
         n_arrows: int,
-        diameter: float,
         scoring_system: str,
-        distance: float,
-        dist_unit: str = "metres",
+        diameter: Union[float, Tuple[float, str]],
+        distance: Union[float, Tuple[float, str]],
         indoor: bool = False,
-        diameter_unit: str = "cm",
     ) -> None:
         self.n_arrows = abs(n_arrows)
-        self.target = Target(
-            diameter, scoring_system, distance, dist_unit, indoor, diameter_unit
-        )
+        self.target = Target(scoring_system, diameter, distance, indoor)
 
     @property
     def distance(self) -> float:
@@ -124,7 +120,7 @@ class Round:
 
     """
 
-    # Two too many arguments, but logically this structure makes sense => disable
+    # One too many arguments, but logically this structure makes sense => disable
     # pylint: disable=too-many-arguments
 
     def __init__(
