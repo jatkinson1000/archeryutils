@@ -1,4 +1,5 @@
 """Tests for handicap table printing"""
+
 # Due to defining some rounds to use in testing duplicate code may trigger.
 # => disable for handicap tests
 # pylint: disable=duplicate-code
@@ -18,24 +19,24 @@ hc_params = hc_eq.HcParams()
 york = Round(
     "York",
     [
-        Pass(72, 122, "5_zone", 100, "yard", False),
-        Pass(48, 122, "5_zone", 80, "yard", False),
-        Pass(24, 122, "5_zone", 60, "yard", False),
+        Pass(72, "5_zone", 122, (100, "yard"), False),
+        Pass(48, "5_zone", 122, (80, "yard"), False),
+        Pass(24, "5_zone", 122, (60, "yard"), False),
     ],
 )
 hereford = Round(
     "Hereford",
     [
-        Pass(72, 122, "5_zone", 80, "yard", False),
-        Pass(48, 122, "5_zone", 60, "yard", False),
-        Pass(24, 122, "5_zone", 50, "yard", False),
+        Pass(72, "5_zone", 122, (80, "yard"), False),
+        Pass(48, "5_zone", 122, (60, "yard"), False),
+        Pass(24, "5_zone", 122, (50, "yard"), False),
     ],
 )
 metric122_30 = Round(
     "Metric 122-30",
     [
-        Pass(36, 122, "10_zone", 30, "metre", False),
-        Pass(36, 122, "10_zone", 30, "metre", False),
+        Pass(36, "10_zone", 122, 30, False),
+        Pass(36, "10_zone", 122, 30, False),
     ],
 )
 

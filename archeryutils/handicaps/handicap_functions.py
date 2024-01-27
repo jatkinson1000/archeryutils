@@ -14,6 +14,7 @@ abbreviate
 format_row
 
 """
+
 from typing import Union, Optional, List
 import warnings
 from itertools import chain

@@ -13,6 +13,7 @@ calculate_agb_field_classification
 agb_field_classification_scores
 
 """
+
 # Due to structure of similar classification schemes they may trigger duplicate code.
 # => disable for classification files and tests
 # pylint: disable=duplicate-code

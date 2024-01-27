@@ -16,6 +16,7 @@ strip_spots
 get_compound_codename
 
 """
+
 import json
 from pathlib import Path
 from typing import List, Dict, Any

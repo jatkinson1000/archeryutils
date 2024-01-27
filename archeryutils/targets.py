@@ -1,5 +1,7 @@
 """Class to represent a Target for archery applications."""
 
+from typing import Union, Tuple
+
 from archeryutils.constants import Length
 
 
@@ -9,19 +11,19 @@ class Target:
 
     Attributes
     ----------
-    diameter : float
-        Target face diameter in [metres]
     scoring_system : str
         target face/scoring system type
+    diameter : float
+        Target face diameter in [metres]
+    native_diameter_unit : str
+        Native unit the target size is measured in.
+        Converts diameter and stores in [meteres]
     distance : float
         linear distance from archer to target
     native_dist_unit : str
         The native unit distance is measured in
     indoor : bool
         is round indoors for arrow diameter purposes? default = False
-    native_diameter_unit : str
-        Native unit the target size is measured in.
-        Converts diameter and stores in [meteres]
 
     Methods
     -------
@@ -31,17 +33,12 @@ class Target:
         Returns the minimum score ring value (excluding miss)
     """
 
-    # One too many arguments, but logically this structure makes sense => disable
-    # pylint: disable=too-many-arguments
-
     def __init__(
         self,
-        diameter: float,
         scoring_system: str,
-        distance: float,
-        native_dist_unit: str = "metre",
+        diameter: Union[float, Tuple[float, str]],
+        distance: Union[float, Tuple[float, str]],
         indoor: bool = False,
-        native_diameter_unit: str = "cm",
     ) -> None:
         systems = [
             "5_zone",
@@ -63,6 +60,11 @@ class Target:
                 f"""Invalid Target Face Type specified.\n"""
                 f"""Please select from '{"', '".join(systems)}'."""
             )
+
+        if isinstance(distance, tuple):
+            (distance, native_dist_unit) = distance
+        else:
+            native_dist_unit = "metre"
         if native_dist_unit not in Length.yard | Length.metre:
             raise ValueError(
                 f"Distance unit '{native_dist_unit}' not recognised. "
@@ -70,6 +72,10 @@ class Target:
             )
         distance = Length.to_metres(distance, native_dist_unit)
 
+        if isinstance(diameter, tuple):
+            (diameter, native_diameter_unit) = diameter
+        else:
+            native_diameter_unit = "cm"
         if native_diameter_unit not in Length.cm | Length.inch | Length.metre:
             raise ValueError(
                 f"Diameter unit '{native_diameter_unit}' not recognised. "

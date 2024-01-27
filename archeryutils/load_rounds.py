@@ -1,4 +1,5 @@
 """Module to load round data from json files into DotDicts."""
+
 import json
 from pathlib import Path
 import warnings
@@ -104,13 +105,15 @@ def read_json_to_round_dict(json_filelist: Union[str, List[str]]) -> Dict[str, R
                 round_i["family"] = ""
 
             # Assign passes
+            for pass_i in round_i["passes"]:
+                if "diameter_unit" not in pass_i.keys():
+                    pass_i["diameter_unit"] = "cm"
             passes = [
                 Pass(
                     pass_i["n_arrows"],
-                    pass_i["diameter"],
                     pass_i["scoring"],
-                    pass_i["distance"],
-                    dist_unit=pass_i["dist_unit"],
+                    (pass_i["diameter"], pass_i["diameter_unit"]),
+                    (pass_i["distance"], pass_i["dist_unit"]),
                     indoor=round_i["indoor"],
                 )
                 for pass_i in round_i["passes"]
