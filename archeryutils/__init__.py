@@ -1,12 +1,15 @@
 """Package providing code for various archery utilities."""
 
-from archeryutils import load_rounds, rounds, targets
+from archeryutils.targets import Target
+from archeryutils.rounds import Pass, Round
 from archeryutils.handicaps import handicap_equations, handicap_functions
 from archeryutils import classifications
 
+
 __all__ = [
-    "rounds",
-    "targets",
+    "Target",
+    "Pass",
+    "Round",
     "handicap_equations",
     "handicap_functions",
     "classifications",
