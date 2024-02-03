@@ -1,5 +1,9 @@
 """
-Code for doing things with archery handicap equations.
+Code providing various functionalities using the archery handicap equations.
+
+Makes use of the basic handicap equations in handicaps.handicap_equations to do
+more elaborate things such as reverse calculation of handicap from score,
+generation of handicap tables, etc.
 
 Extended Summary
 ----------------
@@ -8,10 +12,17 @@ in handicap_equations.py including inverse function and display.
 
 Routine Listings
 ----------------
-handicap_from_score
-print_handicap_table
-abbreviate
-format_row
+- handicap_from_score
+- get_max_score_handicap
+- rootfind_score_handicap
+- f_root
+- print_handicap_table
+- check_print_table_inputs
+- clean_repeated
+- abbreviate
+- table_as_str
+- format_row
+- table_to_file
 
 """
 
@@ -44,7 +55,7 @@ def handicap_from_score(
 
     Parameters
     ----------
-    score : float
+    score : int or float
         score achieved on the round
     rnd : rounds.Round
         a rounds.Round class object that was shot
@@ -52,16 +63,22 @@ def handicap_from_score(
         identifier for the handicap system
     hc_dat : handicaps.handicap_equations.HcParams
         dataclass containing parameters for handicap equations
-    arw_d : float
+    arw_d : float or None, default=None
         arrow diameter in [metres] default = None
-    int_prec : bool
+    int_prec : bool, default=False
         display results as integers? default = False, with decimal to 2dp accuracy from
         rootfinder
 
     Returns
     -------
-    hc: int or float
+    handicap: int or float
         Handicap. Has type int if int_prec is True, and otherwise has type false.
+
+    Raises
+    ------
+    ValueError
+        If an invalid score for the given round is provided.
+
     """
     # Check we have a valid score
     max_score = rnd.max_score()
@@ -135,7 +152,7 @@ def get_max_score_handicap(
         dataclass containing parameters for handicap equations
     arw_d : float
         arrow diameter in [metres] default = None
-    int_prec : bool
+    int_prec : bool, default=False
         display results as integers? default = False
 
     Returns
@@ -176,7 +193,7 @@ def get_max_score_handicap(
     else:
         warnings.warn(
             "Handicap requested for maximum score without integer precision.\n"
-            "Value returned will be first handiucap that achieves this score.\n"
+            "Value returned will be first handicap that achieves this score.\n"
             "This could cause issues if you are not working in integers.",
             UserWarning,
         )
@@ -213,10 +230,10 @@ def rootfind_score_handicap(
 
     References
     ----------
-    Brent's Method for Root Finding in Scipy
+    Brent's Method for Root Finding in Scipy:
+
     - https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.brentq.html
-    - https://github.com/scipy/scipy/blob/dde39b7cc7dc231cec6bf5d882c8a8b5f40e73ad/
-      scipy/optimize/Zeros/brentq.c
+    - https://github.com/scipy/scipy/blob/dde39b7/scipy/optimize/Zeros/brentq.c
 
     """
     # The rootfinding algorithm here raises pylint errors for
@@ -331,7 +348,7 @@ def f_root(
     ----------
     hc_est : float
         current estimate of handicap
-    score_est : float
+    score_est : int or float
         current estimate of score based on hc_est
     round_est : rounds.Round
         round being used
@@ -344,8 +361,13 @@ def f_root(
 
     Returns
     -------
-    val-score_est : float
+    float
         difference between desired value and score estimate
+
+    Raises
+    ------
+    TypeError
+        If an array of handicaps was provided instead of a single value.
     """
     # One too many arguments. Makes sense at the moment => disable
     # Could try and simplify hc_sys and hc_dat in future refactor
@@ -386,7 +408,7 @@ def print_handicap_table(
 
     Parameters
     ----------
-    hcs : ndarray or float
+    hcs : float or ndarray
         handicap value(s) to calculate score(s) for
     hc_sys : string
         identifier for the handicap system
@@ -394,19 +416,19 @@ def print_handicap_table(
         List of Round classes to calculate scores for
     hc_dat : handicaps.handicap_equations.HcParams
         dataclass containing parameters for handicap equations
-    arrow_d : float
+    arrow_d : float or None, default=None
         arrow diameter in [metres] default = None
-    round_scores_up : bool
+    round_scores_up : bool, default=True
         round scores up to nearest integer? default = True
-    clean_gaps : bool
+    clean_gaps : bool, default=True
         Remove all instances of a score except the first? default = False
-    printout : bool
+    printout : bool, default=True
         Print to screen? default = True
-    filename : str
+    filename : str or None, default=None
         filepath to save table to. default = None
-    csvfile : str
+    csvfile : str or None, default=None
         csv filepath to save to. default = None
-    int_prec : bool
+    int_prec : bool, default=False
         display results as integers? default = False, with decimal to 2dp
 
     Returns
@@ -487,17 +509,24 @@ def check_print_table_inputs(
 
     Parameters
     ----------
-    hcs : ndarray or float
+    hcs : float or ndarray
         handicap value(s) to calculate score(s) for
     round_list : list of rounds.Round
         List of Round classes to calculate scores for
-    clean_gaps : bool
+    clean_gaps : bool, default=True
         Remove all instances of a score except the first? default = False
 
     Returns
     -------
     hcs : ndarray
         handicaps prepared for use in table printing routines
+
+    Raises
+    ------
+    TypeError
+        If handicaps not provided as float or ndarray
+    ValueError
+        If no rounds are provided for the handicap table
     """
     if not isinstance(hcs, np.ndarray):
         if isinstance(hcs, list):
@@ -530,16 +559,16 @@ def clean_repeated(
 
     Parameters
     ----------
-    table : np.ndarray
+    table : ndarray
         handicap table of scores
-    int_prec : bool
+    int_prec : bool, default=False
         return integers, not floats?
-    hc_sys : str
+    hc_sys : str, default="AGB"
         handicap system used - assume AGB (high -> low) unless specified
 
     Returns
     -------
-    table : np.ndarray
+    table : ndarray
         handicap table of scores with repetitions filtered
     """
     # NB: This assumes scores are running highest to lowest.
@@ -566,8 +595,6 @@ def abbreviate(name: str) -> str:
     """
     Replace headings within Handicap Tables with abbreviations to keep concise.
 
-    NB: This function only works with names containing space-separated words.
-
     Parameters
     ----------
     name : str
@@ -575,8 +602,13 @@ def abbreviate(name: str) -> str:
 
     Returns
     -------
-    shortname : str
+    str
         abbreviated round name to replace with
+
+    Warnings
+    --------
+    This function only works with names containing space-separated words.
+
     """
     abbreviations = {
         "Compound": "C",
@@ -612,7 +644,7 @@ def table_as_str(
         handicap value(s) to calculate score(s) for
     table : ndarray
         handicap table as array
-    int_prec : bool
+    int_prec : bool, default=False
         return integers, not floats?
 
     Returns
@@ -649,14 +681,14 @@ def format_row(
     ----------
     row : NDArray
         numpy array of table row
-    hc_dp : int
+    hc_dp : int, default=0
         handicap decimal places
-    int_prec : bool
+    int_prec : bool, default=False
         return integers, not floats?
 
     Returns
     -------
-    formatted_row : str
+    str
         pretty string based on input array data
     """
     if hc_dp == 0:
@@ -684,9 +716,6 @@ def table_to_file(filename: str, output_str: str) -> None:
     output_str : str
         handicap table as string to save to file
 
-    Returns
-    -------
-    None
     """
     print("Writing handicap table to file...", end="")
     with open(filename, "w", encoding="utf-8") as table_file:
