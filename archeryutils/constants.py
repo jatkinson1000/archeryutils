@@ -65,21 +65,6 @@ class Length:
     units as sets to allow easy membership checks in combination.
     Methods for conversions to and from metres are provided as classmethods.
 
-    Attributes
-    ----------
-    yard : set[str]
-    metre : set[str]
-    cm: set[str]
-    inch: set[str]
-
-    Methods
-    -------
-    to_metres()
-        Convert distance in any supported unit to metres
-    from_metres()
-        Convert distance in metres to any supported unit
-    definitive_name()
-        Convert any string alias representing a distance unit to a single version.
     """
 
     yard = _YARD_ALIASES
@@ -98,7 +83,7 @@ class Length:
     @classmethod
     def to_metres(cls, value: float, unit: str) -> float:
         """
-        Convert value in metres to given unit.
+        Convert distance in any supported unit to metres.
 
         Parameters
         ----------
@@ -122,7 +107,7 @@ class Length:
     @classmethod
     def from_metres(cls, metre_value: float, unit: str) -> float:
         """
-        Convert value in given unit to metres.
+        Convert distance in metres to specified unit.
 
         Parameters
         ----------
@@ -146,7 +131,7 @@ class Length:
     @classmethod
     def definitive_unit(cls, alias: str) -> str:
         """
-        Convert alias for unit into a single definied name set in constants.
+        Convert any string alias representing a distance unit to a single version.
 
         Parameters
         ----------
