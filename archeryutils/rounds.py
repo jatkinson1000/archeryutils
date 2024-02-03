@@ -1,4 +1,4 @@
-"""Classes to define a Pass and Round for archery applications."""
+"""Module to define a Pass and Round classes for archery applications."""
 
 from typing import List, Union, Tuple
 
@@ -10,30 +10,44 @@ class Pass:
     """
     A class used to represent a Pass.
 
-    This class represents a pass of arrows, i.e. a subunit of a Round.
-    e.g. a single distance or half
+    This class represents a pass of arrows shot at a target.
+    It is the sub-unit of a Round.
+    e.g. a single distance in a round or half of a single-distance round.
+
+    Parameters
+    ----------
+    n_arrows : int
+        number of arrows in this pass.
+    scoring_system : str
+        target face/scoring system type.
+    diameter : float or tuple of float, str
+        face diameter in [centimetres].
+    distance : float or tuple of float, str
+        linear distance from archer to target in [metres].
+    indoor : bool, default=False
+        is round indoors for arrow diameter purposes?
 
     Attributes
     ----------
     n_arrows : int
-        number of arrows in this pass
-    scoring_system : str
-        target face/scoring system type
-    diameter : float
-        face diameter in [centimetres]
-    distance : float
-        linear distance from archer to target in [metres]
-    dist_unit : str
-        The unit distance is measured in. default = 'metres'
-    indoor : bool
-        is round indoors for arrow diameter purposes? default = False
-    diameter_unit : str
-        The unit face diameter is measured in. default = 'centimetres'
+        number of arrows in this pass.
+    target : Target
+        A Target object defined using input parameters.
 
-    Methods
-    -------
-    max_score()
-        Returns the maximum score for Pass
+    Examples
+    --------
+    A Pass can be defined simply as:
+
+    >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
+
+    Like with the Target class, the units for diameter and distance can be specified
+    using tuples:
+
+    >>> myWA18pass = au.Pass(30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True)
+
+    See Also
+    --------
+    archeryutils.Target : The `Target` class.
     """
 
     # One too many arguments, but logically this structure makes sense => disable
@@ -51,33 +65,33 @@ class Pass:
         self.target = Target(scoring_system, diameter, distance, indoor)
 
     @property
-    def distance(self) -> float:
-        """Get distance."""
-        return self.target.distance
-
-    @property
-    def native_dist_unit(self) -> str:
-        """Get native_dist_unit."""
-        return self.target.native_dist_unit
+    def scoring_system(self) -> str:
+        """Get target scoring_system."""
+        return self.target.scoring_system
 
     @property
     def diameter(self) -> float:
-        """Get diameter."""
+        """Get target diameter [metres]."""
         return self.target.diameter
 
     @property
     def native_diameter_unit(self) -> str:
-        """Get native_diameter unit."""
+        """Get native_diameter_unit attribute of target."""
         return self.target.native_diameter_unit
 
     @property
-    def scoring_system(self) -> str:
-        """Get scoring_system."""
-        return self.target.scoring_system
+    def distance(self) -> float:
+        """Get target distance in [metres]."""
+        return self.target.distance
+
+    @property
+    def native_dist_unit(self) -> str:
+        """Get native_dist_unit attribute of target."""
+        return self.target.native_dist_unit
 
     @property
     def indoor(self) -> bool:
-        """Get indoor."""
+        """Get indoor attribute of target."""
         return self.target.indoor
 
     def max_score(self) -> float:
@@ -86,7 +100,7 @@ class Pass:
 
         Returns
         -------
-        max_score : float
+        float
             maximum score possible on this pass
         """
         return self.n_arrows * self.target.max_score()
@@ -98,6 +112,19 @@ class Round:
 
     Describes an archer round made up of a number of Passes.
     e.g. for different distances.
+
+    Parameters
+    ----------
+    name : str
+        Formal name of the round
+    passes : list of Pass
+        a list of Pass classes making up the round
+    location : str or None, default=None
+        string identifing where the round is shot
+    body : str or None, default=None
+        string identifing the governing body the round belongs to
+    family : str or None, default=None
+        string identifing the family the round belongs to (e.g. wa1440, western, etc.)
 
     Attributes
     ----------
@@ -112,12 +139,17 @@ class Round:
     family : str or None
         string identifing the family the round belongs to (e.g. wa1440, western, etc.)
 
-    Methods
-    -------
-    get_info()
-        Prints information about the round including name and breakdown of passes
-    max_score()
-        Returns the maximum score for Round
+    Examples
+    --------
+    Before defining a Round we need to first define the passes that make it up:
+
+    >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
+
+    These can now be passed to the Round constructor as a list:
+
+    >>> my720round = au.Round("WA 720", [my720pass, my720pass])
+
+    Additional, optional parameters can be used to provide 'metadata' about the round.
 
     """
 
@@ -177,7 +209,13 @@ class Round:
         return max_dist
 
     def get_info(self) -> None:
-        """Print information about the Round."""
+        """
+        Print information about the Round.
+
+        Prints a summary of each Pass in the round giving number of arrows,
+        distance, and target size.
+
+        """
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
             native_dist = Length.from_metres(
