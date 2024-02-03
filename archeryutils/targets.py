@@ -1,4 +1,4 @@
-"""Class to represent a Target for archery applications."""
+"""Module for representing a Target for archery applications."""
 
 from typing import Union, Tuple
 
@@ -9,28 +9,51 @@ class Target:
     """
     Class to represent a target.
 
+    Parameters
+    ----------
+    scoring_system : str
+        target face/scoring system type.
+    diameter : float or tuple of float, str
+        Target face diameter default [centimetres].
+    distance : float or tuple of float, str
+        linear distance from archer to target default [metres].
+    indoor : bool, default=False
+        is round indoors for arrow diameter purposes?
+
     Attributes
     ----------
     scoring_system : str
-        target face/scoring system type
+        target face/scoring system type.
     diameter : float
-        Target face diameter in [metres]
+        Target face diameter [metres].
     native_diameter_unit : str
-        Native unit the target size is measured in.
-        Converts diameter and stores in [meteres]
+        Native unit the target size is measured in before conversion to [metres].
     distance : float
-        linear distance from archer to target
+        linear distance from archer to target [metres].
     native_dist_unit : str
-        The native unit distance is measured in
-    indoor : bool
-        is round indoors for arrow diameter purposes? default = False
+        Native unit the target distance is measured in before conversion to [metres].
+    indoor : bool, default=False
+        is round indoors?
 
-    Methods
-    -------
-    max_score()
-        Returns the maximum score ring value
-    min_score()
-        Returns the minimum score ring value (excluding miss)
+    Raises
+    ------
+    ValueError
+        If inappropriate scoring system or units are requested.
+
+    Examples
+    --------
+    A target can be defined simply:
+
+    >>> my720target = au.Target("10_zone", 122, 70.0)
+
+    Alternatively the units for diameter and distance can be specified using tuples:
+
+    >>> my720target = au.Target("10_zone", (122, "cm"), (70.0, "m"))
+    >>> myWorcestertarget = au.Target("Worcester", (16, "inches"), (20.0, "yards"))
+
+    Indoor rounds can be flagged as such using the `indoor` parameter:
+
+    >>> myWA18target = au.Target("10_zone", (40, "cm"), (18.0, "m"), indoor=True)
     """
 
     def __init__(
@@ -83,11 +106,11 @@ class Target:
             )
         diameter = Length.to_metres(diameter, native_diameter_unit)
 
-        self.native_dist_unit = Length.definitive_unit(native_dist_unit)
-        self.distance = distance
-        self.native_diameter_unit = Length.definitive_unit(native_diameter_unit)
-        self.diameter = diameter
         self.scoring_system = scoring_system
+        self.diameter = diameter
+        self.native_diameter_unit = Length.definitive_unit(native_diameter_unit)
+        self.distance = distance
+        self.native_dist_unit = Length.definitive_unit(native_dist_unit)
         self.indoor = indoor
 
     def max_score(self) -> float:
@@ -96,8 +119,19 @@ class Target:
 
         Returns
         -------
-        max_score : float
-            maximum score possible on this target face
+        float
+            maximum score possible on this target face.
+
+        Raises
+        ------
+        ValueError
+            If a scoring system is not accounted for in the function.
+
+        Examples
+        --------
+        >>> mytarget = au.Target("10_zone", (122, "cm"), (70.0, "m"))
+        >>> mytarget.max_score()
+        10.0
         """
         if self.scoring_system in ("5_zone"):
             return 9.0
@@ -132,8 +166,19 @@ class Target:
 
         Returns
         -------
-        min_score : float
+        float
             minimum score possible on this target face
+
+        Raises
+        ------
+        ValueError
+            If a scoring system is not accounted for in the function.
+
+        Examples
+        --------
+        >>> mytarget = au.Target("10_zone", (122, "cm"), (70.0, "m"))
+        >>> mytarget.min_score()
+        1.0
         """
         if self.scoring_system in (
             "5_zone",
