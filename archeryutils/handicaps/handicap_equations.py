@@ -1,40 +1,50 @@
 """
-Code for archery handicap scheme calculations using various schemes.
+Code for archery handicap calculations using various handicap schemes.
 
 Extended Summary
 ----------------
 Code to calculate information using a number of schemes:
-  - Old Archery GB (D Lane)
-  - New Archery GB (J Atkinson, 2023)
-  - Old Archery Australia (J Park)
-  - New Archery Australia (J Park)
+
+- Old Archery GB (D Lane)
+- New Archery GB (J Atkinson, 2023)
+- Old Archery Australia (J Park)
+- New Archery Australia (J Park)
+
 Calculates arrow and round scores for a variety of target faces of given
 distance and diameter:
-  - 5-zone
-  - 10-zone
-  - 10-zone 6-ring
-  - 10-zone compound
-  - 10-zone 5-ring
-  - 10-zone 5-ring compound
-  - WA_field
-  - IFAA_field
-  - Beiter-hit-miss
-  - Worcester
-  - Worcester 2-ring)
+
+- 5-zone
+- 10-zone
+- 10-zone 6-ring
+- 10-zone compound
+- 10-zone 5-ring
+- 10-zone 5-ring compound
+- WA_field
+- IFAA_field
+- Beiter-hit-miss
+- Worcester
+- Worcester 2-ring)
 
 Routine Listings
 ----------------
-HcParams
-sigma_t
-sigma_r
-arrow_score
-score_for_round
+- HcParams Class
+- sigma_t
+- sigma_r
+- arrow_score
+- score_for_passes
+- score_for_round
 
 References
 ----------
-Old AGB - D Lane
-New AGB - J Atkinson
-AA & AA2 - J Park
+- Old AGB: The construction of the graduated handicap tables for target archery
+  Lane, D (2013)
+  https://www.jackatkinson.net/files/Handicap_Tables_2013.pdf
+- New AGB: Atkinson, J
+- AA: Modelling archers’ scores at different distances to quantify score loss due to
+  equipment selection and technique errors
+  Park, J (2014)
+  https://doi.org/10.1177%2F1754337114539308
+
 """
 
 import json
@@ -48,123 +58,67 @@ from archeryutils import targets, rounds
 
 @dataclass
 class HcParams:
-    """
-    Class to hold information for various handicap schemes.
+    """Class to hold information for various handicap schemes."""
 
-    Attributes
-    ----------
-    KEY PARAMETERS AND CONSTANTS FOR NEW AGB HANDICAP SCHEME
-    AGB_datum : float
-        offset required to set handicap 0 at desired score
-    AGB_step : float
-        percentage change in group size for each handicap step
-    AGB_ang_0 : float
-        baseline angle used for group size 0.5 [millirad]
-    AGB_kd : float
-        distance scaling factor [1/metres]
-
-    KEY PARAMETERS AND CONSTANTS FOR OLD AGB HANDICAP SCHEME
-    AGBo_datum : float
-        offset required to set handicap 0 at desired score
-    AGBo_step : float
-        percentage change in group size for each handicap step
-    AGBo_ang_0 : float
-        baseline angle used for group size 0.5 [millirad]
-    AGBo_k1 : float
-        constant used in handicap equation
-    AGBo_k2 : float
-        constant used in handicap equation
-    AGBo_k3 : float
-        constant used in handicap equation
-    AGBo_p1 : float
-        exponent of distance scaling
-
-    KEY PARAMETERS AND CONSTANTS FOR THE ARCHERY AUSTRALIA SCHEME
-    AA_k0 : float
-        offset required to set handicap 100 at desired score
-    AA_ks : float
-        change with each step of geometric progression
-    AA_kd : float
-        distance scaling factor [1/metres]
-
-    KEY PARAMETERS AND CONSTANTS FOR THE UPDATED ARCHERY AUSTRALIA SCHEME
-    AA2_k0 : float
-        offset required to set handicap 100 at desired score
-    AA2_ks : float
-        change with each step of geometric progression
-    AA2_f1 : float
-        'linear' scaling factor
-    AA2_f2 : float
-        'quadratic' scaling factor
-    AA2_d0 : float
-        Normalisation distance [metres]
-
-    DEFAULT ARROW DIAMETER
-    arw_d_in : float
-        Diameter of an indoor arrow [metres]
-    arw_d_out : float
-        Diameter of an outdoor arrow [metres]
-    AGBo_arw_d : float
-        arrow diameter used in the old AGB algorithm by D. Lane [metres]
-    AA_arw_d_out : float
-        Diameter of an outdoor arrow in the Archery Australia scheme [metres]
-
-    """
-
+    # Key values for the new Archery GB handicap scheme [Atkinson].
     agb_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
-                "AGB_datum": 6.0,
-                "AGB_step": 3.5,
-                "AGB_ang_0": 5.0e-4,
-                "AGB_kd": 0.00365,
+                "AGB_datum": 6.0,  # Offset required to set handicap 0 at desired score.
+                "AGB_step": 3.5,  # Percentage change in group size for each handicap step.
+                "AGB_ang_0": 5.0e-4,  # Baseline angle used for group size 0.5 [millirad].
+                "AGB_kd": 0.00365,  # Distance scaling factor [1/metres].
             }
         )
     )
 
+    # Key values for the old Archery GB handicap scheme [Lane].
     agb_old_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
-                "AGBo_datum": 12.9,
-                "AGBo_step": 3.6,
-                "AGBo_ang_0": 5.0e-4,
-                "AGBo_k1": 1.429e-6,
-                "AGBo_k2": 1.07,
-                "AGBo_k3": 4.3,
-                "AGBo_p1": 2.0,
+                "AGBo_datum": 12.9,  # Offset required to set handicap 0 at desired score.
+                "AGBo_step": 3.6,  # Percentage change in group size for each handicap step.
+                "AGBo_ang_0": 5.0e-4,  # Baseline angle used for group size 0.5 [millirad].
+                "AGBo_k1": 1.429e-6,  # Constant 1 used in handicap equation.
+                "AGBo_k2": 1.07,  # Constant 2 used in handicap equation.
+                "AGBo_k3": 4.3,  # Constant 3 used in handicap equation.
+                "AGBo_p1": 2.0,  # Exponent of distance scaling.
             }
         )
     )
 
+    # Key values for the original Archery Australia scheme [Park].
     aa_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
-                "AA_k0": 2.37,
-                "AA_ks": 0.027,
-                "AA_kd": 0.004,
+                "AA_k0": 2.37,  # Offset required to set handicap 100 at desired score.
+                "AA_ks": 0.027,  # Change with each step of geometric progression.
+                "AA_kd": 0.004,  # Distance scaling factor [1/metres].
             }
         )
     )
 
+    # Key values for the new Archery Australia scheme [Park].
     aa2_hc_data: dict[str, float] = field(
         default_factory=lambda: (
             {
-                "AA2_k0": 2.57,
-                "AA2_ks": 0.027,
-                "AA2_f1": 0.815,
-                "AA2_f2": 0.185,
-                "AA2_d0": 50.0,
+                "AA2_k0": 2.57,  # Offset required to set handicap 100 at desired score.
+                "AA2_ks": 0.027,  # Change with each step of geometric progression.
+                "AA2_f1": 0.815,  # 'Linear' scaling factor.
+                "AA2_f2": 0.185,  # 'Quadratic' scaling factor.
+                "AA2_d0": 50.0,  # Normalisation distance [metres].
             }
         )
     )
 
+    # Key values for arrow diameter in the different schemes.
     arw_d_data: dict[str, float] = field(
         default_factory=lambda: (
             {
-                "arw_d_in": 9.3e-3,
-                "arw_d_out": 5.5e-3,
-                "AGBo_arw_d": 7.14e-3,
-                "AA_arw_d_out": 5.0e-3,
+                "arw_d_in": 9.3e-3,  # Diameter of an indoor arrow [metres].
+                "arw_d_out": 5.5e-3,  # Diameter of an outdoor arrow for AGB [metres].
+                "AGBo_arw_d": 7.14e-3,  # Diameter of an arrow in the old AGB algorithm [metres].
+                "AA_arw_d_out": 5.0e-3,  # Diameter of an outdoor arrow for AA [metres].
             }
         )
     )
@@ -183,7 +137,6 @@ class HcParams:
         -------
         json_hc_params : HcParams
             dataclass of handicap parameters read from file
-
         """
         json_hc_params: "HcParams" = cls()
         with open(jsonpath, "r", encoding="utf-8") as read_file:
@@ -226,7 +179,7 @@ def sigma_t(
 
     Parameters
     ----------
-    handicap : ndarray or float
+    handicap : float or ndarray
         handicap to calculate sigma_t at
     hc_sys : str
         identifier for handicap system
@@ -237,18 +190,8 @@ def sigma_t(
 
     Returns
     -------
-    sigma_t : float or ndarray
+    sig_t : float or ndarray
         angular deviation [rad]
-
-    References
-    ----------
-    - The construction of the graduated handicap tables for target archery
-      Lane, D (2013)
-      https://www.jackatkinson.net/files/Handicap_Tables_2013.pdf
-    - Modelling archers’ scores at different distances to quantify score loss due to
-      equipment selection and technique errors
-      Park, J (2014)
-      https://doi.org/10.1177%2F1754337114539308
     """
     # Declare sig_t type for mypy
     sig_t: Union[float, npt.NDArray[np.float_]]
@@ -335,7 +278,7 @@ def sigma_r(
 
     Parameters
     ----------
-    handicap : ndarray or float
+    handicap : float or ndarray
         handicap to calculate sigma_t at
     hc_sys : str
         identifier for handicap system
@@ -371,18 +314,18 @@ def arrow_score(
     ----------
     target : targets.Target
         A Target class specifying the target to be used
-    handicap : ndarray or float
+    handicap : floar or ndarray
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
-    arw_d : float
+    arw_d : float or None, default=None
         arrow diameter in [metres]
 
     Returns
     -------
-    s_bar : float
+    s_bar : float or ndarray
         average score of the arrow for this set of parameters
 
     References
@@ -523,21 +466,20 @@ def score_for_passes(
     ----------
     rnd : rounds.Round
         A Round class specifying the round being shot
-    handicap : ndarray or float
+    handicap : float or ndarray
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
-    arw_d : float
+    arw_d : float or None, default=None
         arrow diameter in [metres] default = None -> (use defaults)
 
 
     Returns
     -------
-    pass_scores : list of float
+    pass_scores : ndarray
         average score for each pass in the round (unrounded decimal)
-
     """
     pass_scores = np.array(
         [
@@ -565,23 +507,22 @@ def score_for_round(
     ----------
     rnd : rounds.Round
         A Round class specifying the round being shot
-    handicap : ndarray or float
+    handicap : float or ndarray
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
     hc_dat : HcParams
         dataclass containing parameters for handicap equations
-    arw_d : float
+    arw_d : float or None, default=None
         arrow diameter in [metres] default = None -> (use defaults)
-    round_score_up : bool
+    round_score_up : bool, default=True
         round score up to nearest integer value?
 
 
     Returns
     -------
-    round_score : float
+    round_score : float or ndarray
         average score of the round for this set of parameters
-
     """
     # Two too many arguments. Makes sense at the moment => disable
     # Could try and simplify hc_sys and hc_dat in future refactor
