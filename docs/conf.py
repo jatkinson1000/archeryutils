@@ -24,6 +24,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinx.ext.autodoc",
+    "sphinx_toolbox.more_autodoc.typehints",
 ]
 
 templates_path = ["_templates"]
