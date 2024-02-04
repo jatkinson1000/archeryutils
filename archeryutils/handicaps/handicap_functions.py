@@ -36,7 +36,7 @@ from numpy.typing import NDArray
 import archeryutils.handicaps.handicap_equations as hc_eq
 from archeryutils import rounds
 
-FILL = -9999
+_FILL = -9999
 
 
 def handicap_from_score(
@@ -581,7 +581,7 @@ def clean_repeated(
         for jscore in range(len(row)):
             if table[irow, jscore] == table[irow + 1, jscore]:
                 if int_prec:
-                    table[irow, jscore] = FILL
+                    table[irow, jscore] = _FILL
                 else:
                     table[irow, jscore] = np.nan
 
@@ -698,7 +698,7 @@ def format_row(
 
     if int_prec:
         return handicap_str + "".join(
-            "".rjust(14) if x == FILL else f"{int(x):14d}" for x in row[1:]
+            "".rjust(14) if x == _FILL else f"{int(x):14d}" for x in row[1:]
         )
     return handicap_str + "".join(
         "".rjust(14) if np.isnan(x) else f"{x:14.8f}" for x in row[1:]
