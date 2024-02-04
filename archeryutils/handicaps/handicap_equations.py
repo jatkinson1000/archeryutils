@@ -23,7 +23,7 @@ distance and diameter:
 - IFAA_field
 - Beiter-hit-miss
 - Worcester
-- Worcester 2-ring)
+- Worcester 2-ring
 
 Routine Listings
 ----------------
@@ -192,6 +192,27 @@ def sigma_t(
     -------
     sig_t : float or ndarray
         angular deviation [rad]
+
+    Raises
+    ------
+    ValueError
+        If no valid handicap scheme is specified
+
+    Examples
+    --------
+    Angular deviation at a distance of 25m, using the AGB handicap system at a
+    handicap of 10 can be calculated with:
+
+    >>> import archeryutils.handicap_equations as hc_eq
+    >>> hc_params = hc_eq.HcParams()
+    >>> hc_eq.sigma_t(10.0, "AGB", 25.0, hc_params)
+    0.0009498280098103058
+
+    It can also be passed an array of handicaps:
+
+    >>> hc_eq.sigma_t(np.asarray([10.0, 50.0, 100.0]), "AGB", 25.0, hc_params)
+    array([0.00094983, 0.00376062, 0.02100276])
+
     """
     # Declare sig_t type for mypy
     sig_t: Union[float, npt.NDArray[np.float_]]
@@ -291,6 +312,22 @@ def sigma_r(
     -------
     sig_r : float or ndarray
         standard deviation of group size [metres]
+
+    Examples
+    --------
+    Deviation (in metres) at a distance of 25m, using the AGB handicap system at a
+    handicap of 10 can be calculated with:
+
+    >>> import archeryutils.handicap_equations as hc_eq
+    >>> hc_params = hc_eq.HcParams()
+    >>> hc_eq.sigma_r(10.0, "AGB", 25.0, hc_params)
+    0.023745700245257646
+
+    It can also be passed an array of handicaps:
+
+    >>> hc_eq.sigma_t(np.asarray([10.0, 50.0, 100.0]), "AGB", 25.0, hc_params)
+    array([0.0237457 , 0.09401539, 0.5250691 ])
+
     """
     sig_t = sigma_t(handicap, hc_sys, dist, hc_dat)
     sig_r = dist * sig_t
@@ -314,7 +351,7 @@ def arrow_score(
     ----------
     target : targets.Target
         A Target class specifying the target to be used
-    handicap : floar or ndarray
+    handicap : float or ndarray
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
@@ -328,10 +365,35 @@ def arrow_score(
     s_bar : float or ndarray
         average score of the arrow for this set of parameters
 
+    Raises
+    ------
+    ValueError
+        If the target uses a scoring system for which no handicap calculations exist.
+
     References
     ----------
     - The construction of the graduated handicap tables for target archery
       Lane, D (2013)
+
+    Examples
+    --------
+    Expected arrow score on a WA720 70m target, using the AGB handicap system at a
+    handicap of 10 can be calculated with:
+
+    >>> import archeryutils as au
+    >>> my720target = au.Target("10_zone", 122, 70.0)
+    >>> hc_params = au.handicap_equations.HcParams()
+    >>> au.handicap_equations.arrow_score(my720target, 10.0, "AGB", hc_params)
+    9.401182682963338
+
+    It can also be passed an array of handicaps:
+
+    >>> au.handicap_equations.sigma_t(my720target,
+    ...                               np.asarray([10.0, 50.0, 100.0]),
+    ...                               "AGB",
+    ...                               hc_params)
+    array([9.40118268, 6.05227962, 0.46412515])
+
     """
     # Set arrow diameter. Use provided, if AGBold or AA/AA2 scheme set value,
     # otherwise select default from params based on in-/out-doors
@@ -475,11 +537,34 @@ def score_for_passes(
     arw_d : float or None, default=None
         arrow diameter in [metres] default = None -> (use defaults)
 
-
     Returns
     -------
     pass_scores : ndarray
         average score for each pass in the round (unrounded decimal)
+
+    Examples
+    --------
+    Expected score for each pass on a WA1440 90m, using the AGB handicap system at a
+    handicap of 10 can be calculated with the code below which returns an array with
+    one score for each pass that makes up the round:
+
+    >>> import archeryutils as au
+    >>> wa_outdoor = au.load_rounds.WA_outdoor
+    >>> hc_params = au.handicap_equations.HcParams()
+    >>> au.handicap_equations.score_for_passes(wa_outdoor.wa1440_90, 10.0, "AGB", hc_params)
+    array([322.84091528, 338.44257659, 338.66395001, 355.87959411])
+
+    It can also be passed an array of handicaps:
+
+    >>> au.handicap_equations.score_for_passes(wa_outdoor.wa1440_90,
+    ...                                        np.asarray([10.0, 50.0, 100.0]),
+    ...                                        "AGB",
+    ...                                        hc_params)
+    array([[322.84091528, 162.76200686,   8.90456718],
+           [338.44257659, 217.88206641,  16.70850537],
+           [338.66395001, 216.74407488,  16.41855209],
+           [355.87959411, 288.77185611,  48.47897177]])
+
     """
     pass_scores = np.array(
         [
@@ -518,11 +603,36 @@ def score_for_round(
     round_score_up : bool, default=True
         round score up to nearest integer value?
 
-
     Returns
     -------
     round_score : float or ndarray
         average score of the round for this set of parameters
+
+    Examples
+    --------
+    Expected score for a WA1440 90m, using the AGB handicap system at a
+    handicap of 10 can be calculated with:
+
+    >>> import archeryutils as au
+    >>> wa_outdoor = au.load_rounds.WA_outdoor
+    >>> hc_params = au.handicap_equations.HcParams()
+    >>> au.handicap_equations.score_for_round(wa_outdoor.wa1440_90, 10.0, "AGB", hc_params)
+    1356.0
+    >>> au.handicap_equations.score_for_round(wa_outdoor.wa1440_90,
+    ...                                       10.0,
+    ...                                       "AGB",
+    ...                                       hc_params,
+    ...                                       round_score_up=False)
+    1355.8270359849505
+
+    It can also be passed an array of handicaps:
+
+    >>> au.handicap_equations.score_for_passes(wa_outdoor.wa1440_90,
+    ...                                        np.asarray([10.0, 50.0, 100.0]),
+    ...                                        "AGB",
+    ...                                        hc_params)
+    array([1356.,  887.,   91.])
+
     """
     # Two too many arguments. Makes sense at the moment => disable
     # Could try and simplify hc_sys and hc_dat in future refactor
