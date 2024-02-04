@@ -79,6 +79,24 @@ def handicap_from_score(
     ValueError
         If an invalid score for the given round is provided.
 
+    Examples
+    --------
+    Angular deviation at a distance of 25m, using the AGB handicap system at a
+    handicap of 10 can be calculated with:
+
+    >>> import archeryutils as au
+    >>> hc_params = au.handicap_equations.HcParams()
+    >>> wa_outdoor = au.load_rounds.WA_outdoor
+    >>> au.handicap_functions.handicap_from_score(999, wa_outdoor.wa1440_90, "AGB", hc_params)
+    43.999964586102706
+    >>> au.handicap_functions.handicap_from_score(
+    ...     999,
+    ...     wa_outdoor.wa1440_90,
+    ...     "AGB", hc_params,
+    ...     int_prec=True
+    ... )
+    44.0
+
     """
     # Check we have a valid score
     max_score = rnd.max_score()
@@ -159,6 +177,7 @@ def get_max_score_handicap(
     -------
     handicap : float
         appropriate handicap for this maximum score
+
     """
     max_score = rnd.max_score()
 
@@ -368,6 +387,7 @@ def f_root(
     ------
     TypeError
         If an array of handicaps was provided instead of a single value.
+
     """
     # One too many arguments. Makes sense at the moment => disable
     # Could try and simplify hc_sys and hc_dat in future refactor
@@ -401,7 +421,7 @@ def print_handicap_table(
     printout: bool = True,
     filename: Optional[str] = None,
     csvfile: Optional[str] = None,
-    int_prec: bool = False,
+    int_prec: bool = True,
 ) -> None:
     """
     Generate a handicap table to screen and/or file.
@@ -428,12 +448,31 @@ def print_handicap_table(
         filepath to save table to. default = None
     csvfile : str or None, default=None
         csv filepath to save to. default = None
-    int_prec : bool, default=False
-        display results as integers? default = False, with decimal to 2dp
+    int_prec : bool, default=True
+        display results as integers? default=True, otherwise prints decimal to 2dp
 
     Returns
     -------
     None
+
+    Examples
+    --------
+    >>> import archeryutils as au
+    >>> hc_params = au.handicap_equations.HcParams()
+    >>> wa_outdoor = au.load_rounds.WA_outdoor
+    >>> au.handicap_functions.print_handicap_table(
+    ...     [1.0, 2.0, 3.0, 4.0, 5.0],
+    ...     "AGB",
+    ...     [wa_outdoor.wa1440_90, wa_outdoor.wa1440_70, wa_outdoor.wa1440_60],
+    ...     hc_params,
+    ... )
+          Handicap WA 1440 (90m) WA 1440 (70m) WA 1440 (60m)
+                 1          1396          1412          1427
+                 2          1393          1409          1425
+                 3          1389          1406          1423
+                 4          1385          1403          1420
+                 5          1380          1399          1418
+
     """
     # Cannot see any other way to handle the options required here => ignore
     # pylint: disable=too-many-arguments
@@ -527,6 +566,7 @@ def check_print_table_inputs(
         If handicaps not provided as float or ndarray
     ValueError
         If no rounds are provided for the handicap table
+
     """
     if not isinstance(hcs, np.ndarray):
         if isinstance(hcs, list):
@@ -570,6 +610,7 @@ def clean_repeated(
     -------
     table : ndarray
         handicap table of scores with repetitions filtered
+
     """
     # NB: This assumes scores are running highest to lowest.
     # :. Flip AA and AA2 tables before operating.
@@ -651,6 +692,7 @@ def table_as_str(
     -------
     output_str : str
         Handicap table formatted as a string
+
     """
     # To ensure both terminal and file output are the same, create a single string
     round_names = [abbreviate(r.name) for r in round_list]
