@@ -1,9 +1,8 @@
 """
-Code for calculating old Archery GB indoor classifications.
+Code for calculating old (pre-2023) Archery GB indoor classifications.
 
 Routine Listings
 ----------------
-_make_AGB_old_indoor_classification_dict
 calculate_AGB_old_indoor_classification
 AGB_old_indoor_classification_scores
 """
@@ -113,8 +112,21 @@ def calculate_agb_old_indoor_classification(
 
     References
     ----------
-    ArcheryGB 2023 Rules of Shooting
-    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    ArcheryGB Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (pre-2023)
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.calculate_agb_old_indoor_classification(
+    ...     "wa18",
+    ...     547,
+    ...     "compound",
+    ...     "male",
+    ...     "adult",
+    ... )
+    'C'
+
     """
     # Check score is valid
     if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
@@ -179,12 +191,35 @@ def agb_old_indoor_classification_scores(
     Returns
     -------
     classification_scores : ndarray
-        abbreviation of the classification appropriate for this score
+        scores required for each classification in descending order
 
     References
     ----------
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.agb_old_indoor_classification_scores(
+    ...     "portsmouth",
+    ...     "barebow",
+    ...     "male",
+    ...     "under 12",
+    ... )
+    [592, 582, 554, 505, 432, 315, 195, 139]
+
+    If a classification cannot be achieved a fill value of `-9999` is returned:
+
+    >>> class_func.agb_old_indoor_classification_scores(
+    ...     "worcester",
+    ...     "compound",
+    ...     "female",
+    ...     "adult",
+    ... )
+    [299, 296, 279, 247, 200, 132, 65, 49]
+
+
     """
     # enforce compound scoring
     if bowstyle.lower() in ("compound"):

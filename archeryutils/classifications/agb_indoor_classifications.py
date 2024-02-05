@@ -3,7 +3,6 @@ Code for calculating Archery GB indoor classifications.
 
 Routine Listings
 ----------------
-_make_agb_old_indoor_classification_dict
 calculate_agb_indoor_classification
 agb_indoor_classification_scores
 """
@@ -143,10 +142,28 @@ def calculate_agb_indoor_classification(
     classification_from_score : str
         the classification appropriate for this score
 
+    Raises
+    ------
+    ValueError
+        If an invalid score for the requested round is provided
+
     References
     ----------
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.calculate_agb_indoor_classification(
+    ...     "wa18",
+    ...     547,
+    ...     "compound",
+    ...     "male",
+    ...     "50+",
+    ... )
+    'I-B2'
+
     """
     # Check score is valid
     if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
@@ -191,7 +208,7 @@ def agb_indoor_classification_scores(
     age_group: str,
 ) -> List[int]:
     """
-    Calculate new (2023) AGB indoor classification scores for category.
+    Calculate 2023 AGB indoor classification scores for category.
 
     Subroutine to calculate classification scores for a specific category and round.
     Appropriate ArcheryGB age groups and classifications.
@@ -210,12 +227,34 @@ def agb_indoor_classification_scores(
     Returns
     -------
     classification_scores : ndarray
-        scores required for each classification band
+        scores required for each classification in descending order
 
     References
     ----------
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.agb_indoor_classification_scores(
+    ...     "portsmouth",
+    ...     "barebow",
+    ...     "male",
+    ...     "under 12",
+    ... )
+    [411, 360, 301, 240, 183, 134, 95, 66]
+
+    If a classification cannot be achieved a fill value of `-9999` is returned:
+
+    >>> class_func.agb_indoor_classification_scores(
+    ...     "worcester",
+    ...     "compound",
+    ...     "female",
+    ...     "adult",
+    ... )
+    [-9999, -9999, 298, 289, 276, 257, 233, 200]
+
     """
     # deal with reduced categories:
     if bowstyle.lower() in ("flatbow", "traditional", "asiatic"):

@@ -1,17 +1,10 @@
 """
-Code for calculating Archery GB classifications.
-
-Extended Summary
-----------------
-Code to add functionality to the basic handicap equations code
-in handicap_equations.py including inverse function and display.
+Code for calculating Archery GB field classifications.
 
 Routine Listings
 ----------------
-_make_agb_field_classification_dict
 calculate_agb_field_classification
 agb_field_classification_scores
-
 """
 
 # Due to structure of similar classification schemes they may trigger duplicate code.
@@ -54,6 +47,7 @@ def _make_agb_field_classification_dict() -> Dict[str, Dict[str, Any]]:
     ----------
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
     """
     agb_field_classes = [
         "Grand Master Bowman",
@@ -199,7 +193,7 @@ def calculate_agb_field_classification(
     ----------
     roundname : str
         name of round shot as given by 'codename' in json
-    score : int
+    score : float
         numerical score on the round to calculate classification for
     bowstyle : str
         archer's bowstyle under AGB outdoor target rules
@@ -213,10 +207,28 @@ def calculate_agb_field_classification(
     classification_from_score : str
         the classification appropriate for this score
 
+    Raises
+    ------
+    ValueError
+        If an invalid score for the requested round is provided
+
     References
     ----------
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.calculate_agb_field_classification(
+    ...     "wa_field_24_red_marked",
+    ...     247,
+    ...     "recurve",
+    ...     "male",
+    ...     "adult",
+    ... )
+    '2nd Class'
+
     """
     # Check score is valid
     if score < 0 or score > ALL_AGBFIELD_ROUNDS[roundname].max_score():
@@ -285,13 +297,25 @@ def agb_field_classification_scores(
 
     Returns
     -------
-    classification_scores : ndarray
-        abbreviation of the classification appropriate for this score
+    classification_scores : list of int
+        scores required for each classification in descending order
 
     References
     ----------
     ArcheryGB Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.agb_field_classification_scores(
+    ...     "wa_field_24_red_marked",
+    ...     "recurve",
+    ...     "male",
+    ...     "adult",
+    ... )
+    [338, 317, 288, 260, 231, 203]
+
     """
     # Unused roundname argument to keep consistency with other classification functions
     # pylint: disable=unused-argument

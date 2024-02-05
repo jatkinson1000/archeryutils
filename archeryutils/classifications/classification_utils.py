@@ -1,8 +1,4 @@
 """
-Utils for classifications.
-
-Extended Summary
-----------------
 Utilities to assist in calculations of classifications.
 
 Routine Listings
@@ -30,13 +26,18 @@ def read_ages_json(
 
     Parameters
     ----------
-    age_file : Path
-        path to json file
+    age_file : Path, default="./AGB_ages.json"
+        path to json file with age information
 
     Returns
     -------
     ages : list of dict
         AGB age category data from file
+
+    Raises
+    ------
+    TypeError
+        If the contents of the data file can't be read properly
 
     References
     ----------
@@ -60,13 +61,18 @@ def read_bowstyles_json(
 
     Parameters
     ----------
-    bowstyles_file : Path
+    bowstyles_file : Path, default="./AGB_bowstyles.json"
         path to json file
 
     Returns
     -------
     bowstyles : list of dict
         AGB bowstyle category data from file
+
+    Raises
+    ------
+    TypeError
+        If the contents of the data file can't be read properly
 
     References
     ----------
@@ -90,13 +96,18 @@ def read_genders_json(
 
     Parameters
     ----------
-    genders_file : Path
+    genders_file : Path, default="./AGB_genders.json"
         path to json file
 
     Returns
     -------
-    genders : list of dict
+    genders : list of str
         AGB gender data from file
+
+    Raises
+    ------
+    TypeError
+        If the contents of the data file can't be read properly
 
     References
     ----------
@@ -129,6 +140,13 @@ def read_classes_json(
     -------
     classes : dict
         AGB classes data from file
+
+    Raises
+    ------
+    ValueError
+        If an unknown classification system is specified
+    TypeError
+        If the contents of the data file can't be read properly
 
     References
     ----------
@@ -212,7 +230,7 @@ def get_age_gender_step(
 
     Returns
     -------
-    delta_hc_age_gender : float
+    float
         age and gender handicap step for this category's MB relative to datum
     """
     # There is a danger that gender step overtakes age step at U15/U16
@@ -220,7 +238,7 @@ def get_age_gender_step(
     if gender.lower() == "female" and age_cat == 3 and age_step < gender_step:
         return age_cat * age_step + age_step
 
-    # For females <=3 (Under 16 or older) apply gender step and age steps
+    # For females age_category<=3 (Under 16 or older) apply gender step and age steps
     if gender.lower() == "female" and age_cat <= 3:
         return gender_step + age_cat * age_step
 

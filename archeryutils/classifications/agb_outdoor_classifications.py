@@ -3,7 +3,6 @@ Code for calculating Archery GB outdoor classifications.
 
 Routine Listings
 ----------------
-_make_agb_outdoor_classification_dict
 calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
@@ -111,7 +110,7 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     )
 
                     # Get minimum distance that must be shot for this classification
-                    classification_dict[groupname]["min_dists"][i] = assign_min_dist(
+                    classification_dict[groupname]["min_dists"][i] = _assign_min_dist(
                         n_class=i,
                         gender=gender,
                         age_group=age["age_group"],
@@ -120,7 +119,7 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
 
                 # Assign prestige rounds for the category
                 classification_dict[groupname]["prestige_rounds"] = (
-                    assign_outdoor_prestige(
+                    _assign_outdoor_prestige(
                         bowstyle=bowstyle["bowstyle"],
                         age=age["age_group"],
                         gender=gender,
@@ -131,7 +130,7 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     return classification_dict
 
 
-def assign_min_dist(
+def _assign_min_dist(
     n_class: int,
     gender: str,
     age_group: str,
@@ -162,6 +161,12 @@ def assign_min_dist(
     ----------
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
+    References
+    ----------
+    ArcheryGB 2023 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
     """
     # List of maximum distances for use in assigning maximum distance [metres]
     # Use metres because corresponding yards distances are >= metric ones
@@ -194,7 +199,7 @@ def assign_min_dist(
         return dists[-1]
 
 
-def assign_outdoor_prestige(
+def _assign_outdoor_prestige(
     bowstyle: str,
     gender: str,
     age: str,
@@ -348,6 +353,24 @@ def calculate_agb_outdoor_classification(
     ----------
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
+    Raises
+    ------
+    ValueError
+        If an invalid score for the requested round is provided
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.calculate_agb_outdoor_classification(
+    ...     "hereford",
+    ...     858,
+    ...     "recurve",
+    ...     "female",
+    ...     "under 18",
+    ... )
+    'B1'
+
     """
     # Check score is valid
     if score < 0 or score > ALL_OUTDOOR_ROUNDS[roundname].max_score():
@@ -378,7 +401,7 @@ def calculate_agb_outdoor_classification(
 
     # Check if this is a prestige round and appropriate distances
     # remove ineligible classes from class_data
-    class_data = check_prestige_distance(roundname, groupname, class_data)
+    class_data = _check_prestige_distance(roundname, groupname, class_data)
 
     # Of the classes remaining, what is the highest classification this score gets?
     to_del = []
@@ -394,7 +417,7 @@ def calculate_agb_outdoor_classification(
         return "UC"
 
 
-def check_prestige_distance(
+def _check_prestige_distance(
     roundname: str, groupname: str, class_data: OrderedDict[str, Dict[str, Any]]
 ) -> OrderedDict[str, Dict[str, Any]]:
     """
@@ -462,12 +485,34 @@ def agb_outdoor_classification_scores(
     Returns
     -------
     classification_scores : ndarray
-        abbreviation of the classification appropriate for this score
+        scores required for each classification in descending order
 
     References
     ----------
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.agb_outdoor_classification_scores(
+    ...     "hereford",
+    ...     "recurve",
+    ...     "female",
+    ...     "adult",
+    ... )
+    [1232, 1178, 1107, 1015, 900, 763, 614, 466, 336]
+
+    If a classification cannot be achieved a fill value of `-9999` is returned:
+
+    >>> class_func.agb_outdoor_classification_scores(
+    ...     "bristol_ii",
+    ...     "recurve",
+    ...     "female",
+    ...     "adult",
+    ... )
+    [-9999, -9999, -9999, -9999, -9999, 931, 797, 646, 493]
+
     """
     if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
         bowstyle = "Barebow"
