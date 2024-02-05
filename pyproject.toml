@@ -38,6 +38,11 @@ lint = [
     "pytest-mock",
     "pydocstyle",
 ]
+docs = [
+    "sphinx",
+    "sphinx_rtd_theme",
+    "sphinx-toolbox",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/jatkinson1000/archeryutils"
