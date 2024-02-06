@@ -10,7 +10,8 @@ Welcome to archeryutils's documentation!
    :maxdepth: 3
    :caption: Contents:
 
-   api
+   Getting Started <getting-started/index>
+   API Documentation <api/index>
 
 Indices and tables
 ==================
