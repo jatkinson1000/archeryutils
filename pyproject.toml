@@ -37,6 +37,7 @@ lint = [
     "pytest>=7.2.0",
     "pytest-mock",
     "pydocstyle",
+    "isort",
 ]
 
 [project.urls]

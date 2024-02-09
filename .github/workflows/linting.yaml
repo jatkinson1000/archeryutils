@@ -37,3 +37,6 @@ jobs:
     - name: Lint with mypy
       if: always()
       run: mypy archeryutils/
+    - name: Check imports with isort
+      if: always()
+      uses: isort/isort-action@master
