@@ -31,18 +31,23 @@ We encourage usage and welcome feature requests.
 It is appreciated if visible credit is given by any projects using `archeryutils`.
 
 ### Installation
-To install clone the repository, navigate to `/archeryutils`, and run:
+To install the library via pip for use in a project you can run:
 
-    python3 -m pip install .
+    python -m pip install git+https://github.com/jatkinson1000/archeryutils.git
 
 It is recommended to use a virtual environment.
 
 There are plans to host the library on PyPI in due course.
 
+If you want a local install that you can edit instead, clone the repository,
+navigate to `/archeryutils`, and run:
+
+    python3 -m pip install .
+
 ### Getting Started
 There are examples of some of the different functionalities in the jupyter notebook
 `examples.ipynb`.
-This can be run using:
+This can be run from a local install using:
 
     pip install notebook
 
