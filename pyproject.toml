@@ -52,6 +52,7 @@ docs = [
     "sphinx_rtd_theme",
     "sphinx-toolbox",
     "nbsphinx",
+    "ipython",
     "black>=24.1.0",
     "blackdoc",
 ]

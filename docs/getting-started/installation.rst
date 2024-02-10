@@ -77,3 +77,4 @@ For building documentation::
 * sphinx-toolbox
 * nbsphinx
 * blackdoc
+* ipython
