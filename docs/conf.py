@@ -38,7 +38,7 @@ exclude_patterns = [
     "*tests*",
 ]
 
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 
 # -- Options for HTML output -------------------------------------------------
