@@ -12,6 +12,7 @@ Welcome to archeryutils's documentation!
 
    Getting Started <getting-started/index>
    API Documentation <api/index>
+   Developer Information <develop/index>
 
 Indices and tables
 ==================
