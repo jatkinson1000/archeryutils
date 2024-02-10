@@ -52,9 +52,12 @@ installed with archeryutils:
 lint
 ^^^^
 
-For applying quality control to the code.
+For applying quality control to the code::
+
+    pip install -e `.[lint]`
 
 * black (24.1.0 or later)
+* jupyter-black
 * pylint
 * mypy (1.0.0 or later)
 * coverage
@@ -65,10 +68,12 @@ For applying quality control to the code.
 docs
 ^^^^
 
-For building documentation.
+For building documentation::
+
+    pip install -e `.[docs]`
 
 * sphinx
 * sphinx_rtd_theme
 * sphinx-toolbox
 * nbsphinx
-
+* blackdoc
