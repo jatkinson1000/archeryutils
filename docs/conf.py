@@ -38,6 +38,8 @@ exclude_patterns = [
     "*tests*",
 ]
 
+pygments_style = 'sphinx'
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
