@@ -31,6 +31,8 @@ running::
 Importing
 ---------
 
+To import the archeryutils package use:
+
 .. ipython:: python
 
     import archeryutils as au
@@ -65,7 +67,7 @@ The target features `max_score()` and `min_score()` methods:
     for target in [my720target, mycompound720target, myIFAATarget, myWorcesterTarget]:
         print(
             f"{target.scoring_system} has max score {target.max_score()} ",
-            f"and min score {target.min_score()}."
+            f"and min score {target.min_score()}.",
         )
 
 Pass
@@ -109,9 +111,9 @@ A number of useful rounds are pre-defined and come preloaded as dictionaries tha
 .. ipython:: python
 
     from archeryutils import load_rounds
-    
+
     agb_outdoor = load_rounds.AGB_outdoor_imperial
-    
+
     for round_i in agb_outdoor.values():
         print(round_i.name)
 
@@ -120,7 +122,7 @@ Individial rounds are accessible via 'dot' notation (using the alias listed in a
 .. ipython:: python
 
     agb_outdoor.york.get_info()
-    
+
     agb_outdoor.york.max_score()
 
 Possible options for round collections are:
@@ -147,7 +149,7 @@ Archery GB (Atkinson (2023), Lane (1978)) and Archery Australia (Park (2014)).
 
     from archeryutils import handicap_equations as hc_eq
     from archeryutils import handicap_functions as hc_func
-    
+
     hcparams = hc_eq.HcParams()
 
 Given a handicap and a round we can calculate the score that would be achieved:
@@ -160,7 +162,7 @@ Given a handicap and a round we can calculate the score that would be achieved:
         "AGB",
         hcparams,
     )
-    
+
     print(f"A handicap of 38 on a York is a score of {score_from_hc}.")
 
     pass_scores = hc_eq.score_for_passes(
@@ -169,7 +171,7 @@ Given a handicap and a round we can calculate the score that would be achieved:
         "AGB",
         hcparams,
     )
-    
+
     print(f"A handicap of 38 on a York gives pass scores of {pass_scores}.")
 
 Perhaps more interestingly we can take a score on a particular round and convert it
@@ -184,7 +186,7 @@ to a handicap:
         hcparams,
     )
     print(f"A score of 950 on a York is a continuous handicap of {hc_from_score}.")
-    
+
     hc_from_score = hc_func.handicap_from_score(
         950,
         agb_outdoor.york,
@@ -207,7 +209,7 @@ There are also inbuilt methods for generating handicap tables:
     ]
     # The following allows printing of handicap tables for an entire group of rounds:
     # rounds = list(load_rounds.AGB_outdoor_imperial.values())
-    
+
     hc_func.print_handicap_table(
         handicaps,
         "AGB",
@@ -218,14 +220,20 @@ There are also inbuilt methods for generating handicap tables:
 Classifications
 ---------------
 
-Finally there is support for the various Archery GB classification schemes.
+Finally there is support for the various Archery GB classification schemes
+
+For full details see the summary on
+`archerycalculator.com <https://archerycalculator.co.uk/info>`_, the Archery GB website
+`here <https://archerygb.org/resources/outdoor-classifications-and-handicaps>`_
+and `here <https://archerygb.org/resources/indoor-classifications-and-handicaps>`_,
+and the Shooting Administrative Procedures.
 
 Given a score we can calculate the classification it achieves:
 
 .. ipython:: python
 
     from archeryutils import classifications as class_func
-    
+
     # AGB Outdoor
     class_from_score = class_func.calculate_agb_outdoor_classification(
         "hereford",
@@ -237,7 +245,7 @@ Given a score we can calculate the classification it achieves:
     print(
         f"A score of 965 on a Hereford is class {class_from_score} for a 50+ male recurve."
     )
-    
+
     # AGB Indoor
     class_from_score = class_func.calculate_agb_indoor_classification(
         "wa18",
@@ -249,7 +257,7 @@ Given a score we can calculate the classification it achieves:
     print(
         f"A score of 562 on a WA 18 is class {class_from_score} for adult female compound."
     )
-    
+
     # AGB Field
     class_from_score = class_func.calculate_agb_field_classification(
         "wa_field_24_blue_unmarked",
@@ -273,7 +281,7 @@ Or, given a round we can output the scores required for each classification band
         "adult",
     )
     print(class_scores)
-    
+
     class_scores = class_func.agb_indoor_classification_scores(
         "portsmouth",
         "compound",
@@ -281,7 +289,7 @@ Or, given a round we can output the scores required for each classification band
         "adult",
     )
     print(class_scores)
-    
+
     class_scores = class_func.agb_field_classification_scores(
         "wa_field_24_blue_marked",
         "flatbow",

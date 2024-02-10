@@ -39,6 +39,7 @@ test = [
 ]
 lint = [
     "black>=24.1.0",
+    "jupyter-black",
     "pylint",
     "mypy>=1.0.0",
     "coverage",
@@ -51,6 +52,8 @@ docs = [
     "sphinx_rtd_theme",
     "sphinx-toolbox",
     "nbsphinx",
+    "black>=24.1.0",
+    "blackdoc",
 ]
 
 [project.urls]
