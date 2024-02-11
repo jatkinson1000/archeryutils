@@ -150,8 +150,6 @@ Archery GB (Atkinson (2023), Lane (1978)) and Archery Australia (Park (2014)).
     from archeryutils import handicap_equations as hc_eq
     from archeryutils import handicap_functions as hc_func
 
-    hcparams = hc_eq.HcParams()
-
 Given a handicap and a round we can calculate the score that would be achieved:
 
 .. ipython:: python
@@ -160,7 +158,6 @@ Given a handicap and a round we can calculate the score that would be achieved:
         agb_outdoor.york,
         38,
         "AGB",
-        hcparams,
     )
 
     print(f"A handicap of 38 on a York is a score of {score_from_hc}.")
@@ -169,7 +166,6 @@ Given a handicap and a round we can calculate the score that would be achieved:
         agb_outdoor.york,
         38,
         "AGB",
-        hcparams,
     )
 
     print(f"A handicap of 38 on a York gives pass scores of {pass_scores}.")
@@ -183,7 +179,6 @@ to a handicap:
         950,
         agb_outdoor.york,
         "AGB",
-        hcparams,
     )
     print(f"A score of 950 on a York is a continuous handicap of {hc_from_score}.")
 
@@ -191,7 +186,6 @@ to a handicap:
         950,
         agb_outdoor.york,
         "AGB",
-        hcparams,
         int_prec=True,
     )
     print(f"A score of 950 on a York is a discrete handicap of {hc_from_score}.")
@@ -214,7 +208,6 @@ There are also inbuilt methods for generating handicap tables:
         handicaps,
         "AGB",
         rounds,
-        hcparams,
     )
 
 Classifications
