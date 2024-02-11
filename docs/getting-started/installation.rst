@@ -35,7 +35,7 @@ Testing
 To run tests on a development installation either install
 `pytest <https://docs.pytest.org/>`__ using pip, or install as an optional dependency::
 
-    pip install -e `.[test]`
+    pip install -e ".[test]"
 
 and then run::
 
@@ -54,7 +54,7 @@ lint
 
 For applying quality control to the code::
 
-    pip install -e `.[lint]`
+    pip install -e ".[lint]"
 
 * black (24.1.0 or later)
 * jupyter-black
@@ -70,7 +70,7 @@ docs
 
 For building documentation::
 
-    pip install -e `.[docs]`
+    pip install -e ".[docs]"
 
 * sphinx
 * sphinx_rtd_theme
