@@ -43,8 +43,8 @@ def handicap_from_score(
     score: Union[int, float],
     rnd: rounds.Round,
     hc_sys: str,
-    hc_dat: hc_eq.HcParams,
     arw_d: Optional[float] = None,
+    hc_dat: Optional[hc_eq.HcParams] = None,
     int_prec: bool = False,
 ) -> Union[int, float]:
     # One too many arguments. Makes sense at the moment => disable
@@ -61,10 +61,10 @@ def handicap_from_score(
         a rounds.Round class object that was shot
     hc_sys : str
         identifier for the handicap system
-    hc_dat : handicaps.handicap_equations.HcParams
-        dataclass containing parameters for handicap equations
     arw_d : float or None, default=None
         arrow diameter in [metres] default = None
+    hc_dat : handicaps.handicap_equations.HcParams or None, default=None
+        dataclass containing parameters for handicap equations
     int_prec : bool, default=False
         display results as integers? default = False, with decimal to 2dp accuracy from
         rootfinder
@@ -113,9 +113,9 @@ def handicap_from_score(
 
     if score == max_score:
         # Deal with max score before root finding
-        return get_max_score_handicap(rnd, hc_sys, hc_dat, arw_d, int_prec)
+        return get_max_score_handicap(rnd, hc_sys, arw_d, hc_dat, int_prec)
 
-    handicap = rootfind_score_handicap(score, rnd, hc_sys, hc_dat, arw_d)
+    handicap = rootfind_score_handicap(score, rnd, hc_sys, arw_d, hc_dat)
 
     # Force integer precision if required.
     if int_prec:
@@ -125,7 +125,7 @@ def handicap_from_score(
             handicap = np.ceil(handicap)
 
         sc_int = hc_eq.score_for_round(
-            rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
+            rnd, handicap, hc_sys, arw_d, hc_dat, round_score_up=True
         )
 
         # Check that you can't get the same score from a larger handicap when
@@ -138,7 +138,7 @@ def handicap_from_score(
         while not min_h_flag:
             handicap += hstep
             sc_int = hc_eq.score_for_round(
-                rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=True
+                rnd, handicap, hc_sys, arw_d, hc_dat, round_score_up=True
             )
             if sc_int < score:
                 handicap -= hstep  # undo the iteration that caused flag to raise
@@ -150,8 +150,8 @@ def handicap_from_score(
 def get_max_score_handicap(
     rnd: rounds.Round,
     hc_sys: str,
-    hc_dat: hc_eq.HcParams,
-    arw_d: Optional[float],
+    arw_d: Optional[float] = None,
+    hc_dat: Optional[hc_eq.HcParams] = None,
     int_prec: bool = False,
 ) -> float:
     """
@@ -166,10 +166,10 @@ def get_max_score_handicap(
         round being used
     hc_sys : str
         identifier for the handicap system
-    hc_dat : handicaps.handicap_equations.HcParams
-        dataclass containing parameters for handicap equations
     arw_d : float
         arrow diameter in [metres] default = None
+    hc_dat : handicaps.handicap_equations.HcParams or None, default=None
+        dataclass containing parameters for handicap equations
     int_prec : bool, default=False
         display results as integers? default = False
 
@@ -195,13 +195,13 @@ def get_max_score_handicap(
         round_lim = 1.0
 
     s_max = hc_eq.score_for_round(
-        rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
+        rnd, handicap, hc_sys, arw_d, hc_dat, round_score_up=False
     )
     # Work down to where we would round or ceil to max score
     while s_max > max_score - round_lim:
         handicap = handicap + delta_hc
         s_max = hc_eq.score_for_round(
-            rnd, handicap, hc_sys, hc_dat, arw_d, round_score_up=False
+            rnd, handicap, hc_sys, arw_d, hc_dat, round_score_up=False
         )
     handicap = handicap - delta_hc  # Undo final iteration that overshoots
     if int_prec:
@@ -223,8 +223,8 @@ def rootfind_score_handicap(
     score: float,
     rnd: rounds.Round,
     hc_sys: str,
-    hc_dat: hc_eq.HcParams,
-    arw_d: Optional[float],
+    arw_d: Optional[float] = None,
+    hc_dat: Optional[hc_eq.HcParams] = None,
 ) -> float:
     """
     Get handicap for general score on a round through rootfinding algorithm.
@@ -237,10 +237,10 @@ def rootfind_score_handicap(
         round being used
     hc_sys : str
         identifier for the handicap system
-    hc_dat : handicaps.handicap_equations.HcParams
-        dataclass containing parameters for handicap equations
     arw_d : float
         arrow diameter in [metres] default = None
+    hc_dat : handicaps.handicap_equations.HcParams or None, default=None
+        dataclass containing parameters for handicap equations
 
     Returns
     -------
@@ -268,8 +268,8 @@ def rootfind_score_handicap(
         x_init = [-75.0, 300.0]
 
     f_init = [
-        f_root(x_init[0], score, rnd, hc_sys, hc_dat, arw_d),
-        f_root(x_init[1], score, rnd, hc_sys, hc_dat, arw_d),
+        f_root(x_init[0], score, rnd, hc_sys, arw_d, hc_dat),
+        f_root(x_init[1], score, rnd, hc_sys, arw_d, hc_dat),
     ]
     xtol = 1.0e-16
     rtol = 0.00
@@ -346,7 +346,7 @@ def rootfind_score_handicap(
             else:
                 xcur -= delta
 
-        fcur = f_root(xcur, score, rnd, hc_sys, hc_dat, arw_d)
+        fcur = f_root(xcur, score, rnd, hc_sys, arw_d, hc_dat)
         handicap = xcur
 
     return handicap
@@ -357,8 +357,8 @@ def f_root(
     score_est: Union[int, float],
     round_est: rounds.Round,
     sys: str,
-    hc_data: hc_eq.HcParams,
-    arw_dia: Optional[float],
+    arw_dia: Optional[float] = None,
+    hc_data: Optional[hc_eq.HcParams] = None,
 ) -> float:
     """
     Return error between predicted score and desired score.
@@ -373,10 +373,10 @@ def f_root(
         round being used
     sys : str
         identifier for the handicap system
-    hc_data : handicaps.handicap_equations.HcParams
-        dataclass containing parameters for handicap equations
     arw_dia : float
         arrow diameter in [metres] default = None
+    hc_dat : handicaps.handicap_equations.HcParams or None, default=None
+        dataclass containing parameters for handicap equations
 
     Returns
     -------
@@ -394,7 +394,7 @@ def f_root(
     # pylint: disable=too-many-arguments
 
     val = hc_eq.score_for_round(
-        round_est, hc_est, sys, hc_data, arw_dia, round_score_up=False
+        round_est, hc_est, sys, arw_dia, hc_data, round_score_up=False
     )
 
     # Ensure we return float, not np.ndarray
@@ -414,8 +414,8 @@ def print_handicap_table(
     hcs: Union[float, NDArray[np.float_]],
     hc_sys: str,
     round_list: List[rounds.Round],
-    hc_dat: hc_eq.HcParams,
     arrow_d: Optional[float] = None,
+    hc_dat: Optional[hc_eq.HcParams] = None,
     round_scores_up: bool = True,
     clean_gaps: bool = True,
     printout: bool = True,
@@ -434,10 +434,10 @@ def print_handicap_table(
         identifier for the handicap system
     round_list : list of rounds.Round
         List of Round classes to calculate scores for
-    hc_dat : handicaps.handicap_equations.HcParams
-        dataclass containing parameters for handicap equations
     arrow_d : float or None, default=None
         arrow diameter in [metres] default = None
+    hc_dat : handicaps.handicap_equations.HcParams or None, default=None
+        dataclass containing parameters for handicap equations
     round_scores_up : bool, default=True
         round scores up to nearest integer? default = True
     clean_gaps : bool, default=True
@@ -491,8 +491,8 @@ def print_handicap_table(
             round_i,
             hcs,
             hc_sys,
-            hc_dat,
             arrow_d,
+            hc_dat,
             round_score_up=round_scores_up,
         )
 

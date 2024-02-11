@@ -172,7 +172,7 @@ def sigma_t(
     handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
     dist: float,
-    hc_dat: HcParams,
+    hc_dat: Optional[HcParams] = None,
 ) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     """
     Calculate angular deviation for given scheme, handicap, and distance.
@@ -185,7 +185,7 @@ def sigma_t(
         identifier for handicap system
     dist : float
         distance to target [metres]
-    hc_dat : HcParams
+    hc_dat : HcParams or None, default=None
         dataclass containing parameters for handicap equations
 
     Returns
@@ -216,6 +216,10 @@ def sigma_t(
     """
     # Declare sig_t type for mypy
     sig_t: Union[float, npt.NDArray[np.float_]]
+
+    # Use default HcParams if not provided by user
+    if hc_dat is None:
+        hc_dat = HcParams()
 
     if hc_sys == "AGB":
         # New AGB (Archery GB) System
@@ -288,7 +292,7 @@ def sigma_r(
     handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
     dist: float,
-    hc_dat: HcParams,
+    hc_dat: Optional[HcParams] = None,
 ) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     """
     Calculate deviation for a given scheme and handicap value.
@@ -305,7 +309,7 @@ def sigma_r(
         identifier for handicap system
     dist : float or ndarray
         distance to target [m]
-    hc_dat : HcParams
+    hc_dat : HcParams or None, default=None
         dataclass containing parameters for handicap equations
 
     Returns
@@ -339,8 +343,8 @@ def arrow_score(
     target: targets.Target,
     handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
-    hc_dat: HcParams,
     arw_d: Optional[float] = None,
+    hc_dat: Optional[HcParams] = None,
 ) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     # Six too many branches. Makes sense due to different target faces => disable
     # pylint: disable=too-many-branches
@@ -355,10 +359,10 @@ def arrow_score(
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
-    hc_dat : HcParams
-        dataclass containing parameters for handicap equations
     arw_d : float or None, default=None
         arrow diameter in [metres]
+    hc_dat : HcParams or None, default=None
+        dataclass containing parameters for handicap equations
 
     Returns
     -------
@@ -398,6 +402,10 @@ def arrow_score(
     # Set arrow diameter. Use provided, if AGBold or AA/AA2 scheme set value,
     # otherwise select default from params based on in-/out-doors
     if arw_d is None:
+        # Use default HcParams if not provided by user
+        if hc_dat is None:
+            hc_dat = HcParams()
+
         if hc_sys == "AGBold":
             arw_rad = hc_dat.arw_d_data["AGBo_arw_d"] / 2.0
         else:
@@ -518,8 +526,8 @@ def score_for_passes(
     rnd: rounds.Round,
     handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
-    hc_dat: HcParams,
     arw_d: Optional[float] = None,
+    hc_dat: Optional[HcParams] = None,
 ) -> npt.NDArray[np.float_]:
     """
     Calculate the expected score for all passes in a round at a given handicap rating.
@@ -532,10 +540,10 @@ def score_for_passes(
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
-    hc_dat : HcParams
-        dataclass containing parameters for handicap equations
     arw_d : float or None, default=None
         arrow diameter in [metres] default = None -> (use defaults)
+    hc_dat : HcParams or None, default=None
+        dataclass containing parameters for handicap equations
 
     Returns
     -------
@@ -569,7 +577,7 @@ def score_for_passes(
     pass_scores = np.array(
         [
             pass_i.n_arrows
-            * arrow_score(pass_i.target, handicap, hc_sys, hc_dat, arw_d=arw_d)
+            * arrow_score(pass_i.target, handicap, hc_sys, arw_d=arw_d, hc_dat=hc_dat)
             for pass_i in rnd.passes
         ]
     )
@@ -581,8 +589,8 @@ def score_for_round(
     rnd: rounds.Round,
     handicap: Union[float, npt.NDArray[np.float_]],
     hc_sys: str,
-    hc_dat: HcParams,
     arw_d: Optional[float] = None,
+    hc_dat: Optional[HcParams] = None,
     round_score_up: bool = True,
 ) -> Union[float, np.float_, npt.NDArray[np.float_]]:
     """
@@ -596,10 +604,10 @@ def score_for_round(
         handicap value to calculate score for
     hc_sys : string
         identifier for the handicap system
-    hc_dat : HcParams
-        dataclass containing parameters for handicap equations
     arw_d : float or None, default=None
         arrow diameter in [metres] default = None -> (use defaults)
+    hc_dat : HcParams or None, default=None
+        dataclass containing parameters for handicap equations
     round_score_up : bool, default=True
         round score up to nearest integer value?
 
@@ -638,7 +646,9 @@ def score_for_round(
     # Could try and simplify hc_sys and hc_dat in future refactor
     # pylint: disable=too-many-arguments
 
-    round_score = np.sum(score_for_passes(rnd, handicap, hc_sys, hc_dat, arw_d), axis=0)
+    round_score = np.sum(
+        score_for_passes(rnd, handicap, hc_sys, arw_d=arw_d, hc_dat=hc_dat), axis=0
+    )
 
     if round_score_up:
         # Old AGB system uses plain rounding rather than ceil of other schemes

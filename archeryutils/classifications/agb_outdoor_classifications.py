@@ -520,15 +520,12 @@ def agb_outdoor_classification_scores(
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
 
-    hc_params = hc_eq.HcParams()
-
     # Get scores required on this round for each classification
     class_scores = [
         hc_eq.score_for_round(
             ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
             "AGB",
-            hc_params,
             round_score_up=True,
         )
         for i in range(len(group_data["classes"]))

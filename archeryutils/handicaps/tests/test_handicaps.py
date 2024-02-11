@@ -15,8 +15,6 @@ from archeryutils.targets import Target
 from archeryutils.rounds import Round, Pass
 
 
-hc_params = hc_eq.HcParams()
-
 # Define rounds used in these functions
 york = Round(
     "York",
@@ -175,7 +173,6 @@ class TestSigmaT:
                 handicap=10.0,
                 hc_sys="InvalidSystem",
                 dist=10.0,
-                hc_dat=hc_params,
             )
 
     @pytest.mark.parametrize(
@@ -210,7 +207,6 @@ class TestSigmaT:
             handicap=handicap,
             hc_sys=system,
             dist=distance,
-            hc_dat=hc_params,
         )
 
         assert theta == pytest.approx(theta_expected)
@@ -225,7 +221,6 @@ class TestSigmaT:
             handicap=handicap_array,
             hc_sys="AGB",
             dist=100.0,
-            hc_dat=hc_params,
         )
 
         np.testing.assert_allclose(theta_array, theta_expected_array)
@@ -264,7 +259,6 @@ class TestSigmaR:
                 handicap=10.0,
                 hc_sys="InvalisHandicapSystem",
                 dist=10.0,
-                hc_dat=hc_params,
             )
 
     @pytest.mark.parametrize(
@@ -299,7 +293,6 @@ class TestSigmaR:
             handicap=handicap,
             hc_sys=system,
             dist=distance,
-            hc_dat=hc_params,
         )
 
         assert sigma_r == pytest.approx(sigma_r_expected)
@@ -314,7 +307,6 @@ class TestSigmaR:
             handicap=handicap_array,
             hc_sys="AGB",
             dist=100.0,
-            hc_dat=hc_params,
         )
 
         np.testing.assert_allclose(sigma_r_array, sigma_r_expected_array)
@@ -355,7 +347,6 @@ class TestArrowScore:
                 target=target,
                 handicap=12.0,
                 hc_sys="AGB",
-                hc_dat=hc_params,
                 arw_d=None,
             )
 
@@ -391,7 +382,6 @@ class TestArrowScore:
             target=Target("10_zone_5_ring_compound", 40, 20.0, indoor),
             handicap=20.0,
             hc_sys=hc_system,
-            hc_dat=hc_params,
             arw_d=arrow_diameter,
         )
 
@@ -424,7 +414,6 @@ class TestArrowScore:
             target=Target(target_face, 80, 50.0, False),
             handicap=38.0,
             hc_sys="AGB",
-            hc_dat=hc_params,
             arw_d=None,
         )
 
@@ -498,7 +487,7 @@ class TestScoreForRound:
         )
 
         assert hc_eq.score_for_round(
-            test_round, 20.0, hc_system, hc_eq.HcParams(), None, False
+            test_round, 20.0, hc_system, round_score_up=False
         ) == pytest.approx(round_score_expected[0])
 
     @pytest.mark.parametrize(
@@ -533,9 +522,7 @@ class TestScoreForRound:
         )
 
         assert (
-            hc_eq.score_for_round(
-                test_round, 20.0, hc_system, hc_eq.HcParams(), None, True
-            )
+            hc_eq.score_for_round(test_round, 20.0, hc_system, round_score_up=True)
             == round_score_expected[0]
         )
 
@@ -604,9 +591,7 @@ class TestHandicapFromScore:
         handicap = hc_func.get_max_score_handicap(
             testround,
             hc_system,
-            hc_params,
-            None,
-            int_prec,
+            int_prec=int_prec,
         )
 
         assert pytest.approx(handicap) == handicap_expected
@@ -630,7 +615,7 @@ class TestHandicapFromScore:
                 ],
             )
 
-            hc_func.handicap_from_score(9999, test_round, "AGB", hc_params)
+            hc_func.handicap_from_score(9999, test_round, "AGB")
 
     def test_score_of_zero(self) -> None:
         """
@@ -651,7 +636,7 @@ class TestHandicapFromScore:
                 ],
             )
 
-            hc_func.handicap_from_score(0, test_round, "AGB", hc_params)
+            hc_func.handicap_from_score(0, test_round, "AGB")
 
     def test_score_below_zero(self) -> None:
         """
@@ -672,7 +657,7 @@ class TestHandicapFromScore:
                 ],
             )
 
-            hc_func.handicap_from_score(-9999, test_round, "AGB", hc_params)
+            hc_func.handicap_from_score(-9999, test_round, "AGB")
 
     @pytest.mark.parametrize(
         "hc_system,testround,max_score,handicap_expected",
@@ -704,9 +689,7 @@ class TestHandicapFromScore:
             max_score,
             testround,
             hc_system,
-            hc_params,
-            None,
-            True,
+            int_prec=True,
         )
 
         assert handicap == handicap_expected
@@ -768,9 +751,7 @@ class TestHandicapFromScore:
             testscore,
             testround,
             hc_system,
-            hc_params,
-            None,
-            True,
+            int_prec=True,
         )
 
         assert handicap == handicap_expected
@@ -810,9 +791,7 @@ class TestHandicapFromScore:
             testscore,
             testround,
             hc_system,
-            hc_params,
-            None,
-            False,
+            int_prec=False,
         )
 
         assert handicap == pytest.approx(handicap_expected)

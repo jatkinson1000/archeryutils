@@ -268,7 +268,6 @@ def agb_indoor_classification_scores(
     group_data = agb_indoor_classifications[groupname]
 
     hc_scheme = "AGB"
-    hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
     # Enforce full size face
@@ -277,7 +276,6 @@ def agb_indoor_classification_scores(
             ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
             hc_scheme,
-            hc_params,
             round_score_up=True,
         )
         for i, class_i in enumerate(group_data["classes"])
@@ -301,7 +299,6 @@ def agb_indoor_classification_scores(
             ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             np.floor(handicap) + 1,
             hc_scheme,
-            hc_params,
             round_score_up=True,
         )
         if next_score == score:
