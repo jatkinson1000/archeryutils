@@ -11,7 +11,7 @@ AGB_old_indoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List, Dict, Any
+from typing import Any
 import numpy as np
 
 from archeryutils import load_rounds
@@ -27,7 +27,7 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-def _make_agb_old_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
+def _make_agb_old_indoor_classification_dict() -> dict[str, dict[str, Any]]:
     """
     Generate AGB outdoor classification data.
 
@@ -145,7 +145,7 @@ def calculate_agb_old_indoor_classification(
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
-    class_data: Dict[str, Any] = dict(zip(group_data["classes"], class_scores))
+    class_data: dict[str, Any] = dict(zip(group_data["classes"], class_scores))
 
     # What is the highest classification this score gets?
     to_del = []
@@ -170,7 +170,7 @@ def agb_old_indoor_classification_scores(
     bowstyle: str,
     gender: str,
     age_group: str,
-) -> List[int]:
+) -> list[int]:
     """
     Calculate AGB indoor classification scores for category.
 

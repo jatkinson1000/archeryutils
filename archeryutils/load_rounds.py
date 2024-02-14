@@ -3,12 +3,12 @@
 import json
 from pathlib import Path
 import warnings
-from typing import Union, List, Dict, Any
+from typing import Union, Any
 
 from archeryutils.rounds import Pass, Round
 
 
-def read_json_to_round_dict(json_filelist: Union[str, List[str]]) -> Dict[str, Round]:
+def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, Round]:
     """
     Read round information from a json file into a dictionary of rounds.
 
@@ -130,7 +130,7 @@ def read_json_to_round_dict(json_filelist: Union[str, List[str]]) -> Dict[str, R
     return round_dict
 
 
-class DotDict(Dict[str, Any]):
+class DotDict(dict[str, Any]):
     """
     A subclass of dict to provide dot notation access to a dictionary.
 

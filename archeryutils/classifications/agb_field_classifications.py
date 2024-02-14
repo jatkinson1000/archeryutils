@@ -12,7 +12,7 @@ agb_field_classification_scores
 # pylint: disable=duplicate-code
 
 import re
-from typing import List, Dict, Any
+from typing import Any
 import numpy as np
 
 from archeryutils import load_rounds
@@ -26,7 +26,7 @@ ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-def _make_agb_field_classification_dict() -> Dict[str, Dict[str, Any]]:
+def _make_agb_field_classification_dict() -> dict[str, dict[str, Any]]:
     """
     Generate AGB outdoor classification data.
 
@@ -262,7 +262,7 @@ def calculate_agb_field_classification(
         return "unclassified"
 
     # What is the highest classification this score gets?
-    class_scores: Dict[str, Any] = dict(
+    class_scores: dict[str, Any] = dict(
         zip(group_data["classes"], group_data["class_scores"])
     )
     for item in class_scores:
@@ -277,7 +277,7 @@ def calculate_agb_field_classification(
 
 def agb_field_classification_scores(
     roundname: str, bowstyle: str, gender: str, age_group: str
-) -> List[int]:
+) -> list[int]:
     """
     Calculate AGB field classification scores for category.
 

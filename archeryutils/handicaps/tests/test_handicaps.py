@@ -4,7 +4,6 @@
 # => disable for handicap tests
 # pylint: disable=duplicate-code
 
-from typing import Tuple, List
 import numpy as np
 import pytest
 from pytest_mock import MockerFixture
@@ -481,7 +480,7 @@ class TestScoreForRound:
         ],
     )
     def test_float_round_score(
-        self, hc_system: str, round_score_expected: Tuple[float, List[float]]
+        self, hc_system: str, round_score_expected: tuple[float, list[float]]
     ) -> None:
         """
         Check appropriate expected round scores are returned not rounding.
@@ -515,7 +514,7 @@ class TestScoreForRound:
         ],
     )
     def test_rounded_round_score(
-        self, hc_system: str, round_score_expected: Tuple[float, List[float]]
+        self, hc_system: str, round_score_expected: tuple[float, list[float]]
     ) -> None:
         """
         Check appropriate expected round scores are returned for rounding.

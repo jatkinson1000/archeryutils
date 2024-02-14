@@ -1,6 +1,6 @@
 """Tests for Pass and Round classes"""
+from typing import Union
 
-from typing import Union, Tuple
 import pytest
 
 from archeryutils.rounds import Pass, Round
@@ -142,7 +142,7 @@ class TestRound:
         self,
         unit: str,
         get_unit: bool,
-        max_dist_expected: Union[float, Tuple[float, str]],
+        max_dist_expected: Union[float, tuple[float,str]],
     ) -> None:
         """
         Check that max distance is calculated correctly for a Round.

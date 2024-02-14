@@ -4,7 +4,6 @@
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List
 import pytest
 
 from archeryutils import load_rounds
@@ -68,7 +67,7 @@ class TestAgbFieldClassificationScores:
         self,
         roundname: str,
         age_group: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that field classification returns expected value for a case.
@@ -116,7 +115,7 @@ class TestAgbFieldClassificationScores:
         roundname: str,
         gender: str,
         age_group: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that field classification returns expected value for a case.
@@ -170,7 +169,7 @@ class TestAgbFieldClassificationScores:
         self,
         roundname: str,
         bowstyle: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that field classification returns expected value for a case.

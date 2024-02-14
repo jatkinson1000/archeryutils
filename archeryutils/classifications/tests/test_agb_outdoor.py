@@ -4,7 +4,6 @@
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List
 import pytest
 
 from archeryutils import load_rounds
@@ -92,7 +91,7 @@ class TestAgbOutdoorClassificationScores:
         self,
         roundname: str,
         age_group: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that  classification returns expected value for a case.
@@ -135,7 +134,7 @@ class TestAgbOutdoorClassificationScores:
         self,
         roundname: str,
         age_group: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that outdoor classification returns expected value for a case.
@@ -198,7 +197,7 @@ class TestAgbOutdoorClassificationScores:
         roundname: str,
         bowstyle: str,
         gender: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that outdoor classification returns expected value for a case.
@@ -240,7 +239,7 @@ class TestAgbOutdoorClassificationScores:
         roundname: str,
         bowstyle: str,
         gender: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that barebow scores returned for valid but non-outdoor bowstyles.
@@ -266,7 +265,7 @@ class TestAgbOutdoorClassificationScores:
     def test_agb_outdoor_classification_scores_triple_faces(
         self,
         roundname: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that outdoor classification returns single face scores only.

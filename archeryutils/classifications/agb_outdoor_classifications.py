@@ -11,7 +11,7 @@ agb_outdoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List, Dict, Any
+from typing import Any
 from collections import OrderedDict
 import numpy as np
 
@@ -29,7 +29,7 @@ ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
+def _make_agb_outdoor_classification_dict() -> dict[str, dict[str, Any]]:
     """
     Generate AGB outdoor classification data.
 
@@ -134,7 +134,7 @@ def _assign_min_dist(
     n_class: int,
     gender: str,
     age_group: str,
-    max_dists: List[int],
+    max_dists: list[int],
 ) -> int:
     """
     Assign appropriate minimum distance required for a category and classification.
@@ -203,8 +203,8 @@ def _assign_outdoor_prestige(
     bowstyle: str,
     gender: str,
     age: str,
-    max_dist: List[int],
-) -> List[str]:
+    max_dist: list[int],
+) -> list[str]:
     """
     Assign appropriate outdoor prestige rounds for a category.
 
@@ -277,7 +277,7 @@ def _assign_outdoor_prestige(
     # Assign prestige rounds for the category
     #  - check bowstyle, distance, and age
     prestige_rounds = []
-    distance_check: List[str] = []
+    distance_check: list[str] = []
 
     # 720 rounds - bowstyle dependent
     if bowstyle.lower() == "compound":
@@ -392,7 +392,7 @@ def calculate_agb_outdoor_classification(
     group_data = agb_outdoor_classifications[groupname]
 
     # We iterate over class_data keys, so convert use OrderedDict
-    class_data: OrderedDict[str, Dict[str, Any]] = OrderedDict([])
+    class_data: OrderedDict[str, dict[str, Any]] = OrderedDict([])
     for i, class_i in enumerate(group_data["classes"]):
         class_data[class_i] = {
             "min_dist": group_data["min_dists"][i],
@@ -418,8 +418,9 @@ def calculate_agb_outdoor_classification(
 
 
 def _check_prestige_distance(
-    roundname: str, groupname: str, class_data: OrderedDict[str, Dict[str, Any]]
-) -> OrderedDict[str, Dict[str, Any]]:
+    roundname: str, groupname: str, class_data: OrderedDict[str, dict[str, Any]]
+) -> OrderedDict[str, dict[str, Any]]:
+
     """
     Check available classifications for eligibility based on distance and prestige..
 
@@ -451,7 +452,7 @@ def _check_prestige_distance(
             del class_data[mb_class]
 
         # If not prestige, what classes are ineligible based on distance
-        to_del: List[str] = []
+        to_del: list[str] = []
         round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
         for class_i_name, class_i_data in class_data.items():
             if class_i_data["min_dist"] > round_max_dist:
@@ -464,7 +465,7 @@ def _check_prestige_distance(
 
 def agb_outdoor_classification_scores(
     roundname: str, bowstyle: str, gender: str, age_group: str
-) -> List[int]:
+) -> list[int]:
     """
     Calculate AGB outdoor classification scores for category.
 

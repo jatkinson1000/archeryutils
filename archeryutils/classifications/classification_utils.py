@@ -15,12 +15,12 @@ get_compound_codename
 
 import json
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
 
 
 def read_ages_json(
     age_file: Path = Path(__file__).parent / "AGB_ages.json",
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Read AGB age categories in from neighbouring json file to list of dicts.
 
@@ -55,7 +55,7 @@ def read_ages_json(
 
 def read_bowstyles_json(
     bowstyles_file: Path = Path(__file__).parent / "AGB_bowstyles.json",
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Read AGB  bowstyles in from neighbouring json file to list of dicts.
 
@@ -90,7 +90,7 @@ def read_bowstyles_json(
 
 def read_genders_json(
     genders_file: Path = Path(__file__).parent / "AGB_genders.json",
-) -> List[str]:
+) -> list[str]:
     """
     Read AGB genders in from neighbouring json file to list of dict.
 
@@ -126,7 +126,7 @@ def read_genders_json(
 
 def read_classes_json(
     class_system: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Read AGB classes in from neighbouring json file to dict.
 

@@ -1,6 +1,5 @@
 """Module to define a Pass and Round classes for archery applications."""
-
-from typing import List, Union, Tuple
+from typing import Optional, Union
 
 from archeryutils.targets import Target
 from archeryutils.constants import Length
@@ -57,8 +56,8 @@ class Pass:
         self,
         n_arrows: int,
         scoring_system: str,
-        diameter: Union[float, Tuple[float, str]],
-        distance: Union[float, Tuple[float, str]],
+        diameter: Union[float, tuple[float,str]],
+        distance: Union[float, tuple[float,str]],
         indoor: bool = False,
     ) -> None:
         self.n_arrows = abs(n_arrows)
@@ -159,10 +158,10 @@ class Round:
     def __init__(
         self,
         name: str,
-        passes: List[Pass],
-        location: Union[str, None] = None,
-        body: Union[str, None] = None,
-        family: Union[str, None] = None,
+        passes: list[Pass],
+        location: Optional[str] = None,
+        body: Optional[str] = None,
+        family: Optional[str] = None,
     ) -> None:
         self.name = name
         self.passes = passes
@@ -181,7 +180,7 @@ class Round:
         """
         return sum(pass_i.max_score() for pass_i in self.passes)
 
-    def max_distance(self, unit: bool = False) -> Union[float, Tuple[float, str]]:
+    def max_distance(self, unit: bool = False) -> Union[float, tuple[float,str]]:
         """
         Return the maximum distance shot on this round along with the unit (optional).
 

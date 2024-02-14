@@ -1,6 +1,5 @@
 """Module for representing a Target for archery applications."""
-
-from typing import Union, Tuple
+from typing import Union
 
 from archeryutils.constants import Length
 
@@ -59,8 +58,8 @@ class Target:
     def __init__(
         self,
         scoring_system: str,
-        diameter: Union[float, Tuple[float, str]],
-        distance: Union[float, Tuple[float, str]],
+        diameter: Union[float, tuple[float,str]],
+        distance: Union[float, tuple[float,str]],
         indoor: bool = False,
     ) -> None:
         systems = [
