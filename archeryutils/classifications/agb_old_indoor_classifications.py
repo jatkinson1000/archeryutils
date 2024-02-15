@@ -12,7 +12,6 @@ AGB_old_indoor_classification_scores
 # pylint: disable=duplicate-code
 
 from typing import TypedDict
-import numpy as np
 
 from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
@@ -260,11 +259,6 @@ def agb_old_indoor_classification_scores(
         for i, class_i in enumerate(group_data["classes"])
     ]
 
-    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
-    if any(isinstance(x, np.ndarray) for x in class_scores):
-        raise TypeError(
-            "score_for_round is attempting to return an array when float expected."
-        )
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]

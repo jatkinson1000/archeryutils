@@ -13,7 +13,6 @@ agb_field_classification_scores
 
 import re
 from typing import TypedDict
-import numpy as np
 
 from archeryutils import load_rounds
 import archeryutils.classifications.classification_utils as cls_funcs
@@ -259,11 +258,6 @@ def agb_field_classification_scores(
     # Get scores required on this round for each classification
     class_scores = group_data["class_scores"]
 
-    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
-    if any(isinstance(x, np.ndarray) for x in class_scores):
-        raise TypeError(
-            "score_for_round is attempting to return an array when float expected."
-        )
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
