@@ -11,7 +11,7 @@ AGB_old_indoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import Any
+from typing import Any, TypedDict
 import numpy as np
 
 from archeryutils import load_rounds
@@ -26,8 +26,12 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     ]
 )
 
+class GroupData(TypedDict):
+    classes: list[str]
+    class_HC: list[int]
 
-def _make_agb_old_indoor_classification_dict() -> dict[str, dict[str, Any]]:
+
+def _make_agb_old_indoor_classification_dict() -> dict[str, GroupData]:
     """
     Generate AGB outdoor classification data.
 
@@ -53,24 +57,30 @@ def _make_agb_old_indoor_classification_dict() -> dict[str, dict[str, Any]]:
 
     # Generate dict of classifications
     # for both bowstyles, for both genders
-    classification_dict = {}
-    classification_dict[cls_funcs.get_groupname("Compound", "Male", "Adult")] = {
+    compound_male_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [5, 12, 24, 37, 49, 62, 73, 79],
     }
-    classification_dict[cls_funcs.get_groupname("Compound", "Female", "Adult")] = {
+    compound_female_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [12, 18, 30, 43, 55, 67, 79, 83],
     }
-    classification_dict[cls_funcs.get_groupname("Recurve", "Male", "Adult")] = {
+    recurve_male_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [14, 21, 33, 46, 58, 70, 80, 85],
     }
-    classification_dict[cls_funcs.get_groupname("Recurve", "Female", "Adult")] = {
+    recurve_female_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [21, 27, 39, 51, 64, 75, 85, 90],
     }
 
+    classification_dict = {
+        cls_funcs.get_groupname("Compound", "Male", "Adult") : compound_male_adult,
+        cls_funcs.get_groupname("Compound", "Female", "Adult") : compound_female_adult,
+        cls_funcs.get_groupname("Recurve", "Male", "Adult") : recurve_male_adult,
+        cls_funcs.get_groupname("Recurve", "Female", "Adult") : recurve_female_adult,
+    }
+    
     return classification_dict
 
 
