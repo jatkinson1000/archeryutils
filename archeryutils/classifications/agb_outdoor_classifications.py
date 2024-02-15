@@ -31,6 +31,8 @@ ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 
 
 class GroupData(TypedDict):
+    """Structure for AGB Outdoor classification data."""
+
     classes: list[str]
     max_distance: list[int]
     classes_long: list[str]
@@ -64,6 +66,9 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
+    # Five too many locals, but better than repeated dictionary assignment => disable
+    # pylint: disable=too-many-locals
+
     # Read in age group info as list of dicts
     agb_ages = cls_funcs.read_ages_json()
     # Read in bowstyleclass info as list of dicts
@@ -83,16 +88,14 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     for bowstyle in agb_bowstyles:
         for gender in agb_genders:
             for age in agb_ages:
-
                 groupname = cls_funcs.get_groupname(
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
                 # Get max dists for category from json file data
                 # Use metres as corresponding yards >= metric
-                gender_key = cast(Literal['male', 'female'], gender.lower())
+                gender_key = cast(Literal["male", "female"], gender.lower())
                 max_dist = age[gender_key]
-
 
                 # set step from datum based on age and gender steps required
                 delta_hc_age_gender = cls_funcs.get_age_gender_step(
@@ -136,7 +139,7 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
                     "classes_long": agb_classes_out_long,
                     "class_HC": class_hc,
                     "min_dists": min_dists,
-                    "prestige_rounds": prestige_rounds
+                    "prestige_rounds": prestige_rounds,
                 }
 
                 classification_dict[groupname] = groupdata

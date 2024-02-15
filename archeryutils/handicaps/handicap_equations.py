@@ -215,7 +215,6 @@ def sigma_t(
     array([0.00094983, 0.00376062, 0.02100276])
 
     """
-
     if hc_sys == "AGB":
         # New AGB (Archery GB) System
         # Written by Jack Atkinson

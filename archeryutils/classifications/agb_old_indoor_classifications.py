@@ -26,7 +26,10 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     ]
 )
 
+
 class GroupData(TypedDict):
+    """Structure for old AGB Indoor classification data."""
+
     classes: list[str]
     class_HC: list[int]
 
@@ -75,12 +78,12 @@ def _make_agb_old_indoor_classification_dict() -> dict[str, GroupData]:
     }
 
     classification_dict = {
-        cls_funcs.get_groupname("Compound", "Male", "Adult") : compound_male_adult,
-        cls_funcs.get_groupname("Compound", "Female", "Adult") : compound_female_adult,
-        cls_funcs.get_groupname("Recurve", "Male", "Adult") : recurve_male_adult,
-        cls_funcs.get_groupname("Recurve", "Female", "Adult") : recurve_female_adult,
+        cls_funcs.get_groupname("Compound", "Male", "Adult"): compound_male_adult,
+        cls_funcs.get_groupname("Compound", "Female", "Adult"): compound_female_adult,
+        cls_funcs.get_groupname("Recurve", "Male", "Adult"): recurve_male_adult,
+        cls_funcs.get_groupname("Recurve", "Female", "Adult"): recurve_female_adult,
     }
-    
+
     return classification_dict
 
 

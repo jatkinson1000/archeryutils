@@ -15,15 +15,17 @@ get_compound_codename
 
 import json
 from pathlib import Path
-from typing import Any, TypedDict, Literal
+from typing import TypedDict, Literal
+
 
 class AGBAgeData(TypedDict):
     """Structure for AGB age group data."""
-    desc : str
-    age_group : str
-    male : list[int]
-    female : list[int]
-    step : int
+
+    desc: str
+    age_group: str
+    male: list[int]
+    female: list[int]
+    step: int
 
 
 def read_ages_json(
@@ -60,17 +62,19 @@ def read_ages_json(
         f"Expected list(dict()) but got {type(ages)}. Check {age_file}."
     )
 
+
 class AGBBowstyleData(TypedDict):
     """Structure for AGB bowstyle data."""
-    bowstyle : str
-    datum_out : float
-    classStep_out : float
-    genderStep_out : float
-    ageStep_out : float
-    datum_in : float
-    classStep_in : float
-    genderStep_in : float
-    ageStep_in : float
+
+    bowstyle: str
+    datum_out: float
+    classStep_out: float
+    genderStep_out: float
+    ageStep_out: float
+    datum_in: float
+    classStep_in: float
+    genderStep_in: float
+    ageStep_in: float
 
 
 def read_bowstyles_json(
@@ -146,6 +150,7 @@ def read_genders_json(
 
 class AGBClassificationData(TypedDict):
     """Structure for AGB classification name data."""
+
     location: str
     classes: list[str]
     classes_long: list[str]

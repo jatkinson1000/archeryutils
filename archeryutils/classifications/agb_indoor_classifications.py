@@ -27,7 +27,10 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     ]
 )
 
+
 class GroupData(TypedDict):
+    """Structure for AGB Indoor classification data."""
+
     classes: list[str]
     classes_long: list[str]
     class_HC: npt.NDArray[np.float_]
@@ -61,6 +64,8 @@ def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
     # For score purposes in classifications we use the full face, not the triple.
     # Option of having triple is handled in get classification function
     # Compound version of rounds is handled below.
+    # One too many locals, but better than repeated dictionary assignment => disable
+    # pylint: disable=too-many-locals
 
     # Read in age group info as list of dicts
     agb_ages = cls_funcs.read_ages_json()
@@ -107,7 +112,7 @@ def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
                 groupdata: GroupData = {
                     "classes": agb_classes_in,
                     "classes_long": agb_classes_in_long,
-                    "class_HC": class_hc
+                    "class_HC": class_hc,
                 }
                 classification_dict[groupname] = groupdata
 
