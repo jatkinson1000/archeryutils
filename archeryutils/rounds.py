@@ -64,7 +64,7 @@ class Pass:
         self.target = Target(scoring_system, diameter, distance, indoor)
 
     @property
-    def scoring_system(self) -> str:
+    def scoring_system(self) -> ScoringSystem:
         """Get target scoring_system."""
         return self.target.scoring_system
 
