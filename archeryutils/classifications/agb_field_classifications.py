@@ -63,134 +63,43 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
         "3rd Class",
     ]
 
+    agb_field_scores = {
+        ("Compound", "Male", "Adult") : [393, 377, 344, 312, 279, 247],
+        ("Compound", "Female", "Adult") : [376, 361, 330, 299, 268, 237],
+        ("Recurve", "Male", "Adult") : [338, 317, 288, 260, 231, 203],
+        ("Recurve", "Female", "Adult") : [322, 302, 275, 247, 220, 193],
+        ("Barebow", "Male", "Adult"): [328, 307, 279, 252, 224, 197],
+        ("Barebow", "Female", "Adult"): [303, 284, 258, 233, 207, 182],
+        ("Longbow", "Male", "Adult"): [201, 188, 171, 155, 137, 121],
+        ("Longbow", "Female", "Adult"): [303, 284, 258, 233, 207, 182],
+        ("Traditional", "Male", "Adult"): [262, 245, 223, 202, 178, 157],
+        ("Traditional", "Female", "Adult"): [197, 184, 167, 152, 134, 118],
+        ("Flatbow", "Male", "Adult"): [262, 245, 223, 202, 178, 157],
+        ("Flatbow", "Female", "Adult"): [197, 184, 167, 152, 134, 118],
+        ("Compound", "Male", "Under 18") : [385, 369, 337, 306, 273, 242],
+        ("Compound", "Female", "Under 18") : [357, 343, 314, 284, 255, 225],
+        ("Recurve", "Male", "Under 18") : [311, 292, 265, 239, 213, 187],
+        ("Recurve", "Female", "Under 18") : [280, 263, 239, 215, 191, 168],
+        ("Barebow", "Male", "Under 18") : [298, 279, 254, 229, 204, 179],
+        ("Barebow", "Female", "Under 18") : [251, 236, 214, 193, 172, 151],
+        ("Longbow", "Male", "Under 18") : [161, 150, 137, 124, 109, 96],
+        ("Longbow", "Female", "Under 18") : [122, 114, 103, 94, 83, 73],
+        ("Traditional", "Male", "Under 18") : [210, 196, 178, 161, 143, 126],
+        ("Traditional", "Female", "Under 18") : [158, 147, 134, 121, 107, 95],
+        ("Flatbow", "Male", "Under 18") : [210, 196, 178, 161, 143, 126],
+        ("Flatbow", "Female", "Under 18") : [158, 147, 134, 121, 107, 95],
+    }
+
     # Generate dict of classifications
-    # for both bowstyles, for both genders
-    compound_male_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [393, 377, 344, 312, 279, 247],
-    }
-    compound_female_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [376, 361, 330, 299, 268, 237],
-    }
-    recurve_male_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [338, 317, 288, 260, 231, 203],
-    }
-    recurve_female_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [322, 302, 275, 247, 220, 193],
-    }
-    barebow_male_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [328, 307, 279, 252, 224, 197],
-    }
-    barebow_female_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [303, 284, 258, 233, 207, 182],
-    }
-    longbow_male_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [201, 188, 171, 155, 137, 121],
-    }
-    longbow_female_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [303, 284, 258, 233, 207, 182],
-    }
-    traditional_male_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [262, 245, 223, 202, 178, 157],
-    }
-    traditional_female_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [197, 184, 167, 152, 134, 118],
-    }
-    flatbow_male_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [262, 245, 223, 202, 178, 157],
-    }
-    flatbow_female_adult: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [197, 184, 167, 152, 134, 118],
-    }
+    classification_dict = {}
 
-    # Juniors
-    compound_male_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [385, 369, 337, 306, 273, 242],
-    }
-    compound_female_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [357, 343, 314, 284, 255, 225],
-    }
-    recurve_male_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [311, 292, 265, 239, 213, 187],
-    }
-    recurve_female_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [280, 263, 239, 215, 191, 168],
-    }
-    barebow_male_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [298, 279, 254, 229, 204, 179],
-    }
-    barebow_female_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [251, 236, 214, 193, 172, 151],
-    }
-    longbow_male_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [161, 150, 137, 124, 109, 96],
-    }
-    longbow_female_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [122, 114, 103, 94, 83, 73],
-    }
-    traditional_male_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [210, 196, 178, 161, 143, 126],
-    }
-    traditional_female_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [158, 147, 134, 121, 107, 95],
-    }
-    flatbow_male_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [210, 196, 178, 161, 143, 126],
-    }
-    flatbow_female_u18: GroupData = {
-        "classes": agb_field_classes,
-        "class_scores": [158, 147, 134, 121, 107, 95],
-    }
-
-    get_groupname = cls_funcs.get_groupname
-    classification_dict = {
-        get_groupname("Compound", "Male", "Adult") : compound_male_adult,
-        get_groupname("Compound", "Female", "Adult") : compound_female_adult,
-        get_groupname("Recurve", "Male", "Adult") : recurve_male_adult,
-        get_groupname("Recurve", "Female", "Adult") : recurve_female_adult,
-        get_groupname("Barebow", "Male", "Adult"): barebow_male_adult,
-        get_groupname("Barebow", "Female", "Adult"): barebow_female_adult,
-        get_groupname("Longbow", "Male", "Adult"): longbow_male_adult,
-        get_groupname("Longbow", "Female", "Adult"): longbow_female_adult,
-        get_groupname("Traditional", "Male", "Adult"): traditional_male_adult,
-        get_groupname("Traditional", "Female", "Adult"): traditional_female_adult,
-        get_groupname("Flatbow", "Male", "Adult"): flatbow_male_adult,
-        get_groupname("Flatbow", "Female", "Adult"): flatbow_female_adult,
-        get_groupname("Compound", "Male", "Under 18") : compound_male_u18,
-        get_groupname("Compound", "Female", "Under 18") : compound_female_u18,
-        get_groupname("Recurve", "Male", "Under 18") : recurve_male_u18,
-        get_groupname("Recurve", "Female", "Under 18") : recurve_female_u18,
-        get_groupname("Barebow", "Male", "Under 18") : barebow_male_u18,
-        get_groupname("Barebow", "Female", "Under 18") : barebow_female_u18,
-        get_groupname("Longbow", "Male", "Under 18") : longbow_male_u18,
-        get_groupname("Longbow", "Female", "Under 18") : longbow_female_u18,
-        get_groupname("Traditional", "Male", "Under 18") : traditional_male_u18,
-        get_groupname("Traditional", "Female", "Under 18") : traditional_female_u18,
-        get_groupname("Flatbow", "Male", "Under 18") : flatbow_male_u18,
-        get_groupname("Flatbow", "Female", "Under 18") : flatbow_female_u18,
-    }
+    for group, scores in agb_field_scores.items():
+        groupdata: GroupData = {
+            "classes": agb_field_classes,
+            "class_scores": scores
+        }
+        groupname = cls_funcs.get_groupname(*group)
+        classification_dict[groupname] = groupdata
 
     return classification_dict
 
