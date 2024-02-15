@@ -1,5 +1,5 @@
 """Module for representing a Target for archery applications."""
-from typing import Union, TypeAlias, Literal
+from typing import Union, TypeAlias, Literal, get_args
 
 from archeryutils.constants import Length
 
@@ -76,20 +76,7 @@ class Target:
         distance: Union[float, tuple[float,str]],
         indoor: bool = False,
     ) -> None:
-        systems = [
-            "5_zone",
-            "10_zone",
-            "10_zone_compound",
-            "10_zone_6_ring",
-            "10_zone_5_ring",
-            "10_zone_5_ring_compound",
-            "WA_field",
-            "IFAA_field",
-            "IFAA_field_expert",
-            "Beiter_hit_miss",
-            "Worcester",
-            "Worcester_2_ring",
-        ]
+        systems = get_args(ScoringSystem)
 
         if scoring_system not in systems:
             raise ValueError(
