@@ -11,7 +11,7 @@ agb_outdoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import Any
+from typing import Any, Literal, cast
 from collections import OrderedDict
 import numpy as np
 
@@ -73,13 +73,15 @@ def _make_agb_outdoor_classification_dict() -> dict[str, dict[str, Any]]:
     for bowstyle in agb_bowstyles:
         for gender in agb_genders:
             for age in agb_ages:
+
                 groupname = cls_funcs.get_groupname(
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
                 # Get max dists for category from json file data
                 # Use metres as corresponding yards >= metric
-                max_dist = age[gender.lower()]
+                gender_key = cast(Literal['male', 'female'], gender.lower())
+                max_dist = age[gender_key]
 
                 classification_dict[groupname] = {
                     "classes": agb_classes_out,
