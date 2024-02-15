@@ -11,8 +11,9 @@ agb_indoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import Any
+from typing import Any, TypedDict
 import numpy as np
+import numpy.typing as npt
 
 from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
@@ -26,8 +27,13 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     ]
 )
 
+class GroupData(TypedDict):
+    classes: list[str]
+    classes_long: list[str]
+    class_HC: npt.NDArray[np.float_]
 
-def _make_agb_indoor_classification_dict() -> dict[str, dict[str, Any]]:
+
+def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
     """
     Generate new (2023) AGB indoor classification data.
 
@@ -79,11 +85,6 @@ def _make_agb_indoor_classification_dict() -> dict[str, dict[str, Any]]:
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
-                classification_dict[groupname] = {
-                    "classes": agb_classes_in,
-                    "classes_long": agb_classes_in_long,
-                }
-
                 # set step from datum based on age and gender steps required
                 delta_hc_age_gender = cls_funcs.get_age_gender_step(
                     gender,
@@ -92,16 +93,23 @@ def _make_agb_indoor_classification_dict() -> dict[str, dict[str, Any]]:
                     bowstyle["genderStep_in"],
                 )
 
-                classification_dict[groupname]["class_HC"] = np.empty(
-                    len(agb_classes_in)
-                )
-                for i in range(len(agb_classes_in)):
+                classifications_count = len(agb_classes_in)
+
+                class_hc = np.empty(classifications_count)
+                for i in range(classifications_count):
                     # Assign handicap for this classification
-                    classification_dict[groupname]["class_HC"][i] = (
+                    class_hc[i] = (
                         bowstyle["datum_in"]
                         + delta_hc_age_gender
                         + (i - 1) * bowstyle["classStep_in"]
                     )
+
+                groupdata: GroupData = {
+                    "classes": agb_classes_in,
+                    "classes_long": agb_classes_in_long,
+                    "class_HC": class_hc
+                }
+                classification_dict[groupname] = groupdata
 
     return classification_dict
 
