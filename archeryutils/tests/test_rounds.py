@@ -4,7 +4,7 @@ from typing import Union
 import pytest
 
 from archeryutils.rounds import Pass, Round
-
+from archeryutils.targets import ScoringSystem
 
 class TestPass:
     """
@@ -88,7 +88,7 @@ class TestPass:
     )
     def test_max_score(
         self,
-        face_type: str,
+        face_type: ScoringSystem,
         max_score_expected: float,
     ) -> None:
         """

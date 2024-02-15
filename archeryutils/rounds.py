@@ -1,7 +1,7 @@
 """Module to define a Pass and Round classes for archery applications."""
 from typing import Optional, Union
 
-from archeryutils.targets import Target
+from archeryutils.targets import Target, ScoringSystem
 from archeryutils.constants import Length
 
 
@@ -55,7 +55,7 @@ class Pass:
     def __init__(
         self,
         n_arrows: int,
-        scoring_system: str,
+        scoring_system: ScoringSystem,
         diameter: Union[float, tuple[float,str]],
         distance: Union[float, tuple[float,str]],
         indoor: bool = False,
