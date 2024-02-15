@@ -11,7 +11,7 @@ AGB_old_indoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import Any, TypedDict
+from typing import TypedDict
 import numpy as np
 
 from archeryutils import load_rounds
@@ -158,7 +158,7 @@ def calculate_agb_old_indoor_classification(
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
-    class_data: dict[str, Any] = dict(zip(group_data["classes"], class_scores))
+    class_data = dict(zip(group_data["classes"], class_scores))
 
     # What is the highest classification this score gets?
     to_del = []

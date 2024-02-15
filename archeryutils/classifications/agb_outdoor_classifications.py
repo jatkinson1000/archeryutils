@@ -12,7 +12,6 @@ agb_outdoor_classification_scores
 # pylint: disable=duplicate-code
 
 from typing import Any, Literal, cast, TypedDict
-from collections import OrderedDict
 import numpy as np
 import numpy.typing as npt
 
@@ -408,8 +407,8 @@ def calculate_agb_outdoor_classification(
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
 
-    # We iterate over class_data keys, so convert use OrderedDict
-    class_data: OrderedDict[str, dict[str, Any]] = OrderedDict([])
+    # dictionary ordering guaranteed in python 3.7+
+    class_data = {}
     for i, class_i in enumerate(group_data["classes"]):
         class_data[class_i] = {
             "min_dist": group_data["min_dists"][i],
@@ -434,10 +433,10 @@ def calculate_agb_outdoor_classification(
         return "UC"
 
 
-def _check_prestige_distance(
-    roundname: str, groupname: str, class_data: OrderedDict[str, dict[str, Any]]
-) -> OrderedDict[str, dict[str, Any]]:
 
+def _check_prestige_distance(
+    roundname: str, groupname: str, class_data: dict[str, dict[str, Any]]
+) -> dict[str, dict[str, Any]]:
     """
     Check available classifications for eligibility based on distance and prestige..
 
@@ -450,12 +449,12 @@ def _check_prestige_distance(
         name of round shot as given by 'codename' in json
     groupname : str
         identifier for the category
-    class_data : OrderedDict
+    class_data : dict
         classification information for each category.
 
     Returns
     -------
-    class_data : OrderedDict
+    class_data : dict
         updated classification information for each category.
 
     References

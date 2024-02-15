@@ -12,7 +12,7 @@ agb_field_classification_scores
 # pylint: disable=duplicate-code
 
 import re
-from typing import Any, TypedDict
+from typing import TypedDict
 import numpy as np
 
 from archeryutils import load_rounds
@@ -189,7 +189,7 @@ def calculate_agb_field_classification(
         return "unclassified"
 
     # What is the highest classification this score gets?
-    class_scores: dict[str, Any] = dict(
+    class_scores = dict(
         zip(group_data["classes"], group_data["class_scores"])
     )
     for item in class_scores:
