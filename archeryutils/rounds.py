@@ -1,4 +1,5 @@
 """Module to define a Pass and Round classes for archery applications."""
+
 from typing import Optional, Union
 from collections.abc import Iterable
 

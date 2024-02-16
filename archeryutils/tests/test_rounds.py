@@ -1,4 +1,5 @@
 """Tests for Pass and Round classes"""
+
 from typing import Union
 
 import pytest

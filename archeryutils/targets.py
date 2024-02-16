@@ -1,4 +1,5 @@
 """Module for representing a Target for archery applications."""
+
 from typing import Union, Literal, get_args
 
 from archeryutils.constants import Length

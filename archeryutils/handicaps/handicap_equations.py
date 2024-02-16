@@ -46,6 +46,7 @@ References
   https://doi.org/10.1177%2F1754337114539308
 
 """
+
 import json
 from typing import Optional, TypeVar
 
