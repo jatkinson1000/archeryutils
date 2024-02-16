@@ -1,5 +1,6 @@
 """Module to define a Pass and Round classes for archery applications."""
 from typing import Optional, Union
+from collections.abc import Iterable
 
 from archeryutils.targets import Target, ScoringSystem
 from archeryutils.constants import Length
@@ -158,13 +159,13 @@ class Round:
     def __init__(
         self,
         name: str,
-        passes: list[Pass],
+        passes: Iterable[Pass],
         location: Optional[str] = None,
         body: Optional[str] = None,
         family: Optional[str] = None,
     ) -> None:
         self.name = name
-        self.passes = passes
+        self.passes = list(passes)
         self.location = location
         self.body = body
         self.family = family

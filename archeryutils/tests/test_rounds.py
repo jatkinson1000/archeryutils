@@ -113,6 +113,20 @@ class TestRound:
     def test_get_info()
         test get_info functionality of Round
     """
+    def test_init_with_iterable_passes(self) -> None:
+        """
+        Check that Round can be intialised with a sequence/iterable of Passes.
+
+        Verify by eq comparison of attribute as Round.__eq__ not defined
+        """
+        pass_a = Pass(100, "5_zone", 122, 50, False)
+        pass_b = Pass(100, "5_zone", 122, 40, False)
+
+        list_ = Round("List", [pass_a, pass_b])
+        tuple_ = Round("Tuple", (pass_a, pass_b))
+        iterable_ = Round("iterable", (p for p in (pass_a, pass_b)))
+
+        assert list_.passes == tuple_.passes == iterable_.passes
 
     def test_max_score(self) -> None:
         """
