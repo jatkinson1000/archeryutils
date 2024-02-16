@@ -6,6 +6,7 @@ import pytest
 from archeryutils.rounds import Pass, Round
 from archeryutils.targets import ScoringSystem
 
+
 class TestPass:
     """
     Class to test the Pass class.
@@ -113,6 +114,7 @@ class TestRound:
     def test_get_info()
         test get_info functionality of Round
     """
+
     def test_init_with_iterable_passes(self) -> None:
         """
         Check that Round can be intialised with a sequence/iterable of Passes.
@@ -156,7 +158,7 @@ class TestRound:
         self,
         unit: str,
         get_unit: bool,
-        max_dist_expected: Union[float, tuple[float,str]],
+        max_dist_expected: Union[float, tuple[float, str]],
     ) -> None:
         """
         Check that max distance is calculated correctly for a Round.

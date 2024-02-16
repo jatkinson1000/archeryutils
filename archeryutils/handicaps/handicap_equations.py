@@ -55,7 +55,8 @@ import numpy.typing as npt
 
 from archeryutils import targets, rounds
 
-FloatArray = TypeVar('FloatArray', float, np.float_, npt.NDArray[np.float_])
+FloatArray = TypeVar("FloatArray", float, np.float_, npt.NDArray[np.float_])
+
 
 @dataclass
 class HcParams:

@@ -433,7 +433,6 @@ def calculate_agb_outdoor_classification(
         return "UC"
 
 
-
 def _check_prestige_distance(
     roundname: str, groupname: str, class_data: dict[str, dict[str, Any]]
 ) -> dict[str, dict[str, Any]]:

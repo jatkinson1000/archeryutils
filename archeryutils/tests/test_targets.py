@@ -26,7 +26,7 @@ class TestTarget:
             match="Invalid Target Face Type specified.\nPlease select from '(.+)'.",
         ):
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
-            Target("InvalidScoringSystem", 122, 50, False) #type: ignore[arg-type]
+            Target("InvalidScoringSystem", 122, 50, False)  # type: ignore[arg-type]
 
     def test_invalid_distance_unit(self) -> None:
         """
@@ -126,7 +126,9 @@ class TestTarget:
             ("Beiter_hit_miss", 1),
         ],
     )
-    def test_max_score(self, face_type: ScoringSystem, max_score_expected: float) -> None:
+    def test_max_score(
+        self, face_type: ScoringSystem, max_score_expected: float
+    ) -> None:
         """
         Check that Target() returns correct max score.
         """
@@ -144,7 +146,7 @@ class TestTarget:
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
-            target.scoring_system = "InvalidScoringSystem" #type: ignore[assignment]
+            target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
             target.max_score()
 
     @pytest.mark.parametrize(
@@ -164,7 +166,9 @@ class TestTarget:
             ("Beiter_hit_miss", 0),
         ],
     )
-    def test_min_score(self, face_type: ScoringSystem, min_score_expected: float) -> None:
+    def test_min_score(
+        self, face_type: ScoringSystem, min_score_expected: float
+    ) -> None:
         """
         Check that Target() returns correct min score.
         """
@@ -182,5 +186,5 @@ class TestTarget:
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
-            target.scoring_system = "InvalidScoringSystem" #type: ignore[assignment]
+            target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
             target.min_score()

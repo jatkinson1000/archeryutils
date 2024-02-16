@@ -19,6 +19,7 @@ ScoringSystem = Literal[
     "Worcester_2_ring",
 ]
 
+
 class Target:
     """
     Class to represent a target.
@@ -73,8 +74,8 @@ class Target:
     def __init__(
         self,
         scoring_system: ScoringSystem,
-        diameter: Union[float, tuple[float,str]],
-        distance: Union[float, tuple[float,str]],
+        diameter: Union[float, tuple[float, str]],
+        distance: Union[float, tuple[float, str]],
         indoor: bool = False,
     ) -> None:
         systems = get_args(ScoringSystem)

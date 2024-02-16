@@ -57,8 +57,8 @@ class Pass:
         self,
         n_arrows: int,
         scoring_system: ScoringSystem,
-        diameter: Union[float, tuple[float,str]],
-        distance: Union[float, tuple[float,str]],
+        diameter: Union[float, tuple[float, str]],
+        distance: Union[float, tuple[float, str]],
         indoor: bool = False,
     ) -> None:
         self.n_arrows = abs(n_arrows)
@@ -181,7 +181,7 @@ class Round:
         """
         return sum(pass_i.max_score() for pass_i in self.passes)
 
-    def max_distance(self, unit: bool = False) -> Union[float, tuple[float,str]]:
+    def max_distance(self, unit: bool = False) -> Union[float, tuple[float, str]]:
         """
         Return the maximum distance shot on this round along with the unit (optional).
 
