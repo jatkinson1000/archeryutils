@@ -348,6 +348,7 @@ class TestArrowScore:
             match="No rule for calculating scoring for face type (.+).",
         ):
             target = Target("5_zone", 122.0, 100.0)
+            # Silence mypy as scoring_system must be a valid literal ScoringSystem
             target.scoring_system = "InvalidScoringSystem" #type: ignore[assignment]
 
             hc_eq.arrow_score(

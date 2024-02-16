@@ -25,6 +25,7 @@ class TestTarget:
             ValueError,
             match="Invalid Target Face Type specified.\nPlease select from '(.+)'.",
         ):
+            # Silence mypy as scoring_system must be a valid literal ScoringSystem
             Target("InvalidScoringSystem", 122, 50, False) #type: ignore[arg-type]
 
     def test_invalid_distance_unit(self) -> None:
@@ -142,6 +143,7 @@ class TestTarget:
         ):
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
+            # Silence mypy as scoring_system must be a valid literal ScoringSystem
             target.scoring_system = "InvalidScoringSystem" #type: ignore[assignment]
             target.max_score()
 
@@ -179,5 +181,6 @@ class TestTarget:
         ):
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
+            # Silence mypy as scoring_system must be a valid literal ScoringSystem
             target.scoring_system = "InvalidScoringSystem" #type: ignore[assignment]
             target.min_score()
