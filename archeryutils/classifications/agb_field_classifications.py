@@ -256,10 +256,4 @@ def agb_field_classification_scores(
     group_data = agb_field_classifications[groupname]
 
     # Get scores required on this round for each classification
-    class_scores = group_data["class_scores"]
-
-    # Score threshold should be int (score_for_round called with round=True)
-    # Enforce this for better code and to satisfy mypy
-    int_class_scores = [int(x) for x in class_scores]
-
-    return int_class_scores
+    return group_data["class_scores"]
