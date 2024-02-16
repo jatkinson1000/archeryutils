@@ -1,9 +1,10 @@
 """Module for representing a Target for archery applications."""
-from typing import Union, TypeAlias, Literal, get_args
+from typing import Union, Literal, get_args
 
 from archeryutils.constants import Length
 
-ScoringSystem: TypeAlias = Literal[
+# TypeAlias (annotate explicitly in py3.10+)
+ScoringSystem = Literal[
     "5_zone",
     "10_zone",
     "10_zone_compound",
