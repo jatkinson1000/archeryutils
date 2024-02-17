@@ -11,8 +11,7 @@ AGB_old_indoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List, Dict, Any
-import numpy as np
+from typing import TypedDict
 
 from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
@@ -27,7 +26,14 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-def _make_agb_old_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
+class GroupData(TypedDict):
+    """Structure for old AGB Indoor classification data."""
+
+    classes: list[str]
+    class_HC: list[int]
+
+
+def _make_agb_old_indoor_classification_dict() -> dict[str, GroupData]:
     """
     Generate AGB outdoor classification data.
 
@@ -53,22 +59,28 @@ def _make_agb_old_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
 
     # Generate dict of classifications
     # for both bowstyles, for both genders
-    classification_dict = {}
-    classification_dict[cls_funcs.get_groupname("Compound", "Male", "Adult")] = {
+    compound_male_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [5, 12, 24, 37, 49, 62, 73, 79],
     }
-    classification_dict[cls_funcs.get_groupname("Compound", "Female", "Adult")] = {
+    compound_female_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [12, 18, 30, 43, 55, 67, 79, 83],
     }
-    classification_dict[cls_funcs.get_groupname("Recurve", "Male", "Adult")] = {
+    recurve_male_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [14, 21, 33, 46, 58, 70, 80, 85],
     }
-    classification_dict[cls_funcs.get_groupname("Recurve", "Female", "Adult")] = {
+    recurve_female_adult: GroupData = {
         "classes": agb_indoor_classes,
         "class_HC": [21, 27, 39, 51, 64, 75, 85, 90],
+    }
+
+    classification_dict = {
+        cls_funcs.get_groupname("Compound", "Male", "Adult"): compound_male_adult,
+        cls_funcs.get_groupname("Compound", "Female", "Adult"): compound_female_adult,
+        cls_funcs.get_groupname("Recurve", "Male", "Adult"): recurve_male_adult,
+        cls_funcs.get_groupname("Recurve", "Female", "Adult"): recurve_female_adult,
     }
 
     return classification_dict
@@ -145,7 +157,7 @@ def calculate_agb_old_indoor_classification(
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
-    class_data: Dict[str, Any] = dict(zip(group_data["classes"], class_scores))
+    class_data = dict(zip(group_data["classes"], class_scores))
 
     # What is the highest classification this score gets?
     to_del = []
@@ -170,7 +182,7 @@ def agb_old_indoor_classification_scores(
     bowstyle: str,
     gender: str,
     age_group: str,
-) -> List[int]:
+) -> list[int]:
     """
     Calculate AGB indoor classification scores for category.
 
@@ -247,11 +259,6 @@ def agb_old_indoor_classification_scores(
         for i, class_i in enumerate(group_data["classes"])
     ]
 
-    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
-    if any(isinstance(x, np.ndarray) for x in class_scores):
-        raise TypeError(
-            "score_for_round is attempting to return an array when float expected."
-        )
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]

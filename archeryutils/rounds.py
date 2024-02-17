@@ -1,8 +1,9 @@
 """Module to define a Pass and Round classes for archery applications."""
 
-from typing import List, Union, Tuple
+from typing import Optional, Union
+from collections.abc import Iterable
 
-from archeryutils.targets import Target
+from archeryutils.targets import Target, ScoringSystem
 from archeryutils.constants import Length
 
 
@@ -18,8 +19,11 @@ class Pass:
     ----------
     n_arrows : int
         number of arrows in this pass.
-    scoring_system : str
-        target face/scoring system type.
+    scoring_system : {\
+        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
+        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
+        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
+        target face/scoring system type. Must be one of the supported values.
     diameter : float or tuple of float, str
         face diameter in [centimetres].
     distance : float or tuple of float, str
@@ -56,16 +60,16 @@ class Pass:
     def __init__(
         self,
         n_arrows: int,
-        scoring_system: str,
-        diameter: Union[float, Tuple[float, str]],
-        distance: Union[float, Tuple[float, str]],
+        scoring_system: ScoringSystem,
+        diameter: Union[float, tuple[float, str]],
+        distance: Union[float, tuple[float, str]],
         indoor: bool = False,
     ) -> None:
         self.n_arrows = abs(n_arrows)
         self.target = Target(scoring_system, diameter, distance, indoor)
 
     @property
-    def scoring_system(self) -> str:
+    def scoring_system(self) -> ScoringSystem:
         """Get target scoring_system."""
         return self.target.scoring_system
 
@@ -117,8 +121,8 @@ class Round:
     ----------
     name : str
         Formal name of the round
-    passes : list of Pass
-        a list of Pass classes making up the round
+    passes : iterable of Pass
+        an iterable of Pass classes making up the round
     location : str or None, default=None
         string identifing where the round is shot
     body : str or None, default=None
@@ -145,9 +149,12 @@ class Round:
 
     >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
 
-    These can now be passed to the Round constructor as a list:
+    These can now be passed to the Round constructor as any iterable,
+    they will be stored as a list:
 
     >>> my720round = au.Round("WA 720", [my720pass, my720pass])
+    >>> my720round2 = au.Round("WA 720", (my720pass, my720pass))
+    >>> assert(my720round.passes == my720round2.passes == [my720pass, my720pass])
 
     Additional, optional parameters can be used to provide 'metadata' about the round.
 
@@ -159,13 +166,13 @@ class Round:
     def __init__(
         self,
         name: str,
-        passes: List[Pass],
-        location: Union[str, None] = None,
-        body: Union[str, None] = None,
-        family: Union[str, None] = None,
+        passes: Iterable[Pass],
+        location: Optional[str] = None,
+        body: Optional[str] = None,
+        family: Optional[str] = None,
     ) -> None:
         self.name = name
-        self.passes = passes
+        self.passes = list(passes)
         self.location = location
         self.body = body
         self.family = family
@@ -181,7 +188,7 @@ class Round:
         """
         return sum(pass_i.max_score() for pass_i in self.passes)
 
-    def max_distance(self, unit: bool = False) -> Union[float, Tuple[float, str]]:
+    def max_distance(self, unit: bool = False) -> Union[float, tuple[float, str]]:
         """
         Return the maximum distance shot on this round along with the unit (optional).
 

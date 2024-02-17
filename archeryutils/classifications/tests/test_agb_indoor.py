@@ -4,7 +4,6 @@
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List
 import pytest
 
 from archeryutils import load_rounds
@@ -82,7 +81,7 @@ class TestAgbIndoorClassificationScores:
     def test_agb_indoor_classification_scores_ages(
         self,
         age_group: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that  classification returns expected value for a case.
@@ -120,7 +119,7 @@ class TestAgbIndoorClassificationScores:
     def test_agb_indoor_classification_scores_genders(
         self,
         age_group: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that indoor classification returns expected value for a case.
@@ -157,7 +156,7 @@ class TestAgbIndoorClassificationScores:
     def test_agb_indoor_classification_scores_bowstyles(
         self,
         bowstyle: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that indoor classification returns expected value for a case.
@@ -191,7 +190,7 @@ class TestAgbIndoorClassificationScores:
     def test_agb_indoor_classification_scores_nonbowstyles(
         self,
         bowstyle: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that barebow scores returned for valid but non-indoor styles.
@@ -225,7 +224,7 @@ class TestAgbIndoorClassificationScores:
     def test_agb_indoor_classification_scores_triple_faces(
         self,
         roundname: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that indoor classification returns single face scores only.

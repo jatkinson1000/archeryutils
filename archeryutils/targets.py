@@ -1,8 +1,24 @@
 """Module for representing a Target for archery applications."""
 
-from typing import Union, Tuple
+from typing import Union, Literal, get_args
 
 from archeryutils.constants import Length
+
+# TypeAlias (annotate explicitly in py3.10+)
+ScoringSystem = Literal[
+    "5_zone",
+    "10_zone",
+    "10_zone_compound",
+    "10_zone_6_ring",
+    "10_zone_5_ring",
+    "10_zone_5_ring_compound",
+    "WA_field",
+    "IFAA_field",
+    "IFAA_field_expert",
+    "Beiter_hit_miss",
+    "Worcester",
+    "Worcester_2_ring",
+]
 
 
 class Target:
@@ -11,8 +27,11 @@ class Target:
 
     Parameters
     ----------
-    scoring_system : str
-        target face/scoring system type.
+    scoring_system : {\
+        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
+        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
+        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
+        target face/scoring system type. Must be one of the supported values.
     diameter : float or tuple of float, str
         Target face diameter default [centimetres].
     distance : float or tuple of float, str
@@ -22,7 +41,7 @@ class Target:
 
     Attributes
     ----------
-    scoring_system : str
+    scoring_system : ScoringSystem
         target face/scoring system type.
     diameter : float
         Target face diameter [metres].
@@ -54,29 +73,24 @@ class Target:
     Indoor rounds can be flagged as such using the `indoor` parameter:
 
     >>> myWA18target = au.Target("10_zone", (40, "cm"), (18.0, "m"), indoor=True)
+
+    Attempting to construct a target with an invalid scoring system will fail
+    in type checking and at runtime.
+
+    >>> myUnknownTarget = au.Target("Unknown", 100, 50)
+    ValueError: Invalid Target Face Type specified.
+    Please select from '5_zone', '10_zone', '10_zone_compound', '10_zone_6_ring', ...
+
     """
 
     def __init__(
         self,
-        scoring_system: str,
-        diameter: Union[float, Tuple[float, str]],
-        distance: Union[float, Tuple[float, str]],
+        scoring_system: ScoringSystem,
+        diameter: Union[float, tuple[float, str]],
+        distance: Union[float, tuple[float, str]],
         indoor: bool = False,
     ) -> None:
-        systems = [
-            "5_zone",
-            "10_zone",
-            "10_zone_compound",
-            "10_zone_6_ring",
-            "10_zone_5_ring",
-            "10_zone_5_ring_compound",
-            "WA_field",
-            "IFAA_field",
-            "IFAA_field_expert",
-            "Beiter_hit_miss",
-            "Worcester",
-            "Worcester_2_ring",
-        ]
+        systems = get_args(ScoringSystem)
 
         if scoring_system not in systems:
             raise ValueError(

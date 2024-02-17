@@ -1,9 +1,11 @@
 """Tests for Pass and Round classes"""
 
-from typing import Union, Tuple
+from typing import Union
+
 import pytest
 
 from archeryutils.rounds import Pass, Round
+from archeryutils.targets import ScoringSystem
 
 
 class TestPass:
@@ -88,7 +90,7 @@ class TestPass:
     )
     def test_max_score(
         self,
-        face_type: str,
+        face_type: ScoringSystem,
         max_score_expected: float,
     ) -> None:
         """
@@ -113,6 +115,21 @@ class TestRound:
     def test_get_info()
         test get_info functionality of Round
     """
+
+    def test_init_with_iterable_passes(self) -> None:
+        """
+        Check that Round can be intialised with a sequence/iterable of Passes.
+
+        Verify by eq comparison of attribute as Round.__eq__ not defined
+        """
+        pass_a = Pass(100, "5_zone", 122, 50, False)
+        pass_b = Pass(100, "5_zone", 122, 40, False)
+
+        list_ = Round("List", [pass_a, pass_b])
+        tuple_ = Round("Tuple", (pass_a, pass_b))
+        iterable_ = Round("iterable", (p for p in (pass_a, pass_b)))
+
+        assert list_.passes == tuple_.passes == iterable_.passes
 
     def test_max_score(self) -> None:
         """
@@ -142,7 +159,7 @@ class TestRound:
         self,
         unit: str,
         get_unit: bool,
-        max_dist_expected: Union[float, Tuple[float, str]],
+        max_dist_expected: Union[float, tuple[float, str]],
     ) -> None:
         """
         Check that max distance is calculated correctly for a Round.

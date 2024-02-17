@@ -11,9 +11,9 @@ agb_outdoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List, Dict, Any
-from collections import OrderedDict
+from typing import Any, Literal, cast, TypedDict
 import numpy as np
+import numpy.typing as npt
 
 from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
@@ -29,7 +29,18 @@ ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
+class GroupData(TypedDict):
+    """Structure for AGB Outdoor classification data."""
+
+    classes: list[str]
+    max_distance: list[int]
+    classes_long: list[str]
+    class_HC: npt.NDArray[np.float_]
+    min_dists: npt.NDArray[np.float_]
+    prestige_rounds: list[str]
+
+
+def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     """
     Generate AGB outdoor classification data.
 
@@ -54,6 +65,9 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
+    # Five too many locals, but better than repeated dictionary assignment => disable
+    # pylint: disable=too-many-locals
+
     # Read in age group info as list of dicts
     agb_ages = cls_funcs.read_ages_json()
     # Read in bowstyleclass info as list of dicts
@@ -79,13 +93,8 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
 
                 # Get max dists for category from json file data
                 # Use metres as corresponding yards >= metric
-                max_dist = age[gender.lower()]
-
-                classification_dict[groupname] = {
-                    "classes": agb_classes_out,
-                    "max_distance": max_dist,
-                    "classes_long": agb_classes_out_long,
-                }
+                gender_key = cast(Literal["male", "female"], gender.lower())
+                max_dist = age[gender_key]
 
                 # set step from datum based on age and gender steps required
                 delta_hc_age_gender = cls_funcs.get_age_gender_step(
@@ -94,23 +103,21 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     bowstyle["ageStep_out"],
                     bowstyle["genderStep_out"],
                 )
+                classifications_count = len(agb_classes_out)
 
-                classification_dict[groupname]["class_HC"] = np.empty(
-                    len(agb_classes_out)
-                )
-                classification_dict[groupname]["min_dists"] = np.empty(
-                    len(agb_classes_out)
-                )
-                for i in range(len(agb_classes_out)):
+                class_hc = np.empty(classifications_count)
+                min_dists = np.empty(classifications_count)
+
+                for i in range(classifications_count):
                     # Assign handicap for this classification
-                    classification_dict[groupname]["class_HC"][i] = (
+                    class_hc[i] = (
                         bowstyle["datum_out"]
                         + delta_hc_age_gender
                         + (i - 2) * bowstyle["classStep_out"]
                     )
 
                     # Get minimum distance that must be shot for this classification
-                    classification_dict[groupname]["min_dists"][i] = _assign_min_dist(
+                    min_dists[i] = _assign_min_dist(
                         n_class=i,
                         gender=gender,
                         age_group=age["age_group"],
@@ -118,14 +125,23 @@ def _make_agb_outdoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     )
 
                 # Assign prestige rounds for the category
-                classification_dict[groupname]["prestige_rounds"] = (
-                    _assign_outdoor_prestige(
-                        bowstyle=bowstyle["bowstyle"],
-                        age=age["age_group"],
-                        gender=gender,
-                        max_dist=max_dist,
-                    )
+                prestige_rounds = _assign_outdoor_prestige(
+                    bowstyle=bowstyle["bowstyle"],
+                    age=age["age_group"],
+                    gender=gender,
+                    max_dist=max_dist,
                 )
+
+                groupdata: GroupData = {
+                    "classes": agb_classes_out,
+                    "max_distance": max_dist,
+                    "classes_long": agb_classes_out_long,
+                    "class_HC": class_hc,
+                    "min_dists": min_dists,
+                    "prestige_rounds": prestige_rounds,
+                }
+
+                classification_dict[groupname] = groupdata
 
     return classification_dict
 
@@ -134,7 +150,7 @@ def _assign_min_dist(
     n_class: int,
     gender: str,
     age_group: str,
-    max_dists: List[int],
+    max_dists: list[int],
 ) -> int:
     """
     Assign appropriate minimum distance required for a category and classification.
@@ -203,8 +219,8 @@ def _assign_outdoor_prestige(
     bowstyle: str,
     gender: str,
     age: str,
-    max_dist: List[int],
-) -> List[str]:
+    max_dist: list[int],
+) -> list[str]:
     """
     Assign appropriate outdoor prestige rounds for a category.
 
@@ -277,7 +293,7 @@ def _assign_outdoor_prestige(
     # Assign prestige rounds for the category
     #  - check bowstyle, distance, and age
     prestige_rounds = []
-    distance_check: List[str] = []
+    distance_check: list[str] = []
 
     # 720 rounds - bowstyle dependent
     if bowstyle.lower() == "compound":
@@ -391,8 +407,8 @@ def calculate_agb_outdoor_classification(
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
 
-    # We iterate over class_data keys, so convert use OrderedDict
-    class_data: OrderedDict[str, Dict[str, Any]] = OrderedDict([])
+    # dictionary ordering guaranteed in python 3.7+
+    class_data = {}
     for i, class_i in enumerate(group_data["classes"]):
         class_data[class_i] = {
             "min_dist": group_data["min_dists"][i],
@@ -418,8 +434,8 @@ def calculate_agb_outdoor_classification(
 
 
 def _check_prestige_distance(
-    roundname: str, groupname: str, class_data: OrderedDict[str, Dict[str, Any]]
-) -> OrderedDict[str, Dict[str, Any]]:
+    roundname: str, groupname: str, class_data: dict[str, dict[str, Any]]
+) -> dict[str, dict[str, Any]]:
     """
     Check available classifications for eligibility based on distance and prestige..
 
@@ -432,12 +448,12 @@ def _check_prestige_distance(
         name of round shot as given by 'codename' in json
     groupname : str
         identifier for the category
-    class_data : OrderedDict
+    class_data : dict
         classification information for each category.
 
     Returns
     -------
-    class_data : OrderedDict
+    class_data : dict
         updated classification information for each category.
 
     References
@@ -451,7 +467,7 @@ def _check_prestige_distance(
             del class_data[mb_class]
 
         # If not prestige, what classes are ineligible based on distance
-        to_del: List[str] = []
+        to_del: list[str] = []
         round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
         for class_i_name, class_i_data in class_data.items():
             if class_i_data["min_dist"] > round_max_dist:
@@ -464,7 +480,7 @@ def _check_prestige_distance(
 
 def agb_outdoor_classification_scores(
     roundname: str, bowstyle: str, gender: str, age_group: str
-) -> List[int]:
+) -> list[int]:
     """
     Calculate AGB outdoor classification scores for category.
 
@@ -545,11 +561,6 @@ def agb_outdoor_classification_scores(
             if group_data["min_dists"][i] > round_max_dist:
                 class_scores[i] = -9999
 
-    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
-    if any(isinstance(x, np.ndarray) for x in class_scores):
-        raise TypeError(
-            "score_for_round is attempting to return an array when float expected."
-        )
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]

@@ -11,8 +11,9 @@ agb_indoor_classification_scores
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List, Dict, Any
+from typing import TypedDict
 import numpy as np
+import numpy.typing as npt
 
 from archeryutils import load_rounds
 from archeryutils.handicaps import handicap_equations as hc_eq
@@ -27,7 +28,15 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
+class GroupData(TypedDict):
+    """Structure for AGB Indoor classification data."""
+
+    classes: list[str]
+    classes_long: list[str]
+    class_HC: npt.NDArray[np.float_]
+
+
+def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
     """
     Generate new (2023) AGB indoor classification data.
 
@@ -55,6 +64,8 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
     # For score purposes in classifications we use the full face, not the triple.
     # Option of having triple is handled in get classification function
     # Compound version of rounds is handled below.
+    # One too many locals, but better than repeated dictionary assignment => disable
+    # pylint: disable=too-many-locals
 
     # Read in age group info as list of dicts
     agb_ages = cls_funcs.read_ages_json()
@@ -79,11 +90,6 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
-                classification_dict[groupname] = {
-                    "classes": agb_classes_in,
-                    "classes_long": agb_classes_in_long,
-                }
-
                 # set step from datum based on age and gender steps required
                 delta_hc_age_gender = cls_funcs.get_age_gender_step(
                     gender,
@@ -92,16 +98,23 @@ def _make_agb_indoor_classification_dict() -> Dict[str, Dict[str, Any]]:
                     bowstyle["genderStep_in"],
                 )
 
-                classification_dict[groupname]["class_HC"] = np.empty(
-                    len(agb_classes_in)
-                )
-                for i in range(len(agb_classes_in)):
+                classifications_count = len(agb_classes_in)
+
+                class_hc = np.empty(classifications_count)
+                for i in range(classifications_count):
                     # Assign handicap for this classification
-                    classification_dict[groupname]["class_HC"][i] = (
+                    class_hc[i] = (
                         bowstyle["datum_in"]
                         + delta_hc_age_gender
                         + (i - 1) * bowstyle["classStep_in"]
                     )
+
+                groupdata: GroupData = {
+                    "classes": agb_classes_in,
+                    "classes_long": agb_classes_in_long,
+                    "class_HC": class_hc,
+                }
+                classification_dict[groupname] = groupdata
 
     return classification_dict
 
@@ -183,7 +196,7 @@ def calculate_agb_indoor_classification(
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_indoor_classifications[groupname]
-    class_data: Dict[str, Any] = dict(zip(group_data["classes"], all_class_scores))
+    class_data = dict(zip(group_data["classes"], all_class_scores))
 
     # What is the highest classification this score gets?
     # < 0 handles max scores, > score handles higher classifications
@@ -206,7 +219,7 @@ def agb_indoor_classification_scores(
     bowstyle: str,
     gender: str,
     age_group: str,
-) -> List[int]:
+) -> list[int]:
     """
     Calculate 2023 AGB indoor classification scores for category.
 
@@ -283,11 +296,6 @@ def agb_indoor_classification_scores(
         for i, class_i in enumerate(group_data["classes"])
     ]
 
-    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
-    if any(isinstance(x, np.ndarray) for x in class_scores):
-        raise TypeError(
-            "score_for_round is attempting to return an array when float expected."
-        )
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]

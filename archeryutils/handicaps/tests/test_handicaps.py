@@ -4,14 +4,13 @@
 # => disable for handicap tests
 # pylint: disable=duplicate-code
 
-from typing import Tuple, List
 import numpy as np
 import pytest
 from pytest_mock import MockerFixture
 
 import archeryutils.handicaps.handicap_equations as hc_eq
 import archeryutils.handicaps.handicap_functions as hc_func
-from archeryutils.targets import Target
+from archeryutils.targets import Target, ScoringSystem
 from archeryutils.rounds import Round, Pass
 
 
@@ -349,7 +348,8 @@ class TestArrowScore:
             match="No rule for calculating scoring for face type (.+).",
         ):
             target = Target("5_zone", 122.0, 100.0)
-            target.scoring_system = "InvalidScoringSystem"
+            # Silence mypy as scoring_system must be a valid literal ScoringSystem
+            target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
 
             hc_eq.arrow_score(
                 target=target,
@@ -415,7 +415,7 @@ class TestArrowScore:
         ],
     )
     def test_different_target_faces(
-        self, target_face: str, arrow_score_expected: float
+        self, target_face: ScoringSystem, arrow_score_expected: float
     ) -> None:
         """
         Check correct arrow scores returned for different target faces
@@ -481,7 +481,7 @@ class TestScoreForRound:
         ],
     )
     def test_float_round_score(
-        self, hc_system: str, round_score_expected: Tuple[float, List[float]]
+        self, hc_system: str, round_score_expected: tuple[float, list[float]]
     ) -> None:
         """
         Check appropriate expected round scores are returned not rounding.
@@ -515,7 +515,7 @@ class TestScoreForRound:
         ],
     )
     def test_rounded_round_score(
-        self, hc_system: str, round_score_expected: Tuple[float, List[float]]
+        self, hc_system: str, round_score_expected: tuple[float, list[float]]
     ) -> None:
         """
         Check appropriate expected round scores are returned for rounding.

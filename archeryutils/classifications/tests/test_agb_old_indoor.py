@@ -4,7 +4,6 @@
 # => disable for classification files and tests
 # pylint: disable=duplicate-code
 
-from typing import List
 import pytest
 
 from archeryutils import load_rounds
@@ -65,7 +64,7 @@ class TestAgbOldIndoorClassificationScores:
     def test_agb_old_indoor_classification_scores_ages(
         self,
         age_group: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that old_indoor classification returns expected value for a case.
@@ -114,7 +113,7 @@ class TestAgbOldIndoorClassificationScores:
         self,
         bowstyle: str,
         gender: str,
-        scores_expected: List[int],
+        scores_expected: list[int],
     ) -> None:
         """
         Check that old_indoor classification returns expected value for a case.

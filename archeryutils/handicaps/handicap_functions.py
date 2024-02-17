@@ -26,7 +26,7 @@ Routine Listings
 
 """
 
-from typing import Union, Optional, List
+from typing import Union, Optional
 import warnings
 from itertools import chain
 import decimal
@@ -40,7 +40,7 @@ _FILL = -9999
 
 
 def handicap_from_score(
-    score: Union[int, float],
+    score: float,
     rnd: rounds.Round,
     hc_sys: str,
     hc_dat: hc_eq.HcParams,
@@ -153,7 +153,7 @@ def get_max_score_handicap(
     hc_dat: hc_eq.HcParams,
     arw_d: Optional[float],
     int_prec: bool = False,
-) -> float:
+) -> Union[int, float]:
     """
     Get handicap for maximum score on a round.
 
@@ -354,7 +354,7 @@ def rootfind_score_handicap(
 
 def f_root(
     hc_est: float,
-    score_est: Union[int, float],
+    score_est: float,
     round_est: rounds.Round,
     sys: str,
     hc_data: hc_eq.HcParams,
@@ -413,7 +413,7 @@ def f_root(
 def print_handicap_table(
     hcs: Union[float, NDArray[np.float_]],
     hc_sys: str,
-    round_list: List[rounds.Round],
+    round_list: list[rounds.Round],
     hc_dat: hc_eq.HcParams,
     arrow_d: Optional[float] = None,
     round_scores_up: bool = True,
@@ -669,7 +669,7 @@ def abbreviate(name: str) -> str:
 
 
 def table_as_str(
-    round_list: List[rounds.Round],
+    round_list: list[rounds.Round],
     hcs: NDArray[Union[np.float_, np.int_]],
     table: NDArray[Union[np.float_, np.int_]],
     int_prec: bool = False,

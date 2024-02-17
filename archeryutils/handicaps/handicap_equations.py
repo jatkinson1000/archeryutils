@@ -48,12 +48,15 @@ References
 """
 
 import json
-from typing import Union, Optional
+from typing import Optional, TypeVar
+
 from dataclasses import dataclass, field
 import numpy as np
 import numpy.typing as npt
 
 from archeryutils import targets, rounds
+
+FloatArray = TypeVar("FloatArray", float, np.float_, npt.NDArray[np.float_])
 
 
 @dataclass
@@ -169,11 +172,11 @@ class HcParams:
 
 
 def sigma_t(
-    handicap: Union[float, npt.NDArray[np.float_]],
+    handicap: FloatArray,
     hc_sys: str,
     dist: float,
     hc_dat: HcParams,
-) -> Union[float, np.float_, npt.NDArray[np.float_]]:
+) -> FloatArray:
     """
     Calculate angular deviation for given scheme, handicap, and distance.
 
@@ -214,9 +217,6 @@ def sigma_t(
     array([0.00094983, 0.00376062, 0.02100276])
 
     """
-    # Declare sig_t type for mypy
-    sig_t: Union[float, npt.NDArray[np.float_]]
-
     if hc_sys == "AGB":
         # New AGB (Archery GB) System
         # Written by Jack Atkinson
@@ -285,11 +285,11 @@ def sigma_t(
 
 
 def sigma_r(
-    handicap: Union[float, npt.NDArray[np.float_]],
+    handicap: FloatArray,
     hc_sys: str,
     dist: float,
     hc_dat: HcParams,
-) -> Union[float, np.float_, npt.NDArray[np.float_]]:
+) -> FloatArray:
     """
     Calculate deviation for a given scheme and handicap value.
 
@@ -337,11 +337,11 @@ def sigma_r(
 
 def arrow_score(
     target: targets.Target,
-    handicap: Union[float, npt.NDArray[np.float_]],
+    handicap: FloatArray,
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
-) -> Union[float, np.float_, npt.NDArray[np.float_]]:
+) -> FloatArray:
     # Six too many branches. Makes sense due to different target faces => disable
     # pylint: disable=too-many-branches
     """
@@ -516,7 +516,7 @@ def arrow_score(
 
 def score_for_passes(
     rnd: rounds.Round,
-    handicap: Union[float, npt.NDArray[np.float_]],
+    handicap: FloatArray,
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
@@ -579,12 +579,12 @@ def score_for_passes(
 
 def score_for_round(
     rnd: rounds.Round,
-    handicap: Union[float, npt.NDArray[np.float_]],
+    handicap: FloatArray,
     hc_sys: str,
     hc_dat: HcParams,
     arw_d: Optional[float] = None,
     round_score_up: bool = True,
-) -> Union[float, np.float_, npt.NDArray[np.float_]]:
+) -> FloatArray:
     """
     Calculate the expected score for a round at a given handicap rating.
 

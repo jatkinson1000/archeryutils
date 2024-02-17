@@ -15,12 +15,22 @@ get_compound_codename
 
 import json
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import TypedDict, Literal
+
+
+class AGBAgeData(TypedDict):
+    """Structure for AGB age group data."""
+
+    desc: str
+    age_group: str
+    male: list[int]
+    female: list[int]
+    step: int
 
 
 def read_ages_json(
     age_file: Path = Path(__file__).parent / "AGB_ages.json",
-) -> List[Dict[str, Any]]:
+) -> list[AGBAgeData]:
     """
     Read AGB age categories in from neighbouring json file to list of dicts.
 
@@ -53,9 +63,23 @@ def read_ages_json(
     )
 
 
+class AGBBowstyleData(TypedDict):
+    """Structure for AGB bowstyle data."""
+
+    bowstyle: str
+    datum_out: float
+    classStep_out: float
+    genderStep_out: float
+    ageStep_out: float
+    datum_in: float
+    classStep_in: float
+    genderStep_in: float
+    ageStep_in: float
+
+
 def read_bowstyles_json(
     bowstyles_file: Path = Path(__file__).parent / "AGB_bowstyles.json",
-) -> List[Dict[str, Any]]:
+) -> list[AGBBowstyleData]:
     """
     Read AGB  bowstyles in from neighbouring json file to list of dicts.
 
@@ -90,7 +114,7 @@ def read_bowstyles_json(
 
 def read_genders_json(
     genders_file: Path = Path(__file__).parent / "AGB_genders.json",
-) -> List[str]:
+) -> list[Literal["Male", "Female"]]:
     """
     Read AGB genders in from neighbouring json file to list of dict.
 
@@ -124,9 +148,17 @@ def read_genders_json(
     )
 
 
+class AGBClassificationData(TypedDict):
+    """Structure for AGB classification name data."""
+
+    location: str
+    classes: list[str]
+    classes_long: list[str]
+
+
 def read_classes_json(
     class_system: str,
-) -> Dict[str, Any]:
+) -> AGBClassificationData:
     """
     Read AGB classes in from neighbouring json file to dict.
 
@@ -168,7 +200,7 @@ def read_classes_json(
 
     # Read in classification names as dict
     with open(classes_file, encoding="utf-8") as json_file:
-        classes = json.load(json_file)
+        classes: AGBClassificationData = json.load(json_file)
     if isinstance(classes, dict):
         return classes
     raise TypeError(
