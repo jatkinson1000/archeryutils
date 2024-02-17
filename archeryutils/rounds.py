@@ -118,8 +118,8 @@ class Round:
     ----------
     name : str
         Formal name of the round
-    passes : list of Pass
-        a list of Pass classes making up the round
+    passes : iterable of Pass
+        an iterable of Pass classes making up the round
     location : str or None, default=None
         string identifing where the round is shot
     body : str or None, default=None
@@ -146,9 +146,12 @@ class Round:
 
     >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
 
-    These can now be passed to the Round constructor as a list:
+    These can now be passed to the Round constructor as any iterable, 
+    they will be stored as a list:
 
     >>> my720round = au.Round("WA 720", [my720pass, my720pass])
+    >>> my720round = au.Round("WA 720", (my720pass, my720pass))
+    >>> my720round.passes == [my720pass, my720pass]
 
     Additional, optional parameters can be used to provide 'metadata' about the round.
 
