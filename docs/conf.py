@@ -40,6 +40,10 @@ exclude_patterns = [
 
 pygments_style = "sphinx"
 
+# This may not work without both
+# from __future__ import annotations
+# and explicit typing of alias types with typing.TypeAlias
+autodoc_type_aliases = {'ScoringSystem': 'targets.ScoringSystem'}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

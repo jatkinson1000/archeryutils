@@ -146,7 +146,7 @@ class Round:
 
     >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
 
-    These can now be passed to the Round constructor as any iterable, 
+    These can now be passed to the Round constructor as any iterable,
     they will be stored as a list:
 
     >>> my720round = au.Round("WA 720", [my720pass, my720pass])
