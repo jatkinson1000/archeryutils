@@ -53,6 +53,7 @@ docs = [
     "sphinx-toolbox",
     "nbsphinx",
     "ipython",
+    "pickleshare",  # https://github.com/ipython/ipython/issues/14237
     "black>=24.1.0",
     "blackdoc",
 ]
