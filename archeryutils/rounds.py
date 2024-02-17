@@ -153,8 +153,8 @@ class Round:
     they will be stored as a list:
 
     >>> my720round = au.Round("WA 720", [my720pass, my720pass])
-    >>> my720round = au.Round("WA 720", (my720pass, my720pass))
-    >>> my720round.passes == [my720pass, my720pass]
+    >>> my720round2 = au.Round("WA 720", (my720pass, my720pass))
+    >>> assert(my720round.passes == my720round2.passes == [my720pass, my720pass])
 
     Additional, optional parameters can be used to provide 'metadata' about the round.
 

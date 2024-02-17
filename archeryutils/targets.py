@@ -79,8 +79,8 @@ class Target:
 
     >>> myUnknownTarget = au.Target("Unknown", 100, 50)
     ValueError: Invalid Target Face Type specified.
+    Please select from '5_zone', '10_zone', '10_zone_compound', '10_zone_6_ring', ...
 
-    # mypy error: Argument 1 to "Target" has incompatible type "Literal['Unkown']"
     """
 
     def __init__(
