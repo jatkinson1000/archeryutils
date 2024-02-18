@@ -62,10 +62,10 @@ class TestPass:
         """
         Check Pass equality comparison is supported.
         """
-        pass_ = Pass.at_target(30, "10_zone", 40, (20, 'yard'))
-        duplicate = Pass.at_target(30, "10_zone", 40, (20, 'yard'))
-        different_arrows = Pass.at_target(40, "10_zone", 40, (20, 'yard'))
-        different_target = Pass.at_target(30, "5_zone", 40, (20, 'yard'))
+        pass_ = Pass.at_target(30, "10_zone", 40, (20, "yard"))
+        duplicate = Pass.at_target(30, "10_zone", 40, (20, "yard"))
+        different_arrows = Pass.at_target(40, "10_zone", 40, (20, "yard"))
+        different_target = Pass.at_target(30, "5_zone", 40, (20, "yard"))
 
         assert pass_ == duplicate
         assert pass_ != different_arrows

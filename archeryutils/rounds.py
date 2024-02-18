@@ -104,6 +104,15 @@ class Pass:
         """Return a representation of a Pass instance."""
         return f"Pass({self.n_arrows}, {self.target})"
 
+    def __eq__(self, other: "Pass") -> bool:
+        """Check equality of Passes based on parameters."""
+        if isinstance(other, Pass):
+            return (
+                self.n_arrows == other.n_arrows
+                and self.target._parameters() == other.target._parameters()
+            )
+        return NotImplemented
+
     @property
     def scoring_system(self) -> ScoringSystem:
         """Get target scoring_system."""
