@@ -104,7 +104,7 @@ class Pass:
         """Return a representation of a Pass instance."""
         return f"Pass({self.n_arrows}, {self.target})"
 
-    def __eq__(self, other: "Pass") -> bool:
+    def __eq__(self, other: object) -> bool:
         """Check equality of Passes based on parameters."""
         if isinstance(other, Pass):
             return (
@@ -226,7 +226,7 @@ class Round:
         """Return a representation of a Round instance."""
         return f"Round('{self.name}')"
 
-    def __eq__(self, other: "Round") -> bool:
+    def __eq__(self, other: object) -> bool:
         """Check equality of Rounds based on name and passes.
 
         Does not consider optional labels of location/body/family as these

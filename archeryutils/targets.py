@@ -140,7 +140,7 @@ class Target:
             ")"
         )
 
-    def __eq__(self, other: "Target") -> bool:
+    def __eq__(self, other: object) -> bool:
         """Check equality of Targets based on parameters."""
         if isinstance(other, Target):
             return self._parameters() == other._parameters()
@@ -158,7 +158,7 @@ class Target:
         )
 
     @property
-    def native_distance(self) -> str:
+    def native_distance(self) -> tuple[float, str]:
         """Get target distance in original native units."""
         return (
             Length.from_metres(self.distance, self.native_dist_unit),
@@ -166,7 +166,7 @@ class Target:
         )
 
     @property
-    def native_diameter(self) -> str:
+    def native_diameter(self) -> tuple[float, str]:
         """Get target diameter in original native units."""
         return (
             Length.from_metres(self.diameter, self.native_diameter_unit),
