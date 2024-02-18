@@ -109,7 +109,7 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
                 if "diameter_unit" not in pass_i.keys():
                     pass_i["diameter_unit"] = "cm"
             passes = [
-                Pass(
+                Pass.at_target(
                     pass_i["n_arrows"],
                     pass_i["scoring"],
                     (pass_i["diameter"], pass_i["diameter_unit"]),
@@ -199,5 +199,6 @@ IFAA_field = _make_rounds_dict("IFAA_field.json")
 WA_VI = _make_rounds_dict("WA_VI.json")
 AGB_VI = _make_rounds_dict("AGB_VI.json")
 custom = _make_rounds_dict("Custom.json")
+
 
 del _make_rounds_dict

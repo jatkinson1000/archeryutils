@@ -78,8 +78,14 @@ a target:
 
 .. ipython:: python
 
-    my70mPass = au.Pass(36, "10_zone", 122, 70.0)
+    my70mPass = au.Pass(36, my720target)
     print(my70mPass.max_score())
+
+We can also directly construct a Pass and Target at the same time using the `at_target` constructor
+
+.. ipython:: python
+
+    my70mPass = au.Pass.at_target(36, "10_zone", 122, 70.0)
 
 Round
 -----

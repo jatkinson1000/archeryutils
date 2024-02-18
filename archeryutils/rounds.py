@@ -19,24 +19,15 @@ class Pass:
     ----------
     n_arrows : int
         number of arrows in this pass.
-    scoring_system : {\
-        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
-        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
-        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
-        target face/scoring system type. Must be one of the supported values.
-    diameter : float or tuple of float, str
-        face diameter in [centimetres].
-    distance : float or tuple of float, str
-        linear distance from archer to target in [metres].
-    indoor : bool, default=False
-        is round indoors for arrow diameter purposes?
+    target : Target
+        A Target object.
 
     Attributes
     ----------
     n_arrows : int
         number of arrows in this pass.
     target : Target
-        A Target object defined using input parameters.
+        A Target object.
 
     Examples
     --------
@@ -54,19 +45,58 @@ class Pass:
     archeryutils.Target : The `Target` class.
     """
 
-    # One too many arguments, but logically this structure makes sense => disable
-    # pylint: disable=too-many-arguments
+    def __init__(self, n_arrows: int, target: Target) -> None:
+        self.n_arrows = abs(n_arrows)
+        self.target = target
 
-    def __init__(
-        self,
+    # One too many arguments, but required to match Target signature => disable
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def at_target(
+        cls,
         n_arrows: int,
         scoring_system: ScoringSystem,
         diameter: Union[float, tuple[float, str]],
         distance: Union[float, tuple[float, str]],
         indoor: bool = False,
-    ) -> None:
-        self.n_arrows = abs(n_arrows)
-        self.target = Target(scoring_system, diameter, distance, indoor)
+    ) -> "Pass":
+        """
+        Initalise a Pass directly with the parameters of its target.
+
+        The parameters are passed directly to the default Target constuctor and
+        therefore share the same behaviours and defaults.
+
+        Parameters
+        ----------
+        n_arrows : int
+            number of arrows in this pass
+        scoring_system : {\
+        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
+        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
+        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
+            target face/scoring system type
+        diameter : float
+            face diameter in [centimetres]
+        distance : float
+            linear distance from archer to target in [metres]
+        dist_unit : str
+            The unit distance is measured in. default = 'metres'
+        indoor : bool
+            is round indoors for arrow diameter purposes? default = False
+        diameter_unit : str
+            The unit face diameter is measured in. default = 'centimetres'
+
+        Returns
+        -------
+        Pass
+            The constructed Pass instance
+
+        Examples
+        --------
+        >>> pass_ = au.Pass.at_target(36, "10_zone", 122, 70.0)
+        """
+        target = Target(scoring_system, diameter, distance, indoor)
+        return cls(n_arrows, target)
 
     def __repr__(self) -> str:
         """Return a representation of a Pass instance."""
