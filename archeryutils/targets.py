@@ -142,19 +142,19 @@ class Target:
 
     @property
     def native_distance(self) -> str:
-        """Get target distance in original native units"""
+        """Get target distance in original native units."""
         return (
             Length.from_metres(self.distance, self.native_dist_unit),
             self.native_dist_unit,
-            )
+        )
 
     @property
     def native_diameter(self) -> str:
-        """Get target diameter in original native units"""
+        """Get target diameter in original native units."""
         return (
             Length.from_metres(self.diameter, self.native_diameter_unit),
             self.native_diameter_unit,
-            )
+        )
 
     def max_score(self) -> float:
         """

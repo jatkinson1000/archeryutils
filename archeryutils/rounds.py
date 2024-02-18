@@ -33,12 +33,7 @@ class Pass:
     --------
     A Pass can be defined simply as:
 
-    >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
-
-    Like with the Target class, the units for diameter and distance can be specified
-    using tuples:
-
-    >>> myWA18pass = au.Pass(30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True)
+    >>> my720pass = au.Pass(36, au.Target("10_zone", 122, 70.0))
 
     See Also
     --------
@@ -94,6 +89,13 @@ class Pass:
         Examples
         --------
         >>> pass_ = au.Pass.at_target(36, "10_zone", 122, 70.0)
+
+        Like with the Target class, the units for diameter and distance can be
+        explicitly specified using tuples:
+
+        >>> myWA18pass = au.Pass.at_target(
+            30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True
+        )
         """
         target = Target(scoring_system, diameter, distance, indoor)
         return cls(n_arrows, target)
@@ -181,7 +183,7 @@ class Round:
     --------
     Before defining a Round we need to first define the passes that make it up:
 
-    >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
+    >>> my720pass = au.Pass.at_target(36, "10_zone", 122, 70.0)
 
     These can now be passed to the Round constructor as any iterable,
     they will be stored as a list:

@@ -81,7 +81,7 @@ a target:
     my70mPass = au.Pass(36, my720target)
     print(my70mPass.max_score())
 
-We can also directly construct a Pass and Target at the same time using the `at_target` constructor
+We can also bypass the Target class and directly construct our Pass using the `at_target` constructor
 
 .. ipython:: python
 

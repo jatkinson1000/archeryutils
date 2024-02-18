@@ -30,9 +30,7 @@ class TestTarget:
         Check Target string representation returns values in native units.
         """
         target = Target("Worcester", (16, "inches"), (20, "yards"), indoor=True)
-        expected = (
-            "Target('Worcester', (16, 'inch'), (20, 'yard'), indoor=True)"
-        )
+        expected = "Target('Worcester', (16, 'inch'), (20, 'yard'), indoor=True)"
         assert repr(target) == expected
 
     def test_invalid_system(self) -> None:
