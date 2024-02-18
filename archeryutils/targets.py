@@ -140,6 +140,23 @@ class Target:
             ")"
         )
 
+    def __eq__(self, other: "Target") -> bool:
+        """Check equality of Targets based on parameters."""
+        if isinstance(other, Target):
+            return self._parameters() == other._parameters()
+        return NotImplemented
+
+    def _parameters(self):
+        """Shortcut to get all target parameters as a tuple for comparison."""
+        return (
+            self.scoring_system,
+            self.diameter,
+            self.native_diameter_unit,
+            self.distance,
+            self.native_dist_unit,
+            self.indoor,
+        )
+
     @property
     def native_distance(self) -> str:
         """Get target distance in original native units."""

@@ -58,6 +58,19 @@ class TestPass:
         )
         assert repr(test_pass) == expected
 
+    def test_equality(self) -> None:
+        """
+        Check Pass equality comparison is supported.
+        """
+        pass_ = Pass.at_target(30, "10_zone", 40, (20, 'yard'))
+        duplicate = Pass.at_target(30, "10_zone", 40, (20, 'yard'))
+        different_arrows = Pass.at_target(40, "10_zone", 40, (20, 'yard'))
+        different_target = Pass.at_target(30, "5_zone", 40, (20, 'yard'))
+
+        assert pass_ == duplicate
+        assert pass_ != different_arrows
+        assert pass_ != different_target
+
     def test_default_distance_unit(self) -> None:
         """
         Check that Pass returns distance in metres when units not specified.
