@@ -17,6 +17,24 @@ class TestTarget:
         test if invalid distance unit raises an error
     """
 
+    def test_repr(self) -> None:
+        """
+        Check Target string representation is as expected.
+        """
+        target = Target("10_zone", 80, 30)
+        expected = "Target('10_zone', (0.8, 'metre'), (30, 'metre'), indoor=False)"
+        assert repr(target) == expected
+
+    def test_repr_formatting(self) -> None:
+        """
+        Check Target string representation rounds/truncates where needed.
+        """
+        target = Target("Worcester", (16, "inches"), (20, "yards"), indoor=True)
+        expected = (
+            "Target('Worcester', (0.4064, 'metre'), (18.288, 'metre'), indoor=True)"
+        )
+        assert repr(target) == expected
+
     def test_invalid_system(self) -> None:
         """
         Check that Target() returns error value for invalid system.

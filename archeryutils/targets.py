@@ -127,6 +127,21 @@ class Target:
         self.native_dist_unit = Length.definitive_unit(native_dist_unit)
         self.indoor = indoor
 
+    def __repr__(self) -> str:
+        """Return a representation of a Target instance.
+
+        Displays diameter and distance as stored in metres to avoid peforming extra
+        logic for display, however units are shown to allow reconstruction.
+        """
+        return (
+            "Target("
+            f"'{self.scoring_system}', "
+            f"({self.diameter:.6g}, 'metre'), "  # si units, avoid reconversion
+            f"({self.distance:.6g}, 'metre'), "  # si units, avoid reconversion
+            f"indoor={self.indoor}"
+            ")"
+        )
+
     def max_score(self) -> float:
         """
         Return the maximum numerical score possible on this target (i.e. not X).

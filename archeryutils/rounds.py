@@ -68,6 +68,10 @@ class Pass:
         self.n_arrows = abs(n_arrows)
         self.target = Target(scoring_system, diameter, distance, indoor)
 
+    def __repr__(self) -> str:
+        """Return a representation of a Pass instance."""
+        return f"Pass({self.n_arrows}, {self.target})"
+
     @property
     def scoring_system(self) -> ScoringSystem:
         """Get target scoring_system."""
@@ -176,6 +180,10 @@ class Round:
         self.location = location
         self.body = body
         self.family = family
+
+    def __repr__(self) -> str:
+        """Return a representation of a Round instance."""
+        return f"Round('{self.name}')"
 
     def max_score(self) -> float:
         """

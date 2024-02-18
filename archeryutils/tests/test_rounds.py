@@ -26,6 +26,16 @@ class TestPass:
         test max score functionality of Pass
     """
 
+    def test_repr(self) -> None:
+        """
+        Check Pass string representation
+        """
+        test_pass = Pass(36, "5_zone", 122, 50)
+        expected = (
+            "Pass(36, Target('5_zone', (1.22, 'metre'), (50, 'metre'), indoor=False))"
+        )
+        assert repr(test_pass) == expected
+
     def test_default_distance_unit(self) -> None:
         """
         Check that Pass() returns distance in metres when units not specified.
@@ -130,6 +140,14 @@ class TestRound:
         iterable_ = Round("iterable", (p for p in (pass_a, pass_b)))
 
         assert list_.passes == tuple_.passes == iterable_.passes
+
+    def test_repr(self) -> None:
+        """
+        Check Pass string representation
+        """
+        test_round = Round("Name", [Pass(36, "5_zone", 122, 50)])
+        expected = "Round('Name')"
+        assert repr(test_round) == expected
 
     def test_max_score(self) -> None:
         """
