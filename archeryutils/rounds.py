@@ -226,6 +226,16 @@ class Round:
         """Return a representation of a Round instance."""
         return f"Round('{self.name}')"
 
+    def __eq__(self, other: "Round") -> bool:
+        """Check equality of Rounds based on name and passes.
+
+        Does not consider optional labels of location/body/family as these
+        do not affect behaviour.
+        """
+        if isinstance(other, Round):
+            return self.name == other.name and self.passes == other.passes
+        return NotImplemented
+
     def max_score(self) -> float:
         """
         Return the maximum numerical score possible on this round (not counting x's).

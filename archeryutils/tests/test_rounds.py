@@ -184,6 +184,24 @@ class TestRound:
         expected = "Round('Name')"
         assert repr(test_round) == expected
 
+    def test_equality(self) -> None:
+        """
+        Check Pass equality comparison is supported.
+        """
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+
+        round_ = Round("Test", [pass_, pass_])
+        duplicate = Round("Test", [pass_, pass_])
+        labelled = Round("Test", [pass_, pass_], location="indoor", family="Bray")
+        different_name = Round("Other", [pass_, pass_])
+        different_no_passes = Round("Test", [pass_])
+
+        assert round_ == duplicate
+        assert round_ == labelled
+        assert round_ != different_name
+        assert round_ != different_no_passes
+
     def test_max_score(self) -> None:
         """
         Check that max score is calculated correctly for a Round
