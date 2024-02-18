@@ -58,19 +58,33 @@ class TestPass:
         )
         assert repr(test_pass) == expected
 
-    def test_equality(self) -> None:
+    @pytest.mark.parametrize(
+        "other,result",
+        [
+            pytest.param(
+                Pass.at_target(30, "10_zone", 40, (20, "yard")), True, id="duplicate"
+            ),
+            pytest.param(
+                Pass.at_target(40, "10_zone", 40, (20, "yard")),
+                False,
+                id="different_arrows",
+            ),
+            pytest.param(
+                Pass.at_target(30, "5_zone", 40, (20, "yard")),
+                False,
+                id="different_target",
+            ),
+            pytest.param((30, "10_zone", 40, (20, "yard")), False, id="other_object"),
+        ],
+    )
+    def test_equality(self, other, result) -> None:
         """
         Check Pass equality comparison is supported.
         """
         pass_ = Pass.at_target(30, "10_zone", 40, (20, "yard"))
-        duplicate = Pass.at_target(30, "10_zone", 40, (20, "yard"))
-        different_arrows = Pass.at_target(40, "10_zone", 40, (20, "yard"))
-        different_target = Pass.at_target(30, "5_zone", 40, (20, "yard"))
 
-        assert pass_ == duplicate
-        assert pass_ != different_arrows
-        assert pass_ != different_target
-        assert pass_ != (30, "10_zone", 40, (20, "yard"))
+        comparison = pass_ == other
+        assert comparison == result
 
     def test_default_distance_unit(self) -> None:
         """
@@ -185,23 +199,57 @@ class TestRound:
         expected = "Round('Name')"
         assert repr(test_round) == expected
 
-    def test_equality(self) -> None:
+    @pytest.mark.parametrize(
+        "name, args, n_passes, result",
+        [
+            pytest.param("Test", (), 2, True, id="duplicate"),
+            pytest.param(
+                "Test",
+                ("indoor", "AGB", "Bray"),
+                2,
+                True,
+                id="labelled",
+            ),
+            pytest.param(
+                "Other",
+                (),
+                2,
+                False,
+                id="different_name",
+            ),
+            pytest.param(
+                "Test",
+                (),
+                1,
+                False,
+                id="different_no_passes",
+            ),
+        ],
+    )
+    def test_equality(self, name, args, n_passes, result) -> None:
         """
-        Check Pass equality comparison is supported.
+        Check Round equality comparison is supported.
+
+        duplicate: compare true against an exact duplicate
+        labelled: compare true against same round with location, body and family set
+        different_name: compare false against same round with different name
+        different_no_passes: compare false against same round with one less pass
         """
         target = Target("10_zone", 40, (20, "yard"), indoor=True)
         pass_ = Pass(30, target)
 
         round_ = Round("Test", [pass_, pass_])
-        duplicate = Round("Test", [pass_, pass_])
-        labelled = Round("Test", [pass_, pass_], location="indoor", family="Bray")
-        different_name = Round("Other", [pass_, pass_])
-        different_no_passes = Round("Test", [pass_])
+        comparison = round_ == Round(name, [pass_] * n_passes, *args)
+        assert comparison == result
 
-        assert round_ == duplicate
-        assert round_ == labelled
-        assert round_ != different_name
-        assert round_ != different_no_passes
+    def test_equality_different_object(self) -> None:
+        """
+        Check Round equality comparison against a differnt type of object.
+        """
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+        round_ = Round("Test", [pass_, pass_])
+
         assert round_ != ("Test", [pass_, pass_])
 
     def test_max_score(self) -> None:
