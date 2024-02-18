@@ -70,6 +70,7 @@ class TestPass:
         assert pass_ == duplicate
         assert pass_ != different_arrows
         assert pass_ != different_target
+        assert pass_ != (30, "10_zone", 40, (20, "yard"))
 
     def test_default_distance_unit(self) -> None:
         """
@@ -201,6 +202,7 @@ class TestRound:
         assert round_ == labelled
         assert round_ != different_name
         assert round_ != different_no_passes
+        assert round_ != ("Test", [pass_, pass_])
 
     def test_max_score(self) -> None:
         """

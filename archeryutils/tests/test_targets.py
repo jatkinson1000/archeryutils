@@ -51,6 +51,7 @@ class TestTarget:
         assert target != different_dist
         assert target != different_diam
         assert target != different_unit
+        assert target != ("10_zone", 40, (20, "yard"), True)
 
     def test_invalid_system(self) -> None:
         """
