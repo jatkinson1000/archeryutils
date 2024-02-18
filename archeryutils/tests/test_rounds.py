@@ -54,7 +54,7 @@ class TestPass:
         """
         test_pass = Pass(36, _target)
         expected = (
-            "Pass(36, Target('5_zone', (1.22, 'metre'), (50, 'metre'), indoor=False))"
+            "Pass(36, Target('5_zone', (122, 'cm'), (50, 'metre'), indoor=False))"
         )
         assert repr(test_pass) == expected
 

@@ -263,15 +263,10 @@ class Round:
         """
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            native_dist = Length.from_metres(
-                pass_i.target.distance, pass_i.native_dist_unit
-            )
-            native_diam = Length.from_metres(
-                pass_i.target.diameter, pass_i.native_diameter_unit
-            )
-
+            diam, diam_units = pass_i.target.native_diameter
+            dist, dist_units = pass_i.target.native_distance
             print(
                 f"\t- {pass_i.n_arrows} arrows "
-                f"at a {native_diam:.1f} {pass_i.native_diameter_unit} target "
-                f"at {native_dist:.1f} {pass_i.native_dist_unit}s."
+                f"at a {diam:.1f} {diam_units} target "
+                f"at {dist:.1f} {dist_units}s."
             )

@@ -128,19 +128,33 @@ class Target:
         self.indoor = indoor
 
     def __repr__(self) -> str:
-        """Return a representation of a Target instance.
-
-        Displays diameter and distance as stored in metres to avoid peforming extra
-        logic for display, however units are shown to allow reconstruction.
-        """
+        """Return a representation of a Target instance."""
+        diam, diamunit = self.native_diameter
+        dist, distunit = self.native_distance
         return (
             "Target("
             f"'{self.scoring_system}', "
-            f"({self.diameter:.6g}, 'metre'), "  # si units, avoid reconversion
-            f"({self.distance:.6g}, 'metre'), "  # si units, avoid reconversion
+            f"({diam:.6g}, '{diamunit}'), "
+            f"({dist:.6g}, '{distunit}'), "
             f"indoor={self.indoor}"
             ")"
         )
+
+    @property
+    def native_distance(self) -> str:
+        """Get target distance in original native units"""
+        return (
+            Length.from_metres(self.distance, self.native_dist_unit),
+            self.native_dist_unit,
+            )
+
+    @property
+    def native_diameter(self) -> str:
+        """Get target diameter in original native units"""
+        return (
+            Length.from_metres(self.diameter, self.native_diameter_unit),
+            self.native_diameter_unit,
+            )
 
     def max_score(self) -> float:
         """
