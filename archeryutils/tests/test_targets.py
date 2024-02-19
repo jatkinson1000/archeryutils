@@ -37,15 +37,17 @@ class TestTarget:
         """
         Check Target equality comparison is supported.
         """
-        target = Target("10_zone", 40, (20, "yard"), indoor=True)
-        duplicate = Target("10_zone", 40, (20, "yard"), indoor=True)
-        different_loc = Target("10_zone", 40, (20, "yard"), indoor=False)
-        different_scoring = Target("5_zone", 40, (20, "yard"), indoor=True)
-        different_dist = Target("10_zone", 40, (19.9, "yard"), indoor=True)
-        different_diam = Target("10_zone", 40.1, (20, "yard"), indoor=True)
-        different_unit = Target("10_zone", 40, (20, "metre"), indoor=True)
+        target = Target("10_zone", (40, "cm"), (20, "metre"), indoor=True)
+        units_free = Target("10_zone", 40, 20, indoor=True)
+        duplicate = Target("10_zone", 40, (20, "metre"), indoor=True)
+        different_loc = Target("10_zone", 40, (20, "metre"), indoor=False)
+        different_scoring = Target("5_zone", 40, (20, "metre"), indoor=True)
+        different_dist = Target("10_zone", 40, (19.9, "metre"), indoor=True)
+        different_diam = Target("10_zone", 40.1, (20, "metre"), indoor=True)
+        different_unit = Target("10_zone", 40, (20, "yard"), indoor=True)
 
         assert target == duplicate
+        assert target == units_free
         assert target != different_loc
         assert target != different_scoring
         assert target != different_dist
