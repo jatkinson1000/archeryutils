@@ -109,7 +109,7 @@ class Pass:
         if isinstance(other, Pass):
             return (
                 self.n_arrows == other.n_arrows
-                and self.target._parameters() == other.target._parameters()
+                and self.target == other.target
             )
         return NotImplemented
 
