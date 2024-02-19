@@ -86,6 +86,14 @@ class TestTarget:
         comparison = target == Target(*args)
         assert comparison == result
 
+    def test_equality_different_object(self) -> None:
+        """
+        Check Target equality comparison against a differnt type of object.
+        """
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+
+        assert target != ("10_zone", 40, (20, "yard"), True)
+
     def test_invalid_system(self) -> None:
         """
         Check that Target() returns error value for invalid system.
