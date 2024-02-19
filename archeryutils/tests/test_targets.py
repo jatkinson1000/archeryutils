@@ -33,27 +33,58 @@ class TestTarget:
         expected = "Target('Worcester', (16, 'inch'), (20, 'yard'), indoor=True)"
         assert repr(target) == expected
 
-    def test_equality(self) -> None:
+    @pytest.mark.parametrize(
+        "args, result",
+        [
+            pytest.param(
+                ("10_zone", (40, "cm"), (20, "metre"), True),
+                True,
+                id="duplicate",
+            ),
+            pytest.param(
+                ("10_zone", 40, 20, True),
+                True,
+                id="units-free",
+            ),
+            pytest.param(
+                ("10_zone", (40, "cm"), (20, "metre"), False),
+                False,
+                id="different-loc",
+            ),
+            pytest.param(
+                ("5_zone", (40, "cm"), (20, "metre"), True),
+                False,
+                id="different-scoring",
+            ),
+            pytest.param(
+                ("10_zone", (40, "cm"), (19.9, "metre"), True),
+                False,
+                id="different-dist",
+            ),
+            pytest.param(
+                ("10_zone", (40.1, "cm"), (20, "metre"), True),
+                False,
+                id="different-diam",
+            ),
+            pytest.param(
+                ("10_zone", (40, "cm"), (20, "yard"), True),
+                False,
+                id="different-dist-unit",
+            ),
+            pytest.param(
+                ("10_zone", (40, "inch"), (20, "metre"), True),
+                False,
+                id="different-diam-unit",
+            ),
+        ],
+    )
+    def test_equality(self, args, result) -> None:
         """
         Check Target equality comparison is supported.
         """
         target = Target("10_zone", (40, "cm"), (20, "metre"), indoor=True)
-        units_free = Target("10_zone", 40, 20, indoor=True)
-        duplicate = Target("10_zone", 40, (20, "metre"), indoor=True)
-        different_loc = Target("10_zone", 40, (20, "metre"), indoor=False)
-        different_scoring = Target("5_zone", 40, (20, "metre"), indoor=True)
-        different_dist = Target("10_zone", 40, (19.9, "metre"), indoor=True)
-        different_diam = Target("10_zone", 40.1, (20, "metre"), indoor=True)
-        different_unit = Target("10_zone", 40, (20, "yard"), indoor=True)
-
-        assert target == duplicate
-        assert target == units_free
-        assert target != different_loc
-        assert target != different_scoring
-        assert target != different_dist
-        assert target != different_diam
-        assert target != different_unit
-        assert target != ("10_zone", 40, (20, "yard"), True)
+        comparison = target == Target(*args)
+        assert comparison == result
 
     def test_invalid_system(self) -> None:
         """
