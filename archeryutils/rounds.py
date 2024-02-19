@@ -107,10 +107,7 @@ class Pass:
     def __eq__(self, other: object) -> bool:
         """Check equality of Passes based on parameters."""
         if isinstance(other, Pass):
-            return (
-                self.n_arrows == other.n_arrows
-                and self.target == other.target
-            )
+            return self.n_arrows == other.n_arrows and self.target == other.target
         return NotImplemented
 
     @property

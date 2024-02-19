@@ -242,6 +242,19 @@ class TestRound:
         comparison = round_ == Round(name, [pass_] * n_passes, *args)
         assert comparison == result
 
+    def test_equality_pass_order(self) -> None:
+        """
+        Check Round equality comparison for alternative pass permutations.
+        """
+        target_1 = Target("10_zone", 122, 90)
+        target_2 = Target("10_zone", 122, 70)
+        pass_1 = Pass(30, target_1)
+        pass_2 = Pass(30, target_2)
+        round_a = Round("Test", [pass_1, pass_2])
+        round_b = Round("Test", [pass_2, pass_1])
+
+        assert round_a != round_b
+
     def test_equality_different_object(self) -> None:
         """
         Check Round equality comparison against a differnt type of object.
