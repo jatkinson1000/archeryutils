@@ -127,6 +127,52 @@ class Target:
         self.native_dist_unit = Length.definitive_unit(native_dist_unit)
         self.indoor = indoor
 
+    def __repr__(self) -> str:
+        """Return a representation of a Target instance."""
+        diam, diamunit = self.native_diameter
+        dist, distunit = self.native_distance
+        return (
+            "Target("
+            f"'{self.scoring_system}', "
+            f"({diam:.6g}, '{diamunit}'), "
+            f"({dist:.6g}, '{distunit}'), "
+            f"indoor={self.indoor}"
+            ")"
+        )
+
+    def __eq__(self, other: object) -> bool:
+        """Check equality of Targets based on parameters."""
+        if isinstance(other, Target):
+            return self._parameters() == other._parameters()
+        return NotImplemented
+
+    def _parameters(self):
+        """Shortcut to get all target parameters as a tuple for comparison."""
+        return (
+            self.scoring_system,
+            self.diameter,
+            self.native_diameter_unit,
+            self.distance,
+            self.native_dist_unit,
+            self.indoor,
+        )
+
+    @property
+    def native_distance(self) -> tuple[float, str]:
+        """Get target distance in original native units."""
+        return (
+            Length.from_metres(self.distance, self.native_dist_unit),
+            self.native_dist_unit,
+        )
+
+    @property
+    def native_diameter(self) -> tuple[float, str]:
+        """Get target diameter in original native units."""
+        return (
+            Length.from_metres(self.diameter, self.native_diameter_unit),
+            self.native_diameter_unit,
+        )
+
     def max_score(self) -> float:
         """
         Return the maximum numerical score possible on this target (i.e. not X).

@@ -17,6 +17,83 @@ class TestTarget:
         test if invalid distance unit raises an error
     """
 
+    def test_repr(self) -> None:
+        """
+        Check Target string representation is as expected.
+        """
+        target = Target("10_zone", 80, 30)
+        expected = "Target('10_zone', (80, 'cm'), (30, 'metre'), indoor=False)"
+        assert repr(target) == expected
+
+    def test_repr_native_units(self) -> None:
+        """
+        Check Target string representation returns values in native units.
+        """
+        target = Target("Worcester", (16, "inches"), (20, "yards"), indoor=True)
+        expected = "Target('Worcester', (16, 'inch'), (20, 'yard'), indoor=True)"
+        assert repr(target) == expected
+
+    @pytest.mark.parametrize(
+        "args, result",
+        [
+            pytest.param(
+                ("10_zone", (40, "cm"), (20, "metre"), True),
+                True,
+                id="duplicate",
+            ),
+            pytest.param(
+                ("10_zone", 40, 20, True),
+                True,
+                id="units-free",
+            ),
+            pytest.param(
+                ("10_zone", (40, "cm"), (20, "metre"), False),
+                False,
+                id="different-loc",
+            ),
+            pytest.param(
+                ("5_zone", (40, "cm"), (20, "metre"), True),
+                False,
+                id="different-scoring",
+            ),
+            pytest.param(
+                ("10_zone", (40, "cm"), (19.9, "metre"), True),
+                False,
+                id="different-dist",
+            ),
+            pytest.param(
+                ("10_zone", (40.1, "cm"), (20, "metre"), True),
+                False,
+                id="different-diam",
+            ),
+            pytest.param(
+                ("10_zone", (40, "cm"), (20, "yard"), True),
+                False,
+                id="different-dist-unit",
+            ),
+            pytest.param(
+                ("10_zone", (40, "inch"), (20, "metre"), True),
+                False,
+                id="different-diam-unit",
+            ),
+        ],
+    )
+    def test_equality(self, args, result) -> None:
+        """
+        Check Target equality comparison is supported.
+        """
+        target = Target("10_zone", (40, "cm"), (20, "metre"), indoor=True)
+        comparison = target == Target(*args)
+        assert comparison == result
+
+    def test_equality_different_object(self) -> None:
+        """
+        Check Target equality comparison against a differnt type of object.
+        """
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+
+        assert target != ("10_zone", 40, (20, "yard"), True)
+
     def test_invalid_system(self) -> None:
         """
         Check that Target() returns error value for invalid system.

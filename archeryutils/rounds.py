@@ -19,54 +19,96 @@ class Pass:
     ----------
     n_arrows : int
         number of arrows in this pass.
-    scoring_system : {\
-        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
-        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
-        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
-        target face/scoring system type. Must be one of the supported values.
-    diameter : float or tuple of float, str
-        face diameter in [centimetres].
-    distance : float or tuple of float, str
-        linear distance from archer to target in [metres].
-    indoor : bool, default=False
-        is round indoors for arrow diameter purposes?
+    target : Target
+        A Target object.
 
     Attributes
     ----------
     n_arrows : int
         number of arrows in this pass.
     target : Target
-        A Target object defined using input parameters.
+        A Target object.
 
     Examples
     --------
     A Pass can be defined simply as:
 
-    >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
-
-    Like with the Target class, the units for diameter and distance can be specified
-    using tuples:
-
-    >>> myWA18pass = au.Pass(30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True)
+    >>> my720pass = au.Pass(36, au.Target("10_zone", 122, 70.0))
 
     See Also
     --------
     archeryutils.Target : The `Target` class.
     """
 
-    # One too many arguments, but logically this structure makes sense => disable
-    # pylint: disable=too-many-arguments
+    def __init__(self, n_arrows: int, target: Target) -> None:
+        self.n_arrows = abs(n_arrows)
+        self.target = target
 
-    def __init__(
-        self,
+    # One too many arguments, but required to match Target signature => disable
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def at_target(
+        cls,
         n_arrows: int,
         scoring_system: ScoringSystem,
         diameter: Union[float, tuple[float, str]],
         distance: Union[float, tuple[float, str]],
         indoor: bool = False,
-    ) -> None:
-        self.n_arrows = abs(n_arrows)
-        self.target = Target(scoring_system, diameter, distance, indoor)
+    ) -> "Pass":
+        """
+        Initalise a Pass directly with the parameters of its target.
+
+        The parameters are passed directly to the default Target constuctor and
+        therefore share the same behaviours and defaults.
+
+        Parameters
+        ----------
+        n_arrows : int
+            number of arrows in this pass
+        scoring_system : {\
+        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
+        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
+        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
+            target face/scoring system type
+        diameter : float
+            face diameter in [centimetres]
+        distance : float
+            linear distance from archer to target in [metres]
+        dist_unit : str
+            The unit distance is measured in. default = 'metres'
+        indoor : bool
+            is round indoors for arrow diameter purposes? default = False
+        diameter_unit : str
+            The unit face diameter is measured in. default = 'centimetres'
+
+        Returns
+        -------
+        Pass
+            The constructed Pass instance
+
+        Examples
+        --------
+        >>> pass_ = au.Pass.at_target(36, "10_zone", 122, 70.0)
+
+        Like with the Target class, the units for diameter and distance can be
+        explicitly specified using tuples:
+
+        >>> myWA18pass = au.Pass.at_target(
+            30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True
+        )
+        """
+        target = Target(scoring_system, diameter, distance, indoor)
+        return cls(n_arrows, target)
+
+    def __repr__(self) -> str:
+        """Return a representation of a Pass instance."""
+        return f"Pass({self.n_arrows}, {self.target})"
+
+    def __eq__(self, other: object) -> bool:
+        """Check equality of Passes based on parameters."""
+        if isinstance(other, Pass):
+            return self.n_arrows == other.n_arrows and self.target == other.target
+        return NotImplemented
 
     @property
     def scoring_system(self) -> ScoringSystem:
@@ -147,7 +189,7 @@ class Round:
     --------
     Before defining a Round we need to first define the passes that make it up:
 
-    >>> my720pass = au.Pass(36, "10_zone", 122, 70.0)
+    >>> my720pass = au.Pass.at_target(36, "10_zone", 122, 70.0)
 
     These can now be passed to the Round constructor as any iterable,
     they will be stored as a list:
@@ -176,6 +218,20 @@ class Round:
         self.location = location
         self.body = body
         self.family = family
+
+    def __repr__(self) -> str:
+        """Return a representation of a Round instance."""
+        return f"Round('{self.name}')"
+
+    def __eq__(self, other: object) -> bool:
+        """Check equality of Rounds based on name and passes.
+
+        Does not consider optional labels of location/body/family as these
+        do not affect behaviour.
+        """
+        if isinstance(other, Round):
+            return self.name == other.name and self.passes == other.passes
+        return NotImplemented
 
     def max_score(self) -> float:
         """
@@ -225,15 +281,10 @@ class Round:
         """
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            native_dist = Length.from_metres(
-                pass_i.target.distance, pass_i.native_dist_unit
-            )
-            native_diam = Length.from_metres(
-                pass_i.target.diameter, pass_i.native_diameter_unit
-            )
-
+            diam, diam_units = pass_i.target.native_diameter
+            dist, dist_units = pass_i.target.native_distance
             print(
                 f"\t- {pass_i.n_arrows} arrows "
-                f"at a {native_diam:.1f} {pass_i.native_diameter_unit} target "
-                f"at {native_dist:.1f} {pass_i.native_dist_unit}s."
+                f"at a {diam:.1f} {diam_units} target "
+                f"at {dist:.1f} {dist_units}s."
             )

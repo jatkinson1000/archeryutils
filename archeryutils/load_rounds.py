@@ -7,6 +7,41 @@ from typing import Union, Any
 
 from archeryutils.rounds import Pass, Round
 
+LOCATIONS = {
+    "indoor": {
+        "i",
+        "I",
+        "indoors",
+        "indoor",
+        "in",
+        "inside",
+        "Indoors",
+        "Indoor",
+        "In",
+        "Inside",
+    },
+    "outdoor": {
+        "o",
+        "O",
+        "outdoors",
+        "outdoor",
+        "out",
+        "outside",
+        "Outdoors",
+        "Outdoor",
+        "Out",
+        "Outside",
+    },
+    "field": {
+        "f",
+        "F",
+        "field",
+        "Field",
+        "woods",
+        "Woods",
+    },
+}
+
 
 def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, Round]:
     """
@@ -42,44 +77,19 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
                 )
                 round_i["location"] = None
                 round_i["indoor"] = False
-            elif round_i["location"] in (
-                "i",
-                "I",
-                "indoors",
-                "indoor",
-                "in",
-                "inside",
-                "Indoors",
-                "Indoor",
-                "In",
-                "Inside",
-            ):
+
+            elif round_i["location"] in LOCATIONS["indoor"]:
                 round_i["indoor"] = True
                 round_i["location"] = "indoor"
-            elif round_i["location"] in (
-                "o",
-                "O",
-                "outdoors",
-                "outdoor",
-                "out",
-                "outside",
-                "Outdoors",
-                "Outdoor",
-                "Out",
-                "Outside",
-            ):
+
+            elif round_i["location"] in LOCATIONS["outdoor"]:
                 round_i["indoor"] = False
                 round_i["location"] = "outdoor"
-            elif round_i["location"] in (
-                "f",
-                "F",
-                "field",
-                "Field",
-                "woods",
-                "Woods",
-            ):
+
+            elif round_i["location"] in LOCATIONS["field"]:
                 round_i["indoor"] = False
                 round_i["location"] = "field"
+
             else:
                 warnings.warn(
                     f"Location not recognised for round {round_i['name']}. "
@@ -105,14 +115,11 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
                 round_i["family"] = ""
 
             # Assign passes
-            for pass_i in round_i["passes"]:
-                if "diameter_unit" not in pass_i.keys():
-                    pass_i["diameter_unit"] = "cm"
             passes = [
-                Pass(
+                Pass.at_target(
                     pass_i["n_arrows"],
                     pass_i["scoring"],
-                    (pass_i["diameter"], pass_i["diameter_unit"]),
+                    (pass_i["diameter"], pass_i.get("diameter_unit", "cm")),
                     (pass_i["distance"], pass_i["dist_unit"]),
                     indoor=round_i["indoor"],
                 )
@@ -199,5 +206,6 @@ IFAA_field = _make_rounds_dict("IFAA_field.json")
 WA_VI = _make_rounds_dict("WA_VI.json")
 AGB_VI = _make_rounds_dict("AGB_VI.json")
 custom = _make_rounds_dict("Custom.json")
+
 
 del _make_rounds_dict

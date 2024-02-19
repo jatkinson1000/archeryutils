@@ -4,8 +4,11 @@ from typing import Union
 
 import pytest
 
-from archeryutils.rounds import Pass, Round
+from archeryutils.rounds import Pass, Round, Target
 from archeryutils.targets import ScoringSystem
+
+
+_target = Target("5_zone", 122, 50)
 
 
 class TestPass:
@@ -26,18 +29,75 @@ class TestPass:
         test max score functionality of Pass
     """
 
+    def test_init(self) -> None:
+        """
+        Check direct initialisation of a Pass with a target instance.
+        """
+        test_pass = Pass(36, _target)
+
+        assert test_pass.target == _target
+        assert test_pass.n_arrows == 36
+
+    def test_at_target_constructor(self) -> None:
+        """
+        Check indirect initialisation of a Pass with target parameters.
+        """
+        test_pass = Pass.at_target(36, "5_zone", 122, 50)
+
+        assert test_pass.n_arrows == 36
+        # cannot test for equality between targets as __eq__ not implemented
+        # assert test_pass.target == _target
+
+    def test_repr(self) -> None:
+        """
+        Check Pass string representation.
+        """
+        test_pass = Pass(36, _target)
+        expected = (
+            "Pass(36, Target('5_zone', (122, 'cm'), (50, 'metre'), indoor=False))"
+        )
+        assert repr(test_pass) == expected
+
+    @pytest.mark.parametrize(
+        "other,result",
+        [
+            pytest.param(
+                Pass.at_target(30, "10_zone", 40, (20, "yard")), True, id="duplicate"
+            ),
+            pytest.param(
+                Pass.at_target(40, "10_zone", 40, (20, "yard")),
+                False,
+                id="different_arrows",
+            ),
+            pytest.param(
+                Pass.at_target(30, "5_zone", 40, (20, "yard")),
+                False,
+                id="different_target",
+            ),
+            pytest.param((30, "10_zone", 40, (20, "yard")), False, id="other_object"),
+        ],
+    )
+    def test_equality(self, other, result) -> None:
+        """
+        Check Pass equality comparison is supported.
+        """
+        pass_ = Pass.at_target(30, "10_zone", 40, (20, "yard"))
+
+        comparison = pass_ == other
+        assert comparison == result
+
     def test_default_distance_unit(self) -> None:
         """
-        Check that Pass() returns distance in metres when units not specified.
+        Check that Pass returns distance in metres when units not specified.
         """
-        test_pass = Pass(36, "5_zone", 122, 50)
+        test_pass = Pass.at_target(36, "5_zone", 122, 50)
         assert test_pass.native_dist_unit == "metre"
 
     def test_default_diameter_unit(self) -> None:
         """
-        Check that Pass() has same default diameter units as Target.
+        Check that Pass has same default diameter units as Target.
         """
-        test_pass = Pass(36, "5_zone", 122, 50)
+        test_pass = Pass.at_target(36, "5_zone", 122, 50)
         assert (
             test_pass.native_diameter_unit
             == test_pass.target.native_diameter_unit
@@ -46,30 +106,30 @@ class TestPass:
 
     def test_diameter_units_passed_to_target(self) -> None:
         """
-        Check that Pass() passes on diameter units to Target object.
+        Check that Pass passes on diameter units to Target object.
         """
-        test_pass = Pass(60, "Worcester", (16, "inches"), (20, "yards"))
+        test_pass = Pass.at_target(60, "Worcester", (16, "inches"), (20, "yards"))
         assert test_pass.target.native_diameter_unit == "inch"
 
     def test_default_location(self) -> None:
         """
-        Check that Pass() returns indoor=False when indoor not specified.
+        Check that Pass returns indoor=False when indoor not specified.
         """
-        test_pass = Pass(36, "5_zone", 122, 50)
+        test_pass = Pass.at_target(36, "5_zone", 122, 50)
         assert test_pass.indoor is False
 
     def test_negative_arrows(self) -> None:
         """
         Check that Pass() uses abs(narrows).
         """
-        test_pass = Pass(-36, "5_zone", 122, 50)
+        test_pass = Pass(-36, _target)
         assert test_pass.n_arrows == 36
 
     def test_properties(self) -> None:
         """
         Check that Pass properties are set correctly
         """
-        test_pass = Pass(36, "5_zone", (122, "cm"), (50, "metre"), False)
+        test_pass = Pass(36, Target("5_zone", (122, "cm"), (50, "metre"), False))
         assert test_pass.distance == 50.0
         assert test_pass.native_dist_unit == "metre"
         assert test_pass.diameter == 1.22
@@ -96,7 +156,7 @@ class TestPass:
         """
         Check that Pass.max_score() method is functioning correctly
         """
-        test_pass = Pass(100, face_type, 122, 50, False)
+        test_pass = Pass.at_target(100, face_type, 122, 50, False)
         assert test_pass.max_score() == max_score_expected
 
 
@@ -122,14 +182,88 @@ class TestRound:
 
         Verify by eq comparison of attribute as Round.__eq__ not defined
         """
-        pass_a = Pass(100, "5_zone", 122, 50, False)
-        pass_b = Pass(100, "5_zone", 122, 40, False)
+        pass_a = Pass.at_target(100, "5_zone", 122, 50, False)
+        pass_b = Pass.at_target(100, "5_zone", 122, 40, False)
 
         list_ = Round("List", [pass_a, pass_b])
         tuple_ = Round("Tuple", (pass_a, pass_b))
         iterable_ = Round("iterable", (p for p in (pass_a, pass_b)))
 
         assert list_.passes == tuple_.passes == iterable_.passes
+
+    def test_repr(self) -> None:
+        """
+        Check Pass string representation
+        """
+        test_round = Round("Name", [Pass(36, _target)])
+        expected = "Round('Name')"
+        assert repr(test_round) == expected
+
+    @pytest.mark.parametrize(
+        "name, args, n_passes, result",
+        [
+            pytest.param("Test", (), 2, True, id="duplicate"),
+            pytest.param(
+                "Test",
+                ("indoor", "AGB", "Bray"),
+                2,
+                True,
+                id="labelled",
+            ),
+            pytest.param(
+                "Other",
+                (),
+                2,
+                False,
+                id="different_name",
+            ),
+            pytest.param(
+                "Test",
+                (),
+                1,
+                False,
+                id="different_no_passes",
+            ),
+        ],
+    )
+    def test_equality(self, name, args, n_passes, result) -> None:
+        """
+        Check Round equality comparison is supported.
+
+        duplicate: compare true against an exact duplicate
+        labelled: compare true against same round with location, body and family set
+        different_name: compare false against same round with different name
+        different_no_passes: compare false against same round with one less pass
+        """
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+
+        round_ = Round("Test", [pass_, pass_])
+        comparison = round_ == Round(name, [pass_] * n_passes, *args)
+        assert comparison == result
+
+    def test_equality_pass_order(self) -> None:
+        """
+        Check Round equality comparison for alternative pass permutations.
+        """
+        target_1 = Target("10_zone", 122, 90)
+        target_2 = Target("10_zone", 122, 70)
+        pass_1 = Pass(30, target_1)
+        pass_2 = Pass(30, target_2)
+        round_a = Round("Test", [pass_1, pass_2])
+        round_b = Round("Test", [pass_2, pass_1])
+
+        assert round_a != round_b
+
+    def test_equality_different_object(self) -> None:
+        """
+        Check Round equality comparison against a differnt type of object.
+        """
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+        round_ = Round("Test", [pass_, pass_])
+
+        assert round_ != ("Test", [pass_, pass_])
 
     def test_max_score(self) -> None:
         """
@@ -139,9 +273,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(100, "5_zone", 122, 50, False),
-                Pass(100, "5_zone", 122, 40, False),
-                Pass(100, "5_zone", 122, 30, False),
+                Pass.at_target(100, "5_zone", 122, 50, False),
+                Pass.at_target(100, "5_zone", 122, 40, False),
+                Pass.at_target(100, "5_zone", 122, 30, False),
             ],
         )
         assert test_round.max_score() == 2700
@@ -172,9 +306,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, "5_zone", 122, (100, unit), False),
-                Pass(10, "5_zone", 122, (80, unit), False),
-                Pass(10, "5_zone", 122, (60, unit), False),
+                Pass.at_target(10, "5_zone", 122, (100, unit), False),
+                Pass.at_target(10, "5_zone", 122, (80, unit), False),
+                Pass.at_target(10, "5_zone", 122, (60, unit), False),
             ],
         )
         assert test_round.max_distance(unit=get_unit) == max_dist_expected
@@ -187,9 +321,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, "5_zone", 122, 80, False),
-                Pass(10, "5_zone", 122, 100, False),
-                Pass(10, "5_zone", 122, 60, False),
+                Pass.at_target(10, "5_zone", 122, 80, False),
+                Pass.at_target(10, "5_zone", 122, 100, False),
+                Pass.at_target(10, "5_zone", 122, 60, False),
             ],
         )
         assert test_round.max_distance() == 100
@@ -198,8 +332,8 @@ class TestRound:
         """
         Check that max distance accounts for different units in round
         """
-        pyards = Pass(36, "5_zone", 122, (80, "yard"))
-        pmetric = Pass(36, "5_zone", 122, (75, "metres"))
+        pyards = Pass.at_target(36, "5_zone", 122, (80, "yard"))
+        pmetric = Pass.at_target(36, "5_zone", 122, (75, "metres"))
         test_round = Round("test", [pyards, pmetric])
 
         assert pmetric.distance > pyards.distance
@@ -212,9 +346,9 @@ class TestRound:
         test_round = Round(
             "MyRound",
             [
-                Pass(10, "5_zone", 122, 100, False),
-                Pass(20, "5_zone", 122, (80, "yards"), False),
-                Pass(30, "5_zone", 80, (60, "metre"), False),
+                Pass.at_target(10, "5_zone", 122, 100, False),
+                Pass.at_target(20, "5_zone", 122, (80, "yards"), False),
+                Pass.at_target(30, "5_zone", 80, (60, "metre"), False),
             ],
         )
         test_round.get_info()
