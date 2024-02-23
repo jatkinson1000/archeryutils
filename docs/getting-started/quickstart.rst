@@ -153,29 +153,24 @@ Archery GB (Atkinson (2023), Lane (1978)) and Archery Australia (Park (2014)).
 
 .. ipython:: python
 
-    from archeryutils import handicap_equations as hc_eq
-    from archeryutils import handicap_functions as hc_func
-
-    hcparams = hc_eq.HcParams()
+    from archeryutils import handicaps as hc
 
 Given a handicap and a round we can calculate the score that would be achieved:
 
 .. ipython:: python
 
-    score_from_hc = hc_eq.score_for_round(
+    score_from_hc = hc.score_for_round(
         agb_outdoor.york,
         38,
         "AGB",
-        hcparams,
     )
 
     print(f"A handicap of 38 on a York is a score of {score_from_hc}.")
 
-    pass_scores = hc_eq.score_for_passes(
+    pass_scores = hc.score_for_passes(
         agb_outdoor.york,
         38,
         "AGB",
-        hcparams,
     )
 
     print(f"A handicap of 38 on a York gives pass scores of {pass_scores}.")
@@ -185,24 +180,22 @@ to a handicap:
 
 .. ipython:: python
 
-    hc_from_score = hc_func.handicap_from_score(
+    hc_from_score = hc.handicap_from_score(
         950,
         agb_outdoor.york,
         "AGB",
-        hcparams,
     )
     print(f"A score of 950 on a York is a continuous handicap of {hc_from_score}.")
 
-    hc_from_score = hc_func.handicap_from_score(
+    hc_from_score = hc.handicap_from_score(
         950,
         agb_outdoor.york,
         "AGB",
-        hcparams,
         int_prec=True,
     )
     print(f"A score of 950 on a York is a discrete handicap of {hc_from_score}.")
 
-There are also inbuilt methods for generating handicap tables:
+There is also the HandicapTable class for generating handicap tables:
 
 .. ipython:: python
 
@@ -213,15 +206,16 @@ There are also inbuilt methods for generating handicap tables:
         agb_outdoor.st_george,
         agb_outdoor.albion,
     ]
-    # The following allows printing of handicap tables for an entire group of rounds:
+    # The following would allow printing of handicap tables for an entire group of rounds:
     # rounds = list(load_rounds.AGB_outdoor_imperial.values())
 
-    hc_func.print_handicap_table(
-        handicaps,
+    my_agb_table = hc.HandicapTable(
         "AGB",
+        handicaps,
         rounds,
-        hcparams,
     )
+    my_agb_table.print()
+
 
 Classifications
 ---------------
