@@ -22,7 +22,7 @@ _FILL = -9999
 
 
 class HandicapTable:
-    """
+    r"""
     Class to generate and store a handicap table.
 
     Parameters

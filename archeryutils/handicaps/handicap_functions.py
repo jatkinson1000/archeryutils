@@ -43,7 +43,7 @@ _CLASSES = {
 def handicap_scheme(
     handicap_sys: Union[str, HandicapScheme], **kwargs: float
 ) -> HandicapScheme:
-    """
+    r"""
     Create a HandicapScheme subclass for a requested handicap scheme.
 
     Parameters
