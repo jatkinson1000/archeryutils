@@ -87,6 +87,8 @@ class HandicapAGB(HandicapScheme):
         ang_0: float = 5.0e-4,
         kd: float = 0.00365,
     ):
+        super().__init__()
+
         self.params = {
             "datum": datum,
             "step": step,
@@ -209,6 +211,8 @@ class HandicapAGBold(HandicapScheme):
     ):
         # three too many arguments, but all are hc-scheme params => disable
         # pylint: disable=too-many-arguments
+
+        super().__init__()
 
         self.params = {
             "datum": datum,  # Offset required to set handicap 0 at desired score.
