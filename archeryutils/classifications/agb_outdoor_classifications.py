@@ -539,8 +539,8 @@ def agb_outdoor_classification_scores(
     # Get scores required on this round for each classification
     class_scores = [
         hc.score_for_round(
-            ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
+            ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             "AGB",
             rounded_score=True,
         )

@@ -93,8 +93,8 @@ class HandicapTable:
         # Assign values to table
         for i, round_i in enumerate(round_list):
             self.table[:, i + 1] = self.hc_sys.score_for_round(
-                round_i,
                 self.hcs,
+                round_i,
                 arrow_d,
                 rounded_score=self.rounded_scores,
             )

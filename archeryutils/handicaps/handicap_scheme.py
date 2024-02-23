@@ -157,8 +157,8 @@ class HandicapScheme(ABC):
 
     def arrow_score(
         self,
-        target: targets.Target,
         handicap: FloatArray,
+        target: targets.Target,
         arw_d: Optional[float] = None,
     ) -> FloatArray:
         # Six too many branches. Makes sense due to different target faces => disable
@@ -167,10 +167,10 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        target : targets.Target
-            A Target class specifying the target to be used
         handicap : FloatArray
             handicap value to calculate score for
+        target : targets.Target
+            A Target class specifying the target to be used
         arw_d : float or None, default=None
             user-specified arrow diameter in [metres]
 
@@ -194,12 +194,12 @@ class HandicapScheme(ABC):
         >>> import archeryutils.handicaps as hc
         >>> my720target = au.Target("10_zone", 122, 70.0)
         >>> agb_scheme = hc.handicap_scheme("AGB")
-        >>> agb_scheme.arrow_score(my720target, 10.0)
+        >>> agb_scheme.arrow_score(10.0, my720target)
         9.401182682963338
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.sigma_t(my720target, np.array([10.0, 50.0, 100.0]))
+        >>> agb_scheme.sigma_t(np.array([10.0, 50.0, 100.0]), my720target)
         array([9.40118268, 6.05227962, 0.46412515])
 
         """
@@ -312,8 +312,8 @@ class HandicapScheme(ABC):
 
     def score_for_passes(
         self,
-        rnd: rounds.Round,
         handicap: FloatArray,
+        rnd: rounds.Round,
         arw_d: Optional[float] = None,
         rounded_score: bool = True,
     ) -> npt.NDArray[np.float_]:
@@ -321,10 +321,10 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        rnd : rounds.Round
-            A Round class specifying the round being shot
         handicap : FloatArray
             handicap value to calculate score for
+        rnd : rounds.Round
+            A Round class specifying the round being shot
         arw_d : float or None, default=None
             user-specified arrow diameter in [metres]
         rounded_score : bool, default=True
@@ -347,12 +347,12 @@ class HandicapScheme(ABC):
         >>> import archeryutils.handicaps as hc
         >>> wa_outdoor = au.load_rounds.WA_outdoor
         >>> agb_scheme = hc.handicap_scheme("AGB")
-        >>> agb_scheme.score_for_passes(wa_outdoor.wa1440_90, 10.0)
+        >>> agb_scheme.score_for_passes(10.0, wa_outdoor.wa1440_90)
         array([322.84091528, 338.44257659, 338.66395001, 355.87959411])
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.score_for_passes(wa_outdoor.wa1440_90, np.array([10.0, 50.0, 100.0]))
+        >>> agb_scheme.score_for_passes(np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90)
         array([[322.84091528, 162.76200686,   8.90456718],
                [338.44257659, 217.88206641,  16.70850537],
                [338.66395001, 216.74407488,  16.41855209],
@@ -361,7 +361,7 @@ class HandicapScheme(ABC):
         """
         pass_scores = np.array(
             [
-                pass_i.n_arrows * self.arrow_score(pass_i.target, handicap, arw_d=arw_d)
+                pass_i.n_arrows * self.arrow_score(handicap, pass_i.target, arw_d=arw_d)
                 for pass_i in rnd.passes
             ]
         )
@@ -370,8 +370,8 @@ class HandicapScheme(ABC):
 
     def score_for_round(
         self,
-        rnd: rounds.Round,
         handicap: FloatArray,
+        rnd: rounds.Round,
         arw_d: Optional[float] = None,
         rounded_score: bool = True,
     ) -> FloatArray:
@@ -379,10 +379,10 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        rnd : rounds.Round
-            A Round class specifying the round being shot
         handicap : FloatArray
             handicap value to calculate score for
+        rnd : rounds.Round
+            A Round class specifying the round being shot
         arw_d : float or None, default=None
             user-specified arrow diameter in [metres]
         rounded_score : bool, default=True
@@ -403,7 +403,7 @@ class HandicapScheme(ABC):
         >>> import archeryutils.handicaps as hc
         >>> wa_outdoor = au.load_rounds.WA_outdoor
         >>> agb_scheme = hc.handicap_scheme("AGB")
-        >>> agb_scheme.score_for_round(wa_outdoor.wa1440_90, 10.0)
+        >>> agb_scheme.score_for_round(10.0, wa_outdoor.wa1440_90)
         1356.0
 
         To get a decimal value of the exact handicap corresponding to the requested
@@ -418,12 +418,12 @@ class HandicapScheme(ABC):
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.score_for_round(wa_outdoor.wa1440_90, np.array([10.0, 50.0, 100.0]))
+        >>> agb_scheme.score_for_round(np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90)
         array([1356.,  887.,   91.])
 
         """
         round_score = np.sum(
-            self.score_for_passes(rnd, handicap, arw_d=arw_d, rounded_score=False),
+            self.score_for_passes(handicap, rnd, arw_d=arw_d, rounded_score=False),
             axis=0,
         )
         return self._rounded_score(round_score) if rounded_score else round_score
@@ -526,7 +526,7 @@ class HandicapScheme(ABC):
             else:
                 handicap = np.floor(handicap)
 
-            sc_int = self.score_for_round(rnd, handicap, arw_d, rounded_score=True)
+            sc_int = self.score_for_round(handicap, rnd, arw_d, rounded_score=True)
 
             # Check that you can't get the same score from a larger handicap when
             # working in integers
@@ -537,7 +537,7 @@ class HandicapScheme(ABC):
                 hstep = -1.0
             while not min_h_flag:
                 handicap += hstep
-                sc_int = self.score_for_round(rnd, handicap, arw_d, rounded_score=True)
+                sc_int = self.score_for_round(handicap, rnd, arw_d, rounded_score=True)
                 if sc_int < score:
                     handicap -= hstep  # undo the iteration that caused flag to raise
                     min_h_flag = True
@@ -590,11 +590,11 @@ class HandicapScheme(ABC):
         else:
             round_lim = 0.5
 
-        s_max = self.score_for_round(rnd, handicap, arw_d, rounded_score=False)
+        s_max = self.score_for_round(handicap, rnd, arw_d, rounded_score=False)
         # Work down to where we would round or ceil to max score
         while s_max > max_score - round_lim:
             handicap = handicap + delta_hc
-            s_max = self.score_for_round(rnd, handicap, arw_d, rounded_score=False)
+            s_max = self.score_for_round(handicap, rnd, arw_d, rounded_score=False)
         handicap = handicap - delta_hc  # Undo final iteration that overshoots
         if int_prec:
             if self.desc_scale:
@@ -761,5 +761,5 @@ class HandicapScheme(ABC):
             difference between desired value and score estimate
 
         """
-        val = self.score_for_round(round_est, hc_est, arw_d=arw_d, rounded_score=False)
+        val = self.score_for_round(hc_est, round_est, arw_d=arw_d, rounded_score=False)
         return val - score_est

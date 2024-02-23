@@ -286,8 +286,8 @@ def agb_indoor_classification_scores(
     # Enforce full size face
     class_scores = [
         hc.score_for_round(
-            ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
+            ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             hc_scheme,
             rounded_score=True,
         )
@@ -304,8 +304,8 @@ def agb_indoor_classification_scores(
         zip(int_class_scores, group_data["class_HC"])
     ):
         next_score = hc.score_for_round(
-            ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             np.floor(handicap) + 1,
+            ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             hc_scheme,
             rounded_score=True,
         )
