@@ -16,7 +16,7 @@ import numpy as np
 import numpy.typing as npt
 
 from archeryutils import load_rounds
-from archeryutils.handicaps import handicap_equations as hc_eq
+import archeryutils.handicaps as hc
 import archeryutils.classifications.classification_utils as cls_funcs
 
 
@@ -536,16 +536,13 @@ def agb_outdoor_classification_scores(
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
 
-    hc_params = hc_eq.HcParams()
-
     # Get scores required on this round for each classification
     class_scores = [
-        hc_eq.score_for_round(
+        hc.score_for_round(
             ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
             "AGB",
-            hc_params,
-            round_score_up=True,
+            rounded_score=True,
         )
         for i in range(len(group_data["classes"]))
     ]
