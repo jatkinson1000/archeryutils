@@ -98,7 +98,6 @@ class TestHandicapScheme:
 
     @pytest.mark.parametrize(
         "scheme",
-        # Check all systems, different distances, negative and large handicaps.
         [
             ("AGB"),
             ("AGBold"),
