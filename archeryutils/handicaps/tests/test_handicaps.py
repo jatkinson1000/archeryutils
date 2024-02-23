@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 import archeryutils.handicaps as hc
+from archeryutils.handicaps.handicap_functions import handicap_scheme
 from archeryutils.handicaps.handicap_scheme import HandicapScheme
 from archeryutils.handicaps.handicap_scheme_aa import HandicapAA, HandicapAA2
 from archeryutils.handicaps.handicap_scheme_agb import HandicapAGB, HandicapAGBold
@@ -75,15 +76,22 @@ metric122_30 = Round(
 
 
 class TestHandicapScheme:
-    """
-    Class to test the handicap_scheme() function creating a HandicapScheme class.
+    """Class to test the handicap_scheme() function creating a HandicapScheme class."""
 
-    Methods
-    -------
-    def test_invalid_system()
-        test if invalid handicap system raises error
-
-    """
+    @pytest.mark.parametrize(
+        "scheme",
+        [
+            ("AGB"),
+            ("AGBold"),
+            ("AA"),
+            ("AA2"),
+        ],
+    )
+    def test_repr(self, scheme: str) -> None:
+        """Check HandicapScheme subclass string representation."""
+        test_scheme = handicap_scheme(scheme)
+        expected = f"HandicapScheme('{scheme}')"
+        assert repr(test_scheme) == expected
 
     def test_invalid_system(self) -> None:
         """Check that error returned if initialising an invalid system."""
