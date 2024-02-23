@@ -87,6 +87,10 @@ class HandicapScheme(ABC):
         # Some schemes will need to override
         self.desc_scale: bool = True
 
+    def __repr__(self) -> str:
+        """Return a representation of a HandicapScheme instance."""
+        return f"HandicapScheme('{self.name}')"
+
     @overload
     @abstractmethod
     def sigma_t(self, handicap: float, dist: float) -> float: ...

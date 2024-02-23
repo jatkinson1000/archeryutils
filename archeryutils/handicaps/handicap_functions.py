@@ -83,7 +83,7 @@ def handicap_scheme(
     >>> from archeryutils import handicaps as hc
     >>> agb_scheme = hc.handicap_scheme("AGB")
     >>> agb_scheme
-    <archeryutils.handicaps.handicap_equations.HandicapAGB object at 0x31415ee00>
+    HandicapScheme('AGB')
 
     """
     if isinstance(handicap_sys, HandicapScheme):
