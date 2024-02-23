@@ -84,6 +84,8 @@ class HandicapAA(HandicapScheme):
         ks: float = 0.027,
         kd: float = 0.004,
     ):
+        super().__init__()
+
         self.params = {
             "ang_0": ang_0,  # Baseline angle used for group size 1.0 [millirad].
             "k0": k0,  # Offset required to set handicap 100 at desired score.
@@ -223,6 +225,8 @@ class HandicapAA2(HandicapScheme):
     ):
         # two too many arguments, but all are hc-scheme params => disable
         # pylint: disable=too-many-arguments
+
+        super().__init__()
 
         self.params = {
             "ang_0": ang_0,
