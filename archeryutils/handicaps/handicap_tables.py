@@ -46,6 +46,8 @@ class HandicapTable:
 
     Attributes
     ----------
+    hc_sys : HandicapScheme
+        HandicapScheme class to be used in constructing this table
     round_list : list[rounds.Round]
         list of Round classes to show in the handicap table
     rounded_scores : bool
@@ -74,6 +76,7 @@ class HandicapTable:
         # three too many arguments, but all are used for table => disable
         # pylint: disable=too-many-arguments
 
+        self.hc_sys = hc.handicap_scheme(handicap_sys)
         self.round_list = round_list
         self.rounded_scores = rounded_scores
         self.int_prec = int_prec
@@ -88,9 +91,8 @@ class HandicapTable:
         )
         self.table[:, 0] = self.hcs[:]
         # Assign values to table
-        hc_sys = hc.handicap_scheme(handicap_sys)
         for i, round_i in enumerate(round_list):
-            self.table[:, i + 1] = hc_sys.score_for_round(
+            self.table[:, i + 1] = self.hc_sys.score_for_round(
                 round_i,
                 self.hcs,
                 arrow_d,
@@ -258,21 +260,11 @@ class HandicapTable:
 
     def _clean_repeated(
         self,
-        hc_sys_name: str = "AGB",
     ) -> None:
-        """
-        Keep only the first instance of a score in the handicap tables.
-
-        Parameters
-        ----------
-        hc_sys_name : str, default="AGB"
-            handicap system used - assume AGB (high -> low) unless specified
-
-        """
+        """Keep only the first instance of a score in the handicap tables."""
         # NB: This assumes scores are running highest to lowest.
-        # :. Flip AA and AA2 tables before operating.
-
-        if hc_sys_name in ("AA", "AA2"):
+        # :. Flip schemes with a descending scale (AA and AA2) tables before operating.
+        if not self.hc_sys.desc_scale:
             self.table = np.flip(self.table, axis=0)
 
         for irow, row in enumerate(self.table[:-1, :]):
@@ -283,7 +275,8 @@ class HandicapTable:
                     else:
                         self.table[irow, jscore] = np.nan
 
-        if hc_sys_name in ("AA", "AA2"):
+        # Undo the initial reversal if required
+        if not self.hc_sys.desc_scale:
             self.table = np.flip(self.table, axis=0)
 
     @staticmethod
