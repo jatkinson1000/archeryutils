@@ -88,15 +88,13 @@ class HandicapScheme(ABC):
 
     @overload
     @abstractmethod
-    def sigma_t(self, handicap: float, dist: float) -> float:
-        ...
+    def sigma_t(self, handicap: float, dist: float) -> float: ...
 
     @overload
     @abstractmethod
     def sigma_t(
         self, handicap: npt.NDArray[np.float_], dist: float
-    ) -> npt.NDArray[np.float_]:
-        ...
+    ) -> npt.NDArray[np.float_]: ...
 
     @abstractmethod
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
