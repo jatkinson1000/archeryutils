@@ -160,16 +160,16 @@ Given a handicap and a round we can calculate the score that would be achieved:
 .. ipython:: python
 
     score_from_hc = hc.score_for_round(
-        agb_outdoor.york,
         38,
+        agb_outdoor.york,
         "AGB",
     )
 
     print(f"A handicap of 38 on a York is a score of {score_from_hc}.")
 
     pass_scores = hc.score_for_passes(
-        agb_outdoor.york,
         38,
+        agb_outdoor.york,
         "AGB",
     )
 
