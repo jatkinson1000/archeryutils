@@ -307,16 +307,16 @@ class TestArrowScore:
         """
         hc_sys = hc.handicap_scheme(hc_system)
         arrow_score = hc_sys.arrow_score(
-            target=Target("10_zone_5_ring_compound", 40, 20.0, indoor),
             handicap=20.0,
+            target=Target("10_zone_5_ring_compound", 40, 20.0, indoor),
             arw_d=arrow_diameter,
         )
 
         assert arrow_score == pytest.approx(arrow_score_expected)
 
         arrow_score_direct = hc.arrow_score(
-            target=Target("10_zone_5_ring_compound", 40, 20.0, indoor),
             handicap=20.0,
+            target=Target("10_zone_5_ring_compound", 40, 20.0, indoor),
             handicap_sys=hc_system,
             arw_d=arrow_diameter,
         )
@@ -350,16 +350,16 @@ class TestArrowScore:
         """
         hc_sys = hc.handicap_scheme("AGB")
         arrow_score = hc_sys.arrow_score(
-            target=Target(target_face, 80, 50.0, False),
             handicap=38.0,
+            target=Target(target_face, 80, 50.0, False),
             arw_d=None,
         )
 
         assert arrow_score == pytest.approx(arrow_score_expected)
 
         arrow_score_direct = hc.arrow_score(
-            target=Target(target_face, 80, 50.0, False),
             handicap=38.0,
+            target=Target(target_face, 80, 50.0, False),
             handicap_sys="AGB",
             arw_d=None,
         )
@@ -423,13 +423,13 @@ class TestScoreForPasses:
         )
 
         np.testing.assert_allclose(
-            hc.score_for_passes(test_round, 20.0, hc_system, None, False),
+            hc.score_for_passes(20.0, test_round, hc_system, None, False),
             pass_scores_expected,
         )
 
         hc_sys = hc.handicap_scheme(hc_system)
         np.testing.assert_allclose(
-            hc_sys.score_for_passes(test_round, 20.0, None, False), pass_scores_expected
+            hc_sys.score_for_passes(20.0, test_round, None, False), pass_scores_expected
         )
 
     @pytest.mark.parametrize(
@@ -459,13 +459,13 @@ class TestScoreForPasses:
         )
 
         np.testing.assert_allclose(
-            hc.score_for_passes(test_round, 20.0, hc_system, None, True),
+            hc.score_for_passes(20.0, test_round, hc_system, None, True),
             pass_scores_expected,
         )
 
         hc_sys = hc.handicap_scheme(hc_system)
         np.testing.assert_allclose(
-            hc_sys.score_for_passes(test_round, 20.0, None, True), pass_scores_expected
+            hc_sys.score_for_passes(20.0, test_round, None, True), pass_scores_expected
         )
 
 
@@ -525,11 +525,11 @@ class TestScoreForRound:
         )
 
         assert hc.score_for_round(
-            test_round, 20.0, hc_system, None, False
+            20.0, test_round, hc_system, None, False
         ) == pytest.approx(round_score_expected)
 
         hc_sys = hc.handicap_scheme(hc_system)
-        assert hc_sys.score_for_round(test_round, 20.0, None, False) == pytest.approx(
+        assert hc_sys.score_for_round(20.0, test_round, None, False) == pytest.approx(
             round_score_expected
         )
 
@@ -565,13 +565,13 @@ class TestScoreForRound:
         )
 
         assert (
-            hc.score_for_round(test_round, 20.0, hc_system, None, True)
+            hc.score_for_round(20.0, test_round, hc_system, None, True)
             == round_score_expected
         )
 
         hc_sys = hc.handicap_scheme(hc_system)
         assert (
-            hc_sys.score_for_round(test_round, 20.0, None, True) == round_score_expected
+            hc_sys.score_for_round(20.0, test_round, None, True) == round_score_expected
         )
 
 

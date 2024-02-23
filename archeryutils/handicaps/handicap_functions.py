@@ -98,8 +98,8 @@ def handicap_scheme(
 
 
 def arrow_score(
-    target: targets.Target,
     handicap: FloatArray,
+    target: targets.Target,
     handicap_sys: Union[str, HandicapScheme],
     arw_d: Optional[float] = None,
 ) -> FloatArray:
@@ -108,10 +108,10 @@ def arrow_score(
 
     Parameters
     ----------
-    target : targets.Target
-        A Target class specifying the target to be used
     handicap : FloatArray
         handicap value to calculate score for
+    target : targets.Target
+        A Target class specifying the target to be used
     handicap_sys : Union[str, HandicapScheme]
         identifier for the handicap system to use
     arw_d : float or None, default=None
@@ -135,23 +135,23 @@ def arrow_score(
     >>> import archeryutils as au
     >>> from archeryutils import handicaps as hc
     >>> my720target = au.Target("10_zone", 122, 70.0)
-    >>> hc.arrow_score(my720target, 10.0, "AGB")
+    >>> hc.arrow_score(10.0, my720target, "AGB")
     9.401182682963338
 
     It can also be passed an array of handicaps:
 
-    >>> hc.arrow_score(my720target, np.array([10.0, 50.0, 100.0]), "AGB")
+    >>> hc.arrow_score(np.array([10.0, 50.0, 100.0]), my720target, "AGB")
     array([9.40118268, 6.05227962, 0.46412515])
 
     """
     hc_sys = handicap_scheme(handicap_sys)
 
-    return hc_sys.arrow_score(target, handicap, arw_d=arw_d)
+    return hc_sys.arrow_score(handicap, target, arw_d=arw_d)
 
 
 def score_for_passes(
-    rnd: rounds.Round,
     handicap: FloatArray,
+    rnd: rounds.Round,
     handicap_sys: Union[str, HandicapScheme],
     arw_d: Optional[float] = None,
     rounded_score: bool = True,
@@ -161,10 +161,10 @@ def score_for_passes(
 
     Parameters
     ----------
-    rnd : rounds.Round
-        A Round class specifying the round being shot
     handicap : FloatArray
         handicap value to calculate score for
+    rnd : rounds.Round
+        A Round class specifying the round being shot
     handicap_sys : Union[str, HandicapScheme]
         identifier for the handicap system to use
     arw_d : float or None, default=None
@@ -187,14 +187,14 @@ def score_for_passes(
     >>> import archeryutils as au
     >>> from archeryutils import handicaps as hc
     >>> wa_outdoor = au.load_rounds.WA_outdoor
-    >>> hc.score_for_passes(wa_outdoor.wa1440_90, 10.0, "AGB")
+    >>> hc.score_for_passes(10.0, wa_outdoor.wa1440_90, "AGB")
     array([322.84091528, 338.44257659, 338.66395001, 355.87959411])
 
     It can also be passed an array of handicaps:
 
     >>> hc.score_for_passes(
-    ...     wa_outdoor.wa1440_90,
     ...     np.array([10.0, 50.0, 100.0]),
+    ...     wa_outdoor.wa1440_90,
     ...     "AGB",
     ... )
     array([[322.84091528, 162.76200686,   8.90456718],
@@ -206,13 +206,13 @@ def score_for_passes(
     hc_sys = handicap_scheme(handicap_sys)
 
     return hc_sys.score_for_passes(
-        rnd, handicap, arw_d=arw_d, rounded_score=rounded_score
+        handicap, rnd, arw_d=arw_d, rounded_score=rounded_score
     )
 
 
 def score_for_round(
-    rnd: rounds.Round,
     handicap: FloatArray,
+    rnd: rounds.Round,
     handicap_sys: Union[str, HandicapScheme],
     arw_d: Optional[float] = None,
     rounded_score: bool = True,
@@ -222,10 +222,10 @@ def score_for_round(
 
     Parameters
     ----------
-    rnd : rounds.Round
-        A Round class specifying the round being shot
     handicap : FloatArray
         handicap value to calculate score for
+    rnd : rounds.Round
+        A Round class specifying the round being shot
     handicap_sys : Union[str, HandicapScheme]
         identifier for the handicap system to use
     arw_d : float or None, default=None
@@ -246,7 +246,7 @@ def score_for_round(
     >>> import archeryutils as au
     >>> from archeryutils import handicaps as hc
     >>> wa_outdoor = au.load_rounds.WA_outdoor
-    >>> hc.score_for_round(wa_outdoor.wa1440_90, 10.0, "AGB")
+    >>> hc.score_for_round(10.0, wa_outdoor.wa1440_90, "AGB")
     1356.0
     >>> au.handicap_equations.score_for_round(wa_outdoor.wa1440_90,
     ...                                       10.0,
@@ -256,8 +256,8 @@ def score_for_round(
     It can also be passed an array of handicaps:
 
     >>> hc.score_for_round(
-    ...     wa_outdoor.wa1440_90,
     ...     np.array([10.0, 50.0, 100.0]),
+    ...     wa_outdoor.wa1440_90,
     ... )
     array([1356.,  887.,   91.])
 
@@ -265,7 +265,7 @@ def score_for_round(
     hc_sys = handicap_scheme(handicap_sys)
 
     return hc_sys.score_for_round(
-        rnd, handicap, arw_d=arw_d, rounded_score=rounded_score
+        handicap, rnd, arw_d=arw_d, rounded_score=rounded_score
     )
 
 

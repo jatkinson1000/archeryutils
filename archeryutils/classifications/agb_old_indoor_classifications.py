@@ -248,8 +248,8 @@ def agb_old_indoor_classification_scores(
     # Get scores required on this round for each classification
     class_scores = [
         hc.score_for_round(
-            ALL_INDOOR_ROUNDS[roundname],
             group_data["class_HC"][i],
+            ALL_INDOOR_ROUNDS[roundname],
             "AGBold",
             rounded_score=True,
         )
