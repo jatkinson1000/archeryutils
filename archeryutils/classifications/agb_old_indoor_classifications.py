@@ -14,7 +14,7 @@ AGB_old_indoor_classification_scores
 from typing import TypedDict
 
 from archeryutils import load_rounds
-from archeryutils.handicaps import handicap_equations as hc_eq
+import archeryutils.handicaps as hc
 import archeryutils.classifications.classification_utils as cls_funcs
 
 
@@ -245,16 +245,13 @@ def agb_old_indoor_classification_scores(
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
 
-    hc_params = hc_eq.HcParams()
-
     # Get scores required on this round for each classification
     class_scores = [
-        hc_eq.score_for_round(
+        hc.score_for_round(
             ALL_INDOOR_ROUNDS[roundname],
             group_data["class_HC"][i],
             "AGBold",
-            hc_params,
-            round_score_up=True,
+            rounded_score=True,
         )
         for i, class_i in enumerate(group_data["classes"])
     ]

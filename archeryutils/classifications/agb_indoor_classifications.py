@@ -16,7 +16,7 @@ import numpy as np
 import numpy.typing as npt
 
 from archeryutils import load_rounds
-from archeryutils.handicaps import handicap_equations as hc_eq
+import archeryutils.handicaps as hc
 import archeryutils.classifications.classification_utils as cls_funcs
 
 
@@ -281,17 +281,15 @@ def agb_indoor_classification_scores(
     group_data = agb_indoor_classifications[groupname]
 
     hc_scheme = "AGB"
-    hc_params = hc_eq.HcParams()
 
     # Get scores required on this round for each classification
     # Enforce full size face
     class_scores = [
-        hc_eq.score_for_round(
+        hc.score_for_round(
             ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             group_data["class_HC"][i],
             hc_scheme,
-            hc_params,
-            round_score_up=True,
+            rounded_score=True,
         )
         for i, class_i in enumerate(group_data["classes"])
     ]
@@ -305,12 +303,11 @@ def agb_indoor_classification_scores(
     for i, (score, handicap) in enumerate(
         zip(int_class_scores, group_data["class_HC"])
     ):
-        next_score = hc_eq.score_for_round(
+        next_score = hc.score_for_round(
             ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             np.floor(handicap) + 1,
             hc_scheme,
-            hc_params,
-            round_score_up=True,
+            rounded_score=True,
         )
         if next_score == score:
             # If already at max score this classification is impossible
