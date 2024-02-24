@@ -57,6 +57,11 @@ class HandicapScheme(ABC):
         diameter of an indoor arrow [metres] for this scheme, default 9.3e-3
     desc_scale: bool
         does the scheme work on a descending scale i.e. lower handicap is better, default True
+    scale_bounds: list[int]
+        Reasonable upper and lower bounds on the handicap scale for bounding searches
+    max_score_rounding_lim: float
+        Limit to round the max score to when searching
+        depends on scheme rounding method e.g. round() vs. ceil() etc.
 
     Methods
     -------
@@ -83,9 +88,11 @@ class HandicapScheme(ABC):
         self.arw_d_out: float = 5.5e-3
         self.arw_d_in: float = 9.3e-3
 
-        # default descending scale (a la AGB)
+        # Scale parameters - defaults set a la AGB
         # Some schemes will need to override
         self.desc_scale: bool = True
+        self.scale_bounds: list[float] = [-75, 300]
+        self.max_score_rounding_lim: float = 1.0
 
     def __repr__(self) -> str:
         """Return a representation of a HandicapScheme instance."""
@@ -582,21 +589,15 @@ class HandicapScheme(ABC):
         max_score = rnd.max_score()
 
         if self.desc_scale:
-            handicap = -75.0
+            handicap = min(self.scale_bounds)
             delta_hc = 0.01
         else:
-            handicap = 175.0
+            handicap = max(self.scale_bounds)
             delta_hc = -0.01
-
-        # Set rounding limit
-        if self.name in ("AGB"):
-            round_lim = 1.0
-        else:
-            round_lim = 0.5
 
         s_max = self.score_for_round(handicap, rnd, arw_d, rounded_score=False)
         # Work down to where we would round or ceil to max score
-        while s_max > max_score - round_lim:
+        while s_max > max_score - self.max_score_rounding_lim:
             handicap = handicap + delta_hc
             s_max = self.score_for_round(handicap, rnd, arw_d, rounded_score=False)
         handicap = handicap - delta_hc  # Undo final iteration that overshoots
@@ -651,10 +652,7 @@ class HandicapScheme(ABC):
         # pylint: disable=too-many-branches
         # pylint: disable=too-many-statements
 
-        if self.desc_scale:
-            x_init = [-75.0, 300.0]
-        else:
-            x_init = [-250.0, 175.0]
+        x_init = self.scale_bounds
 
         f_init = [
             self._f_root(x_init[0], score, rnd, arw_d=arw_d),
