@@ -228,6 +228,7 @@ class HandicapAGBold(HandicapScheme):
         self.arw_d_in = 7.14e-3
 
         self.name = "AGBold"
+        self.max_score_rounding_lim: float = 0.5
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.

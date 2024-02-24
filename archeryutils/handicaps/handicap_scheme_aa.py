@@ -97,6 +97,8 @@ class HandicapAA(HandicapScheme):
 
         self.name = "AA"
         self.desc_scale = False
+        self.scale_bounds = [-250, 175]
+        self.max_score_rounding_lim: float = 0.5
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -241,6 +243,8 @@ class HandicapAA2(HandicapScheme):
 
         self.name = "AA2"
         self.desc_scale = False
+        self.scale_bounds = [-250, 175]
+        self.max_score_rounding_lim: float = 0.5
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
