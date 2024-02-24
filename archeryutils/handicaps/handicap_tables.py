@@ -117,9 +117,43 @@ class HandicapTable:
             self.hcs = self.hcs[1:-1]
             self.table = self.table[1:-1, :]
 
-    def print(
+    def __repr__(self) -> str:
+        """Return a representation of a HandicapTable instance."""
+        return f"<HandicapTable: '{self.hc_sys.name}'>"
+
+    def __str__(
         self,
-    ) -> None:
+    ) -> str:
+        """
+        Format the handicap table as a string.
+
+        Returns
+        -------
+        output_str : str
+            a string representation of the Handicap table for printing/saving
+
+        """
+        # To ensure both terminal and file output are the same, create a single string
+        round_names = [self._abbreviate(r.name) for r in self.round_list]
+        output_header = "".join(
+            name.rjust(14) for name in chain(["Handicap"], round_names)
+        )
+        # Auto-set the number of decimal places to display handicaps to
+        if np.max(self.hcs % 1.0) <= 0.0:
+            hc_dp = 0
+        else:
+            hc_dp = np.max(
+                np.abs([decimal.Decimal(str(d)).as_tuple().exponent for d in self.hcs])
+            )
+        # Format each row appropriately
+        output_rows = [
+            self._format_row(row, hc_dp, self.int_prec) for row in self.table
+        ]
+        output_str = "\n".join(chain([output_header], output_rows))
+
+        return output_str
+
+    def print(self) -> None:
         """
         Print handicap table to screen/stdout.
 
@@ -142,10 +176,7 @@ class HandicapTable:
                      5          1380          1399          1418
 
         """
-        # Generate string to output to file or display
-        output_str = self._table_as_str()
-
-        print(output_str)
+        print(self)
 
     def to_csv(
         self,
@@ -207,9 +238,8 @@ class HandicapTable:
         """
         print("Writing handicap table to file...", end="")
         # Generate string to output to file or display
-        output_str = self._table_as_str()
         with open(filename, "w", encoding="utf-8") as table_file:
-            table_file.write(output_str)
+            table_file.write(str(self))
         print("Done.")
 
     def _check_print_table_inputs(
@@ -314,38 +344,6 @@ class HandicapTable:
         }
 
         return " ".join(abbreviations.get(i, i) for i in name.split())
-
-    def _table_as_str(
-        self,
-    ) -> str:
-        """
-        Convert the handicap table to a string.
-
-        Returns
-        -------
-        output_str : str
-            a string representation of the Handicap table for printing/saving
-
-        """
-        # To ensure both terminal and file output are the same, create a single string
-        round_names = [self._abbreviate(r.name) for r in self.round_list]
-        output_header = "".join(
-            name.rjust(14) for name in chain(["Handicap"], round_names)
-        )
-        # Auto-set the number of decimal places to display handicaps to
-        if np.max(self.hcs % 1.0) <= 0.0:
-            hc_dp = 0
-        else:
-            hc_dp = np.max(
-                np.abs([decimal.Decimal(str(d)).as_tuple().exponent for d in self.hcs])
-            )
-        # Format each row appropriately
-        output_rows = [
-            self._format_row(row, hc_dp, self.int_prec) for row in self.table
-        ]
-        output_str = "\n".join(chain([output_header], output_rows))
-
-        return output_str
 
     @staticmethod
     def _format_row(
