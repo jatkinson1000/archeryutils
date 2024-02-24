@@ -21,6 +21,8 @@ References
 
 """
 
+from typing import Sequence
+
 import numpy as np
 
 from .handicap_scheme import FloatArray, HandicapScheme
@@ -77,28 +79,22 @@ class HandicapAA(HandicapScheme):
 
     """
 
-    def __init__(
-        self,
-        ang_0: float = 1.0e-3,
-        k0: float = 2.37,
-        ks: float = 0.027,
-        kd: float = 0.004,
-    ):
-        super().__init__()
+    name: str = "AA"
 
-        self.params = {
-            "ang_0": ang_0,  # Baseline angle used for group size 1.0 [millirad].
-            "k0": k0,  # Offset required to set handicap 100 at desired score.
-            "ks": ks,  # Change with each step of geometric progression.
-            "kd": kd,  # Distance scaling factor [1/metres].
-        }
+    # Set arrow diameters
+    arw_d_out: float = 5.0e-3
+    arw_d_in: float = 9.3e-3
 
-        self.arw_d_out = 5.0e-3
+    # Scale parameters
+    desc_scale: bool = False
+    scale_bounds: Sequence[float] = [-250, 175]
+    max_score_rounding_lim: float = 0.5
 
-        self.name = "AA"
-        self.desc_scale = False
-        self.scale_bounds = [-250, 175]
-        self.max_score_rounding_lim: float = 0.5
+    # Handicap scheme equation specific parameters
+    ang_0: float = 1.0e-3  # Baseline angle used for group size 1.0 [millirad].
+    k0: float = 2.37  # Offset required to set handicap 100
+    ks: float = 0.027  # Change with each step of geometric
+    kd: float = 0.004  # Distance scaling factor [1/metres].
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -152,11 +148,11 @@ class HandicapAA(HandicapScheme):
         # convert to rad
         return (
             np.sqrt(2.0)
-            * self.params["ang_0"]
+            * self.ang_0
             * np.exp(
-                self.params["k0"]
-                - self.params["ks"] * handicap
-                + self.params["kd"] * dist
+                self.k0
+                - self.ks * handicap
+                + self.kd * dist
             )
         )
 
@@ -216,35 +212,24 @@ class HandicapAA2(HandicapScheme):
 
     """
 
-    def __init__(
-        self,
-        ang_0: float = 1.0e-3,
-        k0: float = 2.57,
-        ks: float = 0.027,
-        f1: float = 0.815,
-        f2: float = 0.185,
-        d0: float = 50.0,
-    ):
-        # two too many arguments, but all are hc-scheme params => disable
-        # pylint: disable=too-many-arguments
+    name: str = "AA2"
 
-        super().__init__()
+    # Set arrow diameters
+    arw_d_out: float = 5.0e-3
+    arw_d_in: float = 9.3e-3
 
-        self.params = {
-            "ang_0": ang_0,
-            "k0": k0,  # Offset required to set handicap 100 at desired score.
-            "ks": ks,  # Change with each step of geometric progression.
-            "f1": f1,  # 'Linear' scaling factor.
-            "f2": f2,  # 'Quadratic' scaling factor.
-            "d0": d0,  # Normalisation distance [metres].
-        }
+    # Scale parameters
+    desc_scale: bool = False
+    scale_bounds: Sequence[float] = [-250, 175]
+    max_score_rounding_lim: float = 0.5
 
-        self.arw_d_out = 5.0e-3
-
-        self.name = "AA2"
-        self.desc_scale = False
-        self.scale_bounds = [-250, 175]
-        self.max_score_rounding_lim: float = 0.5
+    # Handicap scheme equation specific parameters
+    ang_0: float = 1.0e-3  # Baseline angle used for group size 1.0 [millirad].
+    k0: float = 2.57  # Offset required to set handicap 100 at desired score.
+    ks: float = 0.027  # Change with each step of geometric
+    f1: float = 0.815  # 'Linear' scaling factor.
+    f2: float = 0.185  # 'Quadratic' scaling factor.
+    d0: float = 50.0  # Normalisation distance [metres].
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -298,7 +283,7 @@ class HandicapAA2(HandicapScheme):
         # convert to rad
         return (
             np.sqrt(2.0)
-            * self.params["ang_0"]
-            * np.exp(self.params["k0"] - self.params["ks"] * handicap)
-            * (self.params["f1"] + self.params["f2"] * dist / self.params["d0"])
+            * self.ang_0
+            * np.exp(self.k0 - self.ks * handicap)
+            * (self.f1 + self.f2 * dist / self.d0)
         )

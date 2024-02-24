@@ -30,6 +30,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.20.0",
+    "pydantic>=2.0",
 ]
 
 [project.optional-dependencies]

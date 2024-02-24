@@ -22,6 +22,8 @@ References
 
 """
 
+from typing import Sequence
+
 import numpy as np
 
 from .handicap_scheme import FloatArray, HandicapScheme
@@ -80,23 +82,23 @@ class HandicapAGB(HandicapScheme):
 
     """
 
-    def __init__(
-        self,
-        datum: float = 6.0,
-        step: float = 3.5,
-        ang_0: float = 5.0e-4,
-        kd: float = 0.00365,
-    ):
-        super().__init__()
+    name: str = "AGB"
 
-        self.params = {
-            "datum": datum,
-            "step": step,
-            "ang_0": ang_0,
-            "kd": kd,
-        }
+    # Set arrow diameters
+    arw_d_out: float = 5.5e-3
+    arw_d_in: float = 9.3e-3
 
-        self.name = "AGB"
+    # Scale parameters
+    desc_scale: bool = True
+    scale_bounds: Sequence[float] = [-75, 300]
+    max_score_rounding_lim: float = 1.0
+
+    # Handicap scheme equation specific parameters
+    datum: float = 6.0
+    step: float = 3.5
+    ang_0: float = 5.0e-4
+    kd: float = 0.00365
+
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -131,9 +133,9 @@ class HandicapAGB(HandicapScheme):
 
         """
         return (
-            self.params["ang_0"]
-            * ((1.0 + self.params["step"] / 100.0) ** (handicap + self.params["datum"]))
-            * np.exp(self.params["kd"] * dist)
+            self.ang_0
+            * ((1.0 + self.step / 100.0) ** (handicap + self.datum))
+            * np.exp(self.kd * dist)
         )
 
     # Override rounding method for AGB to always round up to next highest score.
@@ -199,36 +201,25 @@ class HandicapAGBold(HandicapScheme):
 
     """
 
-    def __init__(
-        self,
-        datum: float = 12.9,
-        step: float = 3.6,
-        ang_0: float = 5.0e-4,
-        k1: float = 1.429e-6,
-        k2: float = 1.07,
-        k3: float = 4.3,
-        p1: float = 2.0,
-    ):
-        # three too many arguments, but all are hc-scheme params => disable
-        # pylint: disable=too-many-arguments
+    name: str = "AGBold"
 
-        super().__init__()
+    # Set arrow diameters
+    arw_d_out: float = 7.14e-3
+    arw_d_in: float = 7.14e-3
 
-        self.params = {
-            "datum": datum,  # Offset required to set handicap 0 at desired score.
-            "step": step,  # Percentage change in group size for each handicap step.
-            "ang_0": ang_0,  # Baseline angle used for group size 0.5 [millirad].
-            "k1": k1,  # Constant 1 used in handicap equation.
-            "k2": k2,  # Constant 2 used in handicap equation.
-            "k3": k3,  # Constant 3 used in handicap equation.
-            "p1": p1,  # Exponent of distance scaling.
-        }
+    # Scale parameters
+    desc_scale: bool = True
+    scale_bounds: Sequence[float] = [-75, 300]
+    max_score_rounding_lim: float = 0.5
 
-        self.arw_d_out = 7.14e-3
-        self.arw_d_in = 7.14e-3
-
-        self.name = "AGBold"
-        self.max_score_rounding_lim: float = 0.5
+    # Handicap scheme equation specific parameters
+    datum: float = 12.9  # Offset required to set handicap 0 at desired score.
+    step: float = 3.6  # Percentage change in group size for each handicap step.
+    ang_0: float = 5.0e-4  # Baseline angle used for group size 0.5 [millirad].
+    k1: float = 1.429e-6   # Constant 1 used in handicap equation.
+    k2: float = 1.07       # Constant 2 used in handicap equation.
+    k3: float = 4.3        # Constant 3 used in handicap equation.
+    p1: float = 2.0        # Exponent of distance scaling.
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -272,12 +263,12 @@ class HandicapAGBold(HandicapScheme):
         array([0.00112649, 0.00478762, 0.05520862])
 
         """
-        k_factor = self.params["k1"] * self.params["k2"] ** (
-            handicap + self.params["k3"]
+        k_factor = self.k1 * self.k2 ** (
+            handicap + self.k3
         )
-        f_factor = 1.0 + k_factor * dist ** self.params["p1"]
+        f_factor = 1.0 + k_factor * dist ** self.p1
         return (
-            self.params["ang_0"]
-            * ((1.0 + self.params["step"] / 100.0) ** (handicap + self.params["datum"]))
+            self.ang_0
+            * ((1.0 + self.step / 100.0) ** (handicap + self.datum))
             * f_factor
         )

@@ -33,17 +33,18 @@ References
 
 import warnings
 from abc import ABC, abstractmethod
-from typing import Optional, TypeVar, Union, overload
+from typing import Optional, Sequence, TypeVar, Union, overload
 
 import numpy as np
 import numpy.typing as npt
+from pydantic import BaseModel
 
 from archeryutils import rounds, targets
 
 FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float_])
 
 
-class HandicapScheme(ABC):
+class HandicapScheme(BaseModel, ABC):
     """
     Abstract Base Class to represent a generic handicap scheme.
 
@@ -57,11 +58,13 @@ class HandicapScheme(ABC):
         diameter of an indoor arrow [metres] for this scheme, default 9.3e-3
     desc_scale: bool
         does the scheme work on a descending scale i.e. lower handicap is better, default True
-    scale_bounds: list[int]
+    scale_bounds: Sequence[int]
         Reasonable upper and lower bounds on the handicap scale for bounding searches
     max_score_rounding_lim: float
         Limit to round the max score to when searching
         depends on scheme rounding method e.g. round() vs. ceil() etc.
+    scale_bounds: list[int]
+        Reasonable upper and lower bounds on the handicap scale for bounding searches
 
     Methods
     -------
@@ -80,19 +83,16 @@ class HandicapScheme(ABC):
 
     """
 
-    def __init__(self) -> None:
-        self.name: str = "unnamed"
+    name: str
 
-        # Set arrow diameters
-        # Some schemes will need to override these with other values
-        self.arw_d_out: float = 5.5e-3
-        self.arw_d_in: float = 9.3e-3
+    # Indoor and outdoor arrow diameters
+    arw_d_out: float
+    arw_d_in: float
 
-        # Scale parameters - defaults set a la AGB
-        # Some schemes will need to override
-        self.desc_scale: bool = True
-        self.scale_bounds: list[float] = [-75, 300]
-        self.max_score_rounding_lim: float = 1.0
+    # Handicap scheme and scale parameters
+    desc_scale: bool
+    scale_bounds: Sequence[float]
+    max_score_rounding_lim: float
 
     def __repr__(self) -> str:
         """Return a representation of a HandicapScheme instance."""
