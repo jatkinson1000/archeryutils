@@ -221,7 +221,7 @@ class Round:
 
     def __repr__(self) -> str:
         """Return a representation of a Round instance."""
-        return f"Round('{self.name}')"
+        return f"<Round: '{self.name}'>"
 
     def __eq__(self, other: object) -> bool:
         """Check equality of Rounds based on name and passes.
