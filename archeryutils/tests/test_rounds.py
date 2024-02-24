@@ -196,7 +196,7 @@ class TestRound:
         Check Pass string representation
         """
         test_round = Round("Name", [Pass(36, _target)])
-        expected = "Round('Name')"
+        expected = "<Round: 'Name'>"
         assert repr(test_round) == expected
 
     @pytest.mark.parametrize(

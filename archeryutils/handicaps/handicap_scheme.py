@@ -89,7 +89,7 @@ class HandicapScheme(ABC):
 
     def __repr__(self) -> str:
         """Return a representation of a HandicapScheme instance."""
-        return f"HandicapScheme('{self.name}')"
+        return f"<HandicapScheme: '{self.name}'>"
 
     @overload
     @abstractmethod

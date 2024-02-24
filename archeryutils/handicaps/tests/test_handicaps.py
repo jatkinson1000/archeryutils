@@ -90,7 +90,7 @@ class TestHandicapScheme:
     def test_repr(self, scheme: str) -> None:
         """Check HandicapScheme subclass string representation."""
         test_scheme = handicap_scheme(scheme)
-        expected = f"HandicapScheme('{scheme}')"
+        expected = f"<HandicapScheme: '{scheme}'>"
         assert repr(test_scheme) == expected
 
     def test_invalid_system(self) -> None:
