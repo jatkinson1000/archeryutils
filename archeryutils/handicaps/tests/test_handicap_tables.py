@@ -51,6 +51,14 @@ class TestHandicapTable:
 
     """
 
+    def test_repr(self) -> None:
+        """Check HandicapTable representation."""
+        test_table = hc.HandicapTable(
+            "AGB", np.array([1.0, 2.0, 3.0]), [york, hereford]
+        )
+        expected = "<HandicapTable: 'AGB'>"
+        assert repr(test_table) == expected
+
     @pytest.mark.parametrize(
         "hcs,int_prec,rounded,expected",
         [
@@ -118,9 +126,7 @@ class TestHandicapTable:
             "AGB", hcs, [york, hereford], int_prec=int_prec, rounded_scores=rounded
         )
 
-        # Accessing a protected member function, but for testing, not production code
-        # pylint: disable=protected-access
-        assert test_table._table_as_str() == expected
+        assert str(test_table) == expected
 
     @pytest.mark.parametrize(
         "input_str,expected",
