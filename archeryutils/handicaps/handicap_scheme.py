@@ -63,8 +63,6 @@ class HandicapScheme(BaseModel, ABC):
     max_score_rounding_lim: float
         Limit to round the max score to when searching
         depends on scheme rounding method e.g. round() vs. ceil() etc.
-    scale_bounds: list[int]
-        Reasonable upper and lower bounds on the handicap scale for bounding searches
 
     Methods
     -------

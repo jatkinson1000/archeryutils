@@ -99,7 +99,6 @@ class HandicapAGB(HandicapScheme):
     ang_0: float = 5.0e-4
     kd: float = 0.00365
 
-
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
 
@@ -216,10 +215,10 @@ class HandicapAGBold(HandicapScheme):
     datum: float = 12.9  # Offset required to set handicap 0 at desired score.
     step: float = 3.6  # Percentage change in group size for each handicap step.
     ang_0: float = 5.0e-4  # Baseline angle used for group size 0.5 [millirad].
-    k1: float = 1.429e-6   # Constant 1 used in handicap equation.
-    k2: float = 1.07       # Constant 2 used in handicap equation.
-    k3: float = 4.3        # Constant 3 used in handicap equation.
-    p1: float = 2.0        # Exponent of distance scaling.
+    k1: float = 1.429e-6  # Constant 1 used in handicap equation.
+    k2: float = 1.07  # Constant 2 used in handicap equation.
+    k3: float = 4.3  # Constant 3 used in handicap equation.
+    p1: float = 2.0  # Exponent of distance scaling.
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -263,10 +262,8 @@ class HandicapAGBold(HandicapScheme):
         array([0.00112649, 0.00478762, 0.05520862])
 
         """
-        k_factor = self.k1 * self.k2 ** (
-            handicap + self.k3
-        )
-        f_factor = 1.0 + k_factor * dist ** self.p1
+        k_factor = self.k1 * self.k2 ** (handicap + self.k3)
+        f_factor = 1.0 + k_factor * dist**self.p1
         return (
             self.ang_0
             * ((1.0 + self.step / 100.0) ** (handicap + self.datum))

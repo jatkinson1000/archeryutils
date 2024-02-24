@@ -149,11 +149,7 @@ class HandicapAA(HandicapScheme):
         return (
             np.sqrt(2.0)
             * self.ang_0
-            * np.exp(
-                self.k0
-                - self.ks * handicap
-                + self.kd * dist
-            )
+            * np.exp(self.k0 - self.ks * handicap + self.kd * dist)
         )
 
 
