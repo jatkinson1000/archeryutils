@@ -43,7 +43,9 @@ LOCATIONS = {
 }
 
 
-def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, Round]:
+def read_json_to_round_dict(
+    json_filelist: Union[str, list[str]], verbose: bool = False
+) -> dict[str, Round]:
     """
     Read round information from a json file into a dictionary of rounds.
 
@@ -51,11 +53,17 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
     ----------
     json_filelist : list of str
         filenames of json round files in ./round_data_files/
+    verbose : bool or None, default=Famse
+        Use verbose output and display warnings when applying default values to fields?
 
     Returns
     -------
     round_dict : dict of str : rounds.Round
     """
+    # verbosity checks add branches two too many for pylint
+    # In a flat structure, however => disable.
+    # pylint: disable=too-many-branches
+
     if not isinstance(json_filelist, list):
         json_filelist = [json_filelist]
 
@@ -71,10 +79,11 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
         for round_i in data:
             # Assign location
             if "location" not in round_i:
-                warnings.warn(
-                    f"No location provided for round {round_i['name']}. "
-                    "Defaulting to None."
-                )
+                if verbose:
+                    warnings.warn(
+                        f"No location provided for round {round_i['name']}. "
+                        "Defaulting to None."
+                    )
                 round_i["location"] = None
                 round_i["indoor"] = False
 
@@ -91,27 +100,30 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
                 round_i["location"] = "field"
 
             else:
-                warnings.warn(
-                    f"Location not recognised for round {round_i['name']}. "
-                    "Defaulting to None"
-                )
+                if verbose:
+                    warnings.warn(
+                        f"Location not recognised for round {round_i['name']}. "
+                        "Defaulting to None"
+                    )
                 round_i["indoor"] = False
                 round_i["location"] = None
 
             # Assign governing body
             if "body" not in round_i:
-                warnings.warn(
-                    f"No body provided for round {round_i['name']}. "
-                    "Defaulting to 'custom'."
-                )
+                if verbose:
+                    warnings.warn(
+                        f"No body provided for round {round_i['name']}. "
+                        "Defaulting to 'custom'."
+                    )
                 round_i["body"] = "custom"
 
             # Assign round family
             if "family" not in round_i:
-                warnings.warn(
-                    f"No family provided for round {round_i['name']}. "
-                    "Defaulting to ''."
-                )
+                if verbose:
+                    warnings.warn(
+                        f"No family provided for round {round_i['name']}. "
+                        "Defaulting to ''."
+                    )
                 round_i["family"] = ""
 
             # Assign passes
