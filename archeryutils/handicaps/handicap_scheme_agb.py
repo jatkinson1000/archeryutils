@@ -89,14 +89,22 @@ class HandicapAGB(HandicapScheme):
     ):
         super().__init__()
 
+        self.name = "AGB"
+
+        self.arw_d_out: float = 5.5e-3
+        self.arw_d_in: float = 9.3e-3
+
+        # AGB Uses a descending scale with ceil. All numbers typically in [-75, 300]
+        self.desc_scale: bool = True
+        self.scale_bounds: list[float] = [-75, 300]
+        self.max_score_rounding_lim: float = 1.0
+
         self.params = {
             "datum": datum,
             "step": step,
             "ang_0": ang_0,
             "kd": kd,
         }
-
-        self.name = "AGB"
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -214,6 +222,16 @@ class HandicapAGBold(HandicapScheme):
 
         super().__init__()
 
+        self.name = "AGBold"
+
+        self.arw_d_out = 7.14e-3
+        self.arw_d_in = 7.14e-3
+
+        # AGBold Uses a descending scale with round. All numbers typically in [-75, 300]
+        self.desc_scale = True
+        self.scale_bounds = [-75, 300]
+        self.max_score_rounding_lim = 0.5
+
         self.params = {
             "datum": datum,  # Offset required to set handicap 0 at desired score.
             "step": step,  # Percentage change in group size for each handicap step.
@@ -223,12 +241,6 @@ class HandicapAGBold(HandicapScheme):
             "k3": k3,  # Constant 3 used in handicap equation.
             "p1": p1,  # Exponent of distance scaling.
         }
-
-        self.arw_d_out = 7.14e-3
-        self.arw_d_in = 7.14e-3
-
-        self.name = "AGBold"
-        self.max_score_rounding_lim: float = 0.5
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.

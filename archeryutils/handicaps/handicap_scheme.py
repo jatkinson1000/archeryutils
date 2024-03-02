@@ -83,16 +83,14 @@ class HandicapScheme(ABC):
     def __init__(self) -> None:
         self.name: str = "unnamed"
 
-        # Set arrow diameters
-        # Some schemes will need to override these with other values
-        self.arw_d_out: float = 5.5e-3
-        self.arw_d_in: float = 9.3e-3
+        # Arrow diameters outdoor and indoor
+        self.arw_d_out: float
+        self.arw_d_in: float
 
-        # Scale parameters - defaults set a la AGB
-        # Some schemes will need to override
-        self.desc_scale: bool = True
-        self.scale_bounds: list[float] = [-75, 300]
-        self.max_score_rounding_lim: float = 1.0
+        # Handicap Scale parameters
+        self.desc_scale: bool
+        self.scale_bounds: list[float]
+        self.max_score_rounding_lim: float
 
     def __repr__(self) -> str:
         """Return a representation of a HandicapScheme instance."""
