@@ -236,8 +236,8 @@ Given a score we can calculate the classification it achieves:
 
     # AGB Outdoor
     class_from_score = class_func.calculate_agb_outdoor_classification(
-        "hereford",
         965,
+        "hereford",
         "recurve",
         "male",
         "50+",
@@ -248,8 +248,8 @@ Given a score we can calculate the classification it achieves:
 
     # AGB Indoor
     class_from_score = class_func.calculate_agb_indoor_classification(
-        "wa18",
         562,
+        "wa18",
         "compound",
         "female",
         "adult",
@@ -260,8 +260,8 @@ Given a score we can calculate the classification it achieves:
 
     # AGB Field
     class_from_score = class_func.calculate_agb_field_classification(
-        "wa_field_24_blue_unmarked",
         168,
+        "wa_field_24_blue_unmarked",
         "traditional",
         "male",
         "under 18",
