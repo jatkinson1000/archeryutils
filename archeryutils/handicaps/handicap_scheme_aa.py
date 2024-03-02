@@ -86,19 +86,22 @@ class HandicapAA(HandicapScheme):
     ):
         super().__init__()
 
+        self.name = "AA"
+
+        self.arw_d_out = 5.0e-3
+        self.arw_d_in: float = 9.3e-3
+
+        # AA Uses an ascending scale with round. All numbers typically in [-250, 175]
+        self.desc_scale = False
+        self.scale_bounds = [-250, 175]
+        self.max_score_rounding_lim = 0.5
+
         self.params = {
             "ang_0": ang_0,  # Baseline angle used for group size 1.0 [millirad].
             "k0": k0,  # Offset required to set handicap 100 at desired score.
             "ks": ks,  # Change with each step of geometric progression.
             "kd": kd,  # Distance scaling factor [1/metres].
         }
-
-        self.arw_d_out = 5.0e-3
-
-        self.name = "AA"
-        self.desc_scale = False
-        self.scale_bounds = [-250, 175]
-        self.max_score_rounding_lim: float = 0.5
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
@@ -230,6 +233,16 @@ class HandicapAA2(HandicapScheme):
 
         super().__init__()
 
+        self.name = "AA2"
+
+        self.arw_d_out = 5.0e-3
+        self.arw_d_in = 9.3e-3
+
+        # AA Uses an ascending scale with round. All numbers typically in [-250, 175]
+        self.desc_scale = False
+        self.scale_bounds = [-250, 175]
+        self.max_score_rounding_lim = 0.5
+
         self.params = {
             "ang_0": ang_0,
             "k0": k0,  # Offset required to set handicap 100 at desired score.
@@ -238,13 +251,6 @@ class HandicapAA2(HandicapScheme):
             "f2": f2,  # 'Quadratic' scaling factor.
             "d0": d0,  # Normalisation distance [metres].
         }
-
-        self.arw_d_out = 5.0e-3
-
-        self.name = "AA2"
-        self.desc_scale = False
-        self.scale_bounds = [-250, 175]
-        self.max_score_rounding_lim: float = 0.5
 
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
