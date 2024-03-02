@@ -193,7 +193,9 @@ class TestHandicapTable:
             + "             3          1276          1293\n"
         )
         test_table = hc.HandicapTable(
-            "AGB", [1.0, 2.0, 3.0], [york, hereford]  # type: ignore
+            "AGB",
+            [1.0, 2.0, 3.0],
+            [york, hereford],  # type: ignore
         )
         test_table.print()
         captured = capsys.readouterr()
