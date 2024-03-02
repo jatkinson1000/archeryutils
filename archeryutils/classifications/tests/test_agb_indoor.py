@@ -391,8 +391,8 @@ class TestCalculateAgbIndoorClassification:
         """
         # pylint: disable=too-many-arguments
         class_returned = class_funcs.calculate_agb_indoor_classification(
-            roundname="portsmouth",
             score=score,
+            roundname="portsmouth",
             bowstyle=bowstyle,
             gender="male",
             age_group=age_group,
@@ -411,8 +411,8 @@ class TestCalculateAgbIndoorClassification:
             match=("invalid_roundname"),
         ):
             _ = class_funcs.calculate_agb_indoor_classification(
-                roundname="invalid_roundname",
                 score=400,
+                roundname="invalid_roundname",
                 bowstyle="recurve",
                 gender="male",
                 age_group="adult",
@@ -434,8 +434,8 @@ class TestCalculateAgbIndoorClassification:
             ),
         ):
             _ = class_funcs.calculate_agb_indoor_classification(
-                roundname="portsmouth",
                 score=score,
+                roundname="portsmouth",
                 bowstyle="barebow",
                 gender="male",
                 age_group="adult",
