@@ -310,8 +310,8 @@ class TestCalculateAgbFieldClassification:
         """
         # pylint: disable=too-many-arguments
         class_returned = class_funcs.calculate_agb_field_classification(
-            roundname=roundname,
             score=score,
+            roundname=roundname,
             bowstyle=bowstyle,
             gender="male",
             age_group=age_group,
@@ -347,8 +347,8 @@ class TestCalculateAgbFieldClassification:
         Check that field classification returns unclassified for inappropriate rounds.
         """
         class_returned = class_funcs.calculate_agb_field_classification(
-            roundname=roundname,
             score=score,
+            roundname=roundname,
             bowstyle=bowstyle,
             gender="male",
             age_group="adult",
@@ -393,8 +393,8 @@ class TestCalculateAgbFieldClassification:
             ),
         ):
             _ = class_funcs.calculate_agb_field_classification(
-                roundname=roundname,
                 score=score,
+                roundname=roundname,
                 bowstyle="barebow",
                 gender="male",
                 age_group="adult",

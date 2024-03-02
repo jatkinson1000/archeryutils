@@ -339,7 +339,7 @@ del _make_agb_outdoor_classification_dict
 
 
 def calculate_agb_outdoor_classification(
-    roundname: str, score: float, bowstyle: str, gender: str, age_group: str
+    score: float, roundname: str, bowstyle: str, gender: str, age_group: str
 ) -> str:
     """
     Calculate AGB outdoor classification from score.
@@ -349,10 +349,10 @@ def calculate_agb_outdoor_classification(
 
     Parameters
     ----------
-    roundname : str
-        name of round shot as given by 'codename' in json
     score : int
         numerical score on the round to calculate classification for
+    roundname : str
+        name of round shot as given by 'codename' in json
     bowstyle : str
         archer's bowstyle under AGB outdoor target rules
     gender : str
@@ -379,8 +379,8 @@ def calculate_agb_outdoor_classification(
     --------
     >>> from archeryutils import classifications as class_func
     >>> class_func.calculate_agb_outdoor_classification(
-    ...     "hereford",
     ...     858,
+    ...     "hereford",
     ...     "recurve",
     ...     "female",
     ...     "under 18",

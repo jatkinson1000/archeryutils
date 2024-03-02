@@ -431,8 +431,8 @@ class TestCalculateAgbOutdoorClassification:
     )
     def test_calculate_agb_outdoor_classification(
         self,
-        roundname: str,
         score: float,
+        roundname: str,
         age_group: str,
         bowstyle: str,
         class_expected: str,
@@ -528,8 +528,8 @@ class TestCalculateAgbOutdoorClassification:
     )
     def test_calculate_agb_outdoor_classification_prestige_dist(
         self,
-        roundname: str,
         score: float,
+        roundname: str,
         age_group: str,
         bowstyle: str,
         class_expected: str,
@@ -582,8 +582,8 @@ class TestCalculateAgbOutdoorClassification:
             ),
         ):
             _ = class_funcs.calculate_agb_outdoor_classification(
-                roundname="wa1440_90",
                 score=score,
+                roundname="wa1440_90",
                 bowstyle="barebow",
                 gender="male",
                 age_group="adult",

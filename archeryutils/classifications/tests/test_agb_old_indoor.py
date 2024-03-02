@@ -239,8 +239,8 @@ class TestCalculateAgbOldIndoorClassification:
         Check that old_indoor classification returns expected value for a few cases.
         """
         class_returned = class_funcs.calculate_agb_old_indoor_classification(
-            roundname="portsmouth",
             score=score,
+            roundname="portsmouth",
             bowstyle="recurve",
             gender=gender,
             age_group="adult",
@@ -285,8 +285,8 @@ class TestCalculateAgbOldIndoorClassification:
             ),
         ):
             _ = class_funcs.calculate_agb_old_indoor_classification(
-                roundname=roundname,
                 score=score,
+                roundname=roundname,
                 bowstyle="barebow",
                 gender="male",
                 age_group="adult",
