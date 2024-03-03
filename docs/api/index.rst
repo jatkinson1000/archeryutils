@@ -3,48 +3,23 @@
 API Documentation
 =================
 
-Base Classes
-------------
+.. toctree::
+   :maxdepth: 2
 
-.. autoclass:: archeryutils.Target
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   archeryutils.baseclasses
 
-.. autoclass:: archeryutils.Pass
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. toctree::
+   :maxdepth: 3
 
-.. autoclass:: archeryutils.Round
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   archeryutils.handicaps
 
-Subpackages
------------
+.. toctree::
+   :maxdepth: 3
+
+   archeryutils.classifications
 
 .. toctree::
    :maxdepth: 2
 
-   archeryutils.classifications
-   archeryutils.handicaps
+   archeryutils.preloaded_rounds
 
-Submodules
-----------
-
-archeryutils.constants module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: archeryutils.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-archeryutils.load\_rounds module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: archeryutils.load_rounds
-   :members:
-   :undoc-members:
-   :show-inheritance:
