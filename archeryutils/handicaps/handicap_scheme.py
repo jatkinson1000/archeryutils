@@ -44,7 +44,7 @@ FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float_])
 
 
 class HandicapScheme(ABC):
-    """
+    r"""
     Abstract Base Class to represent a generic handicap scheme.
 
     Attributes
