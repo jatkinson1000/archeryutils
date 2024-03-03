@@ -63,20 +63,16 @@ class HandicapScheme(ABC):
         Limit to round the max score to when searching
         depends on scheme rounding method e.g. round() vs. ceil() etc.
 
-    Methods
-    -------
-    sigma_t(handicap, dist)
-        Calculate angular deviation for given handicap and distance.
-    sigma_r(handicap, dist)
-        Calculate radial deviation for a given handicap and distance.
-    arrow_score(target, handicap, arw_d=None)
-        Calculate the average arrow score for a given target and handicap.
-    score_for_passes(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for all passes in a round for a given handicap.
-    score_for_round(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for a round for a given handicap.
-    handicap_from_score(score,rnd, arw_d=None, int_prec=False)
-        Calculate the handicap for a given score on a given round.
+    See Also
+    --------
+    handicap_scheme_agb.HandicapAGB :
+        The AGB HandicapScheme subclass and associated \\**kwargs
+    handicap_scheme_agb.HandicapAGBold :
+        The AGBold HandicapScheme subclass and associated \\**kwargs
+    handicap_scheme_aa.HandicapAA :
+        The AA HandicapScheme subclass and associated \\**kwargs
+    handicap_scheme_aa.HandicapAA2 :
+        The AA2 HandicapScheme subclass and associated \\**kwargs
 
     """
 

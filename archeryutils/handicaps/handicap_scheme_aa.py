@@ -50,21 +50,6 @@ class HandicapAA(HandicapScheme):
     arw_d_in: float
         diameter of an indoor arrow 9.3e-3 [metres]
 
-    Methods
-    -------
-    sigma_t(handicap, dist)
-        Calculate angular deviation for given handicap and distance.
-    sigma_r(handicap, dist)
-        Calculate radial deviation for a given handicap and distance.
-    arrow_score(target, handicap, arw_d=None)
-        Calculate the average arrow score for a given target and handicap.
-    score_for_passes(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for all passes in a round for a given handicap.
-    score_for_round(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for a round for a given handicap.
-    handicap_from_score(score,rnd, arw_d=None, int_prec=False)
-        Calculate the handicap for a given score on a given round.
-
     Warnings
     --------
     Using non-default values for the kwargs may produce results that
@@ -73,7 +58,8 @@ class HandicapAA(HandicapScheme):
 
     See Also
     --------
-    HandicapScheme : The base class for a handicap scheme from which this is subclassed.
+    HandicapScheme : The base class for a handicap scheme from which this is subclassed
+                     containing details of additional methods.
 
     """
 
@@ -121,11 +107,11 @@ class HandicapAA(HandicapScheme):
         Notes
         -----
         This is the key part of this scheme.
-        The values are taken from [1]_
+        The values are taken from Park (2014) [2]_.
 
         References
         ----------
-        .. [1] Park, J. L. (2014). "Modelling archers’ scores at different distances
+        .. [2] Park, J. L. (2014). "Modelling archers’ scores at different distances
            to quantify score loss due to equipment selection and technique errors."
            Proceedings of the Institution of Mechanical Engineers,
            Part P: Journal of Sports Engineering and Technology, 228(4), 250-258.
@@ -192,21 +178,6 @@ class HandicapAA2(HandicapScheme):
     arw_d_in: float
         diameter of an indoor arrow 9.3e-3 [metres]
 
-    Methods
-    -------
-    sigma_t(handicap, dist)
-        Calculate angular deviation for given handicap and distance.
-    sigma_r(handicap, dist)
-        Calculate radial deviation for a given handicap and distance.
-    arrow_score(target, handicap, arw_d=None)
-        Calculate the average arrow score for a given target and handicap.
-    score_for_passes(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for all passes in a round for a given handicap.
-    score_for_round(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for a round for a given handicap.
-    handicap_from_score(score,rnd, arw_d=None, int_prec=False)
-        Calculate the handicap for a given score on a given round.
-
     Warnings
     --------
     Using non-default values for the kwargs may produce results that
@@ -215,7 +186,8 @@ class HandicapAA2(HandicapScheme):
 
     See Also
     --------
-    HandicapScheme : The base class for a handicap scheme from which this is subclassed.
+    HandicapScheme : The base class for a handicap scheme from which this is subclassed
+                     containing details of additional methods.
 
     """
 
@@ -270,11 +242,11 @@ class HandicapAA2(HandicapScheme):
         Notes
         -----
         This is the key part of this scheme.
-        The values are taken from [1]_
+        The values are taken from Park (2014) [3]_.
 
         References
         ----------
-        .. [1] Park, J. L. (2014). "Modelling archers’ scores at different distances
+        .. [3] Park, J. L. (2014). "Modelling archers’ scores at different distances
            to quantify score loss due to equipment selection and technique errors."
            Proceedings of the Institution of Mechanical Engineers,
            Part P: Journal of Sports Engineering and Technology, 228(4), 250-258.
