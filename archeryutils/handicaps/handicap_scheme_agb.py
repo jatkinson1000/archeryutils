@@ -53,21 +53,6 @@ class HandicapAGB(HandicapScheme):
     arw_d_in: float
         diameter of an indoor arrow 9.3e-3 [metres]
 
-    Methods
-    -------
-    sigma_t(handicap, dist)
-        Calculate angular deviation for given handicap and distance.
-    sigma_r(handicap, dist)
-        Calculate radial deviation for a given handicap and distance.
-    arrow_score(target, handicap, arw_d=None)
-        Calculate the average arrow score for a given target and handicap.
-    score_for_passes(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for all passes in a round for a given handicap.
-    score_for_round(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for a round for a given handicap.
-    handicap_from_score(score,rnd, arw_d=None, int_prec=False)
-        Calculate the handicap for a given score on a given round.
-
     Warnings
     --------
     Using non-default values for the kwargs may produce results that
@@ -76,7 +61,8 @@ class HandicapAGB(HandicapScheme):
 
     See Also
     --------
-    HandicapScheme : The base class for a handicap scheme from which this is subclassed.
+    HandicapScheme : The base class for a handicap scheme from which this is subclassed
+                     containing details of additional methods.
 
     """
 
@@ -180,21 +166,6 @@ class HandicapAGBold(HandicapScheme):
     arw_d_in: float
         diameter of an indoor arrow 7.14e-3 [metres]
 
-    Methods
-    -------
-    sigma_t(handicap, dist)
-        Calculate angular deviation for given handicap and distance.
-    sigma_r(handicap, dist)
-        Calculate radial deviation for a given handicap and distance.
-    arrow_score(target, handicap, arw_d=None)
-        Calculate the average arrow score for a given target and handicap.
-    score_for_passes(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for all passes in a round for a given handicap.
-    score_for_round(rnd, handicap, arw_d=None, rounded_score=True)
-        Calculate the expected score for a round for a given handicap.
-    handicap_from_score(score,rnd, arw_d=None, int_prec=False)
-        Calculate the handicap for a given score on a given round.
-
     Warnings
     --------
     Using non-default values for the kwargs may produce results that
@@ -203,7 +174,8 @@ class HandicapAGBold(HandicapScheme):
 
     See Also
     --------
-    HandicapScheme : The base class for a handicap scheme from which this is subclassed.
+    HandicapScheme : The base class for a handicap scheme from which this is subclassed
+                     containing details of additional methods.
 
     """
 
@@ -260,7 +232,7 @@ class HandicapAGBold(HandicapScheme):
         Notes
         -----
         This is the key part of this scheme.
-        The values are taken from [1]_
+        The values are taken from Lane (2013) [1]_.
 
         References
         ----------
