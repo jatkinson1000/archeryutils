@@ -589,11 +589,15 @@ class HandicapScheme(ABC):
             handicap = max(self.scale_bounds)
             delta_hc = -0.01
 
-        s_max = self.score_for_round(handicap, rnd, arw_d, rounded_score=False)
+        target = max_score - self.max_score_rounding_lim
+
+        def check_score(handicap):
+            return self.score_for_round(handicap, rnd, arw_d, rounded_score=False)
+
         # Work down to where we would round or ceil to max score
-        while s_max > max_score - self.max_score_rounding_lim:
+        while check_score(handicap) > target:
             handicap = handicap + delta_hc
-            s_max = self.score_for_round(handicap, rnd, arw_d, rounded_score=False)
+
         handicap = handicap - delta_hc  # Undo final iteration that overshoots
         if int_prec:
             if self.desc_scale:
