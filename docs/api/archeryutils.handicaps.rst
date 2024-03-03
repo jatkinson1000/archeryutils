@@ -1,5 +1,5 @@
-archeryutils.handicaps package
-==============================
+Handicaps
+=========
 
 Top level functions
 -------------------
