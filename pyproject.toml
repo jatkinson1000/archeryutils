@@ -46,6 +46,7 @@ lint = [
     "pytest>=7.2.0",
     "pytest-mock",
     "pydocstyle",
+    "ruff>=0.3.0",
 ]
 docs = [
     "sphinx",
@@ -55,6 +56,7 @@ docs = [
     "ipython",
     "pickleshare",  # https://github.com/ipython/ipython/issues/14237
     "black>=24.1.0",
+    "ruff>=0.3.0",
     "blackdoc",
 ]
 
@@ -84,3 +86,36 @@ archeryutils = ["*.json", "round_data_files/*.json", "classifications/*.json"]
 [tool.mypy]
 warn_unused_configs = true
 plugins = ["numpy.typing.mypy_plugin"]
+
+[tool.ruff]
+# Run linting and formatting on notebooks
+extend-include = ["*.ipynb"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+# See https://docs.astral.sh/ruff/rules for full details of each ruleset.
+
+# Enable:  D: `pydocstyle`, PL: `pylint`, I: `isort`, W: `pycodestyle whitespace`
+#          NPY: `numpy`, FLY: `flynt`, RUF: `ruff`
+#          From flake8: "ARG", "SLF", "S", "BLE", "B", "A", "C4", "EM", "ICN",
+#                       "PIE", "Q", "RSE", "SIM", "TID"
+select = ["D", "PL", "I", "E", "W", "NPY", "FLY", "RUF",
+          "ARG", "SLF", "S", "BLE","B", "A", "C4", "EM", "ICN", "PIE", "Q", "RSE",
+          "SIM", "TID"]
+
+# Enable D417 (Missing argument description) on top of the NumPy convention.
+extend-select = ["D417"]
+
+# Ignore SIM108 (use ternary instead of if-else) as I think it can obscure intent.
+# Ignore RUF002 (ambiguous characters) as it does not allow apostrophes in strings.
+ignore = ["SIM108", "RUF002"]
+
+[tool.ruff.lint.pydocstyle]
+# Use NumPy convention for checking docstrings
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore S101 (use of assert) in tests
+"**/tests/*" = ["S101"]
