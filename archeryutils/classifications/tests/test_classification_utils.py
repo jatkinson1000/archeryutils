@@ -1,4 +1,4 @@
-"""Tests for classification utilities"""
+"""Tests for classification utilities."""
 
 import pytest
 
@@ -34,9 +34,7 @@ class TestStringUtils:
         bowstyle: str,
         groupname_expected: str,
     ) -> None:
-        """
-        Check that get_groupname(handicap=float) returns expected value for a case.
-        """
+        """Check get_groupname(handicap=float) returns expected value for a case."""
         groupname = class_utils.get_groupname(
             bowstyle=bowstyle,
             gender=gender,
@@ -62,9 +60,7 @@ class TestStringUtils:
         roundname: str,
         strippedname_expected: str,
     ) -> None:
-        """
-        Check that strip_spots() returns expected value for a round.
-        """
+        """Check that strip_spots() returns expected value for a round."""
         strippedname = class_utils.strip_spots(roundname)
 
         assert strippedname == strippedname_expected

@@ -145,7 +145,7 @@ class HandicapAA(HandicapScheme):
             * np.exp(
                 self.params["k0"]
                 - self.params["ks"] * handicap
-                + self.params["kd"] * dist
+                + self.params["kd"] * dist,
             )
         )
 
@@ -191,7 +191,7 @@ class HandicapAA2(HandicapScheme):
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913 Too many arguments
         self,
         ang_0: float = 1.0e-3,
         k0: float = 2.57,
@@ -200,9 +200,6 @@ class HandicapAA2(HandicapScheme):
         f2: float = 0.185,
         d0: float = 50.0,
     ):
-        # two too many arguments, but all are hc-scheme params => disable
-        # pylint: disable=too-many-arguments
-
         super().__init__()
 
         self.name = "AA2"

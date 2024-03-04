@@ -7,10 +7,6 @@ from numpy.typing import NDArray
 import archeryutils.handicaps.handicap_tables as hc
 from archeryutils.rounds import Pass, Round
 
-# Define rounds used in these functions
-# Due to defining some rounds to use in testing duplicate code may trigger.
-# => disable for handicap tests
-# pylint: disable=duplicate-code
 york = Round(
     "York",
     [
@@ -54,7 +50,9 @@ class TestHandicapTable:
     def test_repr(self) -> None:
         """Check HandicapTable representation."""
         test_table = hc.HandicapTable(
-            "AGB", np.array([1.0, 2.0, 3.0]), [york, hereford]
+            "AGB",
+            np.array([1.0, 2.0, 3.0]),
+            [york, hereford],
         )
         expected = "<HandicapTable: 'AGB'>"
         assert repr(test_table) == expected
@@ -116,14 +114,18 @@ class TestHandicapTable:
     )
     def test_table_as_str(
         self,
-        hcs: NDArray[np.float_],
+        hcs: NDArray[np.float64],
         int_prec: bool,
         rounded: bool,
         expected: str,
     ) -> None:
         """Check that format_row returns expected results for float and int."""
         test_table = hc.HandicapTable(
-            "AGB", hcs, [york, hereford], int_prec=int_prec, rounded_scores=rounded
+            "AGB",
+            hcs,
+            [york, hereford],
+            int_prec=int_prec,
+            rounded_scores=rounded,
         )
 
         assert str(test_table) == expected
@@ -143,9 +145,7 @@ class TestHandicapTable:
         expected: str,
     ) -> None:
         """Check that abbreviate returns expected results."""
-        # Accessing a protected member function, but for testing, not production code
-        # pylint: disable=protected-access
-        assert hc.HandicapTable._abbreviate(input_str) == expected
+        assert hc.HandicapTable._abbreviate(input_str) == expected  # noqa: SLF001 Private member access for testing purposes
 
     def test_print_agb(
         self,
@@ -159,7 +159,9 @@ class TestHandicapTable:
             + "             3          1276          1293\n"
         )
         test_table = hc.HandicapTable(
-            "AGB", np.array([1.0, 2.0, 3.0]), [york, hereford]
+            "AGB",
+            np.array([1.0, 2.0, 3.0]),
+            [york, hereford],
         )
         test_table.print()
         captured = capsys.readouterr()

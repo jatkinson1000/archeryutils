@@ -1,20 +1,15 @@
-"""Tests for agb indoor classification functions"""
-
-# Due to structure of similar classification schemes they may trigger duplicate code.
-# => disable for classification files and tests
-# pylint: disable=duplicate-code
+"""Tests for agb indoor classification functions."""
 
 import pytest
 
-from archeryutils import load_rounds
 import archeryutils.classifications as class_funcs
-
+from archeryutils import load_rounds
 
 ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "AGB_indoor.json",
         "WA_indoor.json",
-    ]
+    ],
 )
 
 
@@ -83,9 +78,7 @@ class TestAgbIndoorClassificationScores:
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that  classification returns expected value for a case.
-        """
+        """Check that  classification returns expected value for a case."""
         scores = class_funcs.agb_indoor_classification_scores(
             roundname="portsmouth",
             bowstyle="recurve",
@@ -158,9 +151,7 @@ class TestAgbIndoorClassificationScores:
         bowstyle: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that indoor classification returns expected value for a case.
-        """
+        """Check that indoor classification returns expected value for a case."""
         scores = class_funcs.agb_indoor_classification_scores(
             roundname="portsmouth",
             bowstyle=bowstyle,
@@ -192,9 +183,7 @@ class TestAgbIndoorClassificationScores:
         bowstyle: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that barebow scores returned for valid but non-indoor styles.
-        """
+        """Check that barebow scores returned for valid but non-indoor styles."""
         scores = class_funcs.agb_indoor_classification_scores(
             roundname="portsmouth",
             bowstyle=bowstyle,
@@ -228,6 +217,7 @@ class TestAgbIndoorClassificationScores:
     ) -> None:
         """
         Check that indoor classification returns single face scores only.
+
         Includes check that Worcester returns null above max score.
         """
         scores = class_funcs.agb_indoor_classification_scores(
@@ -270,13 +260,12 @@ class TestAgbIndoorClassificationScores:
         gender: str,
         age_group: str,
     ) -> None:
-        """
-        Check that indoor classification returns expected value for a case.
-        """
+        """Check that indoor classification returns expected value for a case."""
         with pytest.raises(
             KeyError,
             match=(
-                f"{age_group.lower().replace(' ','')}_{gender.lower()}_{bowstyle.lower()}"
+                f"{age_group.lower().replace(' ','')}_"
+                f"{gender.lower()}_{bowstyle.lower()}"
             ),
         ):
             _ = class_funcs.agb_indoor_classification_scores(
@@ -289,9 +278,7 @@ class TestAgbIndoorClassificationScores:
     def test_agb_indoor_classification_scores_invalid_round(
         self,
     ) -> None:
-        """
-        Check that indoor classification raises error for invalid round.
-        """
+        """Check that indoor classification raises error for invalid round."""
         with pytest.raises(
             KeyError,
             match=("invalid_roundname"),
@@ -386,10 +373,7 @@ class TestCalculateAgbIndoorClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that indoor classification returns expected value for a few cases.
-        """
-        # pylint: disable=too-many-arguments
+        """Check that indoor classification returns expected value for a few cases."""
         class_returned = class_funcs.calculate_agb_indoor_classification(
             score=score,
             roundname="portsmouth",
@@ -403,9 +387,7 @@ class TestCalculateAgbIndoorClassification:
     def test_calculate_agb_indoor_classification_invalid_round(
         self,
     ) -> None:
-        """
-        Check that indoor classification returns unclassified for inappropriate rounds.
-        """
+        """Check indoor classification returns unclassified for inappropriate rounds."""
         with pytest.raises(
             KeyError,
             match=("invalid_roundname"),
@@ -423,9 +405,7 @@ class TestCalculateAgbIndoorClassification:
         self,
         score: float,
     ) -> None:
-        """
-        Check that indoor classification fails for inappropriate scores.
-        """
+        """Check that indoor classification fails for inappropriate scores."""
         with pytest.raises(
             ValueError,
             match=(

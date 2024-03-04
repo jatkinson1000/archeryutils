@@ -1,21 +1,16 @@
-"""Tests for agb indoor classification functions"""
-
-# Due to structure of similar classification schemes they may trigger duplicate code.
-# => disable for classification files and tests
-# pylint: disable=duplicate-code
+"""Tests for agb indoor classification functions."""
 
 import pytest
 
-from archeryutils import load_rounds
 import archeryutils.classifications as class_funcs
-
+from archeryutils import load_rounds
 
 ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "AGB_outdoor_imperial.json",
         "AGB_outdoor_metric.json",
         "WA_outdoor.json",
-    ]
+    ],
 )
 
 
@@ -93,9 +88,7 @@ class TestAgbOutdoorClassificationScores:
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that  classification returns expected value for a case.
-        """
+        """Check that  classification returns expected value for a case."""
         scores = class_funcs.agb_outdoor_classification_scores(
             roundname=roundname,
             bowstyle="recurve",
@@ -199,9 +192,7 @@ class TestAgbOutdoorClassificationScores:
         gender: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that outdoor classification returns expected value for a case.
-        """
+        """Check that outdoor classification returns expected value for a case."""
         scores = class_funcs.agb_outdoor_classification_scores(
             roundname=roundname,
             bowstyle=bowstyle,
@@ -241,9 +232,7 @@ class TestAgbOutdoorClassificationScores:
         gender: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that barebow scores returned for valid but non-outdoor bowstyles.
-        """
+        """Check that barebow scores returned for valid but non-outdoor bowstyles."""
         scores = class_funcs.agb_outdoor_classification_scores(
             roundname=roundname,
             bowstyle=bowstyle,
@@ -269,6 +258,7 @@ class TestAgbOutdoorClassificationScores:
     ) -> None:
         """
         Check that outdoor classification returns single face scores only.
+
         Includes check that Worcester returns null above max score.
         """
         scores = class_funcs.agb_outdoor_classification_scores(
@@ -311,13 +301,12 @@ class TestAgbOutdoorClassificationScores:
         gender: str,
         age_group: str,
     ) -> None:
-        """
-        Check that outdoor classification returns expected value for a case.
-        """
+        """Check that outdoor classification returns expected value for a case."""
         with pytest.raises(
             KeyError,
             match=(
-                f"{age_group.lower().replace(' ','')}_{gender.lower()}_{bowstyle.lower()}"
+                f"{age_group.lower().replace(' ','')}_"
+                f"{gender.lower()}_{bowstyle.lower()}"
             ),
         ):
             _ = class_funcs.agb_outdoor_classification_scores(
@@ -330,9 +319,7 @@ class TestAgbOutdoorClassificationScores:
     def test_agb_outdoor_classification_scores_invalid_round(
         self,
     ) -> None:
-        """
-        Check that outdoor classification raises error for invalid round.
-        """
+        """Check that outdoor classification raises error for invalid round."""
         with pytest.raises(
             KeyError,
             match=("invalid_roundname"),
@@ -429,7 +416,7 @@ class TestCalculateAgbOutdoorClassification:
             ),
         ],
     )
-    def test_calculate_agb_outdoor_classification(
+    def test_calculate_agb_outdoor_classification(  # noqa: PLR0913 Too many arguments
         self,
         score: float,
         roundname: str,
@@ -437,10 +424,7 @@ class TestCalculateAgbOutdoorClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that outdoor classification returns expected value for a few cases.
-        """
-        # pylint: disable=too-many-arguments
+        """Check that outdoor classification returns expected value for a few cases."""
         class_returned = class_funcs.calculate_agb_outdoor_classification(
             roundname=roundname,
             score=score,
@@ -526,7 +510,7 @@ class TestCalculateAgbOutdoorClassification:
             ),
         ],
     )
-    def test_calculate_agb_outdoor_classification_prestige_dist(
+    def test_calculate_agb_outdoor_classification_prestige_dist(  # noqa: PLR0913 Too many arguments
         self,
         score: float,
         roundname: str,
@@ -534,10 +518,7 @@ class TestCalculateAgbOutdoorClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that prestige and distanec limitations are working for a few cases.
-        """
-        # pylint: disable=too-many-arguments
+        """Check that prestige and distanec limitations are working for a few cases."""
         class_returned = class_funcs.calculate_agb_outdoor_classification(
             roundname=roundname,
             score=score,
@@ -551,9 +532,7 @@ class TestCalculateAgbOutdoorClassification:
     def test_calculate_agb_outdoor_classification_invalid_round(
         self,
     ) -> None:
-        """
-        Check that outdoor classification returns unclassified for inappropriate rounds.
-        """
+        """Check outdoor classification returns unclassified for inappropriate round."""
         with pytest.raises(
             KeyError,
             match=("invalid_roundname"),
@@ -571,9 +550,7 @@ class TestCalculateAgbOutdoorClassification:
         self,
         score: float,
     ) -> None:
-        """
-        Check that outdoor classification fails for inappropriate scores.
-        """
+        """Check that outdoor classification fails for inappropriate scores."""
         with pytest.raises(
             ValueError,
             match=(

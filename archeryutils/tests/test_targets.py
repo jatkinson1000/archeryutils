@@ -1,8 +1,8 @@
-"""Tests for Target class"""
+"""Tests for Target class."""
 
 import pytest
 
-from archeryutils.targets import Target, ScoringSystem
+from archeryutils.targets import ScoringSystem, Target
 
 
 class TestTarget:
@@ -18,17 +18,13 @@ class TestTarget:
     """
 
     def test_repr(self) -> None:
-        """
-        Check Target string representation is as expected.
-        """
+        """Check Target string representation is as expected."""
         target = Target("10_zone", 80, 30)
         expected = "Target('10_zone', (80, 'cm'), (30, 'metre'), indoor=False)"
         assert repr(target) == expected
 
     def test_repr_native_units(self) -> None:
-        """
-        Check Target string representation returns values in native units.
-        """
+        """Check Target string representation returns values in native units."""
         target = Target("Worcester", (16, "inches"), (20, "yards"), indoor=True)
         expected = "Target('Worcester', (16, 'inch'), (20, 'yard'), indoor=True)"
         assert repr(target) == expected
@@ -79,25 +75,19 @@ class TestTarget:
         ],
     )
     def test_equality(self, args, result) -> None:
-        """
-        Check Target equality comparison is supported.
-        """
+        """Check Target equality comparison is supported."""
         target = Target("10_zone", (40, "cm"), (20, "metre"), indoor=True)
         comparison = target == Target(*args)
         assert comparison == result
 
     def test_equality_different_object(self) -> None:
-        """
-        Check Target equality comparison against a differnt type of object.
-        """
+        """Check Target equality comparison against a differnt type of object."""
         target = Target("10_zone", 40, (20, "yard"), indoor=True)
 
         assert target != ("10_zone", 40, (20, "yard"), True)
 
     def test_invalid_system(self) -> None:
-        """
-        Check that Target() returns error value for invalid system.
-        """
+        """Check that Target() returns error value for invalid system."""
         with pytest.raises(
             ValueError,
             match="Invalid Target Face Type specified.\nPlease select from '(.+)'.",
@@ -106,9 +96,7 @@ class TestTarget:
             Target("InvalidScoringSystem", 122, 50, False)  # type: ignore[arg-type]
 
     def test_invalid_distance_unit(self) -> None:
-        """
-        Check that Target() returns error value for invalid distance units.
-        """
+        """Check that Target() returns error value for invalid distance units."""
         with pytest.raises(
             ValueError,
             match="Distance unit '(.+)' not recognised. Select from 'yard' or 'metre'.",
@@ -116,57 +104,46 @@ class TestTarget:
             Target("5_zone", 122, (50, "InvalidDistanceUnit"), False)
 
     def test_default_distance_unit(self) -> None:
-        """
-        Check that Target() returns distance in metres when units not specified.
-        """
+        """Check that Target() returns distance in metres when units not specified."""
         target = Target("5_zone", 122, 50)
         assert target.native_dist_unit == "metre"
 
     def test_yard_to_m_conversion(self) -> None:
-        """
-        Check that Target() returns correct distance in metres when yards provided.
-        """
+        """Check Target() returns correct distance in metres when yards provided."""
         target = Target("5_zone", 122, (50, "yards"))
         assert target.distance == 50.0 * 0.9144
 
     def test_unsupported_diameter_unit(self) -> None:
-        """
-        Check that Target() raises an error when called with unsupported diameter units.
-        """
+        """Check Target() raises error when called with unsupported diameter units."""
         with pytest.raises(
             ValueError,
-            match="Diameter unit '(.+)' not recognised. Select from 'cm', 'inch' or 'metre'",
+            match="Diameter unit '(.+)' not recognised."
+            " Select from 'cm', 'inch' or 'metre'",
         ):
             Target("5_zone", (122, "feet"), (50, "yards"))
 
     def test_default_diameter_unit(self) -> None:
-        """
-        Check that Target() is using centimetres by default for diameter.
-        """
+        """Check that Target() is using centimetres by default for diameter."""
         target = Target("10_zone_5_ring_compound", 80, 50)
         assert target.diameter == 80 * 0.01
 
     def test_diameter_metres_not_converted(self) -> None:
-        """
-        Check that Target() is storing diameter in metres.
-        """
+        """Check that Target() is storing diameter in metres."""
         target = Target("Beiter_hit_miss", (0.04, "m"), 18)
-        assert target.diameter == 0.04
+        assert target.diameter == 0.04  # noqa: PLR2004 Magic value
 
     def test_diameter_inches_supported(self) -> None:
-        """
-        Check that Target() converts diameters in inches correctly.
-        """
+        """Check that Target() converts diameters in inches correctly."""
         target = Target("Worcester", (16, "inches"), (20, "yards"), indoor=True)
         assert target.diameter == 16 * 0.0254
 
     def test_diameter_distance_units_coerced_to_definitive_names(self) -> None:
-        """
-        Check that Target coerces aliased distance units into standard names
-        """
-
+        """Check that Target coerces aliased distance units into standard names."""
         imperial_target = Target(
-            "Worcester", (16, "Inches"), (20, "Yards"), indoor=True
+            "Worcester",
+            (16, "Inches"),
+            (20, "Yards"),
+            indoor=True,
         )
         metric_target = Target(
             "10_zone",
@@ -180,9 +157,7 @@ class TestTarget:
         assert metric_target.native_diameter_unit == "cm"
 
     def test_default_location(self) -> None:
-        """
-        Check that Target() returns indoor=False when indoor not specified.
-        """
+        """Check that Target() returns indoor=False when indoor not specified."""
         target = Target("5_zone", 122, (50, "m"))
         assert target.indoor is False
 
@@ -204,18 +179,16 @@ class TestTarget:
         ],
     )
     def test_max_score(
-        self, face_type: ScoringSystem, max_score_expected: float
+        self,
+        face_type: ScoringSystem,
+        max_score_expected: float,
     ) -> None:
-        """
-        Check that Target() returns correct max score.
-        """
+        """Check that Target() returns correct max score."""
         target = Target(face_type, 122, (50, "metre"), False)
         assert target.max_score() == max_score_expected
 
     def test_max_score_invalid_face_type(self) -> None:
-        """
-        Check that Target() raises error for invalid face.
-        """
+        """Check that Target() raises error for invalid face."""
         with pytest.raises(
             ValueError,
             match="Target face '(.+)' has no specified maximum score.",
@@ -244,18 +217,16 @@ class TestTarget:
         ],
     )
     def test_min_score(
-        self, face_type: ScoringSystem, min_score_expected: float
+        self,
+        face_type: ScoringSystem,
+        min_score_expected: float,
     ) -> None:
-        """
-        Check that Target() returns correct min score.
-        """
+        """Check that Target() returns correct min score."""
         target = Target(face_type, 122, 50, False)
         assert target.min_score() == min_score_expected
 
     def test_min_score_invalid_face_type(self) -> None:
-        """
-        Check that Target() raises error for invalid face.
-        """
+        """Check that Target() raises error for invalid face."""
         with pytest.raises(
             ValueError,
             match="Target face '(.+)' has no specified minimum score.",

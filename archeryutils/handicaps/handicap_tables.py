@@ -63,7 +63,7 @@ class HandicapTable:
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913 Too many arguments
         self,
         handicap_sys: Union[str, HandicapScheme],
         hcs: Union[FloatArray, NDArray[np.int_]],
@@ -73,9 +73,6 @@ class HandicapTable:
         clean_gaps: bool = True,
         arrow_d: Optional[float] = None,
     ):
-        # three too many arguments, but all are used for table => disable
-        # pylint: disable=too-many-arguments
-
         self.hc_sys = hc.handicap_scheme(handicap_sys)
         self.round_list = round_list
         self.rounded_scores = rounded_scores
@@ -86,8 +83,8 @@ class HandicapTable:
         self.hcs = self._check_print_table_inputs(hcs)
 
         # Set up empty handicap table and populate
-        self.table: NDArray[Union[np.float_, np.int_]] = np.empty(
-            [len(self.hcs), len(self.round_list) + 1]
+        self.table: NDArray[Union[np.float64, np.int_]] = np.empty(
+            [len(self.hcs), len(self.round_list) + 1],
         )
         self.table[:, 0] = self.hcs[:]
         # Assign values to table
@@ -99,13 +96,14 @@ class HandicapTable:
                 rounded_score=self.rounded_scores,
             )
 
-        # If rounding scores up we don't want to display trailing zeros, so ensure int_prec
+        # If rounding scores up don't want to display trailing zeros, so ensure int_prec
         if self.rounded_scores and not self.int_prec:
             warnings.warn(
                 "Handicap Table incompatible options.\n"
                 "Requesting scores to be rounded up but without integer precision.\n"
                 "Setting integer precision (`int_prec`) as true.",
                 UserWarning,
+                stacklevel=2,
             )
             self.int_prec = True
 
@@ -143,7 +141,7 @@ class HandicapTable:
             hc_dp = 0
         else:
             hc_dp = np.max(
-                np.abs([decimal.Decimal(str(d)).as_tuple().exponent for d in self.hcs])
+                np.abs([decimal.Decimal(str(d)).as_tuple().exponent for d in self.hcs]),
             )
         # Format each row appropriately
         output_rows = [
@@ -205,11 +203,14 @@ class HandicapTable:
 
         """
         print("Writing handicap table to csv...", end="")
+        roundlist_csv = (
+            f"handicap, {','.join([round_i.name for round_i in self.round_list])}'"
+        )
         np.savetxt(
             csvfile,
             self.table,
             delimiter=", ",
-            header=f"handicap, {','.join([round_i.name for round_i in self.round_list])}'",
+            header=roundlist_csv,
         )
         print("Done.")
 
@@ -245,7 +246,7 @@ class HandicapTable:
     def _check_print_table_inputs(
         self,
         hcs_in: Union[FloatArray, NDArray[np.int_]],
-    ) -> NDArray[np.float_]:
+    ) -> NDArray[np.float64]:
         """
         Sanitise and format inputs to handicap printing code.
 
@@ -273,11 +274,13 @@ class HandicapTable:
             elif isinstance(hcs_in, (float, int)):
                 hcs_in = np.array([hcs_in])
             else:
-                raise TypeError("Expected float or ndarray for hcs.")
+                msg = "Expected float or ndarray for hcs."
+                raise TypeError(msg)
         hcs = hcs_in.astype(float)
 
         if len(self.round_list) == 0:
-            raise ValueError("No rounds provided for handicap table.")
+            msg = "No rounds provided for handicap table."
+            raise ValueError(msg)
 
         # if cleaning gaps add row to top/bottom of table to catch out of range repeats
         if self.clean_gaps:
@@ -347,7 +350,7 @@ class HandicapTable:
 
     @staticmethod
     def _format_row(
-        row: NDArray[Union[np.float_, np.int_]],
+        row: NDArray[Union[np.float64, np.int_]],
         hc_dp: int = 0,
         int_prec: bool = False,
     ) -> str:
