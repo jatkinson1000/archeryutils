@@ -11,6 +11,7 @@ For example, to load all WA Outdoor rounds and then extract the WA1440 (90m) we 
 .. ipython:: python
 
     import archeryutils as au
+
     wa_outdoor_rounds = au.load_rounds.WA_outdoor
     my_wa1440_90 = wa_outdoor_rounds.wa1440_90
 
@@ -23,6 +24,7 @@ Or, to load the round directly:
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.WA_outdoor.wa1440_90
 
 See below for a list of all available round dictionaries, and the rounds they contain.
@@ -34,6 +36,7 @@ WA Outdoor
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.AGB_outdoor_imperial
 
 AGB Outdoor Imperial
@@ -42,6 +45,7 @@ AGB Outdoor Imperial
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.WA_outdoor
 
 AGB Outdoor Metric
@@ -50,6 +54,7 @@ AGB Outdoor Metric
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.AGB_outdoor_metric
 
 AGB Outdoor Imperial
@@ -58,6 +63,7 @@ AGB Outdoor Imperial
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.AGB_outdoor_imperial
 
 WA Indoor
@@ -66,6 +72,7 @@ WA Indoor
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.WA_indoor
 
 AGB Indoor
@@ -74,6 +81,7 @@ AGB Indoor
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.AGB_indoor
 
 WA Field
@@ -82,6 +90,7 @@ WA Field
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.WA_field
 
 IFAA Field
@@ -90,6 +99,7 @@ IFAA Field
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.IFAA_field
 
 WA VI
@@ -98,6 +108,7 @@ WA VI
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.WA_VI
 
 AGB VI
@@ -106,6 +117,7 @@ AGB VI
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.AGB_VI
 
 Custom Rounds
@@ -114,4 +126,5 @@ Custom Rounds
 .. ipython:: python
 
     import archeryutils as au
+
     au.load_rounds.custom
