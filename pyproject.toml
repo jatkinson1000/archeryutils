@@ -38,14 +38,10 @@ test = [
     "pytest-mock",
 ]
 lint = [
-    "black>=24.1.0",
-    "jupyter-black",
-    "pylint",
     "mypy>=1.0.0",
     "coverage",
     "pytest>=7.2.0",
     "pytest-mock",
-    "pydocstyle",
     "ruff>=0.3.0",
 ]
 docs = [
@@ -55,7 +51,6 @@ docs = [
     "nbsphinx",
     "ipython",
     "pickleshare",  # https://github.com/ipython/ipython/issues/14237
-    "black>=24.1.0",
     "ruff>=0.3.0",
     "blackdoc",
 ]
