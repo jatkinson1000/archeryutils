@@ -69,16 +69,12 @@ class Pass:
         ``"IFAA_field"`` ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"``\
         ``"Worcester_2_ring"``}
             target face/scoring system type
-        diameter : float
-            face diameter in [centimetres]
-        distance : float
-            linear distance from archer to target in [metres]
-        dist_unit : str
-            The unit distance is measured in. default = 'metres'
+        diameter : float or tuple of float, str
+            Target diameter size (and units, default [cm])
+        distance : float or tuple of float, str
+            Target distance (and units, default [metres])
         indoor : bool
             is round indoors for arrow diameter purposes? default = False
-        diameter_unit : str
-            The unit face diameter is measured in. default = 'centimetres'
 
         Returns
         -------
