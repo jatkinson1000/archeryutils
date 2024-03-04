@@ -114,17 +114,15 @@ for stylistic errors.
 Generating any warnings will cause these tests to fail.
 Thus, good style is a requirement for submitting code to *archeryutils*.
 
-*archeryutils* uses several tools to ensure consistent and quality code formatting
-throughout:
+*archeryutils* uses tools to ensure consistent and quality code formatting throughout:
 
-- `Black <https://black.readthedocs.io/en/stable/>`_ for standardized
-  code formatting,
-- `blackdoc <https://blackdoc.readthedocs.io/en/stable/>`_ for
-  standardized code formatting in documentation,
-- `pylint <https://docs.pylint.org/>`_ for code quality checks
-- `pydocstyle <https://www.pydocstyle.org/en/stable/>`_ for checking docstrings
-  using the numpy convention
-- `mypy <http://mypy-lang.org/>`_ for static type checking on
+- `ruff <https://docs.astral.sh/ruff/>`_ for:
+
+  - standardized code formatting
+  - code quality checks
+  - checking docstrings against the numpy conventions
+
+- `mypy <http://mypy-lang.org/>`_ for static type checking of
   `type hints <https://docs.python.org/3/library/typing.html>`_.
 
 These will be checked on all pull requests and commits to main, so it is suggested you
@@ -135,16 +133,21 @@ the root directory:
 
 .. code-block:: shell
 
-    black archeryutils
-    pylint archeryutils
+    ruff format archeryutils
+    ruff archeryutils
     mypy archeryutils
-    pydocstyle --convention=numpy archeryutils
 
 Sometimes it makes sense to
-`disable a pylint warning <https://pylint.pycqa.org/en/latest/user_guide/messages/message_control.html>`_.
-We prefer that this is done on a case-by-case basis in the code.
+`disable a ruff warning <https://docs.astral.sh/ruff/linter/#error-suppression>`_.
+We generally prefer that this is done on a case-by-case basis in the code.
 If you have justification for turning off any warnings in your contribution please
 document them in your pull request.
+If you think a rule or ruleset should be more widely disabled for the project, please
+open an issue or detail it in a pull request with a clear explanation.
+
+The full *ruff* configuration for the project is contained in the 
+`pyproject.toml <https://github.com/jatkinson1000/archeryutils/blob/main/pyproject.toml>`_
+file.
 
 
 .. _testing:
