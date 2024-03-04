@@ -73,6 +73,14 @@ metric122_30 = Round(
         Pass.at_target(36, "10_zone", 122, 30, False),
     ],
 )
+kings_900_rec = Round(
+    "Kings 900 (recurve)",
+    [
+        Pass(30, Target.from_spec({0.08: 10, 0.12: 8, 0.16: 7, 0.20: 6}, 40, 18, True)),
+        Pass(30, Target.from_spec({0.08: 10, 0.12: 8, 0.16: 7, 0.20: 6}, 40, 18, True)),
+        Pass(30, Target.from_spec({0.08: 10, 0.12: 8, 0.16: 7, 0.20: 6}, 40, 18, True)),
+    ],
+)
 
 
 class TestHandicapScheme:
@@ -376,6 +384,51 @@ class TestArrowScore:
 
         assert arrow_score_direct == pytest.approx(arrow_score_expected)
 
+    def test_empty_spec(self):
+        """
+        Check expected score is zero when no target rings are defined.
+        """
+        target = Target.from_spec({}, 10, 10)
+        s_bar = hc.arrow_score(50, target, "AGB")
+        assert s_bar == 0
+
+    def test_unsorted_spec(self):
+        """
+        Check expected score is insensitive to order of input spec.
+        """
+
+        def _target(spec):
+            return Target.from_spec(spec, 10, 10)
+
+        s_bar = hc.arrow_score(50, _target({0.1: 1, 0.2: 2, 0.3: 3}), "AA")
+        s_bar_reversed = hc.arrow_score(50, _target({0.3: 3, 0.2: 2, 0.1: 1}), "AA")
+        s_bar_unordered = hc.arrow_score(50, _target({0.1: 1, 0.3: 3, 0.2: 2}), "AA")
+
+        assert s_bar_unordered == s_bar_reversed == s_bar
+
+    def test_decimal_ring_scores(self):
+        """
+        Check expected score can be calculated for non integer ring scores
+
+        Uses a target with integer ring scores at twice the value for comparison
+        """
+        target_int = Target.from_spec({0.1: 3, 0.2: 5}, 10, 10)
+        target_dec = Target.from_spec({0.1: 1.5, 0.2: 2.5}, 10, 10)
+
+        s_bar_int = hc.arrow_score(30, target_int, "AGB")
+        s_bar_dec = hc.arrow_score(30, target_dec, "AGB")
+
+        assert s_bar_int == 2 * s_bar_dec
+
+    def test_array_handicaps(self):
+        """
+        Check expected score can be calculated for an array of input handicap values
+        """
+        handicaps = np.array([10, 20, 30, 40])
+        target = Target.from_spec({0.1: 3, 0.2: 5}, 10, 10)
+        s_bar = hc.arrow_score(handicaps, target, "AGB")
+        assert len(s_bar) == len(handicaps)
+
 
 class TestScoreForPasses:
     """
@@ -597,6 +650,13 @@ class TestScoreForRound:
         assert (
             hc_sys.score_for_round(20.0, test_round, None, True) == round_score_expected
         )
+
+    def test_calculation_custom_scoring(self):
+        """
+        Check that score can be calculated for a round with custom scoring
+        """
+
+        assert hc.score_for_round(20.0, kings_900_rec, "AGB", None, True) == 896.0
 
 
 class TestHandicapFromScore:
@@ -851,3 +911,10 @@ class TestHandicapFromScore:
         )
 
         assert handicap == pytest.approx(handicap_expected)
+
+    def test_calculation_custom_scoring(self):
+        """
+        Check that handicap can be calculated for a round with custom scoring
+        """
+
+        assert hc.handicap_from_score(896, kings_900_rec, "AGB", int_prec=True) == 20

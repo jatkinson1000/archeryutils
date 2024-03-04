@@ -55,6 +55,7 @@ if not hasattr(itr, "pairwise"):  # pragma: no cover
 
     itr.pairwise = _pairwise
 
+
 class HandicapScheme(ABC):
     r"""
     Abstract Base Class to represent a generic handicap scheme.
