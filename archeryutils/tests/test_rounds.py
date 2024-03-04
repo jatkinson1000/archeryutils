@@ -22,6 +22,8 @@ class TestPass:
         test behaviour of default location
     test_negative_arrows()
         test behaviour of negative arrow number
+    test_custom_constructor()
+        test construction from a custom target specification
     test_properties()
         test setting of Pass properties
     test_max_score()
@@ -117,6 +119,14 @@ class TestPass:
         assert test_pass.scoring_system == "5_zone"
         assert test_pass.indoor is False
         assert test_pass.native_diameter_unit == "cm"
+
+    def test_custom_target(self) -> None:
+        """
+        Check that pass can be constructed from a custom target specification
+        """
+        target = Target.from_spec({0.1: 3, 0.5: 1}, 80, (50, "yard"))
+        test_pass = Pass(30, target)
+        assert test_pass.target.is_custom
 
     @pytest.mark.parametrize(
         "face_type,max_score_expected",

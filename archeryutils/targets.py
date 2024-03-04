@@ -1,6 +1,7 @@
 """Module for representing a Target for archery applications."""
 
-from typing import Literal, Union, get_args
+from functools import partial
+from typing import Literal, NamedTuple, Union, get_args
 
 from archeryutils.constants import Length
 
@@ -18,7 +19,36 @@ ScoringSystem = Literal[
     "Beiter_hit_miss",
     "Worcester",
     "Worcester_2_ring",
+    "Custom",
 ]
+
+# TypeAlias (annotate explicitly in py3.10+)
+FaceSpec = dict[float, int]
+
+
+class Rings(NamedTuple):
+    """Container for data on max and min scores on target face types."""
+
+    high: int
+    low: int
+
+
+_scoring_system_data = {
+    "5_zone": Rings(high=9, low=1),
+    "10_zone": Rings(high=10, low=1),
+    "10_zone_compound": Rings(high=10, low=1),
+    "10_zone_6_ring": Rings(high=10, low=5),
+    "10_zone_5_ring": Rings(high=10, low=6),
+    "10_zone_5_ring_compound": Rings(high=10, low=6),
+    "WA_field": Rings(high=6, low=1),
+    "IFAA_field": Rings(high=5, low=3),
+    "IFAA_field_expert": Rings(high=5, low=1),
+    "Beiter_hit_miss": Rings(high=1, low=1),
+    "Worcester": Rings(high=5, low=1),
+    "Worcester_2_ring": Rings(high=5, low=4),
+}
+
+_rnd6 = partial(round, ndigits=6)
 
 
 class Target:
@@ -84,6 +114,11 @@ class Target:
 
     """
 
+    _face_spec: FaceSpec
+    supported_systems = get_args(ScoringSystem)
+    supported_distance_units = Length.yard | Length.metre
+    supported_diameter_units = Length.cm | Length.inch | Length.metre
+
     def __init__(
         self,
         scoring_system: ScoringSystem,
@@ -91,21 +126,20 @@ class Target:
         distance: Union[float, tuple[float, str]],
         indoor: bool = False,
     ) -> None:
-        systems = get_args(ScoringSystem)
 
-        if scoring_system not in systems:
+        if scoring_system not in self.supported_systems:
             msg = (
                 f"""Invalid Target Face Type specified.\n"""
-                f"""Please select from '{"', '".join(systems)}'."""
+                f"""Please select from '{"', '".join(self.supported_systems)}'."""
             )
-
             raise ValueError(msg)
 
         if isinstance(distance, tuple):
             (distance, native_dist_unit) = distance
         else:
             native_dist_unit = "metre"
-        if native_dist_unit not in Length.yard | Length.metre:
+
+        if native_dist_unit not in self.supported_distance_units:
             msg = (
                 f"Distance unit '{native_dist_unit}' not recognised. "
                 "Select from 'yard' or 'metre'."
@@ -117,7 +151,7 @@ class Target:
             (diameter, native_diameter_unit) = diameter
         else:
             native_diameter_unit = "cm"
-        if native_diameter_unit not in Length.cm | Length.inch | Length.metre:
+        if native_diameter_unit not in self.supported_diameter_units:
             msg = (
                 f"Diameter unit '{native_diameter_unit}' not recognised. "
                 "Select from 'cm', 'inch' or 'metre'"
@@ -131,6 +165,66 @@ class Target:
         self.distance = distance
         self.native_dist_unit = Length.definitive_unit(native_dist_unit)
         self.indoor = indoor
+
+    @classmethod
+    def from_spec(
+        cls,
+        face_spec: Union[FaceSpec, tuple[FaceSpec, str]],
+        diameter: Union[float, tuple[float, str]],
+        distance: Union[float, tuple[float, str]],
+        indoor: bool = False,
+    ) -> "Target":
+        """
+        Constuctor to build a target with custom scoring system.
+
+        Optionally can convert units at the time of construction.
+        Diameter must still be provided as a seperate arguement as it is impossible
+        to know what the nominal diameter would be from the face specification
+        without a known scoring system. However it is superceeded by face_spec
+        and has no effect when calculating handicaps.
+
+        Parameters
+        ----------
+        face_spec : dict of floats to ints or 2-tuple of dict, str
+            Target face specification, a mapping of target ring sizes to score.
+            Default units are assumed as [metres] but can be provided as the second
+            element of a tuple.
+        diameter : float or tuple of float, str
+            Target face diameter (and units, default [cm])
+        distance : float or tuple of float, str
+            linear distance from archer to target (and units, default [metres])
+        indoor : bool
+            Is target indoors for arrow diameter purposes? default = False
+
+        Returns
+        -------
+        Target
+            Instance of Target class with scoring system set as "Custom" and
+            face specification stored.
+
+        Examples
+        --------
+        >>> #WA 18m compound triple spot
+        >>> specs = {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
+        >>> target = Target.from_spec(specs, 40, 18)
+        """
+        if isinstance(face_spec, tuple):
+            spec_data, spec_units = face_spec
+
+            if spec_units not in cls.supported_diameter_units:
+                msg = (
+                    f"Face specification unit '{spec_units}' not recognised. "
+                    "Select from 'cm', 'inch' or 'metre'"
+                )
+                raise ValueError(msg)
+            face_spec = {
+                _rnd6(Length.to_metres(ring_diam, spec_units)): score
+                for ring_diam, score in spec_data.items()
+            }
+
+        target = cls("Custom", diameter, distance, indoor)
+        target._face_spec = face_spec  # noqa: SLF001 private member access
+        return target
 
     def __repr__(self) -> str:
         """Return a representation of a Target instance."""
@@ -148,6 +242,11 @@ class Target:
     def __eq__(self, other: object) -> bool:
         """Check equality of Targets based on parameters."""
         if isinstance(other, Target):
+            if self.scoring_system == other.scoring_system == "Custom":
+                return (
+                    self._face_spec == other._face_spec
+                    and self._parameters() == other._parameters()
+                )
             return self._parameters() == other._parameters()
         return NotImplemented
 
@@ -161,6 +260,11 @@ class Target:
             self.native_dist_unit,
             self.indoor,
         )
+
+    @property
+    def is_custom(self):
+        """Check if this Target uses a custom scoring system."""
+        return self.scoring_system == "Custom"
 
     @property
     def native_distance(self) -> tuple[float, str]:
@@ -198,28 +302,11 @@ class Target:
         >>> mytarget.max_score()
         10.0
         """
-        if self.scoring_system in ("5_zone"):
-            return 9.0
-        if self.scoring_system in (
-            "10_zone",
-            "10_zone_compound",
-            "10_zone_6_ring",
-            "10_zone_6_ring_compound",
-            "10_zone_5_ring",
-            "10_zone_5_ring_compound",
-        ):
-            return 10.0
-        if self.scoring_system in ("WA_field"):
-            return 6.0
-        if self.scoring_system in (
-            "IFAA_field",
-            "IFAA_field_expert",
-            "Worcester",
-            "Worcester_2_ring",
-        ):
-            return 5.0
-        if self.scoring_system in ("Beiter_hit_miss"):
-            return 1.0
+        if self.is_custom:
+            return max(self._face_spec.values())
+        data = _scoring_system_data.get(self.scoring_system)
+        if data:
+            return data.high
         # NB: Should be hard (but not impossible) to get here without catching earlier.
         msg = f"Target face '{self.scoring_system}' has no specified maximum score."
         raise ValueError(msg)
@@ -244,32 +331,62 @@ class Target:
         >>> mytarget.min_score()
         1.0
         """
-        if self.scoring_system in (
-            "5_zone",
-            "10_zone",
-            "10_zone_compound",
-            "WA_field",
-            "IFAA_field_expert",
-            "Worcester",
-        ):
-            return 1.0
-        if self.scoring_system in (
-            "10_zone_6_ring",
-            "10_zone_6_ring_compound",
-        ):
-            return 5.0
-        if self.scoring_system in (
-            "10_zone_5_ring",
-            "10_zone_5_ring_compound",
-        ):
-            return 6.0
-        if self.scoring_system in ("Worcester_2_ring",):
-            return 4.0
-        if self.scoring_system in ("IFAA_field",):
-            return 3.0
-        if self.scoring_system in ("Beiter_hit_miss"):
-            # For Beiter options are hit and miss, so return 0 here
-            return 0.0
+        if self.is_custom:
+            return min(self._face_spec.values())
+        data = _scoring_system_data.get(self.scoring_system)
+        if data:
+            return data.low
         # NB: Should be hard (but not impossible) to get here without catching earlier.
         msg = f"Target face '{self.scoring_system}' has no specified minimum score."
         raise ValueError(msg)
+
+    def get_face_spec(self) -> FaceSpec:
+        # Could replace with mapping face to lambda that returns spec
+        """Derive specifications for common/supported targets.
+
+        Returns
+        -------
+        spec : dict
+            Mapping of target ring sizes in [metres] to score
+        """
+        system = self.scoring_system
+        tar_dia = self.diameter
+
+        if system == "Custom":
+            return self._face_spec
+
+        data = _scoring_system_data.get(system)
+        if not data:
+            # no data for scoring system, raise
+            msg = f"No rule for calculating scoring for face type {system}."
+            raise ValueError(msg)
+
+        # calculate missing rings for certain targets from minimum score
+        missing = data.low - 1
+
+        if system == "5_zone":
+            spec = {_rnd6((n + 1) * tar_dia / 10): 10 - n for n in range(1, 11, 2)}
+
+        elif system in ("10_zone", "10_zone_6_ring", "10_zone_5_ring"):
+            spec = {_rnd6(n * tar_dia / 10): 11 - n for n in range(1, 11 - missing)}
+
+        elif system in ("10_zone_compound", "10_zone_5_ring_compound"):
+            spec = {_rnd6(tar_dia / 20): 10} | {
+                _rnd6(n * tar_dia / 10): 11 - n for n in range(2, 11 - missing)
+            }
+
+        elif system == "WA_field":
+            spec = {_rnd6(tar_dia / 10): 6} | {
+                _rnd6(n * tar_dia / 5): 6 - n for n in range(1, 6)
+            }
+
+        elif system == "IFAA_field":
+            spec = {_rnd6(n * tar_dia / 5): 5 - n // 2 for n in range(1, 6, 2)}
+
+        elif system == "Beiter_hit_miss":
+            spec = {tar_dia: 1}
+
+        elif system in ("Worcester", "Worcester_2_ring", "IFAA_field_expert"):
+            spec = {_rnd6(n * tar_dia / 5): 6 - n for n in range(1, 6 - missing)}
+
+        return spec
