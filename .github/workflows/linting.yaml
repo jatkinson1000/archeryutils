@@ -14,26 +14,23 @@ on:
 
 jobs:
   various:
-    name: various (Black, pylint, pydocstyle, mypy)
+    name: various (ruff formatting, ruff linting, mypy)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
-    - run: pip install black pylint pydocstyle mypy
+        python-version: "3.12"
+    - run: pip install ruff mypy
            pip install .[lint]
 
     # annotate each step with `if: always` to run all regardless
-    - name: Assert that code matches Black code style
+    - name: Check code formatting with ruff
       if: always()
-      uses: psf/black@stable
-    - name: Lint with pylint
+      run: ruff format --diff archeryutils/
+    - name: Lint with ruff using pyproject.toml configuration
       if: always()
-      run: pylint archeryutils/
-    - name: Lint with pydocstyle
-      if: always()
-      run: pydocstyle --convention=numpy archeryutils/
-    - name: Lint with mypy
+      run: ruff check archeryutils/
+    - name: Type checking with mypy
       if: always()
       run: mypy archeryutils/
