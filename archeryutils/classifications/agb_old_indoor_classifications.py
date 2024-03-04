@@ -7,22 +7,17 @@ calculate_AGB_old_indoor_classification
 AGB_old_indoor_classification_scores
 """
 
-# Due to structure of similar classification schemes they may trigger duplicate code.
-# => disable for classification files and tests
-# pylint: disable=duplicate-code
-
 from typing import TypedDict
 
-from archeryutils import load_rounds
-import archeryutils.handicaps as hc
 import archeryutils.classifications.classification_utils as cls_funcs
-
+import archeryutils.handicaps as hc
+from archeryutils import load_rounds
 
 ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "AGB_indoor.json",
         "WA_indoor.json",
-    ]
+    ],
 )
 
 
@@ -142,10 +137,11 @@ def calculate_agb_old_indoor_classification(
     """
     # Check score is valid
     if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
-        raise ValueError(
+        msg = (
             f"Invalid score of {score} for a {roundname}. "
             f"Should be in range 0-{ALL_INDOOR_ROUNDS[roundname].max_score()}."
         )
+        raise ValueError(msg)
 
     # Get scores required on this round for each classification
     class_scores = agb_old_indoor_classification_scores(
@@ -171,7 +167,7 @@ def calculate_agb_old_indoor_classification(
     # Beware of this later on, however, if we wish to rectify the 'anomaly'
 
     try:
-        classification_from_score = list(class_data.keys())[0]
+        classification_from_score = next(iter((class_data.keys())))
         return classification_from_score
     except IndexError:
         return "UC"

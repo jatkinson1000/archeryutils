@@ -1,20 +1,15 @@
-"""Tests for old agb indoor classification functions"""
-
-# Due to structure of similar classification schemes they may trigger duplicate code.
-# => disable for classification files and tests
-# pylint: disable=duplicate-code
+"""Tests for old agb indoor classification functions."""
 
 import pytest
 
-from archeryutils import load_rounds
 import archeryutils.classifications as class_funcs
-
+from archeryutils import load_rounds
 
 ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_indoor.json",
         "AGB_indoor.json",
-    ]
+    ],
 )
 
 
@@ -68,6 +63,7 @@ class TestAgbOldIndoorClassificationScores:
     ) -> None:
         """
         Check that old_indoor classification returns expected value for a case.
+
         ALl ages should return the same values.
         """
         scores = class_funcs.agb_old_indoor_classification_scores(
@@ -82,9 +78,7 @@ class TestAgbOldIndoorClassificationScores:
     def test_agb_old_indoor_classification_scores_genders(
         self,
     ) -> None:
-        """
-        Check that old_indoor classification returns expected value for a case.
-        """
+        """Check that old_indoor classification returns expected value for a case."""
         scores = class_funcs.agb_old_indoor_classification_scores(
             roundname="portsmouth",
             bowstyle="recurve",
@@ -117,6 +111,7 @@ class TestAgbOldIndoorClassificationScores:
     ) -> None:
         """
         Check that old_indoor classification returns expected value for a case.
+
         Also checks that compound scoring is enforced.
         """
         scores = class_funcs.agb_old_indoor_classification_scores(
@@ -131,9 +126,7 @@ class TestAgbOldIndoorClassificationScores:
     def test_agb_old_indoor_classification_scores_gent_compound_worcester(
         self,
     ) -> None:
-        """
-        Check gent compound worcester supposed loophole.
-        """
+        """Check gent compound worcester supposed loophole."""
         scores = class_funcs.agb_old_indoor_classification_scores(
             roundname="worcester",
             bowstyle="compound",
@@ -162,13 +155,12 @@ class TestAgbOldIndoorClassificationScores:
         gender: str,
         age_group: str,
     ) -> None:
-        """
-        Check that old_indoor classification returns expected value for a case.
-        """
+        """Check that old_indoor classification returns expected value for a case."""
         with pytest.raises(
             KeyError,
             match=(
-                f"{age_group.lower().replace(' ','')}_{gender.lower()}_{bowstyle.lower()}"
+                f"{age_group.lower().replace(' ','')}_"
+                f"{gender.lower()}_{bowstyle.lower()}"
             ),
         ):
             _ = class_funcs.agb_old_indoor_classification_scores(
@@ -235,9 +227,7 @@ class TestCalculateAgbOldIndoorClassification:
         gender: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that old_indoor classification returns expected value for a few cases.
-        """
+        """Check old_indoor classification returns expected value for a few cases."""
         class_returned = class_funcs.calculate_agb_old_indoor_classification(
             score=score,
             roundname="portsmouth",
@@ -274,9 +264,7 @@ class TestCalculateAgbOldIndoorClassification:
         roundname: str,
         score: float,
     ) -> None:
-        """
-        Check that old_indoor classification fails for inappropriate scores.
-        """
+        """Check that old_indoor classification fails for inappropriate scores."""
         with pytest.raises(
             ValueError,
             match=(

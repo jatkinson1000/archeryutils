@@ -1,4 +1,4 @@
-"""Code for a handicap scheme class performing calculations for a  generic handicap scheme.
+"""Handicap scheme class for performing calculations using a generic handicap scheme.
 
 Extended Summary
 ----------------
@@ -40,7 +40,7 @@ import numpy.typing as npt
 
 from archeryutils import rounds, targets
 
-FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float_])
+FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float64])
 
 
 class HandicapScheme(ABC):
@@ -56,7 +56,7 @@ class HandicapScheme(ABC):
     arw_d_in: float
         diameter of an indoor arrow [metres] for this scheme, default 9.3e-3
     desc_scale: bool
-        does the scheme work on a descending scale i.e. lower handicap is better, default True
+        does the scheme use a descending scale (lower handicap is better), default True
     scale_bounds: list[int]
         Reasonable upper and lower bounds on the handicap scale for bounding searches
     max_score_rounding_lim: float
@@ -99,8 +99,10 @@ class HandicapScheme(ABC):
     @overload
     @abstractmethod
     def sigma_t(
-        self, handicap: npt.NDArray[np.float_], dist: float
-    ) -> npt.NDArray[np.float_]: ...
+        self,
+        handicap: npt.NDArray[np.float64],
+        dist: float,
+    ) -> npt.NDArray[np.float64]: ...
 
     @abstractmethod
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
@@ -160,14 +162,12 @@ class HandicapScheme(ABC):
         sig_r = dist * sig_t
         return sig_r
 
-    def arrow_score(
+    def arrow_score(  # noqa: PLR0912 Too many branches
         self,
         handicap: FloatArray,
         target: targets.Target,
         arw_d: Optional[float] = None,
     ) -> FloatArray:
-        # Six too many branches. Makes sense due to different target faces => disable
-        # pylint: disable=too-many-branches
         """Calculate the average arrow score for a given target and handicap rating.
 
         Parameters
@@ -208,7 +208,7 @@ class HandicapScheme(ABC):
         array([9.40118268, 6.05227962, 0.46412515])
 
         """
-        # Set arrow diameter. Use scheme default based on in-/out-doors if none provided.
+        # Set arrow diameter. Use scheme default based on in/outdoors if none provided.
         if arw_d is None:
             if target.indoor:
                 arw_d = self.arw_d_in
@@ -311,7 +311,7 @@ class HandicapScheme(ABC):
                 - np.exp(-((((tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
                 - 4.0 * np.exp(-((((2 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
             )
-        # No else raising error needed as invalid scoring systems handled in Target class
+        # No need for else with error as invalid scoring systems handled in Target class
 
         return s_bar
 
@@ -321,7 +321,7 @@ class HandicapScheme(ABC):
         rnd: rounds.Round,
         arw_d: Optional[float] = None,
         rounded_score: bool = True,
-    ) -> npt.NDArray[np.float_]:
+    ) -> npt.NDArray[np.float64]:
         """Calculate the expected score for all passes in a round at a given handicap.
 
         Parameters
@@ -334,7 +334,7 @@ class HandicapScheme(ABC):
             user-specified arrow diameter in [metres]
         rounded_score : bool, default=True
             round score to integer value?
-            Note the sum of rounded passes may not be the same as the rounded round score
+            Note: sum of rounded passes may not be the same as the rounded round score
 
         Returns
         -------
@@ -357,7 +357,9 @@ class HandicapScheme(ABC):
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.score_for_passes(np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90)
+        >>> agb_scheme.score_for_passes(
+        ...     np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90
+        ... )
         array([[322.84091528, 162.76200686,   8.90456718],
                [338.44257659, 217.88206641,  16.70850537],
                [338.66395001, 216.74407488,  16.41855209],
@@ -368,7 +370,7 @@ class HandicapScheme(ABC):
             [
                 pass_i.n_arrows * self.arrow_score(handicap, pass_i.target, arw_d=arw_d)
                 for pass_i in rnd.passes
-            ]
+            ],
         )
 
         return self._rounded_score(pass_scores) if rounded_score else pass_scores
@@ -423,7 +425,9 @@ class HandicapScheme(ABC):
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.score_for_round(np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90)
+        >>> agb_scheme.score_for_round(
+        ...     np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90
+        ... )
         array([1356.,  887.,   91.])
 
         """
@@ -508,15 +512,17 @@ class HandicapScheme(ABC):
         # Check we have a valid score
         max_score = rnd.max_score()
         if score > max_score:
-            raise ValueError(
-                f"The score of {score} provided is greater than the maximum of {max_score} "
-                f"for a {rnd.name}."
+            msg = (
+                f"The score of {score} provided is greater than the maximum of "
+                f"{max_score} for a {rnd.name}."
             )
+            raise ValueError(msg)
         if score <= 0.0:
-            raise ValueError(
-                f"The score of {score} provided is less than or equal to zero so cannot "
-                "have a handicap."
+            msg = (
+                f"The score of {score} provided is less than or equal to zero "
+                "so cannot have a handicap."
             )
+            raise ValueError(msg)
 
         if score == max_score:
             # Deal with max score before root finding
@@ -558,7 +564,7 @@ class HandicapScheme(ABC):
         """Get handicap for maximum score on a round.
 
         Start high and drop down until no longer rounding to max score.
-        i.e. >= max_score - 1.0 for ceil() rounding, and >= max_score - 0.5 for around().
+        i.e. >= max_score - 1.0 for ceil(), and >= max_score - 0.5 for around().
 
         Parameters
         ----------
@@ -577,7 +583,7 @@ class HandicapScheme(ABC):
         Warns
         ------
         UserWarning
-            If called with int_prec=False as value limited by the numerical scheme delta.
+            If called with int_prec=False as precision limit of numerical scheme delta.
 
         """
         max_score = rnd.max_score()
@@ -619,10 +625,11 @@ class HandicapScheme(ABC):
                 "Value returned will be first handicap that achieves this score.\n"
                 "This could cause issues if you are not working in integers.",
                 UserWarning,
+                stacklevel=3,
             )
         return handicap
 
-    def _rootfind_score_handicap(
+    def _rootfind_score_handicap(  # noqa: PLR0912, PLR0914, PLR0915, RUF100 Too many: branches, locals, statements
         self,
         score: float,
         rnd: rounds.Round,
@@ -652,13 +659,6 @@ class HandicapScheme(ABC):
         - https://github.com/scipy/scipy/blob/dde39b7/scipy/optimize/Zeros/brentq.c
 
         """
-        # The rootfinding algorithm here raises pylint errors for
-        # too many statements (64/50), branches (17/12), and variables(23/15).
-        # However, it is a single enclosed algorithm => disable
-        # pylint: disable=too-many-locals
-        # pylint: disable=too-many-branches
-        # pylint: disable=too-many-statements
-
         x_init = self.scale_bounds
 
         f_init = [
@@ -693,14 +693,10 @@ class HandicapScheme(ABC):
                 spre = xcur - xpre
                 scur = xcur - xpre
             if abs(fblk) < abs(fcur):
-                # xpre = xcur
-                # xcur = xblk
-                # xblk = xpre
+                # xpre <- xcu, xcur <- xblk, xblk <- xpre
                 xpre, xcur, xblk = xcur, xblk, xcur
 
-                # fpre = fcur
-                # fcur = fblk
-                # fblk = fpre
+                # fpre <- fcur, fcur <- fblk, fblk <- fpre
                 fpre, fcur, fblk = fcur, fblk, fcur
 
             delta = (xtol + rtol * abs(xcur)) / 2.0

@@ -1,4 +1,4 @@
-"""Tests for constants, including Length class"""
+"""Tests for constants, including Length class."""
 
 import pytest
 
@@ -11,21 +11,17 @@ YARD = "yard"
 
 
 class TestLengths:
-    """
-    Tests for Length class
-    """
+    """Tests for Length class."""
 
     def test_units_available(self):
-        """Test common length unit names"""
-
+        """Test common length unit names."""
         assert CM in Length.cm
         assert INCH in Length.inch
         assert METRE in Length.metre
         assert YARD in Length.yard
 
     def test_pluralised_unit_alises_available(self):
-        """Test plurailised versions of common length unit names"""
-
+        """Test plurailised versions of common length unit names."""
         assert CM + "s" in Length.cm
         assert INCH + "es" in Length.inch
         assert METRE + "s" in Length.metre
@@ -41,7 +37,7 @@ class TestLengths:
         ],
     )
     def test_conversion_to_metres(self, value, unit, result):
-        """Test conversion from other units to metres"""
+        """Test conversion from other units to metres."""
         assert Length.to_metres(value, unit) == result
 
     @pytest.mark.parametrize(
@@ -54,7 +50,7 @@ class TestLengths:
         ],
     )
     def test_conversion_from_metres(self, value, unit, result):
-        """Test conversion from metres to other units"""
+        """Test conversion from metres to other units."""
         assert Length.from_metres(value, unit) == pytest.approx(result)
 
     @pytest.mark.parametrize(
@@ -67,5 +63,5 @@ class TestLengths:
         ],
     )
     def test_unit_name_coercion(self, unit, result):
-        """Test unit name standardisation available on Length class"""
+        """Test unit name standardisation available on Length class."""
         assert Length.definitive_unit(unit) == result

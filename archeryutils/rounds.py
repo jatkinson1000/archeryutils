@@ -1,10 +1,10 @@
 """Module to define a Pass and Round classes for archery applications."""
 
-from typing import Optional, Union
 from collections.abc import Iterable
+from typing import Optional, Union
 
-from archeryutils.targets import Target, ScoringSystem
 from archeryutils.constants import Length
+from archeryutils.targets import ScoringSystem, Target
 
 
 class Pass:
@@ -44,10 +44,8 @@ class Pass:
         self.n_arrows = abs(n_arrows)
         self.target = target
 
-    # One too many arguments, but required to match Target signature => disable
-    # pylint: disable=too-many-arguments
     @classmethod
-    def at_target(
+    def at_target(  # noqa: PLR0913
         cls,
         n_arrows: int,
         scoring_system: ScoringSystem,
@@ -67,8 +65,9 @@ class Pass:
             number of arrows in this pass
         scoring_system : {\
         ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
-        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
-        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
+        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"``\
+        ``"IFAA_field"`` ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"``\
+        ``"Worcester_2_ring"``}
             target face/scoring system type
         diameter : float
             face diameter in [centimetres]
@@ -196,16 +195,13 @@ class Round:
 
     >>> my720round = au.Round("WA 720", [my720pass, my720pass])
     >>> my720round2 = au.Round("WA 720", (my720pass, my720pass))
-    >>> assert(my720round.passes == my720round2.passes == [my720pass, my720pass])
+    >>> assert my720round.passes == my720round2.passes == [my720pass, my720pass]
 
     Additional, optional parameters can be used to provide 'metadata' about the round.
 
     """
 
-    # One too many arguments, but logically this structure makes sense => disable
-    # pylint: disable=too-many-arguments
-
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         name: str,
         passes: Iterable[Pass],
@@ -286,5 +282,5 @@ class Round:
             print(
                 f"\t- {pass_i.n_arrows} arrows "
                 f"at a {diam:.1f} {diam_units} target "
-                f"at {dist:.1f} {dist_units}s."
+                f"at {dist:.1f} {dist_units}s.",
             )

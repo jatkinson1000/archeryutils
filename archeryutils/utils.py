@@ -1,7 +1,7 @@
 """Utility functions for printing version information."""
 
 # This is not integral to the functioning of archeryutils and serves debugging purposes.
-# For this reason it is excluded from tests and coverage checks with `  # pragma: no cover`.
+# For this reason exclude from tests and coverage checks with `  # pragma: no cover`.
 
 import importlib
 import locale
@@ -21,7 +21,7 @@ def _get_sys_info() -> list:  # pragma: no cover
     commit = None
     if os.path.isdir(".git") and os.path.isdir("archeryutils"):
         with subprocess.Popen(
-            'git log --format="%H" -n 1'.split(" "),
+            'git log --format="%H" -n 1'.split(" "),  # noqa: S603 subprocess call this is safe
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ) as pipe:
@@ -43,7 +43,7 @@ def _get_sys_info() -> list:  # pragma: no cover
             ("LC_ALL", f'{os.environ.get("LC_ALL", "None")}'),
             ("LANG", f'{os.environ.get("LANG", "None")}'),
             ("LOCALE", f"{locale.getlocale()}"),
-        ]
+        ],
     )
 
     return blob
@@ -61,10 +61,8 @@ def versions() -> None:  # pragma: no cover
         # setup/lint/test
         ("setuptools", lambda mod: mod.__version__),
         ("pip", lambda mod: mod.__version__),
-        ("black", lambda mod: mod.__version__),
-        ("pylint", lambda mod: mod.__version__),
         ("coverage", lambda mod: mod.__version__),
-        ("pydocstyle", lambda mod: mod.__version__),
+        ("ruff", lambda mod: mod.__version__),
         ("pytest", lambda mod: mod.__version__),
         ("pytest_mock", lambda mod: importlib.metadata.version(mod.__name__)),
         ("mypy", lambda mod: importlib.metadata.version(mod.__name__)),

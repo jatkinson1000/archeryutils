@@ -40,8 +40,9 @@ _CLASSES = {
 }
 
 
-def handicap_scheme(
-    handicap_sys: Union[str, HandicapScheme], **kwargs: float
+def handicap_scheme(  # noqa: D417 Missing argument in docstring (**kwargs)
+    handicap_sys: Union[str, HandicapScheme],
+    **kwargs: float,
 ) -> HandicapScheme:
     r"""
     Create a HandicapScheme subclass for a requested handicap scheme.
@@ -91,10 +92,11 @@ def handicap_scheme(
     try:
         return _CLASSES[handicap_sys](**kwargs)
     except KeyError as exc:
-        raise ValueError(
+        msg = (
             f"{handicap_sys} is not a recognised handicap system.\n"
             f"""Please select from '{"', '".join(_CLASSES.keys())}'."""
-        ) from exc
+        )
+        raise ValueError(msg) from exc
 
 
 def arrow_score(
@@ -155,7 +157,7 @@ def score_for_passes(
     handicap_sys: Union[str, HandicapScheme],
     arw_d: Optional[float] = None,
     rounded_score: bool = True,
-) -> npt.NDArray[np.float_]:
+) -> npt.NDArray[np.float64]:
     """
     Calculate the expected score for all passes in a round at a given handicap.
 
@@ -206,7 +208,10 @@ def score_for_passes(
     hc_sys = handicap_scheme(handicap_sys)
 
     return hc_sys.score_for_passes(
-        handicap, rnd, arw_d=arw_d, rounded_score=rounded_score
+        handicap,
+        rnd,
+        arw_d=arw_d,
+        rounded_score=rounded_score,
     )
 
 
@@ -248,9 +253,9 @@ def score_for_round(
     >>> wa_outdoor = au.load_rounds.WA_outdoor
     >>> hc.score_for_round(10.0, wa_outdoor.wa1440_90, "AGB")
     1356.0
-    >>> au.handicap_equations.score_for_round(wa_outdoor.wa1440_90,
-    ...                                       10.0,
-    ...                                       rounded_score=False)
+    >>> au.handicap_equations.score_for_round(
+    ...     wa_outdoor.wa1440_90, 10.0, rounded_score=False
+    ... )
     1355.8270359849505
 
     It can also be passed an array of handicaps:
@@ -265,7 +270,10 @@ def score_for_round(
     hc_sys = handicap_scheme(handicap_sys)
 
     return hc_sys.score_for_round(
-        handicap, rnd, arw_d=arw_d, rounded_score=rounded_score
+        handicap,
+        rnd,
+        arw_d=arw_d,
+        rounded_score=rounded_score,
     )
 
 
@@ -312,10 +320,7 @@ def handicap_from_score(
     ``int_prec=True``:
 
     >>> au.handicap_functions.handicap_from_score(
-    ...     999,
-    ...     wa_outdoor.wa1440_90,
-    ...     "AGB", hc_params,
-    ...     int_prec=True
+    ...     999, wa_outdoor.wa1440_90, "AGB", hc_params, int_prec=True
     ... )
     44.0
 

@@ -15,7 +15,7 @@ get_compound_codename
 
 import json
 from pathlib import Path
-from typing import TypedDict, Literal
+from typing import Literal, TypedDict
 
 
 class AGBAgeData(TypedDict):
@@ -57,10 +57,11 @@ def read_ages_json(
         ages = json.load(json_file)
     if isinstance(ages, list):
         return ages
-    raise TypeError(
+    msg = (
         f"Unexpected ages input when reading from json file. "
         f"Expected list(dict()) but got {type(ages)}. Check {age_file}."
     )
+    raise TypeError(msg)
 
 
 class AGBBowstyleData(TypedDict):
@@ -106,10 +107,11 @@ def read_bowstyles_json(
         bowstyles = json.load(json_file)
     if isinstance(bowstyles, list):
         return bowstyles
-    raise TypeError(
+    msg = (
         f"Unexpected bowstyles input when reading from json file. "
         f"Expected list(dict()) but got {type(bowstyles)}. Check {bowstyles_file}."
     )
+    raise TypeError(msg)
 
 
 def read_genders_json(
@@ -142,10 +144,11 @@ def read_genders_json(
         genders = json.load(json_file)["genders"]
     if isinstance(genders, list):
         return genders
-    raise TypeError(
+    msg = (
         f"Unexpected genders input when reading from json file. "
         f"Expected list() but got {type(genders)}. Check {genders_file}."
     )
+    raise TypeError(msg)
 
 
 class AGBClassificationData(TypedDict):
@@ -191,10 +194,11 @@ def read_classes_json(
     # elif class_system == 'agb_field':
     #     filename = "AGB_classes_field.json"
     else:
-        raise ValueError(
+        msg = (
             "Unexpected classification system specified. "
             "Expected one of 'agb_indoor', 'agb_outdoor', 'aqb_field'."
         )
+        raise ValueError(msg)
 
     classes_file = Path(__file__).parent / filename
 
@@ -203,10 +207,11 @@ def read_classes_json(
         classes: AGBClassificationData = json.load(json_file)
     if isinstance(classes, dict):
         return classes
-    raise TypeError(
+    msg = (
         f"Unexpected classes input when reading from json file. "
         f"Expected dict() but got {type(classes)}. Check {classes_file}."
     )
+    raise TypeError(msg)
 
 
 def get_groupname(bowstyle: str, gender: str, age_group: str) -> str:
@@ -267,11 +272,11 @@ def get_age_gender_step(
     """
     # There is a danger that gender step overtakes age step at U15/U16
     # interface. If this happens set to age step to align U16 with U16
-    if gender.lower() == "female" and age_cat == 3 and age_step < gender_step:
+    if gender.lower() == "female" and age_cat == 3 and age_step < gender_step:  # noqa: PLR2004 Magic Value
         return age_cat * age_step + age_step
 
     # For females age_category<=3 (Under 16 or older) apply gender step and age steps
-    if gender.lower() == "female" and age_cat <= 3:
+    if gender.lower() == "female" and age_cat <= 3:  # noqa: PLR2004 Magic Value
         return gender_step + age_cat * age_step
 
     # Default case for males, and females aged >3 (Under 15 or younger) apply age steps
@@ -306,7 +311,7 @@ def get_compound_codename(round_codename: str) -> str:
 
     Parameters
     ----------
-    round_codenames : str
+    round_codename : str
         str round codename to check
 
     Returns

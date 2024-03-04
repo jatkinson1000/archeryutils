@@ -1,19 +1,14 @@
-"""Tests for agb field classification functions"""
-
-# Due to structure of similar classification schemes they may trigger duplicate code.
-# => disable for classification files and tests
-# pylint: disable=duplicate-code
+"""Tests for agb field classification functions."""
 
 import pytest
 
-from archeryutils import load_rounds
 import archeryutils.classifications as class_funcs
-
+from archeryutils import load_rounds
 
 ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
-    ]
+    ],
 )
 
 
@@ -69,9 +64,7 @@ class TestAgbFieldClassificationScores:
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that field classification returns expected value for a case.
-        """
+        """Check that field classification returns expected value for a case."""
         scores = class_funcs.agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
@@ -117,9 +110,7 @@ class TestAgbFieldClassificationScores:
         age_group: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that field classification returns expected value for a case.
-        """
+        """Check that field classification returns expected value for a case."""
         scores = class_funcs.agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
@@ -171,9 +162,7 @@ class TestAgbFieldClassificationScores:
         bowstyle: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that field classification returns expected value for a case.
-        """
+        """Check that field classification returns expected value for a case."""
         scores = class_funcs.agb_field_classification_scores(
             roundname=roundname,
             bowstyle=bowstyle,
@@ -214,13 +203,12 @@ class TestAgbFieldClassificationScores:
         gender: str,
         age_group: str,
     ) -> None:
-        """
-        Check that field classification returns expected value for a case.
-        """
+        """Check that field classification returns expected value for a case."""
         with pytest.raises(
             KeyError,
             match=(
-                f"{age_group.lower().replace(' ','')}_{gender.lower()}_{bowstyle.lower()}"
+                f"{age_group.lower().replace(' ','')}_"
+                f"{gender.lower()}_{bowstyle.lower()}"
             ),
         ):
             _ = class_funcs.agb_field_classification_scores(
@@ -297,7 +285,7 @@ class TestCalculateAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_agb_field_classification(
+    def test_calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
         self,
         roundname: str,
         score: float,
@@ -305,10 +293,7 @@ class TestCalculateAgbFieldClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that field classification returns expected value for a few cases.
-        """
-        # pylint: disable=too-many-arguments
+        """Check that field classification returns expected value for a few cases."""
         class_returned = class_funcs.calculate_agb_field_classification(
             score=score,
             roundname=roundname,
@@ -343,9 +328,7 @@ class TestCalculateAgbFieldClassification:
         bowstyle: str,
         class_expected: str,
     ) -> None:
-        """
-        Check that field classification returns unclassified for inappropriate rounds.
-        """
+        """Check field classification returns unclassified for inappropriate rounds."""
         class_returned = class_funcs.calculate_agb_field_classification(
             score=score,
             roundname=roundname,
@@ -382,9 +365,7 @@ class TestCalculateAgbFieldClassification:
         roundname: str,
         score: float,
     ) -> None:
-        """
-        Check that field classification fails for inappropriate scores.
-        """
+        """Check that field classification fails for inappropriate scores."""
         with pytest.raises(
             ValueError,
             match=(

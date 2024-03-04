@@ -179,7 +179,7 @@ class HandicapAGBold(HandicapScheme):
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913 Too many arguments
         self,
         datum: float = 12.9,
         step: float = 3.6,
@@ -189,9 +189,6 @@ class HandicapAGBold(HandicapScheme):
         k3: float = 4.3,
         p1: float = 2.0,
     ):
-        # three too many arguments, but all are hc-scheme params => disable
-        # pylint: disable=too-many-arguments
-
         super().__init__()
 
         self.name = "AGBold"

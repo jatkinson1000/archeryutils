@@ -7,21 +7,16 @@ calculate_agb_field_classification
 agb_field_classification_scores
 """
 
-# Due to structure of similar classification schemes they may trigger duplicate code.
-# => disable for classification files and tests
-# pylint: disable=duplicate-code
-
 import re
 from typing import TypedDict
 
-from archeryutils import load_rounds
 import archeryutils.classifications.classification_utils as cls_funcs
-
+from archeryutils import load_rounds
 
 ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
-    ]
+    ],
 )
 
 
@@ -108,7 +103,11 @@ del _make_agb_field_classification_dict
 
 
 def calculate_agb_field_classification(
-    score: float, roundname: str, bowstyle: str, gender: str, age_group: str
+    score: float,
+    roundname: str,
+    bowstyle: str,
+    gender: str,
+    age_group: str,
 ) -> str:
     """
     Calculate AGB field classification from score.
@@ -158,10 +157,11 @@ def calculate_agb_field_classification(
     """
     # Check score is valid
     if score < 0 or score > ALL_AGBFIELD_ROUNDS[roundname].max_score():
-        raise ValueError(
+        msg = (
             f"Invalid score of {score} for a {roundname}. "
             f"Should be in range 0-{ALL_AGBFIELD_ROUNDS[roundname].max_score()}."
         )
+        raise ValueError(msg)
 
     # deal with reduced categories:
     if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
@@ -200,7 +200,10 @@ def calculate_agb_field_classification(
 
 
 def agb_field_classification_scores(
-    roundname: str, bowstyle: str, gender: str, age_group: str
+    roundname: str,  # noqa: ARG001 Unused argument for consistency with other classification schemes
+    bowstyle: str,
+    gender: str,
+    age_group: str,
 ) -> list[int]:
     """
     Calculate AGB field classification scores for category.
@@ -241,9 +244,6 @@ def agb_field_classification_scores(
     [338, 317, 288, 260, 231, 203]
 
     """
-    # Unused roundname argument to keep consistency with other classification functions
-    # pylint: disable=unused-argument
-
     # deal with reduced categories:
     if age_group.lower().replace(" ", "") in ("adult", "50+", "under21"):
         age_group = "Adult"

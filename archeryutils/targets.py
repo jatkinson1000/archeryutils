@@ -1,6 +1,6 @@
 """Module for representing a Target for archery applications."""
 
-from typing import Union, Literal, get_args
+from typing import Literal, Union, get_args
 
 from archeryutils.constants import Length
 
@@ -29,8 +29,9 @@ class Target:
     ----------
     scoring_system : {\
         ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
-        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"`` ``"IFAA_field"``\
-        ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"`` ``"Worcester_2_ring"``}
+        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"``\
+        ``"IFAA_field"`` ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"``\
+        ``"Worcester_2_ring"``}
         target face/scoring system type. Must be one of the supported values.
     diameter : float or tuple of float, str
         Target face diameter default [centimetres].
@@ -93,20 +94,23 @@ class Target:
         systems = get_args(ScoringSystem)
 
         if scoring_system not in systems:
-            raise ValueError(
+            msg = (
                 f"""Invalid Target Face Type specified.\n"""
                 f"""Please select from '{"', '".join(systems)}'."""
             )
+
+            raise ValueError(msg)
 
         if isinstance(distance, tuple):
             (distance, native_dist_unit) = distance
         else:
             native_dist_unit = "metre"
         if native_dist_unit not in Length.yard | Length.metre:
-            raise ValueError(
+            msg = (
                 f"Distance unit '{native_dist_unit}' not recognised. "
                 "Select from 'yard' or 'metre'."
             )
+            raise ValueError(msg)
         distance = Length.to_metres(distance, native_dist_unit)
 
         if isinstance(diameter, tuple):
@@ -114,10 +118,11 @@ class Target:
         else:
             native_diameter_unit = "cm"
         if native_diameter_unit not in Length.cm | Length.inch | Length.metre:
-            raise ValueError(
+            msg = (
                 f"Diameter unit '{native_diameter_unit}' not recognised. "
                 "Select from 'cm', 'inch' or 'metre'"
             )
+            raise ValueError(msg)
         diameter = Length.to_metres(diameter, native_diameter_unit)
 
         self.scoring_system = scoring_system
@@ -216,9 +221,8 @@ class Target:
         if self.scoring_system in ("Beiter_hit_miss"):
             return 1.0
         # NB: Should be hard (but not impossible) to get here without catching earlier.
-        raise ValueError(
-            f"Target face '{self.scoring_system}' has no specified maximum score."
-        )
+        msg = f"Target face '{self.scoring_system}' has no specified maximum score."
+        raise ValueError(msg)
 
     def min_score(self) -> float:
         """
@@ -267,6 +271,5 @@ class Target:
             # For Beiter options are hit and miss, so return 0 here
             return 0.0
         # NB: Should be hard (but not impossible) to get here without catching earlier.
-        raise ValueError(
-            f"Target face '{self.scoring_system}' has no specified minimum score."
-        )
+        msg = f"Target face '{self.scoring_system}' has no specified minimum score."
+        raise ValueError(msg)

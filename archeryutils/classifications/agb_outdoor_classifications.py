@@ -7,25 +7,21 @@ calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
 
-# Due to structure of similar classification schemes they may trigger duplicate code.
-# => disable for classification files and tests
-# pylint: disable=duplicate-code
+from typing import Any, Literal, TypedDict, cast
 
-from typing import Any, Literal, cast, TypedDict
 import numpy as np
 import numpy.typing as npt
 
-from archeryutils import load_rounds
-import archeryutils.handicaps as hc
 import archeryutils.classifications.classification_utils as cls_funcs
-
+import archeryutils.handicaps as hc
+from archeryutils import load_rounds
 
 ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "AGB_outdoor_imperial.json",
         "AGB_outdoor_metric.json",
         "WA_outdoor.json",
-    ]
+    ],
 )
 
 
@@ -35,8 +31,8 @@ class GroupData(TypedDict):
     classes: list[str]
     max_distance: list[int]
     classes_long: list[str]
-    class_HC: npt.NDArray[np.float_]
-    min_dists: npt.NDArray[np.float_]
+    class_HC: npt.NDArray[np.float64]
+    min_dists: npt.NDArray[np.float64]
     prestige_rounds: list[str]
 
 
@@ -65,9 +61,6 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
-    # Five too many locals, but better than repeated dictionary assignment => disable
-    # pylint: disable=too-many-locals
-
     # Read in age group info as list of dicts
     agb_ages = cls_funcs.read_ages_json()
     # Read in bowstyleclass info as list of dicts
@@ -88,7 +81,9 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
         for gender in agb_genders:
             for age in agb_ages:
                 groupname = cls_funcs.get_groupname(
-                    bowstyle["bowstyle"], gender, age["age_group"]
+                    bowstyle["bowstyle"],
+                    gender,
+                    age["age_group"],
                 )
 
                 # Get max dists for category from json file data
@@ -188,10 +183,13 @@ def _assign_min_dist(
     # Use metres because corresponding yards distances are >= metric ones
     dists = [90, 70, 60, 50, 40, 30, 20, 15]
 
+    # Number of MB categories (distance restrictions superceded by prestige rounds.)
+    n_mb: int = 3
+
     max_dist_index = dists.index(np.min(max_dists))
 
     # B1 and above
-    if n_class <= 3:
+    if n_class <= n_mb:
         # All MB and B1 require max distance for everyone:
         return dists[max_dist_index]
 
@@ -205,11 +203,11 @@ def _assign_min_dist(
         "under18",
         "under16",
     ):
-        return dists[max_dist_index + (n_class - 3)]
+        return dists[max_dist_index + (n_class - n_mb)]
 
     # All other categories require max dist for B1 and B2 then step down
     try:
-        return dists[max_dist_index + (n_class - 3) - 1]
+        return dists[max_dist_index + (n_class - n_mb) - 1]
     except IndexError:
         # Distances stack at the bottom end as we can't go below 15m
         return dists[-1]
@@ -339,7 +337,11 @@ del _make_agb_outdoor_classification_dict
 
 
 def calculate_agb_outdoor_classification(
-    score: float, roundname: str, bowstyle: str, gender: str, age_group: str
+    score: float,
+    roundname: str,
+    bowstyle: str,
+    gender: str,
+    age_group: str,
 ) -> str:
     """
     Calculate AGB outdoor classification from score.
@@ -390,10 +392,11 @@ def calculate_agb_outdoor_classification(
     """
     # Check score is valid
     if score < 0 or score > ALL_OUTDOOR_ROUNDS[roundname].max_score():
-        raise ValueError(
+        msg = (
             f"Invalid score of {score} for a {roundname}. "
-            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}."
+            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}.",
         )
+        raise ValueError(msg)
 
     # Get scores required on this round for each classification
     # Enforcing full size face and compound scoring (for compounds)
@@ -428,13 +431,15 @@ def calculate_agb_outdoor_classification(
         del class_data[item]
 
     try:
-        return list(class_data.keys())[0]
+        return next(iter(class_data.keys()))
     except IndexError:
         return "UC"
 
 
 def _check_prestige_distance(
-    roundname: str, groupname: str, class_data: dict[str, dict[str, Any]]
+    roundname: str,
+    groupname: str,
+    class_data: dict[str, dict[str, Any]],
 ) -> dict[str, dict[str, Any]]:
     """
     Check available classifications for eligibility based on distance and prestige..
@@ -479,7 +484,10 @@ def _check_prestige_distance(
 
 
 def agb_outdoor_classification_scores(
-    roundname: str, bowstyle: str, gender: str, age_group: str
+    roundname: str,
+    bowstyle: str,
+    gender: str,
+    age_group: str,
 ) -> list[int]:
     """
     Calculate AGB outdoor classification scores for category.

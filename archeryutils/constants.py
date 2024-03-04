@@ -1,5 +1,7 @@
 """Constants used in the archeryutils package."""
 
+from typing import ClassVar
+
 _CONVERSIONS_TO_M = {
     "metre": 1.0,
     "yard": 0.9144,
@@ -72,9 +74,11 @@ class Length:
     cm = _CM_ALIASES
     inch = _INCH_ALIASES
 
-    _reversed = {alias: name for name in _CONVERSIONS_TO_M for alias in _ALIASES[name]}
+    _reversed: ClassVar = {
+        alias: name for name in _CONVERSIONS_TO_M for alias in _ALIASES[name]
+    }
 
-    _conversions = {
+    _conversions: ClassVar = {
         alias: factor
         for name, factor in _CONVERSIONS_TO_M.items()
         for alias in _ALIASES[name]
