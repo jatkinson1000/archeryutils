@@ -114,4 +114,5 @@ convention = "numpy"
 
 [tool.ruff.lint.per-file-ignores]
 # Ignore S101 (use of assert) in tests
-"**/tests/*" = ["S101"]
+# Ignore PLR2004 (magic values) in tests as we regularly want to compare to a numerical value
+"**/tests/*" = ["S101", "PLR2004"]
