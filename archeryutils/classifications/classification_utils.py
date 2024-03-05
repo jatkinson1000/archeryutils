@@ -270,16 +270,22 @@ def get_age_gender_step(
     float
         age and gender handicap step for this category's MB relative to datum
     """
+    under_16_int = 3  # U16 is the fourth age category after 50+, adult, and U18
+
     # There is a danger that gender step overtakes age step at U15/U16
     # interface. If this happens set to age step to align U16 with U16
-    if gender.lower() == "female" and age_cat == 3 and age_step < gender_step:  # noqa: PLR2004 Magic Value
+    if (
+        gender.lower() == "female"
+        and age_cat == under_16_int
+        and age_step < gender_step
+    ):
         return age_cat * age_step + age_step
 
-    # For females age_category<=3 (Under 16 or older) apply gender step and age steps
-    if gender.lower() == "female" and age_cat <= 3:  # noqa: PLR2004 Magic Value
+    # For females under 16 or older apply gender step and age steps
+    if gender.lower() == "female" and age_cat <= under_16_int:
         return gender_step + age_cat * age_step
 
-    # Default case for males, and females aged >3 (Under 15 or younger) apply age steps
+    # Default case for males, and females aged U15 or younger - apply only age steps
     return age_cat * age_step
 
 
