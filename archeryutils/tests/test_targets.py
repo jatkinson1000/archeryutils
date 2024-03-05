@@ -130,7 +130,7 @@ class TestTarget:
     def test_diameter_metres_not_converted(self) -> None:
         """Check that Target() is storing diameter in metres."""
         target = Target("Beiter_hit_miss", (0.04, "m"), 18)
-        assert target.diameter == 0.04  # noqa: PLR2004 Magic value
+        assert target.diameter == 0.04
 
     def test_diameter_inches_supported(self) -> None:
         """Check that Target() converts diameters in inches correctly."""

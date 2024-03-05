@@ -33,13 +33,13 @@ class TestPass:
         test_pass = Pass(36, _target)
 
         assert test_pass.target == _target
-        assert test_pass.n_arrows == 36  # noqa: PLR2004 Magic value
+        assert test_pass.n_arrows == 36
 
     def test_at_target_constructor(self) -> None:
         """Check indirect initialisation of a Pass with target parameters."""
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
 
-        assert test_pass.n_arrows == 36  # noqa: PLR2004 Magic value
+        assert test_pass.n_arrows == 36
         # cannot test for equality between targets as __eq__ not implemented
         # assert test_pass.target == _target
 
@@ -106,14 +106,14 @@ class TestPass:
     def test_negative_arrows(self) -> None:
         """Check that Pass() uses abs(narrows)."""
         test_pass = Pass(-36, _target)
-        assert test_pass.n_arrows == 36  # noqa: PLR2004 Magic value
+        assert test_pass.n_arrows == 36
 
     def test_properties(self) -> None:
         """Check that Pass properties are set correctly."""
         test_pass = Pass(36, Target("5_zone", (122, "cm"), (50, "metre"), False))
-        assert test_pass.distance == 50.0  # noqa: PLR2004 Magic value
+        assert test_pass.distance == 50.0
         assert test_pass.native_dist_unit == "metre"
-        assert test_pass.diameter == 1.22  # noqa: PLR2004 Magic value
+        assert test_pass.diameter == 1.22
         assert test_pass.scoring_system == "5_zone"
         assert test_pass.indoor is False
         assert test_pass.native_diameter_unit == "cm"
@@ -248,7 +248,7 @@ class TestRound:
                 Pass.at_target(100, "5_zone", 122, 30, False),
             ],
         )
-        assert test_round.max_score() == 2700  # noqa: PLR2004 Magic value
+        assert test_round.max_score() == 2700
 
     @pytest.mark.parametrize(
         "unit,get_unit,max_dist_expected",
@@ -292,7 +292,7 @@ class TestRound:
                 Pass.at_target(10, "5_zone", 122, 60, False),
             ],
         )
-        assert test_round.max_distance() == 100  # noqa: PLR2004 Magic value
+        assert test_round.max_distance() == 100
 
     def test_max_distance_mixed_units(self) -> None:
         """Check that max distance accounts for different units in round."""
@@ -301,7 +301,7 @@ class TestRound:
         test_round = Round("test", [pyards, pmetric])
 
         assert pmetric.distance > pyards.distance
-        assert test_round.max_distance() == 75  # noqa: PLR2004 Magic value
+        assert test_round.max_distance() == 75
 
     def test_get_info(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Check printing info works as expected."""
