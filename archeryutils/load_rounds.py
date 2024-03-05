@@ -2,7 +2,6 @@
 
 import json
 from pathlib import Path
-import warnings
 from typing import Union, Any
 
 from archeryutils.rounds import Pass, Round
@@ -71,10 +70,6 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
         for round_i in data:
             # Assign location
             if "location" not in round_i:
-                warnings.warn(
-                    f"No location provided for round {round_i['name']}. "
-                    "Defaulting to None."
-                )
                 round_i["location"] = None
                 round_i["indoor"] = False
 
@@ -91,28 +86,16 @@ def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, R
                 round_i["location"] = "field"
 
             else:
-                warnings.warn(
-                    f"Location not recognised for round {round_i['name']}. "
-                    "Defaulting to None"
-                )
                 round_i["indoor"] = False
                 round_i["location"] = None
 
             # Assign governing body
             if "body" not in round_i:
-                warnings.warn(
-                    f"No body provided for round {round_i['name']}. "
-                    "Defaulting to 'custom'."
-                )
-                round_i["body"] = "custom"
+                round_i["body"] = None
 
             # Assign round family
             if "family" not in round_i:
-                warnings.warn(
-                    f"No family provided for round {round_i['name']}. "
-                    "Defaulting to ''."
-                )
-                round_i["family"] = ""
+                round_i["family"] = None
 
             # Assign passes
             passes = [
