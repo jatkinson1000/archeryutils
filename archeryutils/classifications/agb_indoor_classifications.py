@@ -197,18 +197,12 @@ def calculate_agb_indoor_classification(
 
     # What is the highest classification this score gets?
     # < 0 handles max scores, > score handles higher classifications
-    to_del = []
     for classname, classscore in class_data.items():
         if classscore < 0 or classscore > score:
-            to_del.append(classname)
-    for del_class in to_del:
-        del class_data[del_class]
-
-    try:
-        classification_from_score = next(iter(class_data.keys()))
-        return classification_from_score
-    except IndexError:
-        return "UC"
+            continue
+        else:
+            return classname
+    return "UC"
 
 
 def agb_indoor_classification_scores(

@@ -156,21 +156,15 @@ def calculate_agb_old_indoor_classification(
     class_data = dict(zip(group_data["classes"], class_scores))
 
     # What is the highest classification this score gets?
-    to_del = []
-    for classname, classscore in class_data.items():
-        if classscore > score:
-            to_del.append(classname)
-    for del_class in to_del:
-        del class_data[del_class]
-
+    # < 0 handles max scores, > score handles higher classifications
     # NB No fiddle for Worcester required with this logic...
     # Beware of this later on, however, if we wish to rectify the 'anomaly'
-
-    try:
-        classification_from_score = next(iter((class_data.keys())))
-        return classification_from_score
-    except IndexError:
-        return "UC"
+    for classname, classscore in class_data.items():
+        if classscore > score:
+            continue
+        else:
+            return classname
+    return "UC"
 
 
 def agb_old_indoor_classification_scores(
@@ -216,16 +210,6 @@ def agb_old_indoor_classification_scores(
     ...     "under 12",
     ... )
     [592, 582, 554, 505, 432, 315, 195, 139]
-
-    If a classification cannot be achieved a fill value of `-9999` is returned:
-
-    >>> class_func.agb_old_indoor_classification_scores(
-    ...     "worcester",
-    ...     "compound",
-    ...     "female",
-    ...     "adult",
-    ... )
-    [299, 296, 279, 247, 200, 132, 65, 49]
 
 
     """
