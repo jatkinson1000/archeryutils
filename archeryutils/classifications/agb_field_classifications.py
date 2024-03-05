@@ -191,7 +191,7 @@ def calculate_agb_field_classification(
     class_scores = dict(zip(group_data["classes"], group_data["class_scores"]))
     for item in class_scores:
         if class_scores[item] > score:
-            pass
+            continue
         else:
             return item
 

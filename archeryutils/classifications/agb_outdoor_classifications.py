@@ -423,17 +423,13 @@ def calculate_agb_outdoor_classification(
     class_data = _check_prestige_distance(roundname, groupname, class_data)
 
     # Of the classes remaining, what is the highest classification this score gets?
-    to_del = []
+    # < 0 handles max scores, > score handles higher classifications
     for classname, classdata in class_data.items():
         if classdata["score"] > score:
-            to_del.append(classname)
-    for item in to_del:
-        del class_data[item]
-
-    try:
-        return next(iter(class_data.keys()))
-    except IndexError:
-        return "UC"
+            continue
+        else:
+            return classname
+    return "UC"
 
 
 def _check_prestige_distance(
