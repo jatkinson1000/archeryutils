@@ -100,8 +100,7 @@ class TestTarget:
     def test_invalid_distance_unit(self) -> None:
         """Check that Target() returns error value for invalid distance units."""
         with pytest.raises(
-            ValueError,
-            match="Distance unit '(.+)' not recognised. Select from",
+            ValueError, match="Distance unit '(.+)' not recognised. Select from"
         ):
             Target("5_zone", 122, (50, "InvalidDistanceUnit"), False)
 
@@ -238,44 +237,97 @@ class TestTarget:
             target.min_score()
 
     @pytest.mark.parametrize(
-        "scoring_system, diam",
+        "scoring_system, diam, expected_spec",
         [
-            ("5_zone", 122),
-            ("10_zone", 80),
-            ("WA_field", 80),
-            ("IFAA_field", 50),
-            ("Beiter_hit_miss", 6),
-            ("Worcester", (16, "inch")),
-            ("10_zone_6_ring", 80),
-            ("10_zone_5_ring_compound", 40),
+            (
+                "5_zone",
+                122,
+                {
+                    0.244: 9,
+                    0.488: 7,
+                    0.732: 5,
+                    0.976: 3,
+                    1.22: 1,
+                },
+            ),
+            (
+                "10_zone",
+                80,
+                {
+                    0.08: 10,
+                    0.16: 9,
+                    0.24: 8,
+                    0.32: 7,
+                    0.4: 6,
+                    0.48: 5,
+                    0.56: 4,
+                    0.64: 3,
+                    0.72: 2,
+                    0.8: 1,
+                },
+            ),
+            (
+                "WA_field",
+                80,
+                {
+                    0.08: 6,
+                    0.16: 5,
+                    0.32: 4,
+                    0.48: 3,
+                    0.64: 2,
+                    0.8: 1,
+                },
+            ),
+            (
+                "IFAA_field",
+                50,
+                {
+                    0.1: 5,
+                    0.3: 4,
+                    0.5: 3,
+                },
+            ),
+            (
+                "Beiter_hit_miss",
+                6,
+                {
+                    0.06: 1,
+                },
+            ),
+            (
+                "Worcester",
+                (16, "inch"),
+                {
+                    0.08128: 5,
+                    0.16256: 4,
+                    0.24384: 3,
+                    0.32512: 2,
+                    0.4064: 1,
+                },
+            ),
+            (
+                "10_zone_6_ring",
+                80,
+                {
+                    0.08: 10,
+                    0.16: 9,
+                    0.24: 8,
+                    0.32: 7,
+                    0.4: 6,
+                    0.48: 5,
+                },
+            ),
+            (
+                "10_zone_5_ring_compound",
+                40,
+                {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6},
+            ),
         ],
     )
-    def test_get_face_spec(self, scoring_system, diam) -> None:
+    def test_get_face_spec(self, scoring_system, diam, expected_spec) -> None:
         """Check that target returns face specs from supported scoring systems."""
-        expected_spec = {
-            "5_zone": {0.244: 9, 0.488: 7, 0.732: 5, 0.976: 3, 1.22: 1},
-            "10_zone": {
-                0.08: 10,
-                0.16: 9,
-                0.24: 8,
-                0.32: 7,
-                0.4: 6,
-                0.48: 5,
-                0.56: 4,
-                0.64: 3,
-                0.72: 2,
-                0.8: 1,
-            },
-            "WA_field": {0.08: 6, 0.16: 5, 0.32: 4, 0.48: 3, 0.64: 2, 0.8: 1},
-            "IFAA_field": {0.1: 5, 0.3: 4, 0.5: 3},
-            "Beiter_hit_miss": {0.06: 1},
-            "Worcester": {0.08128: 5, 0.16256: 4, 0.24384: 3, 0.32512: 2, 0.4064: 1},
-            "10_zone_6_ring": {0.08: 10, 0.16: 9, 0.24: 8, 0.32: 7, 0.4: 6, 0.48: 5},
-            "10_zone_5_ring_compound": {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6},
-        }
-
         target = Target(scoring_system, diam, 30)
-        assert target.get_face_spec() == expected_spec[scoring_system]
+        assert target.get_face_spec() == expected_spec
 
 
 class TestCustomScoringTarget:
@@ -284,8 +336,8 @@ class TestCustomScoringTarget:
     _11zone_spec: Final = {0.02: 11, 0.04: 10, 0.8: 9, 0.12: 8, 0.16: 7, 0.2: 6}
 
     def test_constructor(self) -> None:
-        """Can initialise Target with a custom scoring system and spec."""
-        target = Target.from_spec({0.1: 3, 0.5: 1}, 80, (50, "yard"))
+        """Check initialisation of Target with a custom scoring system and spec."""
+        target = Target.from_face_spec({0.1: 3, 0.5: 1}, 80, (50, "yard"))
         assert target.distance == 50.0 * 0.9144
         assert target.diameter == 0.8
         assert target.scoring_system == "Custom"
@@ -293,16 +345,13 @@ class TestCustomScoringTarget:
 
     def test_face_spec_units(self) -> None:
         """Check custom Target can be constructed with alternative units."""
-        target = Target.from_spec(({10: 5, 20: 4, 30: 3}, "cm"), 50, 30)
+        target = Target.from_face_spec(({10: 5, 20: 4, 30: 3}, "cm"), 50, 30)
         assert target.get_face_spec() == {0.1: 5, 0.2: 4, 0.3: 3}
 
     def test_invalid_face_spec_units(self) -> None:
         """Check custom Target cannot be constructed with unsupported units."""
-        with pytest.raises(
-            ValueError,
-            # match=
-        ):
-            Target.from_spec(({10: 5, 20: 4, 30: 3}, "bananas"), 50, 30)
+        with pytest.raises(ValueError):
+            Target.from_face_spec(({10: 5, 20: 4, 30: 3}, "bananas"), 50, 30)
 
     @pytest.mark.parametrize(
         "spec, args, result",
@@ -323,18 +372,18 @@ class TestCustomScoringTarget:
     )
     def test_equality(self, spec, args, result) -> None:
         """Check custom Target equality comparison is supported."""
-        target = Target.from_spec({0.2: 2, 0.4: 1}, 40, 20, indoor=True)
-        comparison = target == Target.from_spec(spec, *args)
+        target = Target.from_face_spec({0.2: 2, 0.4: 1}, 40, 20, indoor=True)
+        comparison = target == Target.from_face_spec(spec, *args)
         assert comparison == result
 
     def test_max_score(self) -> None:
         """Check that Target with custom scoring system returns correct max score."""
-        target = Target.from_spec(self._11zone_spec, 40, 18)
+        target = Target.from_face_spec(self._11zone_spec, 40, 18)
         assert target.max_score() == 11
 
     def test_min_score(self) -> None:
         """Check that Target with custom scoring system returns correct min score."""
-        target = Target.from_spec(self._11zone_spec, 40, 18)
+        target = Target.from_face_spec(self._11zone_spec, 40, 18)
         assert target.min_score() == 6
 
 

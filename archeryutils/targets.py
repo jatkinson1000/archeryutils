@@ -164,7 +164,7 @@ class Target:
         self.indoor = indoor
 
     @classmethod
-    def from_spec(
+    def from_face_spec(
         cls,
         face_spec: Union[FaceSpec, tuple[FaceSpec, str]],
         diameter: Union[float, tuple[float, str]],
@@ -182,7 +182,7 @@ class Target:
 
         Parameters
         ----------
-        face_spec : dict of floats to ints or 2-tuple of dict, str
+        face_spec : FaceSpec or 2-tuple of FaceSpec, str
             Target face specification, a mapping of target ring sizes to score.
             Default units are assumed as [metres] but can be provided as the second
             element of a tuple.

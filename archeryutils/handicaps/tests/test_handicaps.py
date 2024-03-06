@@ -76,10 +76,12 @@ metric122_30 = Round(
 kings_900_rec = Round(
     "Kings 900 (recurve)",
     [
-        Pass(30, Target.from_spec({0.08: 10, 0.12: 8, 0.16: 7, 0.20: 6}, 40, 18, True)),
-        Pass(30, Target.from_spec({0.08: 10, 0.12: 8, 0.16: 7, 0.20: 6}, 40, 18, True)),
-        Pass(30, Target.from_spec({0.08: 10, 0.12: 8, 0.16: 7, 0.20: 6}, 40, 18, True)),
-    ],
+        Pass(
+            30,
+            Target.from_face_spec({0.08: 10, 0.12: 8, 0.16: 7, 0.20: 6}, 40, 18, True),
+        )
+    ]
+    * 3,
 )
 
 
@@ -386,7 +388,7 @@ class TestArrowScore:
 
     def test_empty_spec(self):
         """Check expected score is zero when no target rings are defined."""
-        target = Target.from_spec({}, 10, 10)
+        target = Target.from_face_spec({}, 10, 10)
         s_bar = hc.arrow_score(50, target, "AGB")
         assert s_bar == 0
 
@@ -394,7 +396,7 @@ class TestArrowScore:
         """Check expected score is insensitive to order of input spec."""
 
         def _target(spec):
-            return Target.from_spec(spec, 10, 10)
+            return Target.from_face_spec(spec, 10, 10)
 
         s_bar = hc.arrow_score(50, _target({0.1: 1, 0.2: 2, 0.3: 3}), "AA")
         s_bar_reversed = hc.arrow_score(50, _target({0.3: 3, 0.2: 2, 0.1: 1}), "AA")
@@ -408,8 +410,8 @@ class TestArrowScore:
 
         Uses a target with integer ring scores at twice the value for comparison
         """
-        target_int = Target.from_spec({0.1: 3, 0.2: 5}, 10, 10)
-        target_dec = Target.from_spec({0.1: 1.5, 0.2: 2.5}, 10, 10)
+        target_int = Target.from_face_spec({0.1: 3, 0.2: 5}, 10, 10)
+        target_dec = Target.from_face_spec({0.1: 1.5, 0.2: 2.5}, 10, 10)
 
         s_bar_int = hc.arrow_score(30, target_int, "AGB")
         s_bar_dec = hc.arrow_score(30, target_dec, "AGB")
@@ -419,7 +421,7 @@ class TestArrowScore:
     def test_array_handicaps(self):
         """Check expected score can be calculated for an array of handicap values."""
         handicaps = np.array([10, 20, 30, 40])
-        target = Target.from_spec({0.1: 3, 0.2: 5}, 10, 10)
+        target = Target.from_face_spec({0.1: 3, 0.2: 5}, 10, 10)
         s_bar = hc.arrow_score(handicaps, target, "AGB")
         assert len(s_bar) == len(handicaps)
 
