@@ -231,8 +231,7 @@ class HandicapScheme(ABC):
         arw_rad = arw_d / 2.0
         spec = target.get_face_spec()
         sig_r = self.sigma_r(handicap, target.distance)
-        s_bar = self._s_bar(spec, arw_rad, sig_r)
-        return s_bar
+        return self._s_bar(spec, arw_rad, sig_r)
 
     def _s_bar(
         self, target_specs: dict[float, int], arw_rad: float, sig_r: FloatArray
