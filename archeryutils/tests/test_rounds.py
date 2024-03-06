@@ -40,8 +40,7 @@ class TestPass:
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
 
         assert test_pass.n_arrows == 36
-        # cannot test for equality between targets as __eq__ not implemented
-        # assert test_pass.target == _target
+        assert test_pass.target == _target
 
     def test_repr(self) -> None:
         """Check Pass string representation."""
