@@ -153,3 +153,25 @@ class Length:
         "metre"
         """
         return cls._reversed[alias]
+
+    @classmethod
+    def definitive_units(cls, aliases: set[str]) -> set[str]:
+        """
+        Reduce a set of string unit aliases to just their definitive names.
+
+        Parameters
+        ----------
+        aliases : set of str
+            names of units to be converted
+
+        Returns
+        -------
+        set of str
+            definitive names of unit
+
+        Examples
+        --------
+        >>> Length.definitive_unit(Length.metre | Length.yard)
+        {'metre', 'yard'}
+        """
+        return {cls._reversed[alias] for alias in aliases}

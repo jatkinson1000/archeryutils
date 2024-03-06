@@ -141,7 +141,7 @@ class Target:
         if native_dist_unit not in self.supported_distance_units:
             msg = (
                 f"Distance unit '{native_dist_unit}' not recognised. "
-                "Select from 'yard' or 'metre'."
+                f"Select from {Length.definitive_units(self.supported_distance_units)}."
             )
             raise ValueError(msg)
         distance = Length.to_metres(distance, native_dist_unit)
@@ -153,7 +153,7 @@ class Target:
         if native_diameter_unit not in self.supported_diameter_units:
             msg = (
                 f"Diameter unit '{native_diameter_unit}' not recognised. "
-                "Select from 'cm', 'inch' or 'metre'"
+                f"Select from {Length.definitive_units(self.supported_diameter_units)}"
             )
             raise ValueError(msg)
         diameter = Length.to_metres(diameter, native_diameter_unit)
