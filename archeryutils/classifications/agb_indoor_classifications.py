@@ -193,7 +193,7 @@ def calculate_agb_indoor_classification(
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_indoor_classifications[groupname]
-    class_data = dict(zip(group_data["classes"], all_class_scores))
+    class_data = dict(zip(group_data["classes"], all_class_scores, strict=True))
 
     # What is the highest classification this score gets?
     # < 0 handles max scores, > score handles higher classifications
@@ -292,7 +292,7 @@ def agb_indoor_classification_scores(
     # Handle possibility of gaps in the tables or max scores by checking 1 HC point
     # above current (floored to handle 0.5) and amending accordingly
     for i, (score, handicap) in enumerate(
-        zip(int_class_scores, group_data["class_HC"]),
+        zip(int_class_scores, group_data["class_HC"], strict=False),
     ):
         next_score = hc.score_for_round(
             np.floor(handicap) + 1,

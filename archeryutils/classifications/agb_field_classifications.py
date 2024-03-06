@@ -188,7 +188,9 @@ def calculate_agb_field_classification(
         return "unclassified"
 
     # What is the highest classification this score gets?
-    class_scores = dict(zip(group_data["classes"], group_data["class_scores"]))
+    class_scores = dict(
+        zip(group_data["classes"], group_data["class_scores"], strict=True)
+    )
     for item in class_scores:
         if class_scores[item] > score:
             continue
