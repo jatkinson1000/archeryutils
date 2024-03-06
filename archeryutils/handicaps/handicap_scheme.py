@@ -53,7 +53,7 @@ if not hasattr(itr, "pairwise"):  # pragma: no cover
         next(b, None)
         return zip(a, b)
 
-    itr.pairwise = _pairwise
+    setattr(itr, "pairwise", _pairwise)  # noqa: B010
 
 
 class HandicapScheme(ABC):
@@ -107,7 +107,8 @@ class HandicapScheme(ABC):
 
     @overload
     @abstractmethod
-    def sigma_t(self, handicap: float, dist: float) -> float: ...
+    def sigma_t(self, handicap: float, dist: float) -> float:
+        ...
 
     @overload
     @abstractmethod
@@ -115,7 +116,8 @@ class HandicapScheme(ABC):
         self,
         handicap: npt.NDArray[np.float64],
         dist: float,
-    ) -> npt.NDArray[np.float64]: ...
+    ) -> npt.NDArray[np.float64]:
+        ...
 
     @abstractmethod
     def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:

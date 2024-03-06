@@ -126,7 +126,6 @@ class Target:
         distance: Union[float, tuple[float, str]],
         indoor: bool = False,
     ) -> None:
-
         if scoring_system not in self.supported_systems:
             msg = (
                 f"""Invalid Target Face Type specified.\n"""
@@ -204,7 +203,7 @@ class Target:
 
         Examples
         --------
-        >>> #WA 18m compound triple spot
+        >>> # WA 18m compound triple spot
         >>> specs = {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
         >>> target = Target.from_spec(specs, 40, 18)
         """

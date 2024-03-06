@@ -121,9 +121,7 @@ class TestPass:
         assert test_pass.native_diameter_unit == "cm"
 
     def test_custom_target(self) -> None:
-        """
-        Check that pass can be constructed from a custom target specification
-        """
+        """Check that pass can be constructed from a custom target specification."""
         target = Target.from_spec({0.1: 3, 0.5: 1}, 80, (50, "yard"))
         test_pass = Pass(30, target)
         assert test_pass.target.is_custom

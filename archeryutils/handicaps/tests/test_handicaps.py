@@ -385,17 +385,13 @@ class TestArrowScore:
         assert arrow_score_direct == pytest.approx(arrow_score_expected)
 
     def test_empty_spec(self):
-        """
-        Check expected score is zero when no target rings are defined.
-        """
+        """Check expected score is zero when no target rings are defined."""
         target = Target.from_spec({}, 10, 10)
         s_bar = hc.arrow_score(50, target, "AGB")
         assert s_bar == 0
 
     def test_unsorted_spec(self):
-        """
-        Check expected score is insensitive to order of input spec.
-        """
+        """Check expected score is insensitive to order of input spec."""
 
         def _target(spec):
             return Target.from_spec(spec, 10, 10)
@@ -408,7 +404,7 @@ class TestArrowScore:
 
     def test_decimal_ring_scores(self):
         """
-        Check expected score can be calculated for non integer ring scores
+        Check expected score can be calculated for non integer ring scores.
 
         Uses a target with integer ring scores at twice the value for comparison
         """
@@ -421,9 +417,7 @@ class TestArrowScore:
         assert s_bar_int == 2 * s_bar_dec
 
     def test_array_handicaps(self):
-        """
-        Check expected score can be calculated for an array of input handicap values
-        """
+        """Check expected score can be calculated for an array of handicap values."""
         handicaps = np.array([10, 20, 30, 40])
         target = Target.from_spec({0.1: 3, 0.2: 5}, 10, 10)
         s_bar = hc.arrow_score(handicaps, target, "AGB")
@@ -652,10 +646,7 @@ class TestScoreForRound:
         )
 
     def test_calculation_custom_scoring(self):
-        """
-        Check that score can be calculated for a round with custom scoring
-        """
-
+        """Check that score can be calculated for a round with custom scoring."""
         assert hc.score_for_round(20.0, kings_900_rec, "AGB", None, True) == 896.0
 
 
@@ -913,8 +904,5 @@ class TestHandicapFromScore:
         assert handicap == pytest.approx(handicap_expected)
 
     def test_calculation_custom_scoring(self):
-        """
-        Check that handicap can be calculated for a round with custom scoring
-        """
-
+        """Check that handicap can be calculated for a round with custom scoring."""
         assert hc.handicap_from_score(896, kings_900_rec, "AGB", int_prec=True) == 20
