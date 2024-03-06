@@ -211,7 +211,8 @@ class Target:
             if spec_units not in cls.supported_diameter_units:
                 msg = (
                     f"Face specification unit '{spec_units}' not recognised. "
-                    "Select from 'cm', 'inch' or 'metre'"
+                    "Select from "
+                    f"{Length.definitive_units(cls.supported_diameter_units)}"
                 )
                 raise ValueError(msg)
             face_spec = {
