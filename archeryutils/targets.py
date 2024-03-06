@@ -1,7 +1,8 @@
 """Module for representing a Target for archery applications."""
 
 from functools import partial
-from typing import Literal, NamedTuple, Union, get_args
+from types import MappingProxyType
+from typing import Final, Literal, NamedTuple, Union, get_args
 
 from archeryutils.constants import Length
 
@@ -24,29 +25,6 @@ ScoringSystem = Literal[
 
 # TypeAlias (annotate explicitly in py3.10+)
 FaceSpec = dict[float, int]
-
-
-class Rings(NamedTuple):
-    """Container for data on max and min scores on target face types."""
-
-    high: int
-    low: int
-
-
-_scoring_system_data = {
-    "5_zone": Rings(high=9, low=1),
-    "10_zone": Rings(high=10, low=1),
-    "10_zone_compound": Rings(high=10, low=1),
-    "10_zone_6_ring": Rings(high=10, low=5),
-    "10_zone_5_ring": Rings(high=10, low=6),
-    "10_zone_5_ring_compound": Rings(high=10, low=6),
-    "WA_field": Rings(high=6, low=1),
-    "IFAA_field": Rings(high=5, low=3),
-    "IFAA_field_expert": Rings(high=5, low=1),
-    "Beiter_hit_miss": Rings(high=1, low=1),
-    "Worcester": Rings(high=5, low=1),
-    "Worcester_2_ring": Rings(high=5, low=4),
-}
 
 _rnd6 = partial(round, ndigits=6)
 
@@ -115,6 +93,26 @@ class Target:
     """
 
     _face_spec: FaceSpec
+
+    # Lookup data for min and max scores for supported scoring systems.
+    # Used to deduplicate logic from max_score, min_score and get_face_spec methods
+    _scoring_system_data: Final = MappingProxyType(
+        {
+            "5_zone": {"high": 9, "low": 1},
+            "10_zone": {"high": 10, "low": 1},
+            "10_zone_compound": {"high": 10, "low": 1},
+            "10_zone_6_ring": {"high": 10, "low": 5},
+            "10_zone_5_ring": {"high": 10, "low": 6},
+            "10_zone_5_ring_compound": {"high": 10, "low": 6},
+            "WA_field": {"high": 6, "low": 1},
+            "IFAA_field": {"high": 5, "low": 3},
+            "IFAA_field_expert": {"high": 5, "low": 1},
+            "Beiter_hit_miss": {"high": 1, "low": 1},
+            "Worcester": {"high": 5, "low": 1},
+            "Worcester_2_ring": {"high": 5, "low": 4},
+        }
+    )
+
     supported_systems = get_args(ScoringSystem)
     supported_distance_units = Length.yard | Length.metre
     supported_diameter_units = Length.cm | Length.inch | Length.metre
@@ -303,9 +301,9 @@ class Target:
         """
         if self.is_custom:
             return max(self._face_spec.values())
-        data = _scoring_system_data.get(self.scoring_system)
+        data = self._scoring_system_data.get(self.scoring_system)
         if data:
-            return data.high
+            return data["high"]
         # NB: Should be hard (but not impossible) to get here without catching earlier.
         msg = f"Target face '{self.scoring_system}' has no specified maximum score."
         raise ValueError(msg)
@@ -332,9 +330,9 @@ class Target:
         """
         if self.is_custom:
             return min(self._face_spec.values())
-        data = _scoring_system_data.get(self.scoring_system)
+        data = self._scoring_system_data.get(self.scoring_system)
         if data:
-            return data.low
+            return data["low"]
         # NB: Should be hard (but not impossible) to get here without catching earlier.
         msg = f"Target face '{self.scoring_system}' has no specified minimum score."
         raise ValueError(msg)
@@ -354,14 +352,14 @@ class Target:
         if system == "Custom":
             return self._face_spec
 
-        data = _scoring_system_data.get(system)
+        data = self._scoring_system_data.get(system)
         if not data:
             # no data for scoring system, raise
             msg = f"No rule for calculating scoring for face type {system}."
             raise ValueError(msg)
 
         # calculate missing rings for certain targets from minimum score
-        missing = data.low - 1
+        missing = data["low"] - 1
 
         if system == "5_zone":
             spec = {_rnd6((n + 1) * tar_dia / 10): 10 - n for n in range(1, 11, 2)}

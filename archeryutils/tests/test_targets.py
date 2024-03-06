@@ -1,6 +1,6 @@
 """Tests for Target class."""
 
-from typing import Final
+from typing import Final, get_args
 
 import pytest
 
@@ -118,8 +118,7 @@ class TestTarget:
     def test_unsupported_diameter_unit(self) -> None:
         """Check Target() raises error when called with unsupported diameter units."""
         with pytest.raises(
-            ValueError,
-            match="Diameter unit '(.+)' not recognised. Select from"
+            ValueError, match="Diameter unit '(.+)' not recognised. Select from"
         ):
             Target("5_zone", (122, "bananas"), (50, "yards"))
 
@@ -337,3 +336,13 @@ class TestCustomScoringTarget:
         """Check that Target with custom scoring system returns correct min score."""
         target = Target.from_spec(self._11zone_spec, 40, 18)
         assert target.min_score() == 6
+
+
+class TestTargetData:
+    """Class to test the provided scoring system data."""
+
+    def test_all_systems_present(self) -> None:
+        """Check that all listed scoring systems have data available."""
+        data = Target._scoring_system_data  # noqa: SLF001
+        for system in Target.supported_systems:
+            assert system in data or system == "Custom"
