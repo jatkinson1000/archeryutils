@@ -329,6 +329,14 @@ class TestTarget:
         target = Target(scoring_system, diam, 30)
         assert target.get_face_spec() == expected_spec
 
+    def test_get_face_spec_invalid_system(self) -> None:
+        """Check error is raised when trying to get specs of an unsupported system."""
+        target = Target("5_zone", 122, 50)
+        # Silence mypy as scoring_system must be a valid literal ScoringSystem
+        target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
+        with pytest.raises(ValueError):
+            target.get_face_spec()
+
 
 class TestCustomScoringTarget:
     """Tests for Target class with custom scoring."""
