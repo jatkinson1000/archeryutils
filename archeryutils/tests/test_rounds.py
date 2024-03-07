@@ -175,6 +175,14 @@ class TestRound:
 
         assert list_.passes == tuple_.passes == iterable_.passes
 
+    def test_init_with_empty_passes(self) -> None:
+        """Check that Round raises a ValueError for empty passes iterable."""
+        with pytest.raises(
+            ValueError,
+            match="passes must contain at least one Pass object but none supplied.",
+        ):
+            Round("My Round Name", [])  # type: ignore[arg-type]
+
     def test_repr(self) -> None:
         """Check Pass string representation."""
         test_round = Round("Name", [Pass(36, _target)])

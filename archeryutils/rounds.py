@@ -202,6 +202,9 @@ class Round:
     ) -> None:
         self.name = name
         self.passes = list(passes)
+        if all(False for _ in self.passes):
+            msg = "passes must contain at least one Pass object but none supplied."
+            raise ValueError(msg)
         self.location = location
         self.body = body
         self.family = family
