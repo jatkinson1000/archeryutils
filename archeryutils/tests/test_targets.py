@@ -99,9 +99,7 @@ class TestTarget:
 
     def test_invalid_distance_unit(self) -> None:
         """Check that Target() returns error value for invalid distance units."""
-        with pytest.raises(
-            ValueError, match="Distance unit '(.+)' not recognised. Select from"
-        ):
+        with pytest.raises(ValueError, match="Unit '(.+)' not recognised. Select from"):
             Target("5_zone", 122, (50, "InvalidDistanceUnit"), False)
 
     def test_default_distance_unit(self) -> None:
@@ -114,11 +112,9 @@ class TestTarget:
         target = Target("5_zone", 122, (50, "yards"))
         assert target.distance == 50.0 * 0.9144
 
-    def test_unsupported_diameter_unit(self) -> None:
+    def test_invalid_diameter_unit(self) -> None:
         """Check Target() raises error when called with unsupported diameter units."""
-        with pytest.raises(
-            ValueError, match="Diameter unit '(.+)' not recognised. Select from"
-        ):
+        with pytest.raises(ValueError, match="Unit '(.+)' not recognised. Select from"):
             Target("5_zone", (122, "bananas"), (50, "yards"))
 
     def test_default_diameter_unit(self) -> None:

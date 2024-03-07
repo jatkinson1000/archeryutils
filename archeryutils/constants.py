@@ -1,6 +1,8 @@
 """Constants used in the archeryutils package."""
 
-from typing import ClassVar
+from typing import Any, ClassVar, TypeVar, Union
+
+T = TypeVar("T")
 
 _CONVERSIONS_TO_M = {
     "metre": 1.0,
@@ -175,3 +177,62 @@ class Length:
         {'metre', 'yard'}
         """
         return {cls._reversed[alias] for alias in aliases}
+
+    @classmethod
+    def parse_optional_units(
+        cls,
+        value: Union[T, tuple[T, str]],
+        supported: set[str],
+        default: str,
+    ) -> tuple[T, str]:
+        """
+        Parse single value or tuple of value and units.
+
+        Always returns a tuple of value and units
+
+        Parameters
+        ----------
+        value : Any or tuple of Any, str
+            Either a single object, or a tuple with the desired units
+        supported: set of str
+            Valid unit aliases to be accepted
+        default: str
+            Default unit to be used when value does not specify units.
+
+        Raises
+        ------
+        ValueError
+            If default units or parsed values units
+            are not contained in supported units.
+
+        Returns
+        -------
+        tuple of Any, str
+            original value, definitive name of unit
+
+        Examples
+        --------
+        >>> m_and_yd = Length.metre | Length.yard
+        >>> Length.parse_optional_units(10, m_and_yd, "metre")
+        (10, 'metre')
+        >>> Length.parse_optional_units((10, 'yards') m_and_yd, 'metre')
+        (10, 'yard')
+        >>> Length.parse_optional_units((10, 'banana') m_and_yd, 'metre')
+        ValueError: Unit 'banana' not recognised. Select from {'yard', 'metre'}.
+        """
+        if default not in supported:
+            msg = f"Default unit {default!r} must be in supported units"
+            raise ValueError(msg)
+        if isinstance(value, tuple) and len(value) == 2:  # noqa: PLR2004
+            quantity, units = value
+        else:
+            quantity = value
+            units = default
+
+        if units not in supported:
+            msg = (
+                f"Unit {units!r} not recognised. "
+                f"Select from {cls.definitive_units(supported)}."
+            )
+            raise ValueError(msg)
+        return quantity, cls.definitive_unit(units)

@@ -130,37 +130,18 @@ class Target:
                 f"""Please select from '{"', '".join(self.supported_systems)}'."""
             )
             raise ValueError(msg)
-
-        if isinstance(distance, tuple):
-            (distance, native_dist_unit) = distance
-        else:
-            native_dist_unit = "metre"
-
-        if native_dist_unit not in self.supported_distance_units:
-            msg = (
-                f"Distance unit '{native_dist_unit}' not recognised. "
-                f"Select from {Length.definitive_units(self.supported_distance_units)}."
-            )
-            raise ValueError(msg)
-        distance = Length.to_metres(distance, native_dist_unit)
-
-        if isinstance(diameter, tuple):
-            (diameter, native_diameter_unit) = diameter
-        else:
-            native_diameter_unit = "cm"
-        if native_diameter_unit not in self.supported_diameter_units:
-            msg = (
-                f"Diameter unit '{native_diameter_unit}' not recognised. "
-                f"Select from {Length.definitive_units(self.supported_diameter_units)}"
-            )
-            raise ValueError(msg)
-        diameter = Length.to_metres(diameter, native_diameter_unit)
+        dist, native_dist_unit = Length.parse_optional_units(
+            distance, self.supported_distance_units, "metre"
+        )
+        diam, native_diameter_unit = Length.parse_optional_units(
+            diameter, self.supported_diameter_units, "cm"
+        )
 
         self.scoring_system = scoring_system
-        self.diameter = diameter
-        self.native_diameter_unit = Length.definitive_unit(native_diameter_unit)
-        self.distance = distance
-        self.native_dist_unit = Length.definitive_unit(native_dist_unit)
+        self.distance = Length.to_metres(dist, native_dist_unit)
+        self.native_dist_unit = native_dist_unit
+        self.diameter = Length.to_metres(diam, native_diameter_unit)
+        self.native_diameter_unit = native_diameter_unit
         self.indoor = indoor
 
     @classmethod
@@ -205,23 +186,16 @@ class Target:
         >>> specs = {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
         >>> target = Target.from_spec(specs, 40, 18)
         """
-        if isinstance(face_spec, tuple):
-            spec_data, spec_units = face_spec
-
-            if spec_units not in cls.supported_diameter_units:
-                msg = (
-                    f"Face specification unit '{spec_units}' not recognised. "
-                    "Select from "
-                    f"{Length.definitive_units(cls.supported_diameter_units)}"
-                )
-                raise ValueError(msg)
-            face_spec = {
-                _rnd6(Length.to_metres(ring_diam, spec_units)): score
-                for ring_diam, score in spec_data.items()
-            }
+        spec_data, spec_units = Length.parse_optional_units(
+            face_spec, cls.supported_diameter_units, "metre"
+        )
+        spec = {
+            _rnd6(Length.to_metres(ring_diam, spec_units)): score
+            for ring_diam, score in spec_data.items()
+        }
 
         target = cls("Custom", diameter, distance, indoor)
-        target._face_spec = face_spec  # noqa: SLF001 private member access
+        target._face_spec = spec  # noqa: SLF001 private member access
         return target
 
     def __repr__(self) -> str:
