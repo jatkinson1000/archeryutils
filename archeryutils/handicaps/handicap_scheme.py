@@ -229,7 +229,7 @@ class HandicapScheme(ABC):
                 arw_d = self.arw_d_out
 
         arw_rad = arw_d / 2.0
-        spec = target.get_face_spec()
+        spec = target.face_spec
         sig_r = self.sigma_r(handicap, target.distance)
         return self._s_bar(spec, arw_rad, sig_r)
 

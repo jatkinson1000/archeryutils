@@ -94,25 +94,6 @@ class Target:
 
     _face_spec: FaceSpec
 
-    # Lookup data for min and max scores for supported scoring systems.
-    # Used to deduplicate logic from max_score, min_score and get_face_spec methods
-    _scoring_system_data: Final = MappingProxyType(
-        {
-            "5_zone": {"high": 9, "low": 1},
-            "10_zone": {"high": 10, "low": 1},
-            "10_zone_compound": {"high": 10, "low": 1},
-            "10_zone_6_ring": {"high": 10, "low": 5},
-            "10_zone_5_ring": {"high": 10, "low": 6},
-            "10_zone_5_ring_compound": {"high": 10, "low": 6},
-            "WA_field": {"high": 6, "low": 1},
-            "IFAA_field": {"high": 5, "low": 3},
-            "IFAA_field_expert": {"high": 5, "low": 1},
-            "Beiter_hit_miss": {"high": 1, "low": 1},
-            "Worcester": {"high": 5, "low": 1},
-            "Worcester_2_ring": {"high": 5, "low": 4},
-        }
-    )
-
     supported_systems = get_args(ScoringSystem)
     supported_distance_units = Length.yard | Length.metre
     supported_diameter_units = Length.cm | Length.inch | Length.metre
@@ -213,14 +194,15 @@ class Target:
 
     def __eq__(self, other: object) -> bool:
         """Check equality of Targets based on parameters."""
-        if isinstance(other, Target):
-            if self.scoring_system == other.scoring_system == "Custom":
-                return (
-                    self._face_spec == other._face_spec
-                    and self._parameters() == other._parameters()
-                )
-            return self._parameters() == other._parameters()
-        return NotImplemented
+        if not isinstance(other, Target):
+            return NotImplemented
+
+        if self.scoring_system == other.scoring_system == "Custom":
+            return (
+                self._face_spec == other._face_spec
+                and self._parameters() == other._parameters()
+            )
+        return self._parameters() == other._parameters()
 
     def _parameters(self):
         """Shortcut to get all target parameters as a tuple for comparison."""
@@ -274,14 +256,7 @@ class Target:
         >>> mytarget.max_score()
         10.0
         """
-        if self.is_custom:
-            return max(self._face_spec.values())
-        data = self._scoring_system_data.get(self.scoring_system)
-        if data:
-            return data["high"]
-        # NB: Should be hard (but not impossible) to get here without catching earlier.
-        msg = f"Target face '{self.scoring_system}' has no specified maximum score."
-        raise ValueError(msg)
+        return max(self.face_spec.values())
 
     def min_score(self) -> float:
         """
@@ -303,62 +278,78 @@ class Target:
         >>> mytarget.min_score()
         1.0
         """
-        if self.is_custom:
-            return min(self._face_spec.values())
-        data = self._scoring_system_data.get(self.scoring_system)
-        if data:
-            return data["low"]
-        # NB: Should be hard (but not impossible) to get here without catching earlier.
-        msg = f"Target face '{self.scoring_system}' has no specified minimum score."
-        raise ValueError(msg)
+        return min(self.face_spec.values())
 
-    def get_face_spec(self) -> FaceSpec:
-        # Could replace with mapping face to lambda that returns spec
-        """Derive specifications for common/supported targets.
+    @property
+    def face_spec(self) -> FaceSpec:
+        """Get the targets face specification."""
+        if not hasattr(self, "_face_spec"):
+            self._face_spec = self._get_face_spec()
+        return self._face_spec
+
+    def _get_face_spec(self):
+        """Generate face specification on demand from instance parameters."""
+        if self.is_custom:
+            return self.face_spec
+
+        return self.gen_face_spec(self.scoring_system, self.diameter)
+
+    @staticmethod
+    def gen_face_spec(system: ScoringSystem, diameter: float) -> FaceSpec:
+        """
+        Derive specifications for common/supported targets.
+
+        Parameters
+        ----------
+        system: ScoringSystem
+            Name of scoring system
+        diameter:
+            Target diameter in metres
 
         Returns
         -------
         spec : dict
             Mapping of target ring sizes in [metres] to score
         """
-        system = self.scoring_system
-        tar_dia = self.diameter
+        removed_rings = {
+            "10_zone_6_ring": 4,
+            "10_zone_5_ring": 5,
+            "10_zone_5_ring_compound": 5,
+            "Worcester_2_ring": 3,
+        }
 
-        if system == "Custom":
-            return self._face_spec
-
-        data = self._scoring_system_data.get(system)
-        if not data:
-            # no data for scoring system, raise
-            msg = f"No rule for calculating scoring for face type {system}."
-            raise ValueError(msg)
-
-        # calculate missing rings for certain targets from minimum score
-        missing = data["low"] - 1
-
+        missing = removed_rings.get(system, 0)
         if system == "5_zone":
-            spec = {_rnd6((n + 1) * tar_dia / 10): 10 - n for n in range(1, 11, 2)}
+            spec = {_rnd6((n + 1) * diameter / 10): 10 - n for n in range(1, 11, 2)}
 
         elif system in ("10_zone", "10_zone_6_ring", "10_zone_5_ring"):
-            spec = {_rnd6(n * tar_dia / 10): 11 - n for n in range(1, 11 - missing)}
+            spec = {_rnd6(n * diameter / 10): 11 - n for n in range(1, 11 - missing)}
 
         elif system in ("10_zone_compound", "10_zone_5_ring_compound"):
-            spec = {_rnd6(tar_dia / 20): 10} | {
-                _rnd6(n * tar_dia / 10): 11 - n for n in range(2, 11 - missing)
+            spec = {_rnd6(diameter / 20): 10} | {
+                _rnd6(n * diameter / 10): 11 - n for n in range(2, 11 - missing)
             }
 
         elif system == "WA_field":
-            spec = {_rnd6(tar_dia / 10): 6} | {
-                _rnd6(n * tar_dia / 5): 6 - n for n in range(1, 6)
+            spec = {_rnd6(diameter / 10): 6} | {
+                _rnd6(n * diameter / 5): 6 - n for n in range(1, 6)
             }
 
         elif system == "IFAA_field":
-            spec = {_rnd6(n * tar_dia / 5): 5 - n // 2 for n in range(1, 6, 2)}
+            spec = {_rnd6(n * diameter / 5): 5 - n // 2 for n in range(1, 6, 2)}
 
         elif system == "Beiter_hit_miss":
-            spec = {tar_dia: 1}
+            spec = {diameter: 1}
 
         elif system in ("Worcester", "Worcester_2_ring", "IFAA_field_expert"):
-            spec = {_rnd6(n * tar_dia / 5): 6 - n for n in range(1, 6 - missing)}
+            spec = {_rnd6(n * diameter / 5): 6 - n for n in range(1, 6 - missing)}
+
+        # NB: Should be hard (but not impossible) to get here without catching earlier;
+        # Can only occur if target scoring system is modified after initialisation
+        # Or newly supported scoring system doesn't have an implementation
+        # here for generating specs
+        else:
+            msg = f"Scoring system {system!r} is not supported"
+            raise ValueError(msg)
 
         return spec

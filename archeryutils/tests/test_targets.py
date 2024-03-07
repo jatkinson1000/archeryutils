@@ -184,10 +184,7 @@ class TestTarget:
 
     def test_max_score_invalid_face_type(self) -> None:
         """Check that Target() raises error for invalid face."""
-        with pytest.raises(
-            ValueError,
-            match="Target face '(.+)' has no specified maximum score.",
-        ):
+        with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
@@ -222,10 +219,7 @@ class TestTarget:
 
     def test_min_score_invalid_face_type(self) -> None:
         """Check that Target() raises error for invalid face."""
-        with pytest.raises(
-            ValueError,
-            match="Target face '(.+)' has no specified minimum score.",
-        ):
+        with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
@@ -323,15 +317,15 @@ class TestTarget:
     def test_get_face_spec(self, scoring_system, diam, expected_spec) -> None:
         """Check that target returns face specs from supported scoring systems."""
         target = Target(scoring_system, diam, 30)
-        assert target.get_face_spec() == expected_spec
+        assert target.face_spec == expected_spec
 
     def test_get_face_spec_invalid_system(self) -> None:
         """Check error is raised when trying to get specs of an unsupported system."""
         target = Target("5_zone", 122, 50)
         # Silence mypy as scoring_system must be a valid literal ScoringSystem
         target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
-        with pytest.raises(ValueError):
-            target.get_face_spec()
+        with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
+            assert target.face_spec
 
 
 class TestCustomScoringTarget:
@@ -345,12 +339,12 @@ class TestCustomScoringTarget:
         assert target.distance == 50.0 * 0.9144
         assert target.diameter == 0.8
         assert target.scoring_system == "Custom"
-        assert target.get_face_spec() == {0.1: 3, 0.5: 1}
+        assert target.face_spec == {0.1: 3, 0.5: 1}
 
     def test_face_spec_units(self) -> None:
         """Check custom Target can be constructed with alternative units."""
         target = Target.from_face_spec(({10: 5, 20: 4, 30: 3}, "cm"), 50, 30)
-        assert target.get_face_spec() == {0.1: 5, 0.2: 4, 0.3: 3}
+        assert target.face_spec == {0.1: 5, 0.2: 4, 0.3: 3}
 
     def test_invalid_face_spec_units(self) -> None:
         """Check custom Target cannot be constructed with unsupported units."""
@@ -389,13 +383,3 @@ class TestCustomScoringTarget:
         """Check that Target with custom scoring system returns correct min score."""
         target = Target.from_face_spec(self._11zone_spec, 40, 18)
         assert target.min_score() == 6
-
-
-class TestTargetData:
-    """Class to test the provided scoring system data."""
-
-    def test_all_systems_present(self) -> None:
-        """Check that all listed scoring systems have data available."""
-        data = Target._scoring_system_data  # noqa: SLF001
-        for system in Target.supported_systems:
-            assert system in data or system == "Custom"
