@@ -101,9 +101,9 @@ class Pass:
 
     def __eq__(self, other: object) -> bool:
         """Check equality of Passes based on parameters."""
-        if isinstance(other, Pass):
-            return self.n_arrows == other.n_arrows and self.target == other.target
-        return NotImplemented
+        if not isinstance(other, Pass):
+            return NotImplemented
+        return self.n_arrows == other.n_arrows and self.target == other.target
 
     @property
     def scoring_system(self) -> ScoringSystem:
@@ -113,22 +113,22 @@ class Pass:
     @property
     def diameter(self) -> float:
         """Get target diameter [metres]."""
-        return self.target.diameter
+        return self.target._diameter  # noqa: SLF001
 
     @property
     def native_diameter_unit(self) -> str:
         """Get native_diameter_unit attribute of target."""
-        return self.target.native_diameter_unit
+        return self.target._native_diameter_unit  # noqa: SLF001
 
     @property
     def distance(self) -> float:
         """Get target distance in [metres]."""
-        return self.target.distance
+        return self.target._distance  # noqa: SLF001
 
     @property
     def native_dist_unit(self) -> str:
         """Get native_dist_unit attribute of target."""
-        return self.target.native_dist_unit
+        return self.target._native_dist_unit  # noqa: SLF001
 
     @property
     def indoor(self) -> bool:

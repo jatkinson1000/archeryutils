@@ -1,7 +1,7 @@
 """Module for representing a Target for archery applications."""
 
 from functools import partial
-from typing import Literal, Optional, Union, get_args
+from typing import Literal, NamedTuple, Optional, Union, get_args
 
 from archeryutils.constants import Length
 
@@ -26,6 +26,13 @@ ScoringSystem = Literal[
 FaceSpec = dict[float, int]
 
 _rnd6 = partial(round, ndigits=6)
+
+
+class Q(NamedTuple):
+    """Dataclass for a quantity with units."""
+
+    value: float
+    units: str
 
 
 class Target:
@@ -117,11 +124,11 @@ class Target:
             diameter, self.supported_diameter_units, "cm"
         )
 
-        self.scoring_system = scoring_system
-        self.distance = Length.to_metres(dist, native_dist_unit)
-        self.native_dist_unit = native_dist_unit
+        self._scoring_system = scoring_system
+        self._distance = Length.to_metres(dist, native_dist_unit)
+        self._native_dist_unit = native_dist_unit
         self._diameter = Length.to_metres(diam, native_diameter_unit)
-        self.native_diameter_unit = native_diameter_unit
+        self._native_diameter_unit = native_diameter_unit
         self.indoor = indoor
 
     @classmethod
@@ -206,45 +213,48 @@ class Target:
     def _parameters(self):
         """Shortcut to get all target parameters as a tuple for comparison."""
         return (
-            self.scoring_system,
-            self.diameter,
-            self.native_diameter_unit,
-            self.distance,
-            self.native_dist_unit,
+            self._scoring_system,
+            self._diameter,
+            self._native_diameter_unit,
+            self._distance,
+            self._native_dist_unit,
             self.indoor,
         )
 
     @property
+    def scoring_system(self):
+        """Get target scoring system."""
+        return self._scoring_system
+
+    @property
     def is_custom(self):
         """Check if this Target uses a custom scoring system."""
-        return self.scoring_system == "Custom"
+        return self._scoring_system == "Custom"
 
     @property
     def diameter(self):
-        """Get target diameter."""
+        """Get target diameter in [metres]."""
         return self._diameter
 
-    @diameter.setter
-    def diameter(self, value):
-        """Set target diameter and invalidate face spec for standard targets."""
-        if self.scoring_system != "Custom":
-            self._face_spec = None
-        self._diameter = value
+    @property
+    def distance(self):
+        """Get target distance in [metres]."""
+        return self._distance
 
     @property
-    def native_distance(self) -> tuple[float, str]:
+    def native_distance(self) -> Q:
         """Get target distance in original native units."""
-        return (
-            Length.from_metres(self.distance, self.native_dist_unit),
-            self.native_dist_unit,
+        return Q(
+            Length.from_metres(self._distance, self._native_dist_unit),
+            self._native_dist_unit,
         )
 
     @property
-    def native_diameter(self) -> tuple[float, str]:
+    def native_diameter(self) -> Q:
         """Get target diameter in original native units."""
-        return (
-            Length.from_metres(self._diameter, self.native_diameter_unit),
-            self.native_diameter_unit,
+        return Q(
+            Length.from_metres(self._diameter, self._native_diameter_unit),
+            self._native_diameter_unit,
         )
 
     def max_score(self) -> float:
@@ -255,11 +265,6 @@ class Target:
         -------
         float
             maximum score possible on this target face.
-
-        Raises
-        ------
-        ValueError
-            If a scoring system is not accounted for in the function.
 
         Examples
         --------
@@ -278,11 +283,6 @@ class Target:
         float
             minimum score possible on this target face
 
-        Raises
-        ------
-        ValueError
-            If a scoring system is not accounted for in the function.
-
         Examples
         --------
         >>> mytarget = au.Target("10_zone", (122, "cm"), (70.0, "m"))
@@ -294,7 +294,14 @@ class Target:
     @property
     def face_spec(self) -> FaceSpec:
         """Get the targets face specification, generating on demand if needed."""
-        if self._face_spec is None and self.scoring_system != "Custom":
+        if self._face_spec is None:
+            if self.scoring_system == "Custom":
+                msg = (
+                    "Trying to generate face spec for custom target "
+                    "but no existing spec found: "
+                    "try instantiating with `Target.from_face_spec` instead"
+                )
+                raise ValueError(msg)
             self._face_spec = self.gen_face_spec(self.scoring_system, self._diameter)
         return self._face_spec
 

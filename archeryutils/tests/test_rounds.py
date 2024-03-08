@@ -88,14 +88,14 @@ class TestPass:
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
         assert (
             test_pass.native_diameter_unit
-            == test_pass.target.native_diameter_unit
+            == test_pass.target.native_diameter.units
             == "cm"
         )
 
     def test_diameter_units_passed_to_target(self) -> None:
         """Check that Pass passes on diameter units to Target object."""
         test_pass = Pass.at_target(60, "Worcester", (16, "inches"), (20, "yards"))
-        assert test_pass.target.native_diameter_unit == "inch"
+        assert test_pass.target.native_diameter.units == "inch"
 
     def test_default_location(self) -> None:
         """Check that Pass returns indoor=False when indoor not specified."""

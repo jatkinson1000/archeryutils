@@ -105,11 +105,12 @@ class TestTarget:
     def test_default_distance_unit(self) -> None:
         """Check that Target() returns distance in metres when units not specified."""
         target = Target("5_zone", 122, 50)
-        assert target.native_dist_unit == "metre"
+        assert target.native_distance == (50, "metre")
 
     def test_yard_to_m_conversion(self) -> None:
         """Check Target() returns correct distance in metres when yards provided."""
         target = Target("5_zone", 122, (50, "yards"))
+        assert target.native_distance == (50, "yard")
         assert target.distance == 50.0 * 0.9144
 
     def test_invalid_diameter_unit(self) -> None:
@@ -130,6 +131,7 @@ class TestTarget:
     def test_diameter_inches_supported(self) -> None:
         """Check that Target() converts diameters in inches correctly."""
         target = Target("Worcester", (16, "inches"), (20, "yards"), indoor=True)
+        assert target.native_diameter == (16, "inch")
         assert target.diameter == 16 * 0.0254
 
     def test_diameter_distance_units_coerced_to_definitive_names(self) -> None:
@@ -146,10 +148,10 @@ class TestTarget:
             (30, "Metres"),
         )
 
-        assert imperial_target.native_dist_unit == "yard"
-        assert imperial_target.native_diameter_unit == "inch"
-        assert metric_target.native_dist_unit == "metre"
-        assert metric_target.native_diameter_unit == "cm"
+        assert imperial_target.native_distance.units == "yard"
+        assert imperial_target.native_diameter.units == "inch"
+        assert metric_target.native_distance.units == "metre"
+        assert metric_target.native_diameter.units == "cm"
 
     def test_default_location(self) -> None:
         """Check that Target() returns indoor=False when indoor not specified."""
@@ -188,7 +190,9 @@ class TestTarget:
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
-            target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
+            # Ignore private attribute access to modify read only property
+            # Conclusion: no way this happens by accident
+            target._scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]  # noqa: SLF001
             target.max_score()
 
     @pytest.mark.parametrize(
@@ -223,7 +227,9 @@ class TestTarget:
             target = Target("5_zone", 122, 50, False)
             # Requires manual resetting of scoring system to get this error.
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
-            target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
+            # Ignore private attribute access to modify read only property
+            # Conclusion: no way this happens by accident
+            target._scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]  # noqa: SLF001
             target.min_score()
 
     @pytest.mark.parametrize(
@@ -319,20 +325,41 @@ class TestTarget:
         target = Target(scoring_system, diam, 30)
         assert target.face_spec == expected_spec
 
-    def test_get_face_spec_invalid_system(self) -> None:
+    def test_face_spec_wrong_constructor(self) -> None:
+        """
+        Accessing face spec raises an error for custom target from standard init.
+
+        Custom targets should be made using the `from_face_spec` classmethod
+        """
+        target = Target("Custom", 122, 50)
+        with pytest.raises(
+            ValueError,
+            match=(
+                "Trying to generate face spec for custom target "
+                "but no existing spec found"
+            ),
+        ):
+            assert target.face_spec
+
+    def test_face_spec_invalid_system(self) -> None:
         """Check error is raised when trying to get specs of an unsupported system."""
         target = Target("5_zone", 122, 50)
         # Silence mypy as scoring_system must be a valid literal ScoringSystem
-        target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
+        # Ignore private attribute access to modify read only property
+        # Conclusion: no way this happens by accident
+        target._scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]  # noqa: SLF001
         with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
             assert target.face_spec
 
-    def test_face_spec_recaluclated_after_changing_diameter(self) -> None:
-        """Check that face_spec respects the current target diameter."""
-        target = Target("10_zone_5_ring", 80, 50)
-        assert target.face_spec == {0.08: 10, 0.16: 9, 0.24: 8, 0.32: 7, 0.4: 6}
-        target.diameter /= 2
-        assert target.face_spec == {0.04: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
+    # def test_face_spec_recaluclated_after_changing_diameter(self) -> None:
+    #     """Check that face_spec respects the current target diameter."""
+    #     target = Target("10_zone_5_ring", 80, 50)
+    #     assert target.face_spec == {0.08: 10, 0.16: 9, 0.24: 8, 0.32: 7, 0.4: 6}
+    #     target.diameter /= 2
+    #     assert target.face_spec == {0.04: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
+
+    # def test_mutating_diameter_units(self) -> None:
+    #     pass
 
 
 class TestCustomScoringTarget:
