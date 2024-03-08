@@ -1,6 +1,8 @@
 """Module for representing a Target for archery applications."""
 
+from collections.abc import Mapping
 from functools import partial
+from types import MappingProxyType
 from typing import Literal, NamedTuple, Optional, Union, get_args
 
 from archeryutils.constants import Length
@@ -23,7 +25,7 @@ ScoringSystem = Literal[
 ]
 
 # TypeAlias (annotate explicitly in py3.10+)
-FaceSpec = dict[float, int]
+FaceSpec = Mapping[float, int]
 
 _rnd6 = partial(round, ndigits=6)
 
@@ -303,7 +305,7 @@ class Target:
                 )
                 raise ValueError(msg)
             self._face_spec = self.gen_face_spec(self.scoring_system, self._diameter)
-        return self._face_spec
+        return MappingProxyType(self._face_spec)
 
     @staticmethod
     def gen_face_spec(system: ScoringSystem, diameter: float) -> FaceSpec:

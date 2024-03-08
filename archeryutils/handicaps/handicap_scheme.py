@@ -234,13 +234,13 @@ class HandicapScheme(ABC):
         return self._s_bar(spec, arw_rad, sig_r)
 
     def _s_bar(
-        self, target_specs: dict[float, int], arw_rad: float, sig_r: FloatArray
+        self, target_specs: targets.FaceSpec, arw_rad: float, sig_r: FloatArray
     ) -> FloatArray:
         """Calculate expected score directly from target ring sizes.
 
         Parameters
         ----------
-        target_specs : dict[float, int]
+        target_specs : FaceSpec
             Mapping of target ring *diameters* in [metres], to points scored
         arw_rad : float
             arrow radius in [metres]
