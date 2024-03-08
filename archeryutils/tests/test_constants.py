@@ -2,7 +2,7 @@
 
 import pytest
 
-from archeryutils.constants import Length
+from archeryutils.constants import length
 
 CM = "cm"
 INCH = "inch"
@@ -15,17 +15,17 @@ class TestLengths:
 
     def test_units_available(self):
         """Test common length unit names."""
-        assert CM in Length.cm
-        assert INCH in Length.inch
-        assert METRE in Length.metre
-        assert YARD in Length.yard
+        assert CM in length.cm
+        assert INCH in length.inch
+        assert METRE in length.metre
+        assert YARD in length.yard
 
     def test_pluralised_unit_alises_available(self):
         """Test plurailised versions of common length unit names."""
-        assert CM + "s" in Length.cm
-        assert INCH + "es" in Length.inch
-        assert METRE + "s" in Length.metre
-        assert YARD + "s" in Length.yard
+        assert CM + "s" in length.cm
+        assert INCH + "es" in length.inch
+        assert METRE + "s" in length.metre
+        assert YARD + "s" in length.yard
 
     @pytest.mark.parametrize(
         "value,unit,result",
@@ -38,7 +38,7 @@ class TestLengths:
     )
     def test_conversion_to_metres(self, value, unit, result):
         """Test conversion from other units to metres."""
-        assert Length.to_metres(value, unit) == result
+        assert length.to_metres(value, unit) == result
 
     @pytest.mark.parametrize(
         "value,unit,result",
@@ -51,7 +51,7 @@ class TestLengths:
     )
     def test_conversion_from_metres(self, value, unit, result):
         """Test conversion from metres to other units."""
-        assert Length.from_metres(value, unit) == pytest.approx(result)
+        assert length.from_metres(value, unit) == pytest.approx(result)
 
     @pytest.mark.parametrize(
         "unit,result",
@@ -64,11 +64,11 @@ class TestLengths:
     )
     def test_unit_name_coercion(self, unit, result):
         """Test unit name standardisation available on Length class."""
-        assert Length.definitive_unit(unit) == result
+        assert length.definitive_unit(unit) == result
 
     def test_unit_alias_reduction(self):
         """Test full set of unit alises can be reduced to just definitive names."""
-        assert Length.definitive_units(Length.inch | Length.cm) == {"inch", "cm"}
+        assert length.definitive_units(length.inch | length.cm) == {"inch", "cm"}
 
     @pytest.mark.parametrize(
         "value,expected",
@@ -97,15 +97,15 @@ class TestLengths:
     )
     def test_optional_unit_parsing(self, value, expected):
         """Test parsing of quantities with and without units."""
-        supported = Length.metre | Length.yard
+        supported = length.metre | length.yard
         default = "metre"
-        assert Length.parse_optional_units(value, supported, default) == expected
+        assert length.parse_optional_units(value, supported, default) == expected
 
     def test_optional_unit_parsing_units_not_supported(self):
         """Test parsing of quantities with and without units."""
         with pytest.raises(ValueError, match="Unit (.+) not recognised. Select from"):
-            assert Length.parse_optional_units(
-                (10, "bannana"), Length.metre | Length.yard, "metre"
+            assert length.parse_optional_units(
+                (10, "bannana"), length.metre | length.yard, "metre"
             )
 
     def test_optional_unit_parsing_default_not_supported(self):
@@ -113,4 +113,4 @@ class TestLengths:
         with pytest.raises(
             ValueError, match="Default unit (.+) must be in supported units"
         ):
-            assert Length.parse_optional_units(10, Length.metre | Length.yard, "inch")
+            assert length.parse_optional_units(10, length.metre | length.yard, "inch")

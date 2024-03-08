@@ -3,7 +3,7 @@
 from collections.abc import Iterable
 from typing import Optional, Union
 
-from archeryutils.constants import Length
+from archeryutils.constants import length
 from archeryutils.targets import ScoringSystem, Target
 
 
@@ -258,7 +258,7 @@ class Round:
                 max_dist = pass_i.distance
                 d_unit = pass_i.native_dist_unit
 
-        max_dist = Length.from_metres(max_dist, d_unit)
+        max_dist = length.from_metres(max_dist, d_unit)
         if unit:
             return (max_dist, d_unit)
         return max_dist

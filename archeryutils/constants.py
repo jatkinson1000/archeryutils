@@ -1,5 +1,6 @@
 """Constants used in the archeryutils package."""
 
+from collections.abc import Collection, Set
 from typing import ClassVar, TypeVar, Union
 
 T = TypeVar("T")
@@ -67,15 +68,17 @@ class Length:
 
     Contains common abbreviations, pluralisations and capitilizations for supported
     units as sets to allow easy membership checks in combination.
-    Methods for conversions to and from metres are provided as classmethods.
-
+    Supported units are provided as class attributes for easy autocompletion
     """
 
+    # Add alias to any new supported units here
     yard = _YARD_ALIASES
     metre = _METRE_ALIASES
     cm = _CM_ALIASES
     inch = _INCH_ALIASES
 
+    # Update _ALIASES and _CONVERSIONS_TO_M for any new supported units
+    # And they will be automatically incorporated here
     _reversed: ClassVar = {
         alias: name for name in _CONVERSIONS_TO_M for alias in _ALIASES[name]
     }
@@ -86,8 +89,12 @@ class Length:
         for alias in _ALIASES[name]
     }
 
-    @classmethod
-    def to_metres(cls, value: float, unit: str) -> float:
+    @property
+    def known_units(self):
+        """Display all units that can be converted by this class."""
+        return tuple(self.definitive_units(self._conversions))
+
+    def to_metres(self, value: float, unit: str) -> float:
         """
         Convert distance in any supported unit to metres.
 
@@ -108,10 +115,9 @@ class Length:
         >>> Length.to_metres(10, "inches")
         0.254
         """
-        return cls._conversions[unit] * value
+        return self._conversions[unit] * value
 
-    @classmethod
-    def from_metres(cls, metre_value: float, unit: str) -> float:
+    def from_metres(self, metre_value: float, unit: str) -> float:
         """
         Convert distance in metres to specified unit.
 
@@ -132,10 +138,9 @@ class Length:
         >>> Length.from_metres(18.3, "yards")
         20.0131
         """
-        return metre_value / cls._conversions[unit]
+        return metre_value / self._conversions[unit]
 
-    @classmethod
-    def definitive_unit(cls, alias: str) -> str:
+    def definitive_unit(self, alias: str) -> str:
         """
         Convert any string alias representing a distance unit to a single version.
 
@@ -154,10 +159,9 @@ class Length:
         >>> Length.definitive_unit("Metres")
         "metre"
         """
-        return cls._reversed[alias]
+        return self._reversed[alias]
 
-    @classmethod
-    def definitive_units(cls, aliases: set[str]) -> set[str]:
+    def definitive_units(self, aliases: Collection[str]) -> set[str]:
         """
         Reduce a set of string unit aliases to just their definitive names.
 
@@ -176,13 +180,12 @@ class Length:
         >>> Length.definitive_unit(Length.metre | Length.yard)
         {'metre', 'yard'}
         """
-        return {cls._reversed[alias] for alias in aliases}
+        return {self._reversed[alias] for alias in aliases}
 
-    @classmethod
     def parse_optional_units(
-        cls,
+        self,
         value: Union[T, tuple[T, str]],
-        supported: set[str],
+        supported: Set[str],
         default: str,
     ) -> tuple[T, str]:
         """
@@ -193,9 +196,9 @@ class Length:
         Parameters
         ----------
         value : Any or tuple of Any, str
-            Either a single object, or a tuple with the desired units
+            Either a single object, or a tuple with the desired units.
         supported: set of str
-            Valid unit aliases to be accepted
+            Set of units (and aliases) that are expected/supported.
         default: str
             Default unit to be used when value does not specify units.
 
@@ -209,6 +212,16 @@ class Length:
         -------
         tuple of Any, str
             original value, definitive name of unit
+
+        Notes
+        -----
+        The supported parameter encodes both which units can be used,
+        and also which aliases are acceptable for those units.
+        If your downstream functionality for example only works with imperial units.
+        Then pass supported = {'inch', 'inches', 'yard', 'yards'} etc.
+        The units parsed from value will be checked against this set.
+        The default parameter is what will be provided in the result if the input value
+        is a scalar, so this must also be present in the set of supported units.
 
         Examples
         --------
@@ -232,7 +245,10 @@ class Length:
         if units not in supported:
             msg = (
                 f"Unit {units!r} not recognised. "
-                f"Select from {cls.definitive_units(supported)}."
+                f"Select from {self.definitive_units(supported)}."
             )
             raise ValueError(msg)
-        return quantity, cls.definitive_unit(units)
+        return quantity, self.definitive_unit(units)
+
+
+length = Length()

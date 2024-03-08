@@ -5,7 +5,7 @@ from functools import partial
 from types import MappingProxyType
 from typing import Literal, NamedTuple, Optional, Union, get_args
 
-from archeryutils.constants import Length
+from archeryutils.constants import length
 
 # TypeAlias (annotate explicitly in py3.10+)
 ScoringSystem = Literal[
@@ -103,8 +103,8 @@ class Target:
     _face_spec: Optional[FaceSpec] = None
 
     supported_systems = get_args(ScoringSystem)
-    supported_distance_units = Length.yard | Length.metre
-    supported_diameter_units = Length.cm | Length.inch | Length.metre
+    supported_distance_units = length.yard | length.metre
+    supported_diameter_units = length.cm | length.inch | length.metre
 
     def __init__(
         self,
@@ -119,17 +119,16 @@ class Target:
                 f"""Please select from '{"', '".join(self.supported_systems)}'."""
             )
             raise ValueError(msg)
-        dist, native_dist_unit = Length.parse_optional_units(
+        dist, native_dist_unit = length.parse_optional_units(
             distance, self.supported_distance_units, "metre"
         )
-        diam, native_diameter_unit = Length.parse_optional_units(
+        diam, native_diameter_unit = length.parse_optional_units(
             diameter, self.supported_diameter_units, "cm"
         )
-
         self._scoring_system = scoring_system
-        self._distance = Length.to_metres(dist, native_dist_unit)
+        self._distance = length.to_metres(dist, native_dist_unit)
         self._native_dist_unit = native_dist_unit
-        self._diameter = Length.to_metres(diam, native_diameter_unit)
+        self._diameter = length.to_metres(diam, native_diameter_unit)
         self._native_diameter_unit = native_diameter_unit
         self.indoor = indoor
 
@@ -175,11 +174,11 @@ class Target:
         >>> specs = {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
         >>> target = Target.from_spec(specs, 40, 18)
         """
-        spec_data, spec_units = Length.parse_optional_units(
+        spec_data, spec_units = length.parse_optional_units(
             face_spec, cls.supported_diameter_units, "metre"
         )
         spec = {
-            _rnd6(Length.to_metres(ring_diam, spec_units)): score
+            _rnd6(length.to_metres(ring_diam, spec_units)): score
             for ring_diam, score in spec_data.items()
         }
 
@@ -247,7 +246,7 @@ class Target:
     def native_distance(self) -> Q:
         """Get target distance in original native units."""
         return Q(
-            Length.from_metres(self._distance, self._native_dist_unit),
+            length.from_metres(self._distance, self._native_dist_unit),
             self._native_dist_unit,
         )
 
@@ -255,7 +254,7 @@ class Target:
     def native_diameter(self) -> Q:
         """Get target diameter in original native units."""
         return Q(
-            Length.from_metres(self._diameter, self._native_diameter_unit),
+            length.from_metres(self._diameter, self._native_diameter_unit),
             self._native_diameter_unit,
         )
 
