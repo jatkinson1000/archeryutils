@@ -1,8 +1,7 @@
 """Module for representing a Target for archery applications."""
 
 from functools import partial
-from types import MappingProxyType
-from typing import Final, Literal, NamedTuple, Union, get_args
+from typing import Literal, Optional, Union, get_args
 
 from archeryutils.constants import Length
 
@@ -92,7 +91,7 @@ class Target:
 
     """
 
-    _face_spec: FaceSpec
+    _face_spec: Optional[FaceSpec] = None
 
     supported_systems = get_args(ScoringSystem)
     supported_distance_units = Length.yard | Length.metre
@@ -121,7 +120,7 @@ class Target:
         self.scoring_system = scoring_system
         self.distance = Length.to_metres(dist, native_dist_unit)
         self.native_dist_unit = native_dist_unit
-        self.diameter = Length.to_metres(diam, native_diameter_unit)
+        self._diameter = Length.to_metres(diam, native_diameter_unit)
         self.native_diameter_unit = native_diameter_unit
         self.indoor = indoor
 
@@ -221,6 +220,18 @@ class Target:
         return self.scoring_system == "Custom"
 
     @property
+    def diameter(self):
+        """Get target diameter."""
+        return self._diameter
+
+    @diameter.setter
+    def diameter(self, value):
+        """Set target diameter and invalidate face spec for standard targets."""
+        if self.scoring_system != "Custom":
+            self._face_spec = None
+        self._diameter = value
+
+    @property
     def native_distance(self) -> tuple[float, str]:
         """Get target distance in original native units."""
         return (
@@ -232,7 +243,7 @@ class Target:
     def native_diameter(self) -> tuple[float, str]:
         """Get target diameter in original native units."""
         return (
-            Length.from_metres(self.diameter, self.native_diameter_unit),
+            Length.from_metres(self._diameter, self.native_diameter_unit),
             self.native_diameter_unit,
         )
 
@@ -282,17 +293,10 @@ class Target:
 
     @property
     def face_spec(self) -> FaceSpec:
-        """Get the targets face specification."""
-        if not hasattr(self, "_face_spec"):
-            self._face_spec = self._get_face_spec()
+        """Get the targets face specification, generating on demand if needed."""
+        if self._face_spec is None and self.scoring_system != "Custom":
+            self._face_spec = self.gen_face_spec(self.scoring_system, self._diameter)
         return self._face_spec
-
-    def _get_face_spec(self):
-        """Generate face specification on demand from instance parameters."""
-        if self.is_custom:
-            return self.face_spec
-
-        return self.gen_face_spec(self.scoring_system, self.diameter)
 
     @staticmethod
     def gen_face_spec(system: ScoringSystem, diameter: float) -> FaceSpec:

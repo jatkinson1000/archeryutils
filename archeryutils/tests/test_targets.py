@@ -1,6 +1,6 @@
 """Tests for Target class."""
 
-from typing import Final, get_args
+from typing import Final
 
 import pytest
 
@@ -326,6 +326,13 @@ class TestTarget:
         target.scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]
         with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
             assert target.face_spec
+
+    def test_face_spec_recaluclated_after_changing_diameter(self) -> None:
+        """Check that face_spec respects the current target diameter."""
+        target = Target("10_zone_5_ring", 80, 50)
+        assert target.face_spec == {0.08: 10, 0.16: 9, 0.24: 8, 0.32: 7, 0.4: 6}
+        target.diameter /= 2
+        assert target.face_spec == {0.04: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
 
 
 class TestCustomScoringTarget:

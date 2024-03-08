@@ -1,6 +1,6 @@
 """Constants used in the archeryutils package."""
 
-from typing import Any, ClassVar, TypeVar, Union
+from typing import ClassVar, TypeVar, Union
 
 T = TypeVar("T")
 
