@@ -65,3 +65,52 @@ class TestLengths:
     def test_unit_name_coercion(self, unit, result):
         """Test unit name standardisation available on Length class."""
         assert Length.definitive_unit(unit) == result
+
+    def test_unit_alias_reduction(self):
+        """Test full set of unit alises can be reduced to just definitive names."""
+        assert Length.definitive_units(Length.inch | Length.cm) == {"inch", "cm"}
+
+    @pytest.mark.parametrize(
+        "value,expected",
+        [
+            pytest.param(
+                10,
+                (10, "metre"),
+                id="int-scalar",
+            ),
+            pytest.param(
+                10.1,
+                (10.1, "metre"),
+                id="float-scalar",
+            ),
+            pytest.param(
+                (10, "Metres"),
+                (10, "metre"),
+                id="default-units",
+            ),
+            pytest.param(
+                (10, "yds"),
+                (10, "yard"),
+                id="other-units",
+            ),
+        ],
+    )
+    def test_optional_unit_parsing(self, value, expected):
+        """Test parsing of quantities with and without units."""
+        supported = Length.metre | Length.yard
+        default = "metre"
+        assert Length.parse_optional_units(value, supported, default) == expected
+
+    def test_optional_unit_parsing_units_not_supported(self):
+        """Test parsing of quantities with and without units."""
+        with pytest.raises(ValueError, match="Unit (.+) not recognised. Select from"):
+            assert Length.parse_optional_units(
+                (10, "bannana"), Length.metre | Length.yard, "metre"
+            )
+
+    def test_optional_unit_parsing_default_not_supported(self):
+        """Test parsing of quantities with and without units."""
+        with pytest.raises(
+            ValueError, match="Default unit (.+) must be in supported units"
+        ):
+            assert Length.parse_optional_units(10, Length.metre | Length.yard, "inch")
