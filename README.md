@@ -37,14 +37,14 @@ It is appreciated if visible credit is given by any projects using `archeryutils
 ### Installation
 To install the library via pip for use in a project you can run:
 
-    python -m pip install git+https://github.com/jatkinson1000/archeryutils.git
+    pip install archeryutils
 
 It is recommended to use a virtual environment.
 
 If you want a local install that you can edit instead, clone the repository,
 navigate to `/archeryutils`, and run:
 
-    python3 -m pip install .
+    python3 -m pip install -e .[test,lint,docs]
 
 Please refer to the online documentation for
 [full installation guidance](https://archeryutils.readthedocs.io/en/latest/getting-started/installation.html).
