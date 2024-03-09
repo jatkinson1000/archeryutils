@@ -207,11 +207,6 @@ class Target:
         if not isinstance(other, Target):
             return NotImplemented
 
-        if self.scoring_system == other.scoring_system == "Custom":
-            return (
-                self._face_spec == other._face_spec
-                and self._parameters() == other._parameters()
-            )
         return self._parameters() == other._parameters()
 
     def _parameters(self):
@@ -223,17 +218,13 @@ class Target:
             self._distance,
             self._native_distance,
             self.indoor,
+            self.face_spec,
         )
 
     @property
     def scoring_system(self):
         """Get target scoring system."""
         return self._scoring_system
-
-    @property
-    def is_custom(self):
-        """Check if this Target uses a custom scoring system."""
-        return self._scoring_system == "Custom"
 
     @property
     def diameter(self) -> float:
