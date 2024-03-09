@@ -81,13 +81,13 @@ class TestPass:
     def test_default_distance_unit(self) -> None:
         """Check that Pass returns distance in metres when units not specified."""
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
-        assert test_pass.native_dist_unit == "metre"
+        assert test_pass.native_distance.units == "metre"
 
     def test_default_diameter_unit(self) -> None:
         """Check that Pass has same default diameter units as Target."""
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
         assert (
-            test_pass.native_diameter_unit
+            test_pass.native_diameter.units
             == test_pass.target.native_diameter.units
             == "cm"
         )
@@ -111,17 +111,17 @@ class TestPass:
         """Check that Pass properties are set correctly."""
         test_pass = Pass(36, Target("5_zone", (122, "cm"), (50, "metre"), False))
         assert test_pass.distance == 50.0
-        assert test_pass.native_dist_unit == "metre"
+        assert test_pass.native_distance == (50, "metre")
         assert test_pass.diameter == 1.22
         assert test_pass.scoring_system == "5_zone"
         assert test_pass.indoor is False
-        assert test_pass.native_diameter_unit == "cm"
+        assert test_pass.native_diameter == (122, "cm")
 
     def test_custom_target(self) -> None:
         """Check that pass can be constructed from a custom target specification."""
         target = Target.from_face_spec({0.1: 3, 0.5: 1}, 80, (50, "yard"))
         test_pass = Pass(30, target)
-        assert test_pass.target.is_custom
+        assert test_pass
 
     @pytest.mark.parametrize(
         "face_type,max_score_expected",

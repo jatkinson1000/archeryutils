@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from typing import Optional, Union
 
 from archeryutils.constants import length
-from archeryutils.targets import ScoringSystem, Target
+from archeryutils.targets import Quantity, ScoringSystem, Target
 
 
 class Pass:
@@ -121,14 +121,14 @@ class Pass:
         return self.target.distance
 
     @property
-    def native_diameter_unit(self) -> str:
+    def native_diameter(self) -> Quantity:
         """Get native_diameter_unit attribute of target."""
-        return self.target.native_diameter.units
+        return self.target.native_diameter
 
     @property
-    def native_dist_unit(self) -> str:
+    def native_distance(self) -> Quantity:
         """Get native_dist_unit attribute of target."""
-        return self.target.native_distance.units
+        return self.target.native_distance
 
     @property
     def indoor(self) -> bool:
@@ -251,17 +251,16 @@ class Round:
             maximum distance shot in this round
         (max_dist, unit) : tuple (float, str)
             tuple of max_dist and string of unit
-        """
-        max_dist = 0.0
-        for pass_i in self.passes:
-            if pass_i.distance > max_dist:
-                max_dist = pass_i.distance
-                d_unit = pass_i.native_dist_unit
 
-        max_dist = length.from_metres(max_dist, d_unit)
+        Notes
+        -----
+        This does not convert the units of the result.
+        Rather the maximum distance shot in the round is returned in
+        """
+        longest_pass = max(self.passes, key=lambda p: p.distance)
         if unit:
-            return (max_dist, d_unit)
-        return max_dist
+            return longest_pass.native_distance
+        return longest_pass.native_distance.value
 
     def get_info(self) -> None:
         """
@@ -273,8 +272,8 @@ class Round:
         """
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            diam, diam_units = pass_i.target.native_diameter
-            dist, dist_units = pass_i.target.native_distance
+            diam, diam_units = pass_i.native_diameter
+            dist, dist_units = pass_i.native_distance
             print(
                 f"\t- {pass_i.n_arrows} arrows "
                 f"at a {diam:.1f} {diam_units} target "
