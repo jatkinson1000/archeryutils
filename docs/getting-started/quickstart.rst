@@ -142,7 +142,7 @@ Possible options for round collections are:
 * ``IFAA_field`` - IFAA indoor and outdoor rounds
 * ``AGB_VI`` - Archery GB Visually Impaired rounds
 * ``WA_VI`` - World Archery Visually Impaired rounds
-* ``custom`` - custom rounds such as individual distances, 252 awards, frostbites etc.
+* ``misc`` - Miscellaneous rounds such as individual distances, 252 awards, frostbites etc.
 
 Handicap Schemes
 ----------------

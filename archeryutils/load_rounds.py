@@ -188,7 +188,7 @@ WA_field = _make_rounds_dict("WA_field.json")
 IFAA_field = _make_rounds_dict("IFAA_field.json")
 WA_VI = _make_rounds_dict("WA_VI.json")
 AGB_VI = _make_rounds_dict("AGB_VI.json")
-custom = _make_rounds_dict("Custom.json")
+misc = _make_rounds_dict("Miscellaneous.json")
 
 
 del _make_rounds_dict

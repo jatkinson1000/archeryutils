@@ -120,11 +120,11 @@ AGB VI
 
     au.load_rounds.AGB_VI
 
-Custom Rounds
+Miscellaneous
 -------------
 
 .. ipython:: python
 
     import archeryutils as au
 
-    au.load_rounds.custom
+    au.load_rounds.misc
