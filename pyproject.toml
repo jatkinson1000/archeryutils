@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "archeryutils"
-version = "0.1.1"
-description = "A collection of archery utilities in python"
+version = "0.1.0"
+description = "A collection of archery utilities in python."
 authors = [
   { name="Jack Atkinson", email="jack.atkinson1000@gmail.com" },
 ]
@@ -14,18 +14,16 @@ license = {file = "LICENSE"}
 requires-python = ">=3.10"
 classifiers = [
     "License :: OSI Approved :: MIT License",
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Natural Language :: English",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Typing :: Typed',
     "Operating System :: OS Independent",
-    'Operating System :: Unix',
-    'Operating System :: MacOS',
-    'Operating System :: Microsoft :: Windows',
-#    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
     "numpy>=1.20.0",
@@ -57,15 +55,15 @@ docs = [
 
 [project.urls]
 "Homepage" = "https://github.com/jatkinson1000/archeryutils"
-"Bug Tracker" = "https://github.com/jatkinson1000/archeryutils/Issues"
+"Bug Tracker" = "https://github.com/jatkinson1000/archeryutils/issues"
+"Documentation" = "https://archeryutils.readthedocs.io/"
+"Repository" = "https://github.com/jatkinson1000/archeryutils"
 
 [tool.setuptools]
 # By default, include-package-data is true in pyproject.toml, so you do
 # NOT have to specify this line.
 include-package-data = true
 
-#[tool.setuptools.packages]
-#find = {}
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
 include = ["archeryutils", "archeryutils.*"]  # package names should match these glob patterns (["*"] by default)
@@ -74,9 +72,6 @@ namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [tool.setuptools.package-data]
 archeryutils = ["*.json", "round_data_files/*.json", "classifications/*.json"]
-
-#[options.extras_require]
-#tests = pytest
 
 [tool.mypy]
 warn_unused_configs = true
@@ -113,5 +108,5 @@ convention = "numpy"
 
 [tool.ruff.lint.per-file-ignores]
 # Ignore S101 (use of assert) in tests
-# Ignore PLR2004 (magic values) in tests as we regularly want to compare to a numerical value
+# Ignore PLR2004 (magic values) in tests as we regularly compare to a numerical value
 "**/tests/*" = ["S101", "PLR2004"]
