@@ -30,7 +30,7 @@ FaceSpec = Mapping[float, int]
 _rnd6 = partial(round, ndigits=6)
 
 
-class Q(NamedTuple):
+class Quantity(NamedTuple):
     """Dataclass for a quantity with units."""
 
     value: float
@@ -122,14 +122,14 @@ class Target:
         dist, native_dist_unit = length.parse_optional_units(
             distance, self.supported_distance_units, "metre"
         )
-        diam, native_diameter_unit = length.parse_optional_units(
+        diam, native_diam_unit = length.parse_optional_units(
             diameter, self.supported_diameter_units, "cm"
         )
         self._scoring_system = scoring_system
         self._distance = length.to_metres(dist, native_dist_unit)
-        self._native_dist_unit = native_dist_unit
-        self._diameter = length.to_metres(diam, native_diameter_unit)
-        self._native_diameter_unit = native_diameter_unit
+        self._native_distance = Quantity(dist, native_dist_unit)
+        self._diameter = length.to_metres(diam, native_diam_unit)
+        self._native_diameter = Quantity(diam, native_diam_unit)
         self.indoor = indoor
 
         if scoring_system != "Custom":
@@ -219,9 +219,9 @@ class Target:
         return (
             self._scoring_system,
             self._diameter,
-            self._native_diameter_unit,
+            self._native_diameter,
             self._distance,
-            self._native_dist_unit,
+            self._native_distance,
             self.indoor,
         )
 
@@ -236,30 +236,24 @@ class Target:
         return self._scoring_system == "Custom"
 
     @property
-    def diameter(self):
+    def diameter(self) -> float:
         """Get target diameter in [metres]."""
         return self._diameter
 
     @property
-    def distance(self):
+    def distance(self) -> float:
         """Get target distance in [metres]."""
         return self._distance
 
     @property
-    def native_distance(self) -> Q:
+    def native_distance(self) -> Quantity:
         """Get target distance in original native units."""
-        return Q(
-            length.from_metres(self._distance, self._native_dist_unit),
-            self._native_dist_unit,
-        )
+        return self._native_distance
 
     @property
-    def native_diameter(self) -> Q:
+    def native_diameter(self) -> Quantity:
         """Get target diameter in original native units."""
-        return Q(
-            length.from_metres(self._diameter, self._native_diameter_unit),
-            self._native_diameter_unit,
-        )
+        return self._native_diameter
 
     def max_score(self) -> float:
         """

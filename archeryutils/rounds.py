@@ -113,22 +113,22 @@ class Pass:
     @property
     def diameter(self) -> float:
         """Get target diameter [metres]."""
-        return self.target._diameter  # noqa: SLF001
-
-    @property
-    def native_diameter_unit(self) -> str:
-        """Get native_diameter_unit attribute of target."""
-        return self.target._native_diameter_unit  # noqa: SLF001
+        return self.target.diameter
 
     @property
     def distance(self) -> float:
         """Get target distance in [metres]."""
-        return self.target._distance  # noqa: SLF001
+        return self.target.distance
+
+    @property
+    def native_diameter_unit(self) -> str:
+        """Get native_diameter_unit attribute of target."""
+        return self.target.native_diameter.units
 
     @property
     def native_dist_unit(self) -> str:
         """Get native_dist_unit attribute of target."""
-        return self.target._native_dist_unit  # noqa: SLF001
+        return self.target.native_distance.units
 
     @property
     def indoor(self) -> bool:
