@@ -31,7 +31,18 @@ _rnd6 = partial(round, ndigits=6)
 
 
 class Quantity(NamedTuple):
-    """Dataclass for a quantity with units."""
+    """
+    Dataclass for a quantity with units.
+
+    Can be used in place of a plain tuple of (value, units)
+
+    Attributes
+    ----------
+    value: float
+        Scalar value of quantity
+    units: str
+        Units of quantity
+    """
 
     value: float
     units: str
@@ -62,12 +73,12 @@ class Target:
         target face/scoring system type.
     diameter : float
         Target face diameter [metres].
-    native_diameter_unit : str
-        Native unit the target size is measured in before conversion to [metres].
     distance : float
         linear distance from archer to target [metres].
-    native_dist_unit : str
-        Native unit the target distance is measured in before conversion to [metres].
+    native_diameter : Quantity
+        Native target diameter and unit before conversion to [metres].
+    native_distance : Quantity
+        Native target distance and unit before conversion to [metres].
     indoor : bool, default=False
         is round indoors?
 
@@ -119,17 +130,17 @@ class Target:
                 f"""Please select from '{"', '".join(self.supported_systems)}'."""
             )
             raise ValueError(msg)
-        dist, native_dist_unit = length.parse_optional_units(
-            distance, self.supported_distance_units, "metre"
-        )
         diam, native_diam_unit = length.parse_optional_units(
             diameter, self.supported_diameter_units, "cm"
         )
+        dist, native_dist_unit = length.parse_optional_units(
+            distance, self.supported_distance_units, "metre"
+        )
         self._scoring_system = scoring_system
-        self._distance = length.to_metres(dist, native_dist_unit)
-        self._native_distance = Quantity(dist, native_dist_unit)
         self._diameter = length.to_metres(diam, native_diam_unit)
         self._native_diameter = Quantity(diam, native_diam_unit)
+        self._distance = length.to_metres(dist, native_dist_unit)
+        self._native_distance = Quantity(dist, native_dist_unit)
         self.indoor = indoor
 
         if scoring_system != "Custom":
@@ -173,9 +184,10 @@ class Target:
 
         Examples
         --------
-        >>> # WA 18m compound triple spot
-        >>> specs = {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
-        >>> target = Target.from_spec(specs, 40, 18)
+        >>> # Kings of archery recurve scoring triple spot
+        >>> specs = {0.08: 10, 0.12: 8, 0.16: 7, 0.2: 6}
+        >>> target = Target.from_face_spec(specs, 40, 18)
+        >>> assert target.scoring_system == "Custom"
         """
         spec_data, spec_units = length.parse_optional_units(
             face_spec, cls.supported_diameter_units, "metre"
@@ -246,6 +258,31 @@ class Target:
         """Get target diameter in original native units."""
         return self._native_diameter
 
+    @property
+    def face_spec(self) -> FaceSpec:
+        """
+        Get the targets face specification.
+
+        Raises
+        ------
+        ValueError
+            If trying to access the face_spec for a `"Custom"` scoring target
+            but that target was not instantiated correctly and no spec is found.
+        """
+        # Still have some error handling in here for the case where
+        # users use the wrong initaliser:
+        # eg target = Target("Custom", 10, 10)
+        # As otherwise errors raised are somewhat cryptic
+        try:
+            return MappingProxyType(self._face_spec)
+        except AttributeError as err:
+            msg = (
+                "Trying to generate face spec for custom target "
+                "but no existing spec found: "
+                "try instantiating with `Target.from_face_spec` instead"
+            )
+            raise ValueError(msg) from err
+
     def max_score(self) -> float:
         """
         Return the maximum numerical score possible on this target (i.e. not X).
@@ -280,23 +317,6 @@ class Target:
         """
         return min(self.face_spec.values(), default=0)
 
-    @property
-    def face_spec(self) -> FaceSpec:
-        """Get the targets face specification, generating on demand if needed."""
-        # Still have some error handling in here for the case where
-        # users use the wrong initaliser:
-        # eg target = Target("Custom", 10, 10)
-        # As otherwise errors raised are somewhat cryptic
-        try:
-            return MappingProxyType(self._face_spec)
-        except AttributeError as err:
-            msg = (
-                "Trying to generate face spec for custom target "
-                "but no existing spec found: "
-                "try instantiating with `Target.from_face_spec` instead"
-            )
-            raise ValueError(msg) from err
-
     @staticmethod
     def gen_face_spec(system: ScoringSystem, diameter: float) -> FaceSpec:
         """
@@ -307,12 +327,24 @@ class Target:
         system: ScoringSystem
             Name of scoring system
         diameter:
-            Target diameter in metres
+            Target diameter in [metres]
 
         Returns
         -------
         spec : dict
             Mapping of target ring sizes in [metres] to score
+
+        Raises
+        ------
+        ValueError
+            If no rule for producing a face_spec from the given system is found.
+
+        Examples
+        --------
+        >>> Target.gen_face_spec("WA_field", 0.6)
+        {0.06: 6, 0.12: 5, 0.24: 4, 0.36: 3, 0.48: 2, 0.6: 1}
+        >>> Target.gen_face_spec("10_zone_5_ring_compound", 0.4)
+        {0.02: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
         """
         removed_rings = {
             "10_zone_6_ring": 4,

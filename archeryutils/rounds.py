@@ -3,7 +3,6 @@
 from collections.abc import Iterable
 from typing import Optional, Union
 
-from archeryutils.constants import length
 from archeryutils.targets import Quantity, ScoringSystem, Target
 
 
@@ -236,7 +235,7 @@ class Round:
         """
         return sum(pass_i.max_score() for pass_i in self.passes)
 
-    def max_distance(self, unit: bool = False) -> Union[float, tuple[float, str]]:
+    def max_distance(self, unit: bool = False) -> Union[float, Quantity]:
         """
         Return the maximum distance shot on this round along with the unit (optional).
 
@@ -256,6 +255,7 @@ class Round:
         -----
         This does not convert the units of the result.
         Rather the maximum distance shot in the round is returned in
+        whatever units it was defined in.
         """
         longest_pass = max(self.passes, key=lambda p: p.distance)
         if unit:
