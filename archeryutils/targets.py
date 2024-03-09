@@ -3,7 +3,7 @@
 from collections.abc import Mapping
 from functools import partial
 from types import MappingProxyType
-from typing import Literal, NamedTuple, Optional, Union, get_args
+from typing import Literal, NamedTuple, Union, get_args
 
 from archeryutils.constants import length
 
@@ -100,7 +100,7 @@ class Target:
 
     """
 
-    _face_spec: Optional[FaceSpec] = None
+    _face_spec: FaceSpec
 
     supported_systems = get_args(ScoringSystem)
     supported_distance_units = length.yard | length.metre
@@ -131,6 +131,9 @@ class Target:
         self._diameter = length.to_metres(diam, native_diameter_unit)
         self._native_diameter_unit = native_diameter_unit
         self.indoor = indoor
+
+        if scoring_system != "Custom":
+            self._face_spec = self.gen_face_spec(scoring_system, self._diameter)
 
     @classmethod
     def from_face_spec(
@@ -295,16 +298,19 @@ class Target:
     @property
     def face_spec(self) -> FaceSpec:
         """Get the targets face specification, generating on demand if needed."""
-        if self._face_spec is None:
-            if self.scoring_system == "Custom":
-                msg = (
-                    "Trying to generate face spec for custom target "
-                    "but no existing spec found: "
-                    "try instantiating with `Target.from_face_spec` instead"
-                )
-                raise ValueError(msg)
-            self._face_spec = self.gen_face_spec(self.scoring_system, self._diameter)
-        return MappingProxyType(self._face_spec)
+        # Still have some error handling in here for the case where
+        # users use the wrong initaliser:
+        # eg target = Target("Custom", 10, 10)
+        # As otherwise errors raised are somewhat cryptic
+        try:
+            return MappingProxyType(self._face_spec)
+        except AttributeError as err:
+            msg = (
+                "Trying to generate face spec for custom target "
+                "but no existing spec found: "
+                "try instantiating with `Target.from_face_spec` instead"
+            )
+            raise ValueError(msg) from err
 
     @staticmethod
     def gen_face_spec(system: ScoringSystem, diameter: float) -> FaceSpec:
@@ -357,9 +363,8 @@ class Target:
             spec = {_rnd6(n * diameter / 5): 6 - n for n in range(1, 6 - missing)}
 
         # NB: Should be hard (but not impossible) to get here without catching earlier;
-        # Can only occur if target scoring system is modified after initialisation
-        # Or newly supported scoring system doesn't have an implementation
-        # here for generating specs
+        # Most likely will only occur if a newly supported scoring system doesn't
+        # have an implementation here for generating specs
         else:
             msg = f"Scoring system {system!r} is not supported"
             raise ValueError(msg)

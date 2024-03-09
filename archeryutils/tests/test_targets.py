@@ -184,17 +184,6 @@ class TestTarget:
         target = Target(face_type, 122, (50, "metre"), False)
         assert target.max_score() == max_score_expected
 
-    def test_max_score_invalid_face_type(self) -> None:
-        """Check that Target() raises error for invalid face."""
-        with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
-            target = Target("5_zone", 122, 50, False)
-            # Requires manual resetting of scoring system to get this error.
-            # Silence mypy as scoring_system must be a valid literal ScoringSystem
-            # Ignore private attribute access to modify read only property
-            # Conclusion: no way this happens by accident
-            target._scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]  # noqa: SLF001
-            target.max_score()
-
     @pytest.mark.parametrize(
         "face_type,min_score_expected",
         [
@@ -220,17 +209,6 @@ class TestTarget:
         """Check that Target() returns correct min score."""
         target = Target(face_type, 122, 50, False)
         assert target.min_score() == min_score_expected
-
-    def test_min_score_invalid_face_type(self) -> None:
-        """Check that Target() raises error for invalid face."""
-        with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
-            target = Target("5_zone", 122, 50, False)
-            # Requires manual resetting of scoring system to get this error.
-            # Silence mypy as scoring_system must be a valid literal ScoringSystem
-            # Ignore private attribute access to modify read only property
-            # Conclusion: no way this happens by accident
-            target._scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]  # noqa: SLF001
-            target.min_score()
 
     @pytest.mark.parametrize(
         "scoring_system, diam, expected_spec",
@@ -340,26 +318,6 @@ class TestTarget:
             ),
         ):
             assert target.face_spec
-
-    def test_face_spec_invalid_system(self) -> None:
-        """Check error is raised when trying to get specs of an unsupported system."""
-        target = Target("5_zone", 122, 50)
-        # Silence mypy as scoring_system must be a valid literal ScoringSystem
-        # Ignore private attribute access to modify read only property
-        # Conclusion: no way this happens by accident
-        target._scoring_system = "InvalidScoringSystem"  # type: ignore[assignment]  # noqa: SLF001
-        with pytest.raises(ValueError, match="Scoring system '(.+)' is not supported"):
-            assert target.face_spec
-
-    # def test_face_spec_recaluclated_after_changing_diameter(self) -> None:
-    #     """Check that face_spec respects the current target diameter."""
-    #     target = Target("10_zone_5_ring", 80, 50)
-    #     assert target.face_spec == {0.08: 10, 0.16: 9, 0.24: 8, 0.32: 7, 0.4: 6}
-    #     target.diameter /= 2
-    #     assert target.face_spec == {0.04: 10, 0.08: 9, 0.12: 8, 0.16: 7, 0.2: 6}
-
-    # def test_mutating_diameter_units(self) -> None:
-    #     pass
 
 
 class TestCustomScoringTarget:
