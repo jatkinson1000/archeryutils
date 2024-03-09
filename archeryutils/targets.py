@@ -273,7 +273,7 @@ class Target:
         >>> mytarget.max_score()
         10.0
         """
-        return max(self.face_spec.values())
+        return max(self.face_spec.values(), default=0)
 
     def min_score(self) -> float:
         """
@@ -290,7 +290,7 @@ class Target:
         >>> mytarget.min_score()
         1.0
         """
-        return min(self.face_spec.values())
+        return min(self.face_spec.values(), default=0)
 
     @property
     def face_spec(self) -> FaceSpec:
