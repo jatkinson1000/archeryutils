@@ -284,7 +284,7 @@ class HandicapScheme(ABC):
                 - np.exp(-((((tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
                 - sum(
                     np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-                    for n in range(2, 7)
+                    for n in range(1, 6)
                 )
             )
 
