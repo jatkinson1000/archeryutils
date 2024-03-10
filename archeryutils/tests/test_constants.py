@@ -14,6 +14,10 @@ class TestLengths:
     """Tests for Length class."""
 
     def test_units_available(self):
+        """Check and document currently supported units."""
+        assert length.known_units == {CM, INCH, METRE, YARD}
+
+    def test_units_available_on_attributes(self):
         """Test common length unit names."""
         assert CM in length.cm
         assert INCH in length.inch

@@ -90,9 +90,9 @@ class Length:
     }
 
     @property
-    def known_units(self):
+    def known_units(self) -> set[str]:
         """Display all units that can be converted by this class."""
-        return tuple(self.definitive_units(self._conversions))
+        return self.definitive_units(self._conversions)
 
     def to_metres(self, value: float, unit: str) -> float:
         """
