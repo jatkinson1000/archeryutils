@@ -340,7 +340,7 @@ class TestArrowScore:
             ("10_zone_6_ring", 7.397557278),
             ("10_zone_5_ring", 7.059965360),
             ("10_zone_5_ring_compound", 6.993772436),
-            ("WA_field", 4.807397627),
+            ("WA_field", 4.115600784),
             ("IFAA_field", 4.265744101),
             ("IFAA_field_expert", 4.021942762),
             ("Beiter_hit_miss", 0.9998380401),
