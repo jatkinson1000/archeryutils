@@ -69,16 +69,6 @@ class Target:
 
     Attributes
     ----------
-    scoring_system : ScoringSystem
-        target face/scoring system type.
-    diameter : float
-        Target face diameter [metres].
-    distance : float
-        linear distance from archer to target [metres].
-    native_diameter : Quantity
-        Native target diameter and unit before conversion to [metres].
-    native_distance : Quantity
-        Native target distance and unit before conversion to [metres].
     indoor : bool, default=False
         is round indoors?
 
@@ -113,9 +103,9 @@ class Target:
 
     _face_spec: FaceSpec
 
-    supported_systems = get_args(ScoringSystem)
-    supported_distance_units = length.yard | length.metre
-    supported_diameter_units = length.cm | length.inch | length.metre
+    _supported_systems = get_args(ScoringSystem)
+    _supported_distance_units = length.yard | length.metre
+    _supported_diameter_units = length.cm | length.inch | length.metre
 
     def __init__(
         self,
@@ -124,17 +114,17 @@ class Target:
         distance: Union[float, tuple[float, str]],
         indoor: bool = False,
     ) -> None:
-        if scoring_system not in self.supported_systems:
+        if scoring_system not in self._supported_systems:
             msg = (
                 f"""Invalid Target Face Type specified.\n"""
-                f"""Please select from '{"', '".join(self.supported_systems)}'."""
+                f"""Please select from '{"', '".join(self._supported_systems)}'."""
             )
             raise ValueError(msg)
         diam, native_diam_unit = length.parse_optional_units(
-            diameter, self.supported_diameter_units, "cm"
+            diameter, self._supported_diameter_units, "cm"
         )
         dist, native_dist_unit = length.parse_optional_units(
-            distance, self.supported_distance_units, "metre"
+            distance, self._supported_distance_units, "metre"
         )
         self._scoring_system = scoring_system
         self._diameter = length.to_metres(diam, native_diam_unit)
@@ -190,7 +180,7 @@ class Target:
         >>> assert target.scoring_system == "Custom"
         """
         spec_data, spec_units = length.parse_optional_units(
-            face_spec, cls.supported_diameter_units, "metre"
+            face_spec, cls._supported_diameter_units, "metre"
         )
         spec = {
             _rnd6(length.to_metres(ring_diam, spec_units)): score
@@ -234,8 +224,8 @@ class Target:
         )
 
     @property
-    def scoring_system(self):
-        """Get target scoring system."""
+    def scoring_system(self) -> ScoringSystem:
+        """Get the target face/scoring system type."""
         return self._scoring_system
 
     @property
