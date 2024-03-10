@@ -298,7 +298,7 @@ class TestTarget:
             ),
         ],
     )
-    def test_get_face_spec(self, scoring_system, diam, expected_spec) -> None:
+    def test_face_spec(self, scoring_system, diam, expected_spec) -> None:
         """Check that target returns face specs from supported scoring systems."""
         target = Target(scoring_system, diam, 30)
         assert target.face_spec == expected_spec
@@ -318,6 +318,15 @@ class TestTarget:
             ),
         ):
             assert target.face_spec
+
+    def test_gen_face_spec_unsupported_system(self) -> None:
+        """Check that generating face spec for an unsupported system raises error."""
+        with pytest.raises(
+            ValueError,
+            match="Scoring system '(.+)' is not supported",
+        ):
+            # Silence mypy as using known invalid scoring system for test
+            assert Target.gen_face_spec("Dartchery", 100)  # type: ignore[arg-type]
 
 
 class TestCustomScoringTarget:
