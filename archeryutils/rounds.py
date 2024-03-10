@@ -205,7 +205,7 @@ class Round:
     ) -> None:
         self.name = name
         self.passes = list(passes)
-        if all(False for _ in self.passes):
+        if not self.passes:
             msg = "passes must contain at least one Pass object but none supplied."
             raise ValueError(msg)
         if any(not isinstance(x, Pass) for x in self.passes):

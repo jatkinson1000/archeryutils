@@ -1,6 +1,6 @@
 """Tests for Pass and Round classes."""
 
-from typing import Union
+from typing import Iterable, Union
 
 import pytest
 
@@ -183,13 +183,20 @@ class TestRound:
 
         assert list_.passes == tuple_.passes == iterable_.passes
 
-    def test_init_with_empty_passes(self) -> None:
+    @pytest.mark.parametrize(
+        "badpass",
+        [
+            pytest.param([]),
+            pytest.param(()),
+        ],
+    )
+    def test_init_with_empty_passes(self, badpass: Iterable) -> None:
         """Check that Round raises a ValueError for empty passes iterable."""
         with pytest.raises(
             ValueError,
             match="passes must contain at least one Pass object but none supplied.",
         ):
-            Round("My Round Name", [])  # type: ignore[arg-type]
+            Round("My Round Name", badpass)  # type: ignore[arg-type]
 
     def test_init_with_incorrect_type_passes(self) -> None:
         """Check that Round raises a TypeError for passes not containing Pass."""
