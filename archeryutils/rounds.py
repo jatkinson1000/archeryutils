@@ -88,8 +88,8 @@ class Pass:
         explicitly specified using tuples:
 
         >>> myWA18pass = au.Pass.at_target(
-            30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True
-        )
+        ...     30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True
+        ... )
         """
         target = Target(scoring_system, diameter, distance, indoor)
         return cls(n_arrows, target)

@@ -111,7 +111,7 @@ def to_metres(value: float, unit: str) -> float:
 
     Examples
     --------
-    >>> convert.to_metres(10, "inches")
+    >>> length.to_metres(10, "inches")
     0.254
     """
     return _conversions[unit] * value
@@ -135,7 +135,7 @@ def from_metres(metre_value: float, unit: str) -> float:
 
     Examples
     --------
-    >>> convert.from_metres(18.3, "yards")
+    >>> length.from_metres(18.3, "yards")
     20.0131
     """
     return metre_value / _conversions[unit]
@@ -157,7 +157,7 @@ def definitive_unit(alias: str) -> str:
 
     Examples
     --------
-    >>> convert.definitive_unit("Metres")
+    >>> length.definitive_unit("Metres")
     "metre"
     """
     return _reversed[alias]
@@ -179,7 +179,7 @@ def definitive_units(aliases: Collection[str]) -> set[str]:
 
     Examples
     --------
-    >>> convert.definitive_units(convert.metre | convert.yard)
+    >>> length.definitive_units(length.metre | length.yard)
     {'metre', 'yard'}
     """
     return {_reversed[alias] for alias in aliases}
@@ -227,12 +227,12 @@ def parse_optional_units(
 
     Examples
     --------
-    >>> m_and_yd = convert.metre | convert.yard
-    >>> convert.parse_optional_units(10, m_and_yd, "metre")
+    >>> m_and_yd = length.metre | length.yard
+    >>> length.parse_optional_units(10, m_and_yd, "metre")
     (10, 'metre')
-    >>> convert.parse_optional_units((10, 'yards') m_and_yd, 'metre')
+    >>> length.parse_optional_units((10, "yards"), m_and_yd, "metre")
     (10, 'yard')
-    >>> convert.parse_optional_units((10, 'banana') m_and_yd, 'metre')
+    >>> length.parse_optional_units((10, "banana"), m_and_yd, "metre")
     ValueError: Unit 'banana' not recognised. Select from {'yard', 'metre'}.
     """
     if default not in supported:

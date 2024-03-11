@@ -2,7 +2,7 @@
 
 from archeryutils import classifications, handicaps
 from archeryutils.rounds import Pass, Round
-from archeryutils.targets import Target
+from archeryutils.targets import Quantity, Target
 from archeryutils.utils import versions
 
 __all__ = [
@@ -10,6 +10,7 @@ __all__ = [
     "handicaps",
     "Pass",
     "Round",
+    "Quantity",
     "Target",
     "versions",
 ]

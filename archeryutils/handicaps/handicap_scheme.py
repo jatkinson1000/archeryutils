@@ -459,7 +459,7 @@ class HandicapScheme(ABC):
         To get an integer value as would appear in the handicap tables use
         ``int_prec=True``:
 
-        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa1440_90), int_prec=True)
+        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa1440_90, int_prec=True)
         44.0
 
         """

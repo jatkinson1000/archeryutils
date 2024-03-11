@@ -36,12 +36,39 @@ class Quantity(NamedTuple):
 
     Can be used in place of a plain tuple of (value, units)
 
-    Attributes
+    Parameters
     ----------
     value: float
         Scalar value of quantity
     units: str
         Units of quantity
+
+    Notes
+    -----
+    It is recommened to use the `Quantity` type when passing specifyinging lengths
+    in _archeryutils_ for explictness and readability, and to ensure the expected units
+    are indeed being used downstream. Default units are assumed for convinience in
+    interactive use but this could cause breakages if the default unit changes
+    in the future.
+
+    Examples
+    --------
+    Define as a simple tuple:
+
+    >>> worcester_distance = au.Quantity(80, "yard")
+
+    Or with named keyword arguments:
+
+    >>> worcester_target_size = au.Quantity(value=122, units="cm")
+
+    These can then be passed on to any function that accepts a Quantity like tuple:
+
+    >>> worcester_target = au.Target(
+    ...     "Worcester",
+    ...     diameter=worcester_target_size,
+    ...     distance=worcester_distance,
+    ...     indoor=True,
+    ... )
     """
 
     value: float

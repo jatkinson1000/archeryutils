@@ -117,6 +117,4 @@ class TestLengths:
         with pytest.raises(
             ValueError, match="Default unit (.+) must be in supported units"
         ):
-            assert length.parse_optional_units(
-                10, length.metre | length.yard, "inch"
-            )
+            assert length.parse_optional_units(10, length.metre | length.yard, "inch")
