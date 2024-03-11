@@ -285,7 +285,10 @@ class TestRound:
                 Pass.at_target(10, "5_zone", 122, (60, unit), False),
             ],
         )
-        assert test_round.max_distance(unit=get_unit) == max_dist_expected
+        result = (
+            test_round.max_distance() if get_unit else test_round.max_distance().value
+        )
+        assert result == max_dist_expected
 
     def test_max_distance_out_of_order(self) -> None:
         """Check max distance correct when Passes not in descending distance order."""
@@ -297,7 +300,7 @@ class TestRound:
                 Pass.at_target(10, "5_zone", 122, 60, False),
             ],
         )
-        assert test_round.max_distance() == 100
+        assert test_round.max_distance().value == 100
 
     def test_max_distance_mixed_units(self) -> None:
         """Check that max distance accounts for different units in round."""
@@ -306,7 +309,7 @@ class TestRound:
         test_round = Round("test", [pyards, pmetric])
 
         assert pmetric.distance > pyards.distance
-        assert test_round.max_distance() == 75
+        assert test_round.max_distance().value == 75
 
     def test_get_info(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Check printing info works as expected."""

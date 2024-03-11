@@ -325,7 +325,7 @@ def _assign_outdoor_prestige(
 
     # Check all other rounds based on distance
     for roundname in distance_check:
-        if ALL_OUTDOOR_ROUNDS[roundname].max_distance() >= np.min(max_dist):
+        if ALL_OUTDOOR_ROUNDS[roundname].max_distance().value >= np.min(max_dist):
             prestige_rounds.append(roundname)
 
     return prestige_rounds
@@ -469,7 +469,7 @@ def _check_prestige_distance(
 
         # If not prestige, what classes are ineligible based on distance
         to_del: list[str] = []
-        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
+        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance().value
         for class_i_name, class_i_data in class_data.items():
             if class_i_data["min_dist"] > round_max_dist:
                 to_del.append(class_i_name)
@@ -557,7 +557,7 @@ def agb_outdoor_classification_scores(
         class_scores[0:3] = [-9999] * 3
 
         # If not prestige, what classes are eligible based on category and distance
-        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance()
+        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance().value
         for i in range(3, len(class_scores)):
             if group_data["min_dists"][i] > round_max_dist:
                 class_scores[i] = -9999

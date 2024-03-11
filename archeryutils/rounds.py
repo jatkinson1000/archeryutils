@@ -235,21 +235,14 @@ class Round:
         """
         return sum(pass_i.max_score() for pass_i in self.passes)
 
-    def max_distance(self, unit: bool = False) -> Union[float, Quantity]:
+    def max_distance(self) -> Quantity:
         """
         Return the maximum distance shot on this round along with the unit (optional).
 
-        Parameters
-        ----------
-        unit : bool
-            Return unit as well as numerical value?
-
         Returns
         -------
-        max_dist : float
-            maximum distance shot in this round
-        (max_dist, unit) : tuple (float, str)
-            tuple of max_dist and string of unit
+        max_dist : Quantity
+            maximum distance and units shot in this round
 
         Notes
         -----
@@ -258,9 +251,7 @@ class Round:
         whatever units it was defined in.
         """
         longest_pass = max(self.passes, key=lambda p: p.distance)
-        if unit:
-            return longest_pass.native_distance
-        return longest_pass.native_distance.value
+        return longest_pass.native_distance
 
     def get_info(self) -> None:
         """
