@@ -188,7 +188,7 @@ def definitive_units(aliases: Collection[str]) -> set[str]:
 def parse_optional_units(
     value: Union[T, tuple[T, str]],
     supported: Set[str],
-    default: str,
+    default: str = "metre",
 ) -> tuple[T, str]:
     """
     Parse single value or tuple of value and units.
