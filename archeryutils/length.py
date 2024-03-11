@@ -5,9 +5,8 @@ units as sets to allow easy membership checks in combination.
 Supported units are provided as module attributes for easy autocompletion,
 """
 
-from collections import abc as _abc
-from typing import TypeVar as _TypeVar
-from typing import Union as _Union
+from collections.abc import Collection, Set
+from typing import TypeVar, Union
 
 __all__ = [
     "yard",
@@ -22,7 +21,7 @@ __all__ = [
     "known_units",
 ]
 
-_T = _TypeVar("_T")
+T = TypeVar("T")
 
 # Add aliases to any new supported units here
 yard = {
@@ -67,7 +66,7 @@ inch = {
     "inches",
 }
 
-# Update _ALIASES and _CONVERSIONS_TO_M for any new supported units
+# Update _ALIASES and _CONVERSIONSTO_M for any new supported units
 # And they will be automatically incorporated
 _ALIASES = {
     "yard": yard,
@@ -77,7 +76,7 @@ _ALIASES = {
 }
 
 
-_CONVERSIONS_TO_M = {
+_CONVERSIONSTO_M = {
     "metre": 1.0,
     "yard": 0.9144,
     "cm": 0.01,
@@ -85,11 +84,11 @@ _CONVERSIONS_TO_M = {
 }
 
 
-_reversed = {alias: name for name in _CONVERSIONS_TO_M for alias in _ALIASES[name]}
+_reversed = {alias: name for name in _CONVERSIONSTO_M for alias in _ALIASES[name]}
 
 _conversions = {
     alias: factor
-    for name, factor in _CONVERSIONS_TO_M.items()
+    for name, factor in _CONVERSIONSTO_M.items()
     for alias in _ALIASES[name]
 }
 
@@ -164,7 +163,7 @@ def definitive_unit(alias: str) -> str:
     return _reversed[alias]
 
 
-def definitive_units(aliases: _abc.Collection[str]) -> set[str]:
+def definitive_units(aliases: Collection[str]) -> set[str]:
     """
     Reduce a set of string unit aliases to just their definitive names.
 
@@ -187,10 +186,10 @@ def definitive_units(aliases: _abc.Collection[str]) -> set[str]:
 
 
 def parse_optional_units(
-    value: _Union[_T, tuple[_T, str]],
-    supported: _abc.Set[str],
+    value: Union[T, tuple[T, str]],
+    supported: Set[str],
     default: str,
-) -> tuple[_T, str]:
+) -> tuple[T, str]:
     """
     Parse single value or tuple of value and units.
 
