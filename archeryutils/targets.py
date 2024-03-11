@@ -5,7 +5,7 @@ from functools import partial
 from types import MappingProxyType
 from typing import Literal, NamedTuple, Union, get_args
 
-from archeryutils.constants import length
+from archeryutils import convert
 
 # TypeAlias (annotate explicitly in py3.10+)
 ScoringSystem = Literal[
@@ -104,8 +104,8 @@ class Target:
     _face_spec: FaceSpec
 
     _supported_systems = get_args(ScoringSystem)
-    _supported_distance_units = length.yard | length.metre
-    _supported_diameter_units = length.cm | length.inch | length.metre
+    _supported_distance_units = convert.yard | convert.metre
+    _supported_diameter_units = convert.cm | convert.inch | convert.metre
 
     def __init__(
         self,
@@ -120,16 +120,17 @@ class Target:
                 f"""Please select from '{"', '".join(self._supported_systems)}'."""
             )
             raise ValueError(msg)
-        diam, native_diam_unit = length.parse_optional_units(
+
+        diam, native_diam_unit = convert.parse_optional_units(
             diameter, self._supported_diameter_units, "cm"
         )
-        dist, native_dist_unit = length.parse_optional_units(
+        dist, native_dist_unit = convert.parse_optional_units(
             distance, self._supported_distance_units, "metre"
         )
         self._scoring_system = scoring_system
-        self._diameter = length.to_metres(diam, native_diam_unit)
+        self._diameter = convert.to_metres(diam, native_diam_unit)
         self._native_diameter = Quantity(diam, native_diam_unit)
-        self._distance = length.to_metres(dist, native_dist_unit)
+        self._distance = convert.to_metres(dist, native_dist_unit)
         self._native_distance = Quantity(dist, native_dist_unit)
         self.indoor = indoor
 
@@ -179,11 +180,11 @@ class Target:
         >>> target = Target.from_face_spec(specs, 40, 18)
         >>> assert target.scoring_system == "Custom"
         """
-        spec_data, spec_units = length.parse_optional_units(
+        spec_data, spec_units = convert.parse_optional_units(
             face_spec, cls._supported_diameter_units, "metre"
         )
         spec = {
-            _rnd6(length.to_metres(ring_diam, spec_units)): score
+            _rnd6(convert.to_metres(ring_diam, spec_units)): score
             for ring_diam, score in spec_data.items()
         }
 
