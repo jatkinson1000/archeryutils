@@ -204,6 +204,15 @@ class Target:
             Instance of Target class with scoring system set as "Custom" and
             face specification stored.
 
+        Notes
+        -----
+        Targets created in this way can represent almost any common round target in use,
+        altough archeryutils has built in support for many of the most popular.
+        There are some limitations to the target faces that can be represented however:
+
+        1. Targets must be formed of concentric rings
+        2. The score must monotonically decrease as the rings get larger
+
         Examples
         --------
         >>> # Kings of archery recurve scoring triple spot
