@@ -8,6 +8,7 @@ from typing import Literal, NamedTuple, Union, get_args
 from archeryutils import length
 
 # TypeAlias (annotate explicitly in py3.10+)
+#: All scoring systems that archeryutils knows how to handle by default.
 ScoringSystem = Literal[
     "5_zone",
     "10_zone",
@@ -25,6 +26,8 @@ ScoringSystem = Literal[
 ]
 
 # TypeAlias (annotate explicitly in py3.10+)
+#: A mapping of a target ring diameter to the score for hitting that ring.
+#: Typically ordered from smallest to largest rings but this is not necessary.
 FaceSpec = Mapping[float, int]
 
 _rnd6 = partial(round, ndigits=6)

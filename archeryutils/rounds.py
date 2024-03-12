@@ -62,11 +62,7 @@ class Pass:
         ----------
         n_arrows : int
             number of arrows in this pass
-        scoring_system : {\
-        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
-        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"``\
-        ``"IFAA_field"`` ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"``\
-        ``"Worcester_2_ring"``}
+        scoring_system : ScoringSystem
             target face/scoring system type
         diameter : float or tuple of float, str
             Target diameter size (and units, default [cm])

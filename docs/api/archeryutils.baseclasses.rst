@@ -27,7 +27,5 @@ Types
 -----
 
 .. autodata:: archeryutils.targets.ScoringSystem
-   :annotation: bob
 
-End of file
-
+.. autodata:: archeryutils.targets.FaceSpec
