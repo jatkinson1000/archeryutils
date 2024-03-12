@@ -51,14 +51,16 @@ It can be invoked by specifying a scoring system, face size (cm) and distance (m
     mycompound720target = au.Target("10_zone_6_ring", 80, 50.0)
 
 In more complicated cases specific units can be passed in with the diameter and distance
-as a tuple:
+as a plain tuple, or (recommeneded for clarity) as a :py:class:`~archeryutils.targets.Quantity`:
 
 .. ipython:: python
 
     myWorcesterTarget = au.Target(
         "Worcester", diameter=(16, "inches"), distance=(20.0, "yards"), indoor=True
     )
-    myIFAATarget = au.Target("IFAA_field", diameter=80, distance=(80.0, "yards"))
+    myIFAATarget = au.Target(
+        "IFAA_field", diameter=80, distance=au.Quantity(80.0, "yards")
+    )
 
 If the target you want is not supported, you can manually supply the target ring sizes
 and scores as a `FaceSpec` and construct a target as so.
