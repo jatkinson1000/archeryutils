@@ -11,6 +11,11 @@ API Documentation
 .. toctree::
    :maxdepth: 3
 
+   archeryutils.types
+
+.. toctree::
+   :maxdepth: 3
+
    archeryutils.handicaps
 
 .. toctree::
