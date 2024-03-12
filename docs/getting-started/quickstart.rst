@@ -73,7 +73,7 @@ and scores as a `FaceSpec` and construct a target as so.
     print(myKingsTarget.scoring_system)
 
 .. note::
-    Although we can provide the face_spec in any unit listed under :py:attr:`~archeryutils.Target.supported_diameter_units`,
+    Although we can provide the face_spec in any unit listed under :py:attr:`~archeryutils.Target._supported_diameter_units`,
     the sizes in the specification are converted to metres and stored in this form.
     Therefore unlike the target diameter paramater, the default unit for specifications is [metres]
 

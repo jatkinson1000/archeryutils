@@ -130,8 +130,13 @@ class Target:
 
     _face_spec: FaceSpec
 
+    #: Allowable scoring systems that this target can utilise.
     _supported_systems = get_args(ScoringSystem)
+
+    #: Allowable units and alises for target distances.
     _supported_distance_units = length.yard | length.metre
+
+    #: Allowable units and alises for target diameters.
     _supported_diameter_units = length.cm | length.inch | length.metre
 
     def __init__(
