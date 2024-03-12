@@ -23,3 +23,11 @@ The following units and aliases are recognised as valid for specifiying target d
    :undoc-members:
    :show-inheritance:
 
+Types
+-----
+
+.. autodata:: archeryutils.targets.ScoringSystem
+   :annotation: bob
+
+End of file
+

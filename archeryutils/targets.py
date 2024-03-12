@@ -81,11 +81,7 @@ class Target:
 
     Parameters
     ----------
-    scoring_system : {\
-        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
-        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"``\
-        ``"IFAA_field"`` ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"``\
-        ``"Worcester_2_ring"``}
+    scoring_system : ScoringSystem
         target face/scoring system type. Must be one of the supported values.
     diameter : float or tuple of float, str
         Target face diameter default [centimetres].
@@ -354,7 +350,7 @@ class Target:
 
         Returns
         -------
-        spec : dict
+        spec : FaceSpec
             Mapping of target ring sizes in [metres] to score
 
         Raises
