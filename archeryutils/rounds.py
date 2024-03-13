@@ -107,7 +107,7 @@ class Pass:
 
     @property
     def diameter(self) -> float:
-        """Get target diameter [metres]."""
+        """Get target diameter in [metres]."""
         return self.target.diameter
 
     @property
@@ -117,12 +117,12 @@ class Pass:
 
     @property
     def native_diameter(self) -> Quantity:
-        """Get native_diameter_unit attribute of target."""
+        """Get diameter of target in native units."""
         return self.target.native_diameter
 
     @property
     def native_distance(self) -> Quantity:
-        """Get native_dist_unit attribute of target."""
+        """Get distance of target in native units."""
         return self.target.native_distance
 
     @property
@@ -216,9 +216,9 @@ class Round:
         Does not consider optional labels of location/body/family as these
         do not affect behaviour.
         """
-        if isinstance(other, Round):
-            return self.name == other.name and self.passes == other.passes
-        return NotImplemented
+        if not isinstance(other, Round):
+            return NotImplemented
+        return self.name == other.name and self.passes == other.passes
 
     def max_score(self) -> float:
         """
