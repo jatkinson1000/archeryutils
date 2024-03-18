@@ -63,7 +63,7 @@ class Pass:
         n_arrows : int
             number of arrows in this pass
         scoring_system : ScoringSystem
-            target face/scoring system type
+            Literal string value of target face/scoring system type.
         diameter : float or tuple of float, str
             Target diameter size (and units, default [cm])
         distance : float or tuple of float, str

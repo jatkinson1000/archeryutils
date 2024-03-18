@@ -84,7 +84,8 @@ class Target:
     Parameters
     ----------
     scoring_system : ScoringSystem
-        target face/scoring system type. Must be one of the supported values.
+        Literal string value of target face/scoring system type.
+        Must be one of the supported values.
     diameter : float or tuple of float, str
         Target face diameter default [centimetres].
     distance : float or tuple of float, str
