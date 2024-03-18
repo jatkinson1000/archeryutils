@@ -4,14 +4,14 @@ API Documentation
 =================
 
 .. toctree::
-   :maxdepth: 2
-
-   archeryutils.baseclasses
-
-.. toctree::
    :maxdepth: 3
 
    archeryutils.types
+
+.. toctree::
+   :maxdepth: 2
+
+   archeryutils.baseclasses
 
 .. toctree::
    :maxdepth: 3
