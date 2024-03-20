@@ -31,6 +31,7 @@ References
 
 """
 
+import itertools as itr
 import warnings
 from abc import ABC, abstractmethod
 from typing import Optional, TypeVar, Union, overload
@@ -41,6 +42,18 @@ import numpy.typing as npt
 from archeryutils import rounds, targets
 
 FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float64])
+
+# itertools.pairwise not available until python 3.10
+# workaround can be removed when support for 3.9 is dropped
+# ignore for coverage (runner is > 3.10, ci shows this works on 3.9)
+if not hasattr(itr, "pairwise"):  # pragma: no cover
+
+    def _pairwise(iterable):
+        a, b = itr.tee(iterable)
+        next(b, None)
+        return zip(a, b)
+
+    setattr(itr, "pairwise", _pairwise)  # noqa: B010
 
 
 class HandicapScheme(ABC):
@@ -162,7 +175,7 @@ class HandicapScheme(ABC):
         sig_r = dist * sig_t
         return sig_r
 
-    def arrow_score(  # noqa: PLR0912 Too many branches
+    def arrow_score(
         self,
         handicap: FloatArray,
         target: targets.Target,
@@ -216,104 +229,45 @@ class HandicapScheme(ABC):
                 arw_d = self.arw_d_out
 
         arw_rad = arw_d / 2.0
-
-        tar_dia = target.diameter
+        spec = target.face_spec
         sig_r = self.sigma_r(handicap, target.distance)
+        return self._s_bar(spec, arw_rad, sig_r)
 
-        if target.scoring_system == "5_zone":
-            s_bar = (
-                9.0
-                - 2.0
-                * sum(
-                    np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-                    for n in range(1, 5)
-                )
-                - np.exp(-((((5.0 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-            )
+    def _s_bar(
+        self, target_specs: targets.FaceSpec, arw_rad: float, sig_r: FloatArray
+    ) -> FloatArray:
+        """Calculate expected score directly from target ring sizes.
 
-        elif target.scoring_system == "10_zone":
-            s_bar = 10.0 - sum(
-                np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
-                for n in range(1, 11)
-            )
+        Parameters
+        ----------
+        target_specs : FaceSpec
+            Mapping of target ring *diameters* in [metres], to points scored
+        arw_rad : float
+            arrow radius in [metres]
+        sig_r : float
+            standard deviation of group size [metres]
 
-        elif target.scoring_system == "10_zone_6_ring":
-            s_bar = (
-                10.0
-                - sum(
-                    np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
-                    for n in range(1, 6)
-                )
-                - 5.0 * np.exp(-((((6.0 * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
-            )
+        Returns
+        -------
+        s_bar : float
+            expected average score per arrow
 
-        elif target.scoring_system == "10_zone_compound":
-            s_bar = (
-                10.0
-                - np.exp(-((((tar_dia / 40.0) + arw_rad) / sig_r) ** 2))
-                - sum(
-                    np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
-                    for n in range(2, 11)
-                )
-            )
+        Notes
+        -----
+        Assumes that:
+        - target rings are concentric
+        - score decreases monotonically as ring sizes increase
+        """
+        target_specs = dict(sorted(target_specs.items()))
+        ring_sizes = target_specs.keys()
+        ring_scores = list(itr.chain(target_specs.values(), [0]))
+        score_drops = (inner - outer for inner, outer in itr.pairwise(ring_scores))
+        max_score = max(ring_scores)
 
-        elif target.scoring_system == "10_zone_5_ring":
-            s_bar = (
-                10.0
-                - sum(
-                    np.exp(-((((n * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
-                    for n in range(1, 5)
-                )
-                - 6.0 * np.exp(-((((5.0 * tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
-            )
-
-        elif target.scoring_system == "10_zone_5_ring_compound":
-            s_bar = (
-                10.0
-                - np.exp(-((((tar_dia / 40) + arw_rad) / sig_r) ** 2))
-                - sum(
-                    np.exp(-((((n * tar_dia / 20) + arw_rad) / sig_r) ** 2))
-                    for n in range(2, 5)
-                )
-                - 6.0 * np.exp(-((((5 * tar_dia / 20) + arw_rad) / sig_r) ** 2))
-            )
-
-        elif target.scoring_system == "WA_field":
-            s_bar = (
-                6.0
-                - np.exp(-((((tar_dia / 20.0) + arw_rad) / sig_r) ** 2))
-                - sum(
-                    np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-                    for n in range(1, 6)
-                )
-            )
-
-        elif target.scoring_system == "IFAA_field":
-            s_bar = (
-                5.0
-                - np.exp(-((((tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-                - np.exp(-((((3.0 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-                - 3.0 * np.exp(-((((5.0 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-            )
-
-        elif target.scoring_system == "Beiter_hit_miss":
-            s_bar = 1.0 - np.exp(-((((tar_dia / 2.0) + arw_rad) / sig_r) ** 2))
-
-        elif target.scoring_system in ("Worcester", "IFAA_field_expert"):
-            s_bar = 5.0 - sum(
-                np.exp(-((((n * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-                for n in range(1, 6)
-            )
-
-        elif target.scoring_system == "Worcester_2_ring":
-            s_bar = (
-                5.0
-                - np.exp(-((((tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-                - 4.0 * np.exp(-((((2 * tar_dia / 10.0) + arw_rad) / sig_r) ** 2))
-            )
-        # No need for else with error as invalid scoring systems handled in Target class
-
-        return s_bar
+        return max_score - sum(
+            score_drop * np.exp(-(((arw_rad + (ring_diam / 2)) / sig_r) ** 2))
+            for ring_diam, score_drop in zip(ring_sizes, score_drops)
+        )
 
     def score_for_passes(
         self,
@@ -505,7 +459,7 @@ class HandicapScheme(ABC):
         To get an integer value as would appear in the handicap tables use
         ``int_prec=True``:
 
-        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa1440_90), int_prec=True)
+        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa1440_90, int_prec=True)
         44.0
 
         """

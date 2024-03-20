@@ -3,8 +3,7 @@
 from collections.abc import Iterable
 from typing import Optional, Union
 
-from archeryutils.constants import Length
-from archeryutils.targets import ScoringSystem, Target
+from archeryutils.targets import Quantity, ScoringSystem, Target
 
 
 class Pass:
@@ -63,22 +62,14 @@ class Pass:
         ----------
         n_arrows : int
             number of arrows in this pass
-        scoring_system : {\
-        ``"5_zone"`` ``"10_zone"`` ``"10_zone_compound"`` ``"10_zone_6_ring"``\
-        ``"10_zone_5_ring"`` ``"10_zone_5_ring_compound"`` ``"WA_field"``\
-        ``"IFAA_field"`` ``"IFAA_field_expert"`` ``"Beiter_hit_miss"`` ``"Worcester"``\
-        ``"Worcester_2_ring"``}
-            target face/scoring system type
-        diameter : float
-            face diameter in [centimetres]
-        distance : float
-            linear distance from archer to target in [metres]
-        dist_unit : str
-            The unit distance is measured in. default = 'metres'
+        scoring_system : ScoringSystem
+            Literal string value of target face/scoring system type.
+        diameter : float or tuple of float, str
+            Target diameter size (and units, default [cm])
+        distance : float or tuple of float, str
+            Target distance (and units, default [metres])
         indoor : bool
             is round indoors for arrow diameter purposes? default = False
-        diameter_unit : str
-            The unit face diameter is measured in. default = 'centimetres'
 
         Returns
         -------
@@ -93,8 +84,8 @@ class Pass:
         explicitly specified using tuples:
 
         >>> myWA18pass = au.Pass.at_target(
-            30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True
-        )
+        ...     30, "10_zone", (40, "cm"), (18.0, "m"), indoor=True
+        ... )
         """
         target = Target(scoring_system, diameter, distance, indoor)
         return cls(n_arrows, target)
@@ -105,9 +96,9 @@ class Pass:
 
     def __eq__(self, other: object) -> bool:
         """Check equality of Passes based on parameters."""
-        if isinstance(other, Pass):
-            return self.n_arrows == other.n_arrows and self.target == other.target
-        return NotImplemented
+        if not isinstance(other, Pass):
+            return NotImplemented
+        return self.n_arrows == other.n_arrows and self.target == other.target
 
     @property
     def scoring_system(self) -> ScoringSystem:
@@ -116,13 +107,8 @@ class Pass:
 
     @property
     def diameter(self) -> float:
-        """Get target diameter [metres]."""
+        """Get target diameter in [metres]."""
         return self.target.diameter
-
-    @property
-    def native_diameter_unit(self) -> str:
-        """Get native_diameter_unit attribute of target."""
-        return self.target.native_diameter_unit
 
     @property
     def distance(self) -> float:
@@ -130,9 +116,14 @@ class Pass:
         return self.target.distance
 
     @property
-    def native_dist_unit(self) -> str:
-        """Get native_dist_unit attribute of target."""
-        return self.target.native_dist_unit
+    def native_diameter(self) -> Quantity:
+        """Get diameter of target in native units."""
+        return self.target.native_diameter
+
+    @property
+    def native_distance(self) -> Quantity:
+        """Get distance of target in native units."""
+        return self.target.native_distance
 
     @property
     def indoor(self) -> bool:
@@ -225,9 +216,9 @@ class Round:
         Does not consider optional labels of location/body/family as these
         do not affect behaviour.
         """
-        if isinstance(other, Round):
-            return self.name == other.name and self.passes == other.passes
-        return NotImplemented
+        if not isinstance(other, Round):
+            return NotImplemented
+        return self.name == other.name and self.passes == other.passes
 
     def max_score(self) -> float:
         """
@@ -240,32 +231,23 @@ class Round:
         """
         return sum(pass_i.max_score() for pass_i in self.passes)
 
-    def max_distance(self, unit: bool = False) -> Union[float, tuple[float, str]]:
+    def max_distance(self) -> Quantity:
         """
         Return the maximum distance shot on this round along with the unit (optional).
 
-        Parameters
-        ----------
-        unit : bool
-            Return unit as well as numerical value?
-
         Returns
         -------
-        max_dist : float
-            maximum distance shot in this round
-        (max_dist, unit) : tuple (float, str)
-            tuple of max_dist and string of unit
-        """
-        max_dist = 0.0
-        for pass_i in self.passes:
-            if pass_i.distance > max_dist:
-                max_dist = pass_i.distance
-                d_unit = pass_i.native_dist_unit
+        max_dist : Quantity
+            maximum distance and units shot in this round
 
-        max_dist = Length.from_metres(max_dist, d_unit)
-        if unit:
-            return (max_dist, d_unit)
-        return max_dist
+        Notes
+        -----
+        This does not convert the units of the result.
+        Rather the maximum distance shot in the round is returned in
+        whatever units it was defined in.
+        """
+        longest_pass = max(self.passes, key=lambda p: p.distance)
+        return longest_pass.native_distance
 
     def get_info(self) -> None:
         """
@@ -277,8 +259,8 @@ class Round:
         """
         print(f"A {self.name} consists of {len(self.passes)} passes:")
         for pass_i in self.passes:
-            diam, diam_units = pass_i.target.native_diameter
-            dist, dist_units = pass_i.target.native_distance
+            diam, diam_units = pass_i.native_diameter
+            dist, dist_units = pass_i.native_distance
             print(
                 f"\t- {pass_i.n_arrows} arrows "
                 f"at a {diam:.1f} {diam_units} target "

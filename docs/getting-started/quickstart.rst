@@ -51,20 +51,56 @@ It can be invoked by specifying a scoring system, face size (cm) and distance (m
     mycompound720target = au.Target("10_zone_6_ring", 80, 50.0)
 
 In more complicated cases specific units can be passed in with the diameter and distance
-as a tuple:
+as a plain tuple, or (recommeneded for clarity) as a :py:class:`~archeryutils.targets.Quantity`:
 
 .. ipython:: python
 
     myWorcesterTarget = au.Target(
         "Worcester", diameter=(16, "inches"), distance=(20.0, "yards"), indoor=True
     )
-    myIFAATarget = au.Target("IFAA_field", diameter=80, distance=(80.0, "yards"))
+    myIFAATarget = au.Target(
+        "IFAA_field", diameter=80, distance=au.Quantity(80.0, "yards")
+    )
+
+If the target you want is not supported, you can manually supply the target ring sizes
+and scores as a `FaceSpec` and construct a target as so.
+
+.. ipython:: python
+
+    # Kings of archery recurve scoring target
+    face_spec = {8: 10, 12: 8, 16: 7, 20: 6}
+    myKingsTarget = au.Target.from_face_spec((face_spec, "cm"), 40, 18, indoor=True)
+    print(myKingsTarget.scoring_system)
+
+.. note::
+    Although we can provide the face_spec in any unit listed under :py:attr:`~archeryutils.Target._supported_diameter_units`,
+    the sizes in the specification are converted to metres and stored in this form.
+    Therefore unlike the target diameter paramater, the default unit for specifications is [metres]
+
+The only limitations to the target faces you can represent in this way are:
+
+1. Targets must be formed of concentric rings
+2. The score must monotonically decrease as the rings get larger
+
+Under the hood, all standard scoring systems autogenerate their own `FaceSpec` and this is used
+internally when calculating handicaps and classifications. You can see this stored under the
+:py:attr:`~archeryutils.Target.face_spec` property:
+
+.. ipython:: python
+
+    print(my720target.face_spec)
 
 The target features `max_score()` and `min_score()` methods:
 
 .. ipython:: python
 
-    for target in [my720target, mycompound720target, myIFAATarget, myWorcesterTarget]:
+    for target in [
+        my720target,
+        mycompound720target,
+        myIFAATarget,
+        myWorcesterTarget,
+        myKingsTarget,
+    ]:
         print(
             f"{target.scoring_system} has max score {target.max_score()} ",
             f"and min score {target.min_score()}.",
@@ -142,7 +178,7 @@ Possible options for round collections are:
 * ``IFAA_field`` - IFAA indoor and outdoor rounds
 * ``AGB_VI`` - Archery GB Visually Impaired rounds
 * ``WA_VI`` - World Archery Visually Impaired rounds
-* ``custom`` - custom rounds such as individual distances, 252 awards, frostbites etc.
+* ``misc`` - Miscellaneous rounds such as individual distances, 252 awards, frostbites etc.
 
 Handicap Schemes
 ----------------

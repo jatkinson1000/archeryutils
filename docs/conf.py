@@ -45,3 +45,9 @@ pygments_style = "sphinx"
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
+autodoc_member_order = "bysource"
+napoleon_preprocess_types = True
+napoleon_type_aliases = {
+    "FaceSpec": "~archeryutils.targets.FaceSpec",
+    "ScoringSystem": "~archeryutils.targets.ScoringSystem",
+}

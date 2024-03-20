@@ -40,8 +40,7 @@ class TestPass:
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
 
         assert test_pass.n_arrows == 36
-        # cannot test for equality between targets as __eq__ not implemented
-        # assert test_pass.target == _target
+        assert test_pass.target == _target
 
     def test_repr(self) -> None:
         """Check Pass string representation."""
@@ -82,21 +81,21 @@ class TestPass:
     def test_default_distance_unit(self) -> None:
         """Check that Pass returns distance in metres when units not specified."""
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
-        assert test_pass.native_dist_unit == "metre"
+        assert test_pass.native_distance.units == "metre"
 
     def test_default_diameter_unit(self) -> None:
         """Check that Pass has same default diameter units as Target."""
         test_pass = Pass.at_target(36, "5_zone", 122, 50)
         assert (
-            test_pass.native_diameter_unit
-            == test_pass.target.native_diameter_unit
+            test_pass.native_diameter.units
+            == test_pass.target.native_diameter.units
             == "cm"
         )
 
     def test_diameter_units_passed_to_target(self) -> None:
         """Check that Pass passes on diameter units to Target object."""
         test_pass = Pass.at_target(60, "Worcester", (16, "inches"), (20, "yards"))
-        assert test_pass.target.native_diameter_unit == "inch"
+        assert test_pass.target.native_diameter.units == "inch"
 
     def test_default_location(self) -> None:
         """Check that Pass returns indoor=False when indoor not specified."""
@@ -112,11 +111,17 @@ class TestPass:
         """Check that Pass properties are set correctly."""
         test_pass = Pass(36, Target("5_zone", (122, "cm"), (50, "metre"), False))
         assert test_pass.distance == 50.0
-        assert test_pass.native_dist_unit == "metre"
+        assert test_pass.native_distance == (50, "metre")
         assert test_pass.diameter == 1.22
         assert test_pass.scoring_system == "5_zone"
         assert test_pass.indoor is False
-        assert test_pass.native_diameter_unit == "cm"
+        assert test_pass.native_diameter == (122, "cm")
+
+    def test_custom_target(self) -> None:
+        """Check that pass can be constructed from a custom target specification."""
+        target = Target.from_face_spec({0.1: 3, 0.5: 1}, 80, (50, "yard"))
+        test_pass = Pass(30, target)
+        assert test_pass
 
     @pytest.mark.parametrize(
         "face_type,max_score_expected",
@@ -280,7 +285,10 @@ class TestRound:
                 Pass.at_target(10, "5_zone", 122, (60, unit), False),
             ],
         )
-        assert test_round.max_distance(unit=get_unit) == max_dist_expected
+        result = (
+            test_round.max_distance() if get_unit else test_round.max_distance().value
+        )
+        assert result == max_dist_expected
 
     def test_max_distance_out_of_order(self) -> None:
         """Check max distance correct when Passes not in descending distance order."""
@@ -292,7 +300,7 @@ class TestRound:
                 Pass.at_target(10, "5_zone", 122, 60, False),
             ],
         )
-        assert test_round.max_distance() == 100
+        assert test_round.max_distance().value == 100
 
     def test_max_distance_mixed_units(self) -> None:
         """Check that max distance accounts for different units in round."""
@@ -301,7 +309,7 @@ class TestRound:
         test_round = Round("test", [pyards, pmetric])
 
         assert pmetric.distance > pyards.distance
-        assert test_round.max_distance() == 75
+        assert test_round.max_distance().value == 75
 
     def test_get_info(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Check printing info works as expected."""
