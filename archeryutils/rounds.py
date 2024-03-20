@@ -42,6 +42,9 @@ class Pass:
     def __init__(self, n_arrows: int, target: Target) -> None:
         self.n_arrows = abs(n_arrows)
         self.target = target
+        if not isinstance(self.target, Target):
+            msg = "The target passed to a Pass should be of type Target."
+            raise TypeError(msg)
 
     @classmethod
     def at_target(  # noqa: PLR0913
@@ -202,6 +205,12 @@ class Round:
     ) -> None:
         self.name = name
         self.passes = list(passes)
+        if not self.passes:
+            msg = "passes must contain at least one Pass object but none supplied."
+            raise ValueError(msg)
+        if any(not isinstance(x, Pass) for x in self.passes):
+            msg = "passes in a Round object should be an iterable of Pass objects."
+            raise TypeError(msg)
         self.location = location
         self.body = body
         self.family = family

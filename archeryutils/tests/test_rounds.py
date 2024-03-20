@@ -1,6 +1,6 @@
 """Tests for Pass and Round classes."""
 
-from typing import Union
+from typing import Iterable, Union
 
 import pytest
 
@@ -34,6 +34,14 @@ class TestPass:
 
         assert test_pass.target == _target
         assert test_pass.n_arrows == 36
+
+    def test_invalid_target(self) -> None:
+        """Check that Pass raises a TypeError for invalid target."""
+        with pytest.raises(
+            TypeError,
+            match="The target passed to a Pass should be of type Target.",
+        ):
+            Pass(36, 42)  # type: ignore[arg-type]
 
     def test_at_target_constructor(self) -> None:
         """Check indirect initialisation of a Pass with target parameters."""
@@ -174,6 +182,29 @@ class TestRound:
         iterable_ = Round("iterable", (p for p in (pass_a, pass_b)))
 
         assert list_.passes == tuple_.passes == iterable_.passes
+
+    @pytest.mark.parametrize(
+        "badpass",
+        [
+            pytest.param([]),
+            pytest.param(()),
+        ],
+    )
+    def test_init_with_empty_passes(self, badpass: Iterable) -> None:
+        """Check that Round raises a ValueError for empty passes iterable."""
+        with pytest.raises(
+            ValueError,
+            match="passes must contain at least one Pass object but none supplied.",
+        ):
+            Round("My Round Name", badpass)  # type: ignore[arg-type]
+
+    def test_init_with_incorrect_type_passes(self) -> None:
+        """Check that Round raises a TypeError for passes not containing Pass."""
+        with pytest.raises(
+            TypeError,
+            match="passes in a Round object should be an iterable of Pass objects.",
+        ):
+            Round("My Round Name", ["a", "b", "c"])  # type: ignore[list-item]
 
     def test_repr(self) -> None:
         """Check Pass string representation."""
