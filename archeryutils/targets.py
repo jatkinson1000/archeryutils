@@ -16,6 +16,8 @@ ScoringSystem = Literal[
     "10_zone_6_ring",
     "10_zone_5_ring",
     "10_zone_5_ring_compound",
+    "11_zone",
+    "11_zone_5_ring",
     "WA_field",
     "IFAA_field",
     "IFAA_field_expert",
@@ -381,6 +383,7 @@ class Target:
             "10_zone_6_ring": 4,
             "10_zone_5_ring": 5,
             "10_zone_5_ring_compound": 5,
+            "11_zone_5_ring": 5,
             "Worcester_2_ring": 3,
         }
 
@@ -394,6 +397,11 @@ class Target:
         elif system in ("10_zone_compound", "10_zone_5_ring_compound"):
             spec = {_rnd6(diameter / 20): 10} | {
                 _rnd6(n * diameter / 10): 11 - n for n in range(2, 11 - missing)
+            }
+
+        elif system in ("11_zone", "11_zone_5_ring"):
+            spec = {_rnd6(diameter / 20): 11} | {
+                _rnd6(n * diameter / 10): 11 - n for n in range(1, 11 - missing)
             }
 
         elif system == "WA_field":
