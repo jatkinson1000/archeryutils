@@ -3,13 +3,13 @@
 from collections.abc import Mapping
 from functools import partial
 from types import MappingProxyType
-from typing import Literal, NamedTuple, Union, get_args
+from typing import Literal, NamedTuple, TypeAlias, Union, get_args
 
 from archeryutils import length
 
-# TypeAlias (annotate explicitly in py3.10+)
+# TypeAlias deprecated. Move to `type` in py3.12+
 #: All scoring systems that archeryutils knows how to handle by default.
-ScoringSystem = Literal[
+ScoringSystem: TypeAlias = Literal[
     "5_zone",
     "10_zone",
     "10_zone_compound",
@@ -25,9 +25,9 @@ ScoringSystem = Literal[
     "Custom",
 ]
 
-# TypeAlias (annotate explicitly in py3.10+)
+# TypeAlias deprecated. Move to `type` in py3.12+
 #: A mapping of a target ring diameter to the score for that ring.
-FaceSpec = Mapping[float, int]
+FaceSpec: TypeAlias = Mapping[float, int]
 
 _rnd6 = partial(round, ndigits=6)
 
