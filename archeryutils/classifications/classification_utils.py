@@ -25,6 +25,8 @@ class AGBAgeData(TypedDict):
     age_group: str
     male: list[int]
     female: list[int]
+    red: list[int]
+    blue: list[int]
     step: int
 
 
@@ -76,6 +78,10 @@ class AGBBowstyleData(TypedDict):
     classStep_in: float
     genderStep_in: float
     ageStep_in: float
+    datum_field: float
+    classStep_field: float
+    genderStep_field: float
+    ageStep_field: float
 
 
 def read_bowstyles_json(
