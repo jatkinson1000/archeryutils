@@ -6,6 +6,23 @@
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}]
   },
 
+  {"name" : "Lancaster",
+   "codename" : "lancaster",
+   "location" : "indoor",
+   "body" : "custom",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "11_zone", "distance" : 18, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 40, "scoring" : "11_zone", "distance" : 18, "dist_unit" : "metre"}
+   ]
+  },
+  {"name" : "Lancaster Triple",
+   "codename" : "lancaster_triple",
+   "location" : "indoor",
+   "body" : "custom",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "11_zone_5_ring", "distance" : 18, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 40, "scoring" : "11_zone_5_ring", "distance" : 18, "dist_unit" : "metre"}
+   ]
+  },
+
   {"name" : "252 100",
    "codename" : "c_252_100",
    "location" : "outdoor",
