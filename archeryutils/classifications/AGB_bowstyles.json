@@ -8,7 +8,7 @@
    "classStep_in" : 8,
    "genderStep_in" : 4,
    "ageStep_in" : 6,
-   "datum_field" : 21,
+   "datum_field" : 15,
    "classStep_field" : 7,
    "genderStep_field" : 4,
    "ageStep_field" : 7
@@ -22,10 +22,10 @@
    "classStep_in" : 7.5,
    "genderStep_in" : 5,
    "ageStep_in" : 6.5,
-   "datum_field" : 45,
-   "classStep_field" : 6,
+   "datum_field" : 30,
+   "classStep_field" : 8,
    "genderStep_field" : 5,
-   "ageStep_field" : 6
+   "ageStep_field" : 7
   },
   {"bowstyle" : "Barebow",
    "datum_out" : 47,
@@ -36,8 +36,8 @@
    "classStep_in" : 6.0,
    "genderStep_in" : 5.5,
    "ageStep_in" : 5.5,
-   "datum_field" : 55,
-   "classStep_field" : 5,
+   "datum_field" : 47,
+   "classStep_field" : 6,
    "genderStep_field" : 5.5,
    "ageStep_field" : 5.5
   },
@@ -50,10 +50,10 @@
    "classStep_in" : 6.5,
    "genderStep_in" : 7,
    "ageStep_in" : 6,
-   "datum_field" : 75,
-   "classStep_field" : 5,
+   "datum_field" : 65,
+   "classStep_field" : 7,
    "genderStep_field" : 7,
-   "ageStep_field" : 7
+   "ageStep_field" : 6
   },
   {"bowstyle" : "Traditional",
    "datum_out" : 47,
@@ -64,10 +64,10 @@
    "classStep_in" : 6.0,
    "genderStep_in" : 5.5,
    "ageStep_in" : 5.5,
-   "datum_field" : 55,
-   "classStep_field" : 5,
+   "datum_field" : 50,
+   "classStep_field" : 6.5,
    "genderStep_field" : 5.5,
-   "ageStep_field" : 5.5
+   "ageStep_field" : 6
   },
   {"bowstyle" : "Flatbow",
    "datum_out" : 47,
@@ -78,10 +78,10 @@
    "classStep_in" : 6.0,
    "genderStep_in" : 5.5,
    "ageStep_in" : 5.5,
-   "datum_field" : 55,
-   "classStep_field" : 5,
+   "datum_field" : 53,
+   "classStep_field" : 6.5,
    "genderStep_field" : 5.5,
-   "ageStep_field" : 5.5
+   "ageStep_field" : 6
   },
   {"bowstyle" : "Compound Limited",
    "datum_out" : 15,
