@@ -6,7 +6,7 @@ Installation
 Required dependencies
 ---------------------
 
-- Python (3.9 or later)
+- Python (3.10 or later)
 - `numpy <https://www.numpy.org/>`__ (1.20 or later)
 
 .. _optional-dependencies:
@@ -17,7 +17,7 @@ Installation Instructions
 archeryutils is a pure python package.
 It can be installed using pip by executing::
 
-    python -m pip install git+https://github.com/jatkinson1000/archeryutils.git
+    pip install archeryutils
 
 Development Installation
 ------------------------
@@ -27,7 +27,7 @@ install as an editable package::
 
     git clone git@github.com:jatkinson1000/archeryutils.git
     cd archeryutils
-    pip install -e .
+    pip install -e .[test,int,docs]
 
 Testing
 ~~~~~~~
