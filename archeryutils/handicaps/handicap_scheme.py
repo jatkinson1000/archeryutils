@@ -43,18 +43,6 @@ from archeryutils import rounds, targets
 
 FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float64])
 
-# itertools.pairwise not available until python 3.10
-# workaround can be removed when support for 3.9 is dropped
-# ignore for coverage (runner is > 3.10, ci shows this works on 3.9)
-if not hasattr(itr, "pairwise"):  # pragma: no cover
-
-    def _pairwise(iterable):
-        a, b = itr.tee(iterable)
-        next(b, None)
-        return zip(a, b)
-
-    setattr(itr, "pairwise", _pairwise)  # noqa: B010
-
 
 class HandicapScheme(ABC):
     r"""
@@ -266,7 +254,7 @@ class HandicapScheme(ABC):
 
         return max_score - sum(
             score_drop * np.exp(-(((arw_rad + (ring_diam / 2)) / sig_r) ** 2))
-            for ring_diam, score_drop in zip(ring_sizes, score_drops)
+            for ring_diam, score_drop in zip(ring_sizes, score_drops, strict=True)
         )
 
     def score_for_passes(
