@@ -4,7 +4,7 @@
 [![Documentation Status](https://readthedocs.org/projects/archeryutils/badge/?version=latest)](https://archeryutils.readthedocs.io/en/latest/?badge=latest)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jatkinson1000/archeryutils/testing.yaml)
 [![codecov](https://codecov.io/gh/jatkinson1000/archeryutils/branch/main/graph/badge.svg?token=AZU7G6H8T0)](https://codecov.io/gh/jatkinson1000/archeryutils)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jatkinson1000/archeryutils/main?labpath=examples.ipynb)
 

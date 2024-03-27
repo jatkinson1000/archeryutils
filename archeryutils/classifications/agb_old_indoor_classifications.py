@@ -153,7 +153,7 @@ def calculate_agb_old_indoor_classification(
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
-    class_data = dict(zip(group_data["classes"], class_scores))
+    class_data = dict(zip(group_data["classes"], class_scores, strict=True))
 
     # What is the highest classification this score gets?
     # < 0 handles max scores, > score handles higher classifications
