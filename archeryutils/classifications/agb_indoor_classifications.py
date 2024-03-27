@@ -292,7 +292,7 @@ def agb_indoor_classification_scores(
     # Handle possibility of gaps in the tables or max scores by checking 1 HC point
     # above current (floored to handle 0.5) and amending accordingly
     for i, (score, handicap) in enumerate(
-        zip(int_class_scores, group_data["class_HC"], strict=False),
+        zip(int_class_scores, group_data["class_HC"], strict=True),
     ):
         next_score = hc.score_for_round(
             np.floor(handicap) + 1,
