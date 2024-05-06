@@ -7,7 +7,7 @@ calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
 
-from typing import Any, Literal, TypedDict, cast
+from typing import Any, Literal, Optional, TypedDict, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -567,3 +567,102 @@ def agb_outdoor_classification_scores(
     int_class_scores = [int(x) for x in class_scores]
 
     return int_class_scores
+
+
+def classification_fraction(  # noqa: PLR0913 Too many arguments
+    score: float,
+    roundname: str,
+    bowstyle: str,
+    gender: str,
+    age_group: str,
+    restrict: Optional[bool] = True,
+) -> float:
+    """
+    Calculate the fraction towards the next classification an archer is.
+
+    Calculates fraction through current classification a score is based on handicap.
+    If above maximum possible classification returns 1.0, if below minimum returns 0.0.
+
+    Parameters
+    ----------
+    score : float
+        numerical score on the round
+    roundname : str
+        name of round shot as given by 'codename' in json
+    bowstyle : str
+        archer's bowstyle under AGB outdoor target rules
+    gender : str
+        archer's gender under AGB outdoor target rules
+    age_group : str
+        archer's age group under AGB outdoor target rules
+    restrict : bool, default=True
+        whether to restrict to the classifications officially available on this
+        round for this category
+
+    Returns
+    -------
+    float
+        fraction (as a decimal) towards the next classification in terms of handicap.
+        If above maximum return 1.0, if below minimum return 0.0.
+
+    Examples
+    --------
+    A score of 450 on a WA720 70m round for an adult male recurve is B3, but around
+    33% of the way towards B2 in terms of handicap:
+
+    >>> import archeryutils as au
+    >>> au.classifications.agb_outdoor_classifications.classification_fraction(
+    ...     450, "wa720_70", "recurve", "male", "adult"
+    ... )
+    0.3348216315578329
+
+    A score of 632 on a national would be A1 class, the highest possible for the round:
+
+    >>> au.classifications.agb_outdoor_classifications.classification_fraction(
+    ...     620, "western", "recurve", "male", "adult"
+    ... )
+    1.0
+
+    If we use restrict=False we ignore the distance and prestige restrictions to use
+    purely the classification handicap values:
+
+    >>> au.classifications.agb_outdoor_classifications.classification_fraction(
+    ...     620,
+    ...     "wa720_50_b",
+    ...     "recurve",
+    ...     "male",
+    ...     "adult"
+    ...     restrict=False
+    ... )
+
+    """
+    hc_sys = hc.handicap_scheme("AGB")
+    handicap = hc_sys.handicap_from_score(score, ALL_OUTDOOR_ROUNDS[roundname])
+
+    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    group_data = agb_outdoor_classifications[groupname]
+
+    if restrict:
+        class_data = {}
+        for i, class_i in enumerate(group_data["classes"]):
+            class_data[class_i] = {
+                "min_dist": group_data["min_dists"][i],
+                "class_HC": group_data["class_HC"][i],
+            }
+        class_data = _check_prestige_distance(roundname, groupname, class_data)
+
+        group_hcs = np.array([class_data[cls]["class_HC"] for cls in class_data])
+    else:
+        group_hcs = group_data["class_HC"]
+
+    loc = 0
+    while loc < len(group_hcs):
+        if handicap < group_hcs[loc]:
+            break
+        loc += 1
+
+    if loc == 0:
+        return 1.0
+    if loc == len(group_hcs):
+        return 0.0
+    return (group_hcs[loc] - handicap) / (group_hcs[loc] - group_hcs[loc - 1])

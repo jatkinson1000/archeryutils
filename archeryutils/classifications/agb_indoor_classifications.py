@@ -310,3 +310,68 @@ def agb_indoor_classification_scores(
                 int_class_scores[i] += 1
 
     return int_class_scores
+
+
+def classification_fraction(
+    score: float,
+    roundname: str,
+    bowstyle: str,
+    gender: str,
+    age_group: str,
+) -> float:
+    """
+    Calculate the fraction towards the next classification an archer is.
+
+    Calculates fraction through current classification a score is based on handicap.
+    If above maximum possible classification returns 1.0, if below minimum returns 0.0.
+
+    Parameters
+    ----------
+    score : float
+        numerical score on the round
+    roundname : str
+        name of round shot as given by 'codename' in json
+    bowstyle : str
+        archer's bowstyle under AGB outdoor target rules
+    gender : str
+        archer's gender under AGB outdoor target rules
+    age_group : str
+        archer's age group under AGB outdoor target rules
+
+    Returns
+    -------
+    float
+        fraction (as a decimal) towards the next classification in terms of handicap.
+        If above maximum return 1.0, if below minimum return 0.0.
+
+    Examples
+    --------
+    A score of 525 on a WA18 round for an adult male recurve is I-B2, but around
+    60% of the way towards I-B1 in terms of handicap:
+
+    >>> import archeryutils as au
+    >>> au.classifications.agb_indoor_classifications.classification_fraction(
+    ...     525, "wa18", "recurve", "male", "adult"
+    ... )
+    0.6005602030896947
+
+    """
+    hc_sys = hc.handicap_scheme("AGB")
+    handicap = hc_sys.handicap_from_score(score, ALL_INDOOR_ROUNDS[roundname])
+
+    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    group_data = agb_indoor_classifications[groupname]
+
+    group_hcs = group_data["class_HC"]
+
+    loc = 0
+    while loc < len(group_hcs):
+        if handicap < group_hcs[loc]:
+            break
+        loc += 1
+
+    if loc == 0:
+        return 1.0
+    if loc == len(group_hcs):
+        return 0.0
+    return (group_hcs[loc] - handicap) / (group_hcs[loc] - group_hcs[loc - 1])
