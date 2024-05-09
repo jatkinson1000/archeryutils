@@ -370,8 +370,13 @@ def classification_fraction(
             break
         loc += 1
 
-    if loc == 0:
+    if loc == 0 or (score == ALL_INDOOR_ROUNDS[roundname].max_score()):
+        # Handicap below max classification possible
+        # OR
+        # max score (but does not achieve highest classification)
         return 1.0
     if loc == len(group_hcs):
+        # Handicap above lowest classification
         return 0.0
+
     return (group_hcs[loc] - handicap) / (group_hcs[loc] - group_hcs[loc - 1])
