@@ -67,7 +67,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
         ("Barebow", "Male", "Adult"): [328, 307, 279, 252, 224, 197],
         ("Barebow", "Female", "Adult"): [303, 284, 258, 233, 207, 182],
         ("Longbow", "Male", "Adult"): [201, 188, 171, 155, 137, 121],
-        ("Longbow", "Female", "Adult"): [303, 284, 258, 233, 207, 182],
+        ("Longbow", "Female", "Adult"): [152, 142, 129, 117, 103, 91],
         ("Traditional", "Male", "Adult"): [262, 245, 223, 202, 178, 157],
         ("Traditional", "Female", "Adult"): [197, 184, 167, 152, 134, 118],
         ("Flatbow", "Male", "Adult"): [262, 245, 223, 202, 178, 157],
