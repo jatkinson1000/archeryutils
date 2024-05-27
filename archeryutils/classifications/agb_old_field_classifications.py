@@ -79,6 +79,11 @@ def _make_old_agb_field_classification_dict() -> dict[str, GroupData]:
         ("Traditional", "Female", "Adult"): [197, 184, 167, 152, 134, 118],
         ("Flatbow", "Male", "Adult"): [262, 245, 223, 202, 178, 157],
         ("Flatbow", "Female", "Adult"): [197, 184, 167, 152, 134, 118],
+        ("Compound Limited", "Male", "Adult"): [338, 317, 288, 260, 231, 203],
+        ("Compound Limited", "Female", "Adult"): [322, 302, 275, 247, 220, 193],
+        ("Compound Barebow", "Male", "Adult"): [328, 307, 279, 252, 224, 197],
+        ("Compound Barebow", "Female", "Adult"): [303, 284, 258, 233, 207, 182],
+        #
         ("Compound", "Male", "Under 18"): [385, 369, 337, 306, 273, 242],
         ("Compound", "Female", "Under 18"): [357, 343, 314, 284, 255, 225],
         ("Recurve", "Male", "Under 18"): [311, 292, 265, 239, 213, 187],
@@ -91,6 +96,10 @@ def _make_old_agb_field_classification_dict() -> dict[str, GroupData]:
         ("Traditional", "Female", "Under 18"): [158, 147, 134, 121, 107, 95],
         ("Flatbow", "Male", "Under 18"): [210, 196, 178, 161, 143, 126],
         ("Flatbow", "Female", "Under 18"): [158, 147, 134, 121, 107, 95],
+        ("Compound Limited", "Male", "Under 18"): [311, 292, 265, 239, 213, 187],
+        ("Compound Limited", "Female", "Under 18"): [280, 263, 239, 215, 191, 168],
+        ("Compound Barebow", "Male", "Under 18"): [298, 279, 254, 229, 204, 179],
+        ("Compound Barebow", "Female", "Under 18"): [251, 236, 214, 193, 172, 151],
     }
 
     # Generate dict of classifications
