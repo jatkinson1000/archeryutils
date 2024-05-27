@@ -178,14 +178,14 @@ def calculate_old_agb_field_classification(
     group_data = old_agb_field_classifications[groupname]
 
     # Check Round is appropriate:
-    # Sighted can have any Red 24, unsightes can have any blue 24
+    # Sighted can have any Red 24, unsighted can have any blue 24
     if (
-        bowstyle.lower() in ("compound", "recurve")
+        bowstyle.lower().replace(" ", "") in ("compound", "recurve")
         and "wa_field_24_red_" not in roundname
     ):
         return "unclassified"
     if (
-        bowstyle.lower() in ("barebow", "longbow", "traditional", "flatbow")
+        bowstyle.lower().replace(" ", "") in ("barebow", "longbow", "traditional", "flatbow", "compoundlimited", "compoundbarebow")
         and "wa_field_24_blue_" not in roundname
     ):
         return "unclassified"
