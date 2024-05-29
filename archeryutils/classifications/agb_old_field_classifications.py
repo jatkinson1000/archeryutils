@@ -194,7 +194,15 @@ def calculate_old_agb_field_classification(
     ):
         return "unclassified"
     if (
-        bowstyle.lower().replace(" ", "") in ("barebow", "longbow", "traditional", "flatbow", "compoundlimited", "compoundbarebow")
+        bowstyle.lower().replace(" ", "")
+        in (
+            "barebow",
+            "longbow",
+            "traditional",
+            "flatbow",
+            "compoundlimited",
+            "compoundbarebow",
+        )
         and "wa_field_24_blue_" not in roundname
     ):
         return "unclassified"

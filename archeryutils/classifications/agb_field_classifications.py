@@ -209,7 +209,7 @@ def calculate_agb_field_classification(
     roundname = roundname.replace("unmarked", "marked")
     roundname = roundname.replace("mixed", "marked")
 
-    # Check round is long enough
+    # Check round is long enough (no classifications for 12-target passes)
     if "12" in roundname:
         return "UC"
 
@@ -235,7 +235,7 @@ def calculate_agb_field_classification(
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_field_classifications[groupname]
-    class_data = dict(zip(group_data["classes"], all_class_scores))
+    class_data = dict(zip(group_data["classes"], all_class_scores, strict=True))
 
     # Of the classes remaining, what is the highest classification this score gets?
     # < 0 handles max scores, > score handles higher classifications
