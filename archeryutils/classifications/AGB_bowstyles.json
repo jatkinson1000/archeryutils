@@ -92,10 +92,10 @@
    "classStep_in" : 8,
    "genderStep_in" : 4,
    "ageStep_in" : 6,
-   "datum_field" : 55,
-   "classStep_field" : 5,
-   "genderStep_field" : 5.5,
-   "ageStep_field" : 5.5
+   "datum_field" : 25,
+   "classStep_field" : 7,
+   "genderStep_field" : 5,
+   "ageStep_field" : 6
   },
   {"bowstyle" : "Compound Barebow",
    "datum_out" : 15,
@@ -106,9 +106,9 @@
    "classStep_in" : 8,
    "genderStep_in" : 4,
    "ageStep_in" : 6,
-   "datum_field" : 55,
-   "classStep_field" : 5,
-   "genderStep_field" : 5.5,
-   "ageStep_field" : 5.5
+   "datum_field" : 38,
+   "classStep_field" : 6.5,
+   "genderStep_field" : 5,
+   "ageStep_field" : 6
   }
 ]
