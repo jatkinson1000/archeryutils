@@ -155,7 +155,7 @@ def _assign_dists(
     # U18 R/C/CL Red, Others Blue
     # U15 All Blue, R/C Red, Others White
     # U12 R/C/CL Red, All Blue, All White,
-    if bowstyle.lower() in ("compound", "recurve"):
+    if bowstyle.lower().replace(" ", "") in ("compound", "recurve", "compoundlimited"):
         return age["red"]
     return age["blue"]
 
