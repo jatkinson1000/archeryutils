@@ -1,4 +1,4 @@
-"""Tests for agb indoor classification functions."""
+"""Tests for agb outdoor classification functions."""
 
 import pytest
 
@@ -16,25 +16,10 @@ ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 
 class TestAgbOutdoorClassificationScores:
     """
-    Class to test the agb outdoor classification scores function.
+    Tests for the agb outdoor classification scores function.
 
     This will implicitly check the dictionary creation.
     Provided sufficient options are covered across bowstyles, genders, and ages.
-
-    Methods
-    -------
-    test_agb_outdoor_classification_scores_ages()
-        test if expected scores returned for different ages
-    test_agb_outdoor_classification_scores_genders()
-        test if expected scores returned for different genders
-    test_agb_outdoor_classification_scores_bowstyles()
-        test if expected scores returned for different bowstyles
-    test_agb_outdoor_classification_scores_triple_faces()
-        test if triple faces return full face scores
-    test_agb_outdoor_classification_scores_invalid()
-        test invalid inputs
-    test_agb_outdoor_classification_scores_invalid_round
-        test invalid roundname
     """
 
     @pytest.mark.parametrize(
@@ -333,20 +318,7 @@ class TestAgbOutdoorClassificationScores:
 
 
 class TestCalculateAgbOutdoorClassification:
-    """
-    Class to test the outdoor classification function.
-
-    Methods
-    -------
-    test_calculate_agb_outdoor_classification()
-        test if expected full-face roundname returned
-    test_calculate_agb_outdoor_classification_prestige()
-        check prestige round are working
-    test_calculate_agb_outdoor_classification_invalid_round()
-        check corrrect error raised for invalid rounds
-    test_calculate_agb_outdoor_classification_invalid_scores()
-        check corrrect error raised for invalid scores
-    """
+    """Tests for the outdoor classification function."""
 
     @pytest.mark.parametrize(
         "roundname,score,age_group,bowstyle,class_expected",

@@ -14,22 +14,7 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 
 
 class TestAgbOldIndoorClassificationScores:
-    """
-    Class to test the old_indoor classification scores function.
-
-    Methods
-    -------
-    test_agb_old_indoor_classification_scores_ages()
-        test if expected scores returned for different ages
-    test_agb_old_indoor_classification_scores_genders()
-        test if expected scores returned for different genders
-    test_agb_old_indoor_classification_scores_bowstyles()
-        test if expected scores returned for different bowstyles
-    test_agb_old_indoor_classification_scores_gent_compound_worcester
-        test supposed loophole in worcester for gent compound
-    test_agb_old_indoor_classification_scores_invalid()
-        test invalid inputs
-    """
+    """Tests for the old_indoor classification scores function."""
 
     @pytest.mark.parametrize(
         "age_group,scores_expected",
@@ -172,14 +157,7 @@ class TestAgbOldIndoorClassificationScores:
 
 
 class TestCalculateAgbOldIndoorClassification:
-    """
-    Class to test the old_indoor classification function.
-
-    Methods
-    -------
-    test_calculate_agb_old_indoor_classification()
-    test_calculate_agb_old_indoor_classification_invalid_scores()
-    """
+    """Tests for the old_indoor classification function."""
 
     @pytest.mark.parametrize(
         "score,gender,class_expected",

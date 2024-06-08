@@ -86,7 +86,7 @@ kings_900_rec = Round(
 
 
 class TestHandicapScheme:
-    """Class to test the handicap_scheme() function creating a HandicapScheme class."""
+    """Tests for the handicap_scheme() function creating a HandicapScheme class."""
 
     @pytest.mark.parametrize(
         "scheme",
@@ -152,18 +152,11 @@ class TestHandicapScheme:
 
 class TestSigmaT:
     """
-    Class to test the sigma_t() function of handicap_equations.
+    Tests for the sigma_t() function of handicap_equations.
 
-    Uses output of the code when run at a particular point in time and then
+    Uses outputs of the code when run at a particular point in time and then
     'frozen' to make sure future developments do not introduce unexpected changes.
     Deliberate changes to the schemes may affect these values and require changes.
-
-    Methods
-    -------
-    test_float()
-        test if expected sigma_t returned from float
-    test_array()
-        test if expected sigma_t returned from array of floats
     """
 
     @pytest.mark.parametrize(
@@ -215,18 +208,11 @@ class TestSigmaT:
 
 class TestSigmaR:
     """
-    Class to test the sigma_r() function of handicap_equations.
+    Tests for the sigma_r() function of handicap_equations.
 
     Uses output of the code when run at a particular point in time and then
     'frozen' to make sure future developments do not introduce unexpected changes.
     Deliberate changes to the schemes may affect these values and require changes.
-
-    Methods
-    -------
-    test_float()
-        test if expected sigma_r returned for from float
-    test_array()
-        test if expected sigma_r returned for from array of floats
     """
 
     @pytest.mark.parametrize(
@@ -278,20 +264,12 @@ class TestSigmaR:
 
 class TestArrowScore:
     """
-    Class to test the arrow_score() function of handicap_equations.
+    Tests for the arrow_score() function of handicap_equations.
 
     Tests all of the different types of target faces.
     Uses output of the code when run at a particular point in time and then
     'frozen' to make sure future developments do not introduce unexpected changes.
     Deliberate changes to the schemes may affect these values and require changes.
-
-
-    Methods
-    -------
-    test_different_handicap_systems()
-        test if expected score returned for different systems
-    test_different_target_faces()
-        test if expected score returned for different faces
     """
 
     @pytest.mark.parametrize(
@@ -430,18 +408,11 @@ class TestArrowScore:
 
 class TestScoreForPasses:
     """
-    Class to test the score_for_passes() function of handicap_equations.
+    Tests for the score_for_passes() function of handicap_equations.
 
     Uses output of the code when run at a particular point in time and then
     'frozen' to make sure future developments do not introduce unexpected changes.
     Deliberate changes to the schemes may affect these values and require changes.
-
-    Methods
-    -------
-    test_float_pass_scores()
-        test if round_score returns expected results
-    test_rounded_pass_scores
-        test if round_score returns expected results when rounding
     """
 
     @pytest.mark.parametrize(
@@ -538,18 +509,11 @@ class TestScoreForPasses:
 
 class TestScoreForRound:
     """
-    Class to test the score_for_round() function of handicap_equations.
+    Tests for the score_for_round() function of handicap_equations.
 
     Uses output of the code when run at a particular point in time and then
     'frozen' to make sure future developments do not introduce unexpected changes.
     Deliberate changes to the schemes may affect these values and require changes.
-
-    Methods
-    -------
-    test_float_round_score()
-        test if round_score returns expected results
-    test_rounded_round_score
-        test if round_score returns expected results when rounding
     """
 
     @pytest.mark.parametrize(
@@ -656,7 +620,7 @@ class TestScoreForRound:
 
 class TestHandicapFromScore:
     """
-    Class to test the handicap_from_score() function of handicap_functions.
+    Tests for the handicap_from_score() function of handicap_functions.
 
     Test both float and integer values, and maximum score.
     Where possible try and perform comparisons using values taken from literature,
@@ -665,15 +629,6 @@ class TestHandicapFromScore:
     - For Archery GB new use the published handicap tables or values from this code.
     - For Archery Australia use Archery Scorepad- [ ] Classifications
     - For Archery Australia 2 there are no published tables and issues exist with
-
-    Methods
-    -------
-    test_score_over_max()
-    test_score_of_zero()
-    test_score_below_zero()
-    test_maximum_score()
-    test_int_precision()
-    test_decimal()
 
     References
     ----------

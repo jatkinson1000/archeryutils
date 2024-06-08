@@ -34,18 +34,7 @@ roundlist = [york, hereford, metric122_30]
 
 
 class TestHandicapTable:
-    """Class to test the handicap table functionalities of handicap_functions.
-
-    Methods
-    -------
-    test_format_row
-    test_table_as_str
-    test_print_agb
-    test_print_aa
-    test_check_print_table_inputs_invalid_rounds
-    test_check_print_table_inputs_invalid_handicaps
-
-    """
+    """Tests for the handicap table functionalities of the HandicapTable class."""
 
     def test_repr(self) -> None:
         """Check HandicapTable representation."""
@@ -222,54 +211,3 @@ class TestHandicapTable:
             match=("Expected float or ndarray for hcs."),
         ):
             hc.HandicapTable("AGB", "a", [york, hereford])  # type: ignore
-
-
-#     @pytest.mark.parametrize(
-#         "input_table,int_prec,sys,expected",
-#         [
-#             (
-#                 np.array([[0, 11, 12, 13], [1, 10, 12, 12]]),
-#                 True,
-#                 "AGB",
-#                 np.array([[0, 11, -9999, 13], [1, 10, 12, 12]]),
-#             ),
-#             (
-#                 np.array([[0, 13], [5, 12], [10, 12], [15, 11]]),
-#                 True,
-#                 "AGB",
-#                 np.array([[0, 13], [5, -9999], [10, 12], [15, 11]]),
-#             ),
-#             (
-#                 np.array([[4, 13], [3, 12], [2, 12], [1, 11]]),
-#                 True,
-#                 "AA",
-#                 np.array([[4, 13], [3, 12], [2, -9999], [1, 11]]),
-#             ),
-#             (
-#                 np.array([[0.0, 11.0, 12.0, 13.0], [1.0, 10.0, 12.0, 12.0]]),
-#                 False,
-#                 "AGB",
-#                 np.array([[0.0, 11.0, np.nan, 13.0], [1.0, 10.0, 12.0, 12.0]]),
-#             ),
-#             (
-#                 np.array([[0.0, 11.5, 12.5, 13.5], [1.0, 11.5, 12.0, 13.5]]),
-#                 False,
-#                 "AGB",
-#                 np.array([[0.0, np.nan, 12.5, np.nan], [1.0, 11.5, 12.0, 13.5]]),
-#             ),
-#         ],
-#     )
-#     def test_clean_repeated(
-#         self,
-#         input_table: NDArray[Union[np.int_, np.float_]],
-#         int_prec: bool,
-#         sys: str,
-#         expected: NDArray[Union[np.int_, np.float_]],
-#     ) -> None:
-#         """
-#         Check that abbreviate returns expected results.
-#         """
-#         print(hc_func.clean_repeated(input_table, int_prec, sys))
-#         np.testing.assert_allclose(
-#             hc_func.clean_repeated(input_table, int_prec, sys), expected
-#         )

@@ -6,16 +6,7 @@ import archeryutils.classifications.classification_utils as class_utils
 
 
 class TestStringUtils:
-    """
-    Class to test the get_groupname() function of handicap_equations.
-
-    Methods
-    -------
-    test_get_groupname()
-        test if expected sanitised groupname returned
-    test_strip_spots()
-        test if expected full-face roundname returned
-    """
+    """Tests for the string formatting utils of classifications code."""
 
     @pytest.mark.parametrize(
         "bowstyle,age_group,gender,groupname_expected",
