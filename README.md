@@ -43,7 +43,7 @@ To install the library via pip for use in a project you can run:
 It is recommended to use a virtual environment.
 
 If you want a local install that you can edit instead, clone the repository,
-navigate to `/archeryutils`, and run:
+navigate to `archeryutils/`, and run:
 
     python3 -m pip install -e .[test,lint,docs]
 
