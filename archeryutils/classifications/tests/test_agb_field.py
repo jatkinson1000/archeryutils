@@ -13,20 +13,7 @@ ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
 
 
 class TestAgbFieldClassificationScores:
-    """
-    Class to test the field classification scores function.
-
-    Methods
-    -------
-    test_agb_field_classification_scores_ages()
-        test if expected scores returned for different ages
-    test_agb_field_classification_scores_genders()
-        test if expected scores returned for different genders
-    test_agb_field_classification_scores_bowstyles()
-        test if expected scores returned for different bowstyles
-    test_agb_field_classification_scores_invalid()
-        test invalid inputs
-    """
+    """Tests for the field classification scores function."""
 
     @pytest.mark.parametrize(
         "roundname,age_group,scores_expected",
@@ -220,16 +207,7 @@ class TestAgbFieldClassificationScores:
 
 
 class TestCalculateAgbFieldClassification:
-    """
-    Class to test the field classification function.
-
-    Methods
-    -------
-    test_calculate_agb_field_classification_scores()
-        test if expected sanitised groupname returned
-    test_calculate_agb_field_classification()
-        test if expected full-face roundname returned
-    """
+    """Tests for the field classification function."""
 
     @pytest.mark.parametrize(
         "roundname,score,age_group,bowstyle,class_expected",
