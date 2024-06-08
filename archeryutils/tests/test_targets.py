@@ -8,16 +8,7 @@ from archeryutils.targets import ScoringSystem, Target
 
 
 class TestTarget:
-    """
-    Class to test the Target class.
-
-    Methods
-    -------
-    def test_invalid_system()
-        test if invalid target face type system raises an error
-    test_invalid_distance_unit()
-        test if invalid distance unit raises an error
-    """
+    """Tests for the Target class."""
 
     def test_repr(self) -> None:
         """Check Target string representation is as expected."""

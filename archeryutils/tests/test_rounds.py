@@ -11,22 +11,7 @@ _target = Target("5_zone", 122, 50)
 
 
 class TestPass:
-    """
-    Class to test the Pass class.
-
-    Methods
-    -------
-    test_default_distance_unit()
-        test behaviour of default distance unit
-    test_default_location()
-        test behaviour of default location
-    test_negative_arrows()
-        test behaviour of negative arrow number
-    test_properties()
-        test setting of Pass properties
-    test_max_score()
-        test max score functionality of Pass
-    """
+    """Tests for the Pass class."""
 
     def test_init(self) -> None:
         """Check direct initialisation of a Pass with a target instance."""
@@ -153,20 +138,7 @@ class TestPass:
 
 
 class TestRound:
-    """
-    Class to test the Round class.
-
-    Methods
-    -------
-    def test_max_score()
-        test max score functionality of Round
-    def test_max_distance()
-        test max distance functionality of Round
-    test_max_distance_out_of_order()
-        test max distance functionality of Round with unsorted Passes
-    def test_get_info()
-        test get_info functionality of Round
-    """
+    """Tests for the Round class."""
 
     def test_init_with_iterable_passes(self) -> None:
         """
