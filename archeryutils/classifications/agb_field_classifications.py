@@ -30,7 +30,8 @@ class GroupData(TypedDict):
     classes: list[str]
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
-    dists: list[int]
+    max_distance: int
+    min_dists: npt.NDArray[np.float64]
 
 
 def _make_agb_field_classification_dict() -> dict[str, GroupData]:
@@ -87,6 +88,10 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
                     bowstyle["bowstyle"], gender, age["age_group"]
                 )
 
+                # Get max dists for category from json file data
+                # Use metres as corresponding yards >= metric
+                dists = _assign_dists(bowstyle["bowstyle"], age)
+
                 # set step from datum based on age and gender steps required
                 delta_hc_age_gender = cls_funcs.get_age_gender_step(
                     gender,
@@ -98,6 +103,9 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
                 classifications_count = len(agb_classes_field)
 
                 class_hc = np.empty(classifications_count)
+                min_dists = np.empty(classifications_count)
+                min_dists[0:6] = dists[0]
+                min_dists[6:9] = [max(dists[0] - 10 * i, 30) for i in range(1, 4)]
 
                 for i in range(classifications_count):
                     # Assign handicap for this classification
@@ -111,7 +119,8 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
                     "classes": agb_classes_field,
                     "classes_long": agb_classes_field_long,
                     "class_HC": class_hc,
-                    "dists": _assign_dists(bowstyle["bowstyle"], age),
+                    "max_distance": dists[1],
+                    "min_dists": min_dists,
                 }
 
                 classification_dict[groupname] = groupdata
@@ -150,8 +159,8 @@ def _assign_dists(
     # Red - R/C/CL
     # Blue - Barebow, U18 R/C
     # Yellow - U18 BB
-    # AGB
     #
+    # AGB
     # U18 R/C/CL Red, Others Blue
     # U15 All Blue, R/C Red, Others White
     # U12 R/C/CL Red, All Blue, All White,
@@ -209,23 +218,11 @@ def calculate_agb_field_classification(
     roundname = roundname.replace("unmarked", "marked")
     roundname = roundname.replace("mixed", "marked")
 
-    # Check round is long enough (no classifications for 12-target passes)
-    if "12" in roundname:
-        return "UC"
-
     group_data = agb_field_classifications[
         cls_funcs.get_groupname(bowstyle, gender, age_group)
     ]
 
-    # Check if this round is an appropriate distance
-    round_max_dist = ALL_FIELD_ROUNDS[roundname].max_distance().value
-    if round_max_dist < group_data["dists"][0]:
-        return "UC"
-    if round_max_dist > group_data["dists"][1]:
-        return "UC"
-
     # Get scores required on this round for each classification
-    # Enforcing full size face and compound scoring (for compounds)
     all_class_scores = agb_field_classification_scores(
         roundname,
         bowstyle,
@@ -299,21 +296,19 @@ def agb_field_classification_scores(
 
     # Reduce list based on other criteria besides handicap
     # What classes are eligible based on category and distance
-    # Check round is long enough (24 targets)
     round_max_dist = ALL_FIELD_ROUNDS[roundname].max_distance().value
-    for i, _ in enumerate(class_scores):
-        if "12" in roundname:
+    for i in range(len(class_scores)):
+        # What classes are eligible based on category and distance
+        # Is round too short?
+        if group_data["min_dists"][i] > round_max_dist:
             class_scores[i] = -9999
-        if (
-            round_max_dist < group_data["dists"][0]
-            or round_max_dist > group_data["dists"][1]
-        ):
+        # Is peg too long (i.e. red peg for unsighted)?
+        if group_data["max_distance"] < round_max_dist:
             class_scores[i] = -9999
+    # What classes are eligible based on round length (24 targets)
+    if "12" in roundname:
+        class_scores[0:3] = [-9999] * 3
 
-    # Make sure that hc.eq.score_for_round did not return array to satisfy mypy
-    if any(isinstance(x, np.ndarray) for x in class_scores):
-        msg = "score_for_round is attempting to return an array when float expected."
-        raise TypeError(msg)
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
