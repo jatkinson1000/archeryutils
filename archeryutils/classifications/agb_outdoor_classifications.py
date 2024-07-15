@@ -647,6 +647,7 @@ def agb_outdoor_classification_fraction(  # noqa: PLR0913 Too many arguments
         age_group,
     )
     if restrict:
+        # Reduce list to classifications that have scores (remove -9999)
         all_class_scores = [x for x in all_class_scores if x >= 0.0]
         all_class_scores.append(-9999)
     if (
