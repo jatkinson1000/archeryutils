@@ -312,7 +312,7 @@ def agb_indoor_classification_scores(
     return int_class_scores
 
 
-def classification_fraction(
+def agb_indoor_classification_fraction(
     score: float,
     roundname: str,
     bowstyle: str,
@@ -349,8 +349,8 @@ def classification_fraction(
     A score of 525 on a WA18 round for an adult male recurve is I-B2, but around
     60% of the way towards I-B1 in terms of handicap:
 
-    >>> import archeryutils as au
-    >>> au.classifications.agb_indoor_classifications.classification_fraction(
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.agb_indoor_classification_fraction(
     ...     525, "wa18", "recurve", "male", "adult"
     ... )
     0.6005602030896947

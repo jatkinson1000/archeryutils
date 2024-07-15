@@ -569,7 +569,7 @@ def agb_outdoor_classification_scores(
     return int_class_scores
 
 
-def classification_fraction(  # noqa: PLR0913 Too many arguments
+def agb_outdoor_classification_fraction(  # noqa: PLR0913 Too many arguments
     score: float,
     roundname: str,
     bowstyle: str,
@@ -610,15 +610,15 @@ def classification_fraction(  # noqa: PLR0913 Too many arguments
     A score of 450 on a WA720 70m round for an adult male recurve is B3, but around
     33% of the way towards B2 in terms of handicap:
 
-    >>> import archeryutils as au
-    >>> au.classifications.agb_outdoor_classifications.classification_fraction(
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.agb_outdoor_classification_fraction(
     ...     450, "wa720_70", "recurve", "male", "adult"
     ... )
     0.3348216315578329
 
     A score of 632 on a national would be A1 class, the highest possible for the round:
 
-    >>> au.classifications.agb_outdoor_classifications.classification_fraction(
+    >>> class_func.agb_outdoor_classification_fraction(
     ...     620, "western", "recurve", "male", "adult"
     ... )
     1.0
@@ -626,7 +626,7 @@ def classification_fraction(  # noqa: PLR0913 Too many arguments
     If we use restrict=False we ignore the distance and prestige restrictions to use
     purely the classification handicap values:
 
-    >>> au.classifications.agb_outdoor_classifications.classification_fraction(
+    >>> class_func.agb_outdoor_classification_fraction(
     ...     620,
     ...     "wa720_50_b",
     ...     "recurve",
