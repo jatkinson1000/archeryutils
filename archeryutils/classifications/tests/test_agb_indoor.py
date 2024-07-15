@@ -512,7 +512,7 @@ class TestCalculateAgbIndoorClassificationFraction:
         bowstyle: str,
         frac_expected: float,
     ) -> None:
-        """Check that classification fraction below lowest classification is 0,0."""
+        """Check that classification fraction below lowest classification is 0.0."""
         frac_returned = class_funcs.agb_indoor_classification_fraction(
             roundname=roundname,
             score=score,
@@ -564,7 +564,59 @@ class TestCalculateAgbIndoorClassificationFraction:
         bowstyle: str,
         frac_expected: float,
     ) -> None:
-        """Check that classification fraction above highest classification is 1,0."""
+        """Check that classification fraction above highest classification is 1.0."""
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa18",
+                546,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "worcester",
+                294,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "wa18",
+                535,
+                "adult",
+                "barebow",
+                1.0,
+            ),
+            (
+                "portsmouth",
+                571,
+                "under 18",
+                "recurve",
+                1.0,
+            ),
+        ],
+    )
+    def test_agb_indoor_classification_fraction_boundary(  # noqa: PLR0913 Too many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction on score boundaries is 0.0 or 1.0."""
         frac_returned = class_funcs.agb_indoor_classification_fraction(
             roundname=roundname,
             score=score,

@@ -664,7 +664,7 @@ class TestCalculateAgbOutdoorClassificationFraction:
         bowstyle: str,
         frac_expected: float,
     ) -> None:
-        """Check that classification fraction below lowest classification is 0,0."""
+        """Check that classification fraction below lowest classification is 0.0."""
         frac_returned = class_funcs.agb_outdoor_classification_fraction(
             roundname=roundname,
             score=score,
@@ -716,7 +716,59 @@ class TestCalculateAgbOutdoorClassificationFraction:
         bowstyle: str,
         frac_expected: float,
     ) -> None:
-        """Check that classification fraction above highest classification is 1,0."""
+        """Check that classification fraction above highest classification is 1.0."""
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa720_70",
+                613,
+                "adult",
+                "compound",
+                1.0,
+            ),
+            (
+                "wa720_50_b",
+                626,
+                "adult",
+                "barebow",
+                1.0,
+            ),
+            (
+                "wa720_50_c",
+                640,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "wa720_60",
+                338,
+                "under 18",
+                "recurve",
+                0.0,
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_fraction_boundary(  # noqa: PLR0913 many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction above highest classification is 1.0."""
         frac_returned = class_funcs.agb_outdoor_classification_fraction(
             roundname=roundname,
             score=score,

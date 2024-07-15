@@ -362,16 +362,18 @@ def agb_indoor_classification_fraction(
     roundname = cls_funcs.strip_spots(roundname)
 
     # Check for early return if on score boundary:
-        # If above max classification score return 1.0 early.
-        # Else if a boundary score return 0.0 (avoids integer rounding errors later).
-        # Note this section is operating under `restrict=True`
+    # If above max classification score return 1.0 early.
+    # Else if a boundary score return 0.0 (avoids integer rounding errors later).
     all_class_scores = agb_indoor_classification_scores(
         roundname,
         bowstyle,
         gender,
         age_group,
     )
-    if score >= np.abs(all_class_scores[0]) or score == ALL_INDOOR_ROUNDS[roundname].max_score():
+    if (
+        score >= np.abs(all_class_scores[0])
+        or score == ALL_INDOOR_ROUNDS[roundname].max_score()
+    ):
         return 1.0
     elif score in all_class_scores:
         return 0.0
