@@ -2,6 +2,7 @@
 
 import pytest
 
+import archeryutils as au
 import archeryutils.classifications as class_funcs
 from archeryutils import load_rounds
 
@@ -71,7 +72,7 @@ class TestAgbIndoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "age_group,scores_expected",
@@ -112,7 +113,7 @@ class TestAgbIndoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "bowstyle,scores_expected",
@@ -144,7 +145,7 @@ class TestAgbIndoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "bowstyle,scores_expected",
@@ -176,7 +177,7 @@ class TestAgbIndoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,scores_expected",
@@ -212,7 +213,7 @@ class TestAgbIndoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,age_group",
@@ -392,3 +393,208 @@ class TestCalculateAgbIndoorClassification:
                 gender="male",
                 age_group="adult",
             )
+
+
+class TestCalculateAgbIndoorClassificationFraction:
+    """Class to test the indoor classification fraction function."""
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa18",
+                450,
+                "adult",
+                "compound",
+                0.847856946666746,
+            ),
+            (
+                "wa18",
+                425,
+                "adult",
+                "barebow",
+                0.5975078167952219,
+            ),
+            (
+                "portsmouth",
+                538,
+                "Under 18",
+                "recurve",
+                0.4473199669958774,
+            ),
+        ],
+    )
+    def test_agb_indoor_classification_fraction(  # noqa: PLR0913 Too many arguments
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction is as expected."""
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa18",
+                1,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "wa18",
+                20,
+                "adult",
+                "barebow",
+                0.0,
+            ),
+            (
+                "wa18",
+                30,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "portsmouth",
+                1,
+                "Under 18",
+                "recurve",
+                0.0,
+            ),
+        ],
+    )
+    def test_agb_indoor_classification_fraction_low(  # noqa: PLR0913 many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction below lowest classification is 0.0."""
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa18",
+                599,
+                "adult",
+                "compound",
+                1.0,
+            ),
+            (
+                "worcester",
+                300,
+                "adult",
+                "compound",
+                1.0,
+            ),
+            (
+                "wa18",
+                550,
+                "adult",
+                "barebow",
+                1.0,
+            ),
+            (
+                "portsmouth",
+                588,
+                "under 18",
+                "recurve",
+                1.0,
+            ),
+        ],
+    )
+    def test_agb_indoor_classification_fraction_high(  # noqa: PLR0913 Too many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction above highest classification is 1.0."""
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa18",
+                546,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "worcester",
+                294,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "wa18",
+                535,
+                "adult",
+                "barebow",
+                1.0,
+            ),
+            (
+                "portsmouth",
+                571,
+                "under 18",
+                "recurve",
+                1.0,
+            ),
+        ],
+    )
+    def test_agb_indoor_classification_fraction_boundary(  # noqa: PLR0913 Too many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction on score boundaries is 0.0 or 1.0."""
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)

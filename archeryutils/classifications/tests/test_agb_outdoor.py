@@ -2,6 +2,7 @@
 
 import pytest
 
+import archeryutils as au
 import archeryutils.classifications as class_funcs
 from archeryutils import load_rounds
 
@@ -81,7 +82,7 @@ class TestAgbOutdoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,age_group,scores_expected",
@@ -127,7 +128,7 @@ class TestAgbOutdoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,scores_expected",
@@ -185,7 +186,7 @@ class TestAgbOutdoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,scores_expected",
@@ -225,7 +226,7 @@ class TestAgbOutdoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,scores_expected",
@@ -253,7 +254,7 @@ class TestAgbOutdoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,age_group",
@@ -537,3 +538,254 @@ class TestCalculateAgbOutdoorClassification:
                 gender="male",
                 age_group="adult",
             )
+
+
+class TestCalculateAgbOutdoorClassificationFraction:
+    """Class to test the outdoor classification fraction function."""
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa720_70",
+                450,
+                "adult",
+                "compound",
+                0.3906252368174717,
+            ),
+            (
+                "wa720_50_b",
+                425,
+                "adult",
+                "barebow",
+                0.11099804827974227,
+            ),
+            (
+                "wa720_50_c",
+                450,
+                "adult",
+                "compound",
+                0.42456775138238356,
+            ),
+            (
+                "wa720_60",
+                620,
+                "Under 18",
+                "recurve",
+                0.7257808930669505,
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_fraction(  # noqa: PLR0913 many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction is as expected."""
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa720_70",
+                1,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "wa720_50_b",
+                20,
+                "adult",
+                "barebow",
+                0.0,
+            ),
+            (
+                "wa720_50_c",
+                30,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "wa720_60",
+                1,
+                "Under 18",
+                "recurve",
+                0.0,
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_fraction_low(  # noqa: PLR0913 many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction below lowest classification is 0.0."""
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa720_70",
+                720,
+                "adult",
+                "compound",
+                1.0,
+            ),
+            (
+                "wa720_50_b",
+                650,
+                "adult",
+                "barebow",
+                1.0,
+            ),
+            (
+                "wa720_50_c",
+                718,
+                "adult",
+                "compound",
+                1.0,
+            ),
+            (
+                "wa720_60",
+                650,
+                "under 18",
+                "recurve",
+                1.0,
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_fraction_high(  # noqa: PLR0913 many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction above highest classification is 1.0."""
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,frac_expected",
+        [
+            (
+                "wa720_70",
+                613,
+                "adult",
+                "compound",
+                1.0,
+            ),
+            (
+                "wa720_50_b",
+                626,
+                "adult",
+                "barebow",
+                1.0,
+            ),
+            (
+                "wa720_50_c",
+                640,
+                "adult",
+                "compound",
+                0.0,
+            ),
+            (
+                "wa720_60",
+                338,
+                "under 18",
+                "recurve",
+                0.0,
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_fraction_boundary(  # noqa: PLR0913 many args
+        self,
+        score: float,
+        roundname: str,
+        age_group: str,
+        bowstyle: str,
+        frac_expected: float,
+    ) -> None:
+        """Check that classification fraction above highest classification is 1.0."""
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
+        )
+
+        assert frac_returned == pytest.approx(frac_expected)
+
+    def test_agb_outdoor_classification_fraction_restrict(
+        self,
+    ) -> None:
+        """Check that classification fraction functions with restrict."""
+        frac_restricted = class_funcs.agb_outdoor_classification_fraction(
+            score=620,
+            roundname="national",
+            bowstyle="recurve",
+            gender="male",
+            age_group="adult",
+        )
+        assert frac_restricted == 1.0
+
+        frac_unrestricted = class_funcs.agb_outdoor_classification_fraction(
+            score=620,
+            roundname="national",
+            bowstyle="recurve",
+            gender="male",
+            age_group="adult",
+            restrict=False,
+        )
+
+        assert frac_unrestricted == pytest.approx(0.4541258975704667)
+
+    def test_agb_outdoor_classification_fraction_unrestrict_large(
+        self,
+    ) -> None:
+        """Check classification fraction unrestricted for large scores."""
+        frac_unrestricted = class_funcs.agb_outdoor_classification_fraction(
+            score=646,
+            roundname="national",
+            bowstyle="recurve",
+            gender="male",
+            age_group="adult",
+            restrict=False,
+        )
+
+        assert frac_unrestricted == pytest.approx(1.0)
