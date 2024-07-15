@@ -636,6 +636,22 @@ def agb_outdoor_classification_fraction(  # noqa: PLR0913 Too many arguments
     ... )
 
     """
+    # Check for early return if on score boundary:
+        # If above max classification score return 1.0 early.
+        # Else if a boundary score return 0.0 (avoids integer rounding errors later).
+        # Note this section is operating under `restrict=True`
+    all_class_scores = agb_outdoor_classification_scores(
+        roundname,
+        bowstyle,
+        gender,
+        age_group,
+    )
+    if score >= np.abs(all_class_scores[0]) or score == ALL_OUTDOOR_ROUNDS[roundname].max_score():
+        return 1.0
+    elif score in all_class_scores:
+        return 0.0
+
+    # If no early return from score boundaries proceed using handicaps.
     hc_sys = hc.handicap_scheme("AGB")
     handicap = hc_sys.handicap_from_score(score, ALL_OUTDOOR_ROUNDS[roundname])
 
@@ -655,6 +671,7 @@ def agb_outdoor_classification_fraction(  # noqa: PLR0913 Too many arguments
     else:
         group_hcs = group_data["class_HC"]
 
+    # Fetch the handicaps either side and get fraction
     loc = 0
     while loc < len(group_hcs):
         if handicap < group_hcs[loc]:
