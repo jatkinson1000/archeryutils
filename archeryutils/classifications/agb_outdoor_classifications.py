@@ -686,7 +686,9 @@ def agb_outdoor_classification_fraction(  # noqa: PLR0913 Too many arguments
         loc += 1
 
     if loc == 0:
+        # Handicap below max classification possible
         return 1.0
     if loc == len(group_hcs):
+        # Handicap above lowest classification
         return 0.0
     return (group_hcs[loc] - handicap) / (group_hcs[loc] - group_hcs[loc - 1])

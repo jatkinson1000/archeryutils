@@ -802,3 +802,18 @@ class TestCalculateAgbOutdoorClassificationFraction:
         )
 
         assert frac_unrestricted == pytest.approx(0.4541258975704667)
+
+    def test_agb_outdoor_classification_fraction_unrestrict_large(
+        self,
+    ) -> None:
+        """Check classification fraction unrestricted for large scores."""
+        frac_unrestricted = class_funcs.agb_outdoor_classification_fraction(
+            score=646,
+            roundname="national",
+            bowstyle="recurve",
+            gender="male",
+            age_group="adult",
+            restrict=False,
+        )
+
+        assert frac_unrestricted == pytest.approx(1.0)

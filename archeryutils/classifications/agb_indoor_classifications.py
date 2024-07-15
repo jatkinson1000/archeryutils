@@ -395,7 +395,7 @@ def agb_indoor_classification_fraction(
 
     if loc == 0:
         # Handicap below max classification possible
-        return 1.0
+        return 1.0  # pragma: no cover - Match outdoor: sanity check but not triggered
     if loc == len(group_hcs):
         # Handicap above lowest classification
         return 0.0
