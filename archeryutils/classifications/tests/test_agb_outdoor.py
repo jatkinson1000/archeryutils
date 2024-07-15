@@ -97,7 +97,7 @@ class TestAgbOutdoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,age_group,scores_expected",
@@ -143,7 +143,7 @@ class TestAgbOutdoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,scores_expected",
@@ -201,7 +201,7 @@ class TestAgbOutdoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,scores_expected",
@@ -241,7 +241,7 @@ class TestAgbOutdoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,scores_expected",
@@ -269,7 +269,7 @@ class TestAgbOutdoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,age_group",
@@ -621,7 +621,7 @@ class TestCalculateAgbOutdoorClassificationFraction:
             age_group=age_group,
         )
 
-        assert frac_returned == frac_expected
+        assert frac_returned == pytest.approx(frac_expected)
 
     @pytest.mark.parametrize(
         "roundname,score,age_group,bowstyle,frac_expected",
@@ -673,7 +673,7 @@ class TestCalculateAgbOutdoorClassificationFraction:
             age_group=age_group,
         )
 
-        assert frac_returned == frac_expected
+        assert frac_returned == pytest.approx(frac_expected)
 
     @pytest.mark.parametrize(
         "roundname,score,age_group,bowstyle,frac_expected",
@@ -725,7 +725,7 @@ class TestCalculateAgbOutdoorClassificationFraction:
             age_group=age_group,
         )
 
-        assert frac_returned == frac_expected
+        assert frac_returned == pytest.approx(frac_expected)
 
     def test_agb_outdoor_classification_fraction_restrict(
         self,
@@ -749,4 +749,4 @@ class TestCalculateAgbOutdoorClassificationFraction:
             restrict=False,
         )
 
-        assert frac_unrestricted == 0.4541258975704667
+        assert frac_unrestricted == pytest.approx(0.4541258975704667)

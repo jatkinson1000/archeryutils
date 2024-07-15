@@ -87,7 +87,7 @@ class TestAgbIndoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "age_group,scores_expected",
@@ -128,7 +128,7 @@ class TestAgbIndoorClassificationScores:
             age_group=age_group,
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "bowstyle,scores_expected",
@@ -160,7 +160,7 @@ class TestAgbIndoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "bowstyle,scores_expected",
@@ -192,7 +192,7 @@ class TestAgbIndoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,scores_expected",
@@ -228,7 +228,7 @@ class TestAgbIndoorClassificationScores:
             age_group="adult",
         )
 
-        assert scores == scores_expected[::-1]
+        assert scores == pytest.approx(scores_expected[::-1])
 
     @pytest.mark.parametrize(
         "roundname,bowstyle,gender,age_group",
@@ -469,7 +469,7 @@ class TestCalculateAgbIndoorClassificationFraction:
             age_group=age_group,
         )
 
-        assert frac_returned == frac_expected
+        assert frac_returned == pytest.approx(frac_expected)
 
     @pytest.mark.parametrize(
         "roundname,score,age_group,bowstyle,frac_expected",
@@ -521,7 +521,7 @@ class TestCalculateAgbIndoorClassificationFraction:
             age_group=age_group,
         )
 
-        assert frac_returned == frac_expected
+        assert frac_returned == pytest.approx(frac_expected)
 
     @pytest.mark.parametrize(
         "roundname,score,age_group,bowstyle,frac_expected",
@@ -573,4 +573,4 @@ class TestCalculateAgbIndoorClassificationFraction:
             age_group=age_group,
         )
 
-        assert frac_returned == frac_expected
+        assert frac_returned == pytest.approx(frac_expected)

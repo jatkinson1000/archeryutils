@@ -7,7 +7,7 @@ calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
 
-from typing import Any, Literal, Optional, TypedDict, cast
+from typing import Any, Literal, TypedDict, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -575,7 +575,7 @@ def agb_outdoor_classification_fraction(  # noqa: PLR0913 Too many arguments
     bowstyle: str,
     gender: str,
     age_group: str,
-    restrict: Optional[bool] = True,
+    restrict: bool | None = True,
 ) -> float:
     """
     Calculate the fraction towards the next classification an archer is.
