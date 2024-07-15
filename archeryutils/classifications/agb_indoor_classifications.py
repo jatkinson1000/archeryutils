@@ -357,6 +357,12 @@ def agb_indoor_classification_fraction(
 
     """
     hc_sys = hc.handicap_scheme("AGB")
+
+    # enforce full size face and compound scoring where required
+    if bowstyle.lower() in ("compound"):
+        roundname = cls_funcs.get_compound_codename(roundname)
+    roundname = cls_funcs.strip_spots(roundname)
+
     handicap = hc_sys.handicap_from_score(score, ALL_INDOOR_ROUNDS[roundname])
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
