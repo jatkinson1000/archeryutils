@@ -613,14 +613,12 @@ class TestCalculateAgbOutdoorClassificationFraction:
         frac_expected: float,
     ) -> None:
         """Check that classification fraction is as expected."""
-        frac_returned = (
-            au.classifications.agb_outdoor_classifications.classification_fraction(
-                roundname=roundname,
-                score=score,
-                bowstyle=bowstyle,
-                gender="male",
-                age_group=age_group,
-            )
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
         )
 
         assert frac_returned == frac_expected
@@ -667,14 +665,12 @@ class TestCalculateAgbOutdoorClassificationFraction:
         frac_expected: float,
     ) -> None:
         """Check that classification fraction below lowest classification is 0,0."""
-        frac_returned = (
-            au.classifications.agb_outdoor_classifications.classification_fraction(
-                roundname=roundname,
-                score=score,
-                bowstyle=bowstyle,
-                gender="male",
-                age_group=age_group,
-            )
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
         )
 
         assert frac_returned == frac_expected
@@ -721,14 +717,12 @@ class TestCalculateAgbOutdoorClassificationFraction:
         frac_expected: float,
     ) -> None:
         """Check that classification fraction above highest classification is 1,0."""
-        frac_returned = (
-            au.classifications.agb_outdoor_classifications.classification_fraction(
-                roundname=roundname,
-                score=score,
-                bowstyle=bowstyle,
-                gender="male",
-                age_group=age_group,
-            )
+        frac_returned = class_funcs.agb_outdoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
         )
 
         assert frac_returned == frac_expected
@@ -737,26 +731,22 @@ class TestCalculateAgbOutdoorClassificationFraction:
         self,
     ) -> None:
         """Check that classification fraction functions with restrict."""
-        frac_restricted = (
-            au.classifications.agb_outdoor_classifications.classification_fraction(
-                score=620,
-                roundname="national",
-                bowstyle="recurve",
-                gender="male",
-                age_group="adult",
-            )
+        frac_restricted = class_funcs.agb_outdoor_classification_fraction(
+            score=620,
+            roundname="national",
+            bowstyle="recurve",
+            gender="male",
+            age_group="adult",
         )
         assert frac_restricted == 1.0
 
-        frac_unrestricted = (
-            au.classifications.agb_outdoor_classifications.classification_fraction(
-                score=620,
-                roundname="national",
-                bowstyle="recurve",
-                gender="male",
-                age_group="adult",
-                restrict=False,
-            )
+        frac_unrestricted = class_funcs.agb_outdoor_classification_fraction(
+            score=620,
+            roundname="national",
+            bowstyle="recurve",
+            gender="male",
+            age_group="adult",
+            restrict=False,
         )
 
         assert frac_unrestricted == 0.4541258975704667

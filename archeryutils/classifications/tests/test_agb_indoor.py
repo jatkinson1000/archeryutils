@@ -434,7 +434,7 @@ class TestCalculateAgbIndoorClassificationFraction:
                 450,
                 "adult",
                 "compound",
-                0.7661562067030987,
+                0.847856946666746,
             ),
             (
                 "wa18",
@@ -442,13 +442,6 @@ class TestCalculateAgbIndoorClassificationFraction:
                 "adult",
                 "barebow",
                 0.5975078167952219,
-            ),
-            (
-                "wa18",
-                450,
-                "adult",
-                "compound",
-                0.7661562067030987,
             ),
             (
                 "portsmouth",
@@ -468,14 +461,12 @@ class TestCalculateAgbIndoorClassificationFraction:
         frac_expected: float,
     ) -> None:
         """Check that classification fraction is as expected."""
-        frac_returned = (
-            au.classifications.agb_indoor_classifications.classification_fraction(
-                roundname=roundname,
-                score=score,
-                bowstyle=bowstyle,
-                gender="male",
-                age_group=age_group,
-            )
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
         )
 
         assert frac_returned == frac_expected
@@ -522,14 +513,12 @@ class TestCalculateAgbIndoorClassificationFraction:
         frac_expected: float,
     ) -> None:
         """Check that classification fraction below lowest classification is 0,0."""
-        frac_returned = (
-            au.classifications.agb_indoor_classifications.classification_fraction(
-                roundname=roundname,
-                score=score,
-                bowstyle=bowstyle,
-                gender="male",
-                age_group=age_group,
-            )
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
         )
 
         assert frac_returned == frac_expected
@@ -576,14 +565,12 @@ class TestCalculateAgbIndoorClassificationFraction:
         frac_expected: float,
     ) -> None:
         """Check that classification fraction above highest classification is 1,0."""
-        frac_returned = (
-            au.classifications.agb_indoor_classifications.classification_fraction(
-                roundname=roundname,
-                score=score,
-                bowstyle=bowstyle,
-                gender="male",
-                age_group=age_group,
-            )
+        frac_returned = class_funcs.agb_indoor_classification_fraction(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender="male",
+            age_group=age_group,
         )
 
         assert frac_returned == frac_expected
