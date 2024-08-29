@@ -8,7 +8,7 @@
    "classStep_in" : 8,
    "genderStep_in" : 4,
    "ageStep_in" : 6,
-   "datum_field" : 15,
+   "datum_field" : 16,
    "classStep_field" : 7,
    "genderStep_field" : 4,
    "ageStep_field" : 6
@@ -22,7 +22,7 @@
    "classStep_in" : 7.5,
    "genderStep_in" : 5,
    "ageStep_in" : 6.5,
-   "datum_field" : 30,
+   "datum_field" : 34,
    "classStep_field" : 8,
    "genderStep_field" : 5,
    "ageStep_field" : 6.5
@@ -36,7 +36,7 @@
    "classStep_in" : 6.0,
    "genderStep_in" : 5.5,
    "ageStep_in" : 5.5,
-   "datum_field" : 47,
+   "datum_field" : 50,
    "classStep_field" : 6.5,
    "genderStep_field" : 5.5,
    "ageStep_field" : 5.5
@@ -50,8 +50,8 @@
    "classStep_in" : 6.5,
    "genderStep_in" : 7,
    "ageStep_in" : 6,
-   "datum_field" : 65,
-   "classStep_field" : 7,
+   "datum_field" : 70,
+   "classStep_field" : 6,
    "genderStep_field" : 7,
    "ageStep_field" : 6
   },
