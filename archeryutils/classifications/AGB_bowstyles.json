@@ -10,7 +10,7 @@
    "ageStep_in" : 6,
    "datum_field" : 19,
    "classStep_field" : 7.5,
-   "genderStep_field" : 4,
+   "genderStep_field" : 3.5,
    "ageStep_field" : 6
   },
   {"bowstyle" : "Recurve",
@@ -64,9 +64,9 @@
    "classStep_in" : 6.0,
    "genderStep_in" : 5.5,
    "ageStep_in" : 5.5,
-   "datum_field" : 60,
-   "classStep_field" : 6.5,
-   "genderStep_field" : 6,
+   "datum_field" : 55,
+   "classStep_field" : 6,
+   "genderStep_field" : 5.5,
    "ageStep_field" : 5.5
   },
   {"bowstyle" : "Flatbow",
