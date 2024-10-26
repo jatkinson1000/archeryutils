@@ -388,7 +388,7 @@ class TestCalculateAgbOutdoorClassification:
             ),
         ],
     )
-    def test_calculate_agb_outdoor_classification(  # noqa: PLR0913 Too many arguments
+    def test_calculate_agb_outdoor_classification(
         self,
         score: float,
         roundname: str,
@@ -482,7 +482,7 @@ class TestCalculateAgbOutdoorClassification:
             ),
         ],
     )
-    def test_calculate_agb_outdoor_classification_prestige_dist(  # noqa: PLR0913 Too many arguments
+    def test_calculate_agb_outdoor_classification_prestige_dist(
         self,
         score: float,
         roundname: str,
