@@ -21,8 +21,7 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-    - run: pip install ruff mypy blackdoc
-           pip install .[lint]
+    - run: pip install .[lint]
 
     # annotate each step with `if: always` to run all regardless
     - name: Check code formatting with ruff
