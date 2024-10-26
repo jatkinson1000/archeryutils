@@ -47,7 +47,7 @@ class Pass:
             raise TypeError(msg)
 
     @classmethod
-    def at_target(  # noqa: PLR0913
+    def at_target(
         cls,
         n_arrows: int,
         scoring_system: ScoringSystem,
@@ -195,7 +195,7 @@ class Round:
 
     """
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         name: str,
         passes: Iterable[Pass],

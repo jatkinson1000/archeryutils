@@ -20,8 +20,8 @@ def _get_sys_info() -> list:  # pragma: no cover
     # get full commit hash
     commit = None
     if os.path.isdir(".git") and os.path.isdir("archeryutils"):
-        with subprocess.Popen(
-            'git log --format="%H" -n 1'.split(" "),  # noqa: S603 subprocess call this is safe
+        with subprocess.Popen(  # noqa: S603 subprocess call this is safe
+            'git log --format="%H" -n 1'.split(" "),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ) as pipe:
