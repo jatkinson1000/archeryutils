@@ -42,7 +42,7 @@ class TestLengths:
     )
     def test_conversion_to_metres(self, value, unit, result):
         """Test conversion from other units to metres."""
-        assert length.to_metres(value, unit) == result
+        assert length.to_metres(value, unit) == pytest.approx(result)
 
     @pytest.mark.parametrize(
         "value,unit,result",

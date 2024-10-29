@@ -102,7 +102,7 @@ class TestTarget:
         """Check Target() returns correct distance in metres when yards provided."""
         target = Target("5_zone", 122, (50, "yards"))
         assert target.native_distance == (50, "yard")
-        assert target.distance == 50.0 * 0.9144
+        assert target.distance == pytest.approx(50.0 * 0.9144)
 
     def test_invalid_diameter_unit(self) -> None:
         """Check Target() raises error when called with unsupported diameter units."""
@@ -112,7 +112,7 @@ class TestTarget:
     def test_default_diameter_unit(self) -> None:
         """Check that Target() is using centimetres by default for diameter."""
         target = Target("10_zone_5_ring_compound", 80, 50)
-        assert target.diameter == 80 * 0.01
+        assert target.diameter == pytest.approx(80 * 0.01)
 
     def test_diameter_metres_not_converted(self) -> None:
         """Check that Target() is storing diameter in metres."""
@@ -123,7 +123,7 @@ class TestTarget:
         """Check that Target() converts diameters in inches correctly."""
         target = Target("Worcester", (16, "inches"), (20, "yards"), indoor=True)
         assert target.native_diameter == (16, "inch")
-        assert target.diameter == 16 * 0.0254
+        assert target.diameter == pytest.approx(16 * 0.0254)
 
     def test_diameter_distance_units_coerced_to_definitive_names(self) -> None:
         """Check that Target coerces aliased distance units into standard names."""
@@ -349,7 +349,7 @@ class TestCustomScoringTarget:
     def test_constructor(self) -> None:
         """Check initialisation of Target with a custom scoring system and spec."""
         target = Target.from_face_spec({0.1: 3, 0.5: 1}, 80, (50, "yard"))
-        assert target.distance == 50.0 * 0.9144
+        assert target.distance == pytest.approx(50.0 * 0.9144)
         assert target.diameter == 0.8
         assert target.scoring_system == "Custom"
         assert target.face_spec == {0.1: 3, 0.5: 1}
