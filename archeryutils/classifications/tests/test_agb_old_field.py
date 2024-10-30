@@ -275,7 +275,7 @@ class TestCalculateOldAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_old_agb_field_classification(  # noqa: PLR0913 Too many arguments
+    def test_calculate_old_agb_field_classification(
         self,
         roundname: str,
         score: float,

@@ -83,7 +83,6 @@ def _make_old_agb_field_classification_dict() -> dict[str, GroupData]:
         ("Compound Limited", "Female", "Adult"): [322, 302, 275, 247, 220, 193],
         ("Compound Barebow", "Male", "Adult"): [328, 307, 279, 252, 224, 197],
         ("Compound Barebow", "Female", "Adult"): [303, 284, 258, 233, 207, 182],
-        #
         ("Compound", "Male", "Under 18"): [385, 369, 337, 306, 273, 242],
         ("Compound", "Female", "Under 18"): [357, 343, 314, 284, 255, 225],
         ("Recurve", "Male", "Under 18"): [311, 292, 265, 239, 213, 187],
