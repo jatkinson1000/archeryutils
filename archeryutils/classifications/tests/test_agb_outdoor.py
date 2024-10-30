@@ -168,6 +168,12 @@ class TestAgbOutdoorClassificationScores:
                 "female",
                 [64, 94, 136, 195, 274, 373, 493, 625, 761],
             ),
+            (
+                "wa1440_70",
+                "english longbow",
+                "female",
+                [64, 94, 136, 195, 274, 373, 493, 625, 761],
+            ),
         ],
     )
     def test_agb_outdoor_classification_scores_bowstyles(
@@ -385,6 +391,13 @@ class TestCalculateAgbOutdoorClassification:
                 "Under 12",
                 "longbow",
                 "UC",
+            ),
+            (
+                "metric_v",
+                250,
+                "Under 12",
+                "longbow",
+                "A1",
             ),
         ],
     )

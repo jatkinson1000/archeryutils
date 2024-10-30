@@ -141,6 +141,11 @@ class TestAgbFieldClassificationScores:
                 "longbow",
                 [201, 188, 171, 155, 137, 121],
             ),
+            (
+                "wa_field_24_blue_marked",
+                "english longbow",
+                [201, 188, 171, 155, 137, 121],
+            ),
         ],
     )
     def test_agb_field_classification_scores_bowstyles(
@@ -259,6 +264,13 @@ class TestCalculateAgbFieldClassification:
                 1,
                 "Under 12",
                 "longbow",
+                "unclassified",
+            ),
+            (
+                "wa_field_24_blue_marked",
+                1,
+                "Under 12",
+                "english longbow",
                 "unclassified",
             ),
         ],
