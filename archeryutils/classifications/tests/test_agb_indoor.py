@@ -129,6 +129,10 @@ class TestAgbIndoorClassificationScores:
                 "longbow",
                 [127, 178, 240, 306, 369, 423, 466, 501],
             ),
+            (
+                "english longbow",
+                [127, 178, 240, 306, 369, 423, 466, 501],
+            ),
         ],
     )
     def test_agb_indoor_classification_scores_bowstyles(
@@ -333,7 +337,7 @@ class TestCalculateAgbIndoorClassification:
             (
                 1,
                 "Under 12",
-                "longbow",
+                "english longbow",
                 "UC",
             ),
         ],
