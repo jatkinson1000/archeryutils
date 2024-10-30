@@ -232,6 +232,10 @@ def get_groupname(bowstyle: str, gender: str, age_group: str) -> str:
     groupname : str
         single, lower case str id for this category
     """
+    # Guard against English Longbow as a synonym for Longbow
+    if bowstyle.lower() == "english longbow":
+        bowstyle = "longbow"
+
     groupname = (
         f"{age_group.lower().replace(' ', '')}_"
         f"{gender.lower()}_"

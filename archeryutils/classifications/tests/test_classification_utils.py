@@ -10,12 +10,13 @@ class TestStringUtils:
 
     @pytest.mark.parametrize(
         "bowstyle,age_group,gender,groupname_expected",
-        # Check all systems, different distances, negative and large handicaps.
         [
             ("barebow", "adult", "male", "adult_male_barebow"),
             ("Barebow", "Adult", "Male", "adult_male_barebow"),
             ("Barebow", "Under 18", "Male", "under18_male_barebow"),
             ("RECURVE", "UnDeR 18", "femaLe", "under18_female_recurve"),
+            # Check English Longbow becomes Longbow
+            ("English Longbow", "adult", "femaLe", "adult_female_longbow"),
         ],
     )
     def test_get_groupname(
@@ -36,7 +37,6 @@ class TestStringUtils:
 
     @pytest.mark.parametrize(
         "roundname,strippedname_expected",
-        # Check all systems, different distances, negative and large handicaps.
         [
             ("portsmouth", "portsmouth"),
             ("portsmouth_triple", "portsmouth"),
