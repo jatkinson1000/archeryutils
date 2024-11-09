@@ -221,7 +221,7 @@ def calculate_old_agb_field_classification(
 
 
 def old_agb_field_classification_scores(
-    roundname: str,  # noqa: ARG001 Unused argument for consistency with other classification schemes
+    roundname: str,  # noqa: ARG001 - Unused argument for consistency with other classification schemes
     bowstyle: str,
     gender: str,
     age_group: str,

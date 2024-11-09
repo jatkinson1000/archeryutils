@@ -40,7 +40,7 @@ _CLASSES = {
 }
 
 
-def handicap_scheme(  # noqa: D417 Missing argument in docstring (**kwargs)
+def handicap_scheme(  # noqa: D417 - Missing argument in docstring (**kwargs)
     handicap_sys: Union[str, HandicapScheme],
     **kwargs: float,
 ) -> HandicapScheme:

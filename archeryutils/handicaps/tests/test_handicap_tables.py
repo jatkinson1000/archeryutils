@@ -134,7 +134,7 @@ class TestHandicapTable:
         expected: str,
     ) -> None:
         """Check that abbreviate returns expected results."""
-        assert hc.HandicapTable._abbreviate(input_str) == expected  # noqa: SLF001 Private member access for testing purposes
+        assert hc.HandicapTable._abbreviate(input_str) == expected  # noqa: SLF001 - Private member access for testing purposes
 
     def test_print_agb(
         self,
