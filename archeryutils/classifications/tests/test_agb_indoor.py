@@ -165,6 +165,14 @@ class TestAgbIndoorClassificationScores:
                 "asiatic",
                 [331, 387, 433, 472, 503, 528, 549, 565],
             ),
+            (
+                "compound limited",
+                [472, 508, 532, 549, 560, 571, 583, 594],
+            ),
+            (
+                "compound barebow",
+                [472, 508, 532, 549, 560, 571, 583, 594],
+            ),
         ],
     )
     def test_agb_indoor_classification_scores_nonbowstyles(
@@ -172,7 +180,7 @@ class TestAgbIndoorClassificationScores:
         bowstyle: str,
         scores_expected: list[int],
     ) -> None:
-        """Check that barebow scores returned for valid but non-indoor styles."""
+        """Check that appropriate scores returned for valid but non-indoor styles."""
         scores = class_funcs.agb_indoor_classification_scores(
             roundname="portsmouth",
             bowstyle=bowstyle,

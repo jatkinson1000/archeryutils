@@ -25,6 +25,8 @@ class AGBAgeData(TypedDict):
     age_group: str
     male: list[int]
     female: list[int]
+    red: list[int]
+    blue: list[int]
     step: int
 
 
@@ -76,6 +78,10 @@ class AGBBowstyleData(TypedDict):
     classStep_in: float
     genderStep_in: float
     ageStep_in: float
+    datum_field: float
+    classStep_field: float
+    genderStep_field: float
+    ageStep_field: float
 
 
 def read_bowstyles_json(
@@ -191,12 +197,13 @@ def read_classes_json(
         filename = "AGB_classes_in.json"
     elif class_system == "agb_outdoor":
         filename = "AGB_classes_out.json"
-    # elif class_system == 'agb_field':
-    #     filename = "AGB_classes_field.json"
+    elif class_system == "agb_field":
+        # Field classifications are same as outdoor
+        filename = "AGB_classes_out.json"
     else:
         msg = (
             "Unexpected classification system specified. "
-            "Expected one of 'agb_indoor', 'agb_outdoor', 'aqb_field'."
+            "Expected one of 'agb_indoor', 'agb_outdoor', 'agb_field'."
         )
         raise ValueError(msg)
 
@@ -233,7 +240,7 @@ def get_groupname(bowstyle: str, gender: str, age_group: str) -> str:
         single, lower case str id for this category
     """
     # Guard against English Longbow as a synonym for Longbow
-    if bowstyle.lower() == "english longbow":
+    if bowstyle.lower() in ["english longbow", "englishlongbow"]:
         bowstyle = "longbow"
 
     groupname = (

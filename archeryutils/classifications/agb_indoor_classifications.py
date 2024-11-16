@@ -263,6 +263,8 @@ def agb_indoor_classification_scores(
     # deal with reduced categories:
     if bowstyle.lower() in ("flatbow", "traditional", "asiatic"):
         bowstyle = "Barebow"
+    elif bowstyle.lower() in ("compound barebow", "compound limited"):
+        bowstyle = "Compound"
 
     # enforce compound scoring
     if bowstyle.lower() in ("compound"):

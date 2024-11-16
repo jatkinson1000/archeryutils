@@ -63,7 +63,7 @@ class HandicapTable:
 
     """
 
-    def __init__(  # noqa: PLR0913 Too many arguments
+    def __init__(  # noqa: PLR0913 - Too many arguments
         self,
         handicap_sys: Union[str, HandicapScheme],
         hcs: Union[FloatArray, NDArray[np.int_]],

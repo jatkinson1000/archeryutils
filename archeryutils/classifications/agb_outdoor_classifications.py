@@ -536,6 +536,8 @@ def agb_outdoor_classification_scores(
     """
     if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
         bowstyle = "Barebow"
+    elif bowstyle.lower() in ("compound barebow", "compound longbow"):
+        bowstyle = "Compound"
 
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]

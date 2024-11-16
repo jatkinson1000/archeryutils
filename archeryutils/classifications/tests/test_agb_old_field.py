@@ -1,4 +1,4 @@
-"""Tests for old field classification functions."""
+"""Tests for old agb field classification functions."""
 
 import pytest
 
@@ -12,7 +12,7 @@ ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 
-class TestAgbFieldClassificationScores:
+class TestOldAgbFieldClassificationScores:
     """Tests for the field classification scores function."""
 
     @pytest.mark.parametrize(
@@ -21,38 +21,38 @@ class TestAgbFieldClassificationScores:
             (
                 "wa_field_24_blue_marked",
                 "adult",
-                [336, 311, 283, 249, 212, 173, 135, 101, 74],
+                [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
                 "50+",
-                [321, 294, 263, 227, 188, 149, 114, 84, 60],
+                [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
-                "Under 21",
-                [336, 311, 283, 249, 212, 173, 135, 101, 74],
+                "under21",
+                [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
                 "Under 18",
-                [305, 275, 241, 203, 164, 127, 94, 68, 48],
+                [298, 279, 254, 229, 204, 179],
             ),
             (
                 "wa_field_24_blue_marked",
                 "Under 12",
-                [224, 185, 146, 111, 82, 58, 41, 28, 19],
+                [298, 279, 254, 229, 204, 179],
             ),
         ],
     )
-    def test_agb_field_classification_scores_ages(
+    def test_old_agb_field_classification_scores_ages(
         self,
         roundname: str,
         age_group: str,
         scores_expected: list[int],
     ) -> None:
         """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
             gender="male",
@@ -68,29 +68,29 @@ class TestAgbFieldClassificationScores:
                 "wa_field_24_blue_marked",
                 "male",
                 "adult",
-                [336, 311, 283, 249, 212, 173, 135, 101, 74],
+                [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
                 "female",
                 "adult",
-                [315, 287, 255, 218, 179, 140, 106, 78, 55],
+                [303, 284, 258, 233, 207, 182],
             ),
             (
                 "wa_field_24_blue_marked",
                 "male",
                 "Under 18",
-                [305, 275, 241, 203, 164, 127, 94, 68, 48],
+                [298, 279, 254, 229, 204, 179],
             ),
             (
                 "wa_field_24_blue_marked",
                 "female",
                 "Under 18",
-                [280, 247, 209, 170, 132, 99, 72, 51, 35],
+                [251, 236, 214, 193, 172, 151],
             ),
         ],
     )
-    def test_agb_field_classification_scores_genders(
+    def test_old_agb_field_classification_scores_genders(
         self,
         roundname: str,
         gender: str,
@@ -98,7 +98,7 @@ class TestAgbFieldClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle="barebow",
             gender=gender,
@@ -114,58 +114,48 @@ class TestAgbFieldClassificationScores:
             (
                 "wa_field_24_red_marked",
                 "compound",
-                [408, 391, 369, 345, 318, 286, 248, 204, 157],
-            ),
-            (
-                "wa_field_24_red_marked",
-                "compound limited",
-                [369, 347, 322, 293, 259, 219, 176, 133, 96],
-            ),
-            (
-                "wa_field_24_blue_marked",
-                "compound barebow",
-                [343, 321, 296, 268, 235, 200, 164, 129, 99],
+                [393, 377, 344, 312, 279, 247],
             ),
             (
                 "wa_field_24_red_marked",
                 "recurve",
-                [369, 343, 314, 279, 237, 189, 139, 96, 62],
+                [338, 317, 288, 260, 231, 203],
             ),
             (
                 "wa_field_24_blue_marked",
                 "barebow",
-                [336, 311, 283, 249, 212, 173, 135, 101, 74],
+                [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
                 "traditional",
-                [309, 283, 252, 218, 182, 146, 114, 86, 63],
+                [262, 245, 223, 202, 178, 157],
             ),
             (
                 "wa_field_24_blue_marked",
                 "flatbow",
-                [273, 244, 212, 179, 146, 116, 90, 68, 51],
+                [262, 245, 223, 202, 178, 157],
             ),
             (
                 "wa_field_24_blue_marked",
                 "longbow",
-                [241, 209, 176, 143, 114, 88, 67, 49, 36],
+                [201, 188, 171, 155, 137, 121],
             ),
             (
                 "wa_field_24_blue_marked",
                 "english longbow",
-                [241, 209, 176, 143, 114, 88, 67, 49, 36],
+                [201, 188, 171, 155, 137, 121],
             ),
         ],
     )
-    def test_agb_field_classification_scores_bowstyles(
+    def test_old_agb_field_classification_scores_bowstyles(
         self,
         roundname: str,
         bowstyle: str,
         scores_expected: list[int],
     ) -> None:
         """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        scores = class_funcs.old_agb_field_classification_scores(
             roundname=roundname,
             bowstyle=bowstyle,
             gender="male",
@@ -198,7 +188,7 @@ class TestAgbFieldClassificationScores:
             ),
         ],
     )
-    def test_agb_field_classification_scores_invalid(
+    def test_old_agb_field_classification_scores_invalid(
         self,
         roundname: str,
         bowstyle: str,
@@ -213,7 +203,7 @@ class TestAgbFieldClassificationScores:
                 f"{gender.lower()}_{bowstyle.lower()}"
             ),
         ):
-            _ = class_funcs.agb_field_classification_scores(
+            _ = class_funcs.old_agb_field_classification_scores(
                 roundname=roundname,
                 bowstyle=bowstyle,
                 gender=gender,
@@ -221,7 +211,7 @@ class TestAgbFieldClassificationScores:
             )
 
 
-class TestCalculateAgbFieldClassification:
+class TestCalculateOldAgbFieldClassification:
     """Tests for the field classification function."""
 
     @pytest.mark.parametrize(
@@ -232,88 +222,60 @@ class TestCalculateAgbFieldClassification:
                 400,
                 "adult",
                 "compound",
-                "GMB",
-            ),
-            (
-                "wa_field_12_red_marked",
-                200,
-                "adult",
-                "compound",
-                "B1",
+                "Grand Master Bowman",
             ),
             (
                 "wa_field_24_red_marked",
                 337,
                 "50+",
                 "recurve",
-                "GMB",
+                "Master Bowman",
             ),
             (
                 "wa_field_24_blue_marked",
                 306,
                 "under21",
                 "barebow",
-                "MB",
-            ),
-            (
-                "wa_field_24_red_marked",
-                306,
-                "under21",
-                "barebow",
-                "UC",
+                "Bowman",
             ),
             (
                 "wa_field_24_blue_marked",
                 177,
                 "Under 18",
                 "traditional",
-                "B1",
-            ),
-            (
-                "wa_field_24_red_marked",
-                177,
-                "Under 18",
-                "traditional",
-                "UC",
-            ),
-            (
-                "wa_field_12_blue_marked",
-                88,
-                "Under 18",
-                "traditional",
-                "B1",
+                "1st Class",
             ),
             (
                 "wa_field_24_blue_marked",
                 143,
                 "Under 12",
                 "flatbow",
-                "EMB",
+                "2nd Class",
             ),
             (
                 "wa_field_24_blue_marked",
                 96,
                 "Under 12",
                 "longbow",
-                "EMB",
+                "3rd Class",
             ),
             (
                 "wa_field_24_blue_marked",
                 1,
                 "Under 12",
                 "longbow",
-                "UC",
+                "unclassified",
             ),
             (
                 "wa_field_24_blue_marked",
                 1,
                 "Under 12",
                 "english longbow",
-                "UC",
+                "unclassified",
             ),
         ],
     )
-    def test_calculate_agb_field_classification(
+    def test_calculate_old_agb_field_classification(
         self,
         roundname: str,
         score: float,
@@ -322,7 +284,8 @@ class TestCalculateAgbFieldClassification:
         class_expected: str,
     ) -> None:
         """Check that field classification returns expected value for a few cases."""
-        class_returned = class_funcs.calculate_agb_field_classification(
+        # pylint: disable=too-many-arguments
+        class_returned = class_funcs.calculate_old_agb_field_classification(
             roundname=roundname,
             score=score,
             bowstyle=bowstyle,
@@ -336,20 +299,20 @@ class TestCalculateAgbFieldClassification:
         "roundname,score,bowstyle,class_expected",
         [
             (
-                "wa_field_24_red_unmarked",
+                "wa_field_24_blue_marked",
                 400,
-                "english longbow",
-                "UC",
+                "compound",
+                "unclassified",
             ),
             (
                 "wa_field_24_red_marked",
                 337,
                 "barebow",
-                "UC",
+                "unclassified",
             ),
         ],
     )
-    def test_calculate_agb_field_classification_invalid_rounds(
+    def test_calculate_old_agb_field_classification_invalid_rounds(
         self,
         roundname: str,
         score: float,
@@ -357,7 +320,7 @@ class TestCalculateAgbFieldClassification:
         class_expected: str,
     ) -> None:
         """Check field classification returns unclassified for inappropriate rounds."""
-        class_returned = class_funcs.calculate_agb_field_classification(
+        class_returned = class_funcs.calculate_old_agb_field_classification(
             roundname=roundname,
             score=score,
             bowstyle=bowstyle,
@@ -388,7 +351,7 @@ class TestCalculateAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_agb_field_classification_invalid_scores(
+    def test_calculate_old_agb_field_classification_invalid_scores(
         self,
         roundname: str,
         score: float,
@@ -401,7 +364,7 @@ class TestCalculateAgbFieldClassification:
                 f"Should be in range 0-{ALL_AGBFIELD_ROUNDS[roundname].max_score()}."
             ),
         ):
-            _ = class_funcs.calculate_agb_field_classification(
+            _ = class_funcs.calculate_old_agb_field_classification(
                 score=score,
                 roundname=roundname,
                 bowstyle="barebow",
