@@ -54,16 +54,12 @@ lint
 
 For applying quality control to the code::
 
-    pip install -e ".[lint]"
-
-* black (24.1.0 or later)
-* jupyter-black
-* pylint
+* ruff (0.7.3 or later)
 * mypy (1.0.0 or later)
 * coverage
 * pytest (7.2.0 or later)
 * pytest-mock
-* pydocstyle
+* blackdoc
 
 docs
 ^^^^
@@ -78,3 +74,5 @@ For building documentation::
 * nbsphinx
 * blackdoc
 * ipython
+* pickleshare
+* ruff (0.7.3 or later)

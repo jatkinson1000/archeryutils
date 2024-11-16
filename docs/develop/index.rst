@@ -6,7 +6,7 @@ archeryutils is an open-source community project currently operating as a
 
 Contributions from anyone are welcome, be they bug reports, bug fixes,
 features/enhancements, documentation improvements etc.
-For details of how to get involved with any of these see :ref:`contributing`.`
+For details of how to get involved with any of these see :ref:`contributing`.
 
 
 

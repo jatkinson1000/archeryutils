@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "archeryutils"
-version = "1.0.0"
+version = "1.1.0"
 description = "A collection of archery utilities in python."
 authors = [
   { name="Jack Atkinson", email="jack.atkinson1000@gmail.com" },
@@ -39,7 +39,7 @@ lint = [
     "coverage",
     "pytest>=7.2.0",
     "pytest-mock",
-    "ruff>=0.3.0",
+    "ruff>=0.7.3",
     "blackdoc",
 ]
 docs = [
@@ -49,7 +49,7 @@ docs = [
     "nbsphinx",
     "ipython",
     "pickleshare",  # https://github.com/ipython/ipython/issues/14237
-    "ruff>=0.3.0",
+    "ruff>=0.7.3",
     "blackdoc",
 ]
 

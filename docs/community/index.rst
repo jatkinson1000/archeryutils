@@ -13,12 +13,12 @@ The SSI provides `good guidance <https://www.software.ac.uk/publication/how-cite
 
 The following entries can be used or adapted when citing this work:
 
-* Atkinson J., archeryutils python package [v1.0.0] (2024); software available at https://github.com/jatkinson1000/archeryutils.
+* Atkinson J., archeryutils python package [v1.1.0] (2024); software available at https://github.com/jatkinson1000/archeryutils.
 * BibTeX::
 
     @Manual{archeryutils,
             author = {Atkinson, J},
-            title  = {archeryutils python package, Version~1.0.0},
+            title  = {archeryutils python package, Version~1.1.0},
             year   = {2024},
             url    = {https://github.com/jatkinson1000/archeryutils},
     }
