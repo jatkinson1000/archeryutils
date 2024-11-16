@@ -31,7 +31,6 @@ class GroupData(TypedDict):
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
     max_distance: int
-    min_dists: npt.NDArray[np.float64]
 
 
 def _make_agb_field_classification_dict() -> dict[str, GroupData]:
@@ -103,9 +102,6 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
                 classifications_count = len(agb_classes_field)
 
                 class_hc = np.empty(classifications_count)
-                min_dists = np.empty(classifications_count)
-                min_dists[0:6] = dists[0]
-                min_dists[6:9] = [max(dists[0] - 10 * i, 30) for i in range(1, 4)]
 
                 for i in range(classifications_count):
                     # Assign handicap for this classification
@@ -120,7 +116,6 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
                     "classes_long": agb_classes_field_long,
                     "class_HC": class_hc,
                     "max_distance": dists[1],
-                    "min_dists": min_dists,
                 }
 
                 classification_dict[groupname] = groupdata
@@ -135,7 +130,7 @@ def _assign_dists(
     """
     Assign appropriate minimum distance required for a category and classification.
 
-    Appropriate for 2023 ArcheryGB age groups and classifications.
+    Appropriate for 2024 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -151,8 +146,8 @@ def _assign_dists(
 
     References
     ----------
-    ArcheryGB 2023 Rules of Shooting
-    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    ArcheryGB 2024 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2024)
     World Archery Rulebook
     """
     # WA
@@ -218,9 +213,9 @@ def calculate_agb_field_classification(
     roundname = roundname.replace("unmarked", "marked")
     roundname = roundname.replace("mixed", "marked")
 
-    group_data = agb_field_classifications[
-        cls_funcs.get_groupname(bowstyle, gender, age_group)
-    ]
+    # No under 21 category in field, use adult scores
+    if age_group.lower().replace(" ", "") in ("under21"):
+        age_group = "Adult"
 
     # Get scores required on this round for each classification
     all_class_scores = agb_field_classification_scores(
@@ -274,6 +269,10 @@ def agb_field_classification_scores(
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
+    # No under 21 category in field, use adult scores
+    if age_group.lower().replace(" ", "") in ("under21"):
+        age_group = "Adult"
+
     groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
     group_data = agb_field_classifications[groupname]
 
@@ -299,9 +298,6 @@ def agb_field_classification_scores(
     round_max_dist = ALL_FIELD_ROUNDS[roundname].max_distance().value
     for i in range(len(class_scores)):
         # What classes are eligible based on category and distance
-        # Is round too short?
-        if group_data["min_dists"][i] > round_max_dist:
-            class_scores[i] = -9999
         # Is peg too long (i.e. red peg for unsighted)?
         if group_data["max_distance"] < round_max_dist:
             class_scores[i] = -9999
