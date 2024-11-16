@@ -39,7 +39,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 
     Generate a dictionary of dictionaries providing handicaps for each
     classification band and a list prestige rounds for each category from data files.
-    Appropriate for 2023 ArcheryGB age groups and classifications.
+    Appropriate for 2025 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -55,8 +55,8 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 
     References
     ----------
-    ArcheryGB 2023 Rules of Shooting
-    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    ArcheryGB 2025 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2025)
     """
     # Read in age group info as list of dicts
     agb_ages_full = cls_funcs.read_ages_json()
@@ -176,7 +176,7 @@ def calculate_agb_field_classification(
     Calculate AGB field classification from score.
 
     Calculate a classification from a score given suitable inputs.
-    Appropriate for 2023 ArcheryGB age groups and classifications.
+    Appropriate for 2025 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -198,8 +198,21 @@ def calculate_agb_field_classification(
 
     References
     ----------
-    ArcheryGB 2023 Rules of Shooting
-    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    ArcheryGB 2025 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2025)
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.calculate_agb_field_classification(
+    ...     177,
+    ...     "wa_field_24_blue_marked",
+    ...     "traditional",
+    ...     "male",
+    ...     "under 18",
+    ... )
+    'B1'
+
     """
     # Check score is valid
     if score < 0 or score > ALL_FIELD_ROUNDS[roundname].max_score():
@@ -246,7 +259,7 @@ def agb_field_classification_scores(
     Calculate AGB field classification scores for category.
 
     Subroutine to calculate classification scores for a specific category and round.
-    Appropriate for 2023 ArcheryGB age groups and classifications.
+    Appropriate for 2025 ArcheryGB age groups and classifications.
 
     Parameters
     ----------
@@ -266,8 +279,30 @@ def agb_field_classification_scores(
 
     References
     ----------
-    ArcheryGB 2023 Rules of Shooting
-    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+    ArcheryGB 2025 Rules of Shooting
+    ArcheryGB Shooting Administrative Procedures - SAP7 (2025)
+
+    Examples
+    --------
+    >>> from archeryutils import classifications as class_func
+    >>> class_func.agb_field_classification_scores(
+    ...     "wa_field_24_red_marked",
+    ...     "compound",
+    ...     "male",
+    ...     "adult",
+    ... )
+    [408, 391, 369, 345, 318, 286, 248, 204, 157]
+
+    If a classification cannot be achieved a fill value of `-9999` is returned:
+
+    >>> class_func.agb_field_classification_scores(
+    ...     "wa_field_12_red_unmarked",
+    ...     "compound",
+    ...     "male",
+    ...     "adult",
+    ... )
+    [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
+
     """
     # No under 21 category in field, use adult scores
     if age_group.lower().replace(" ", "") in ("under21"):

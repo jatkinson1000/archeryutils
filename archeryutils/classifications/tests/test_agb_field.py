@@ -117,6 +117,11 @@ class TestAgbFieldClassificationScores:
                 [408, 391, 369, 345, 318, 286, 248, 204, 157],
             ),
             (
+                "wa_field_12_red_unmarked",
+                "compound",
+                [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
+            ),
+            (
                 "wa_field_24_red_marked",
                 "compound limited",
                 [369, 347, 322, 293, 259, 219, 176, 133, 96],
