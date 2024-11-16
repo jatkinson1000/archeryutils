@@ -214,6 +214,18 @@ class TestAgbOutdoorClassificationScores:
                 "female",
                 [252, 338, 441, 558, 682, 806, 921, 1023, 1108],
             ),
+            (
+                "wa1440_70",
+                "compound barebow",
+                "female",
+                [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
+            ),
+            (
+                "wa1440_70",
+                "compound limited",
+                "female",
+                [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
+            ),
         ],
     )
     def test_agb_outdoor_classification_scores_nonbowstyles(
@@ -223,7 +235,7 @@ class TestAgbOutdoorClassificationScores:
         gender: str,
         scores_expected: list[int],
     ) -> None:
-        """Check that barebow scores returned for valid but non-outdoor bowstyles."""
+        """Check that appropriate scores returned for valid non-outdoor bowstyles."""
         scores = class_funcs.agb_outdoor_classification_scores(
             roundname=roundname,
             bowstyle=bowstyle,
@@ -242,7 +254,7 @@ class TestAgbOutdoorClassificationScores:
             ),
         ],
     )
-    def test_agb_outdoor_classification_scores_triple_faces(
+    def test_agb_outdoor_classification_scores_small_faces(
         self,
         roundname: str,
         scores_expected: list[int],
