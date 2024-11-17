@@ -31,6 +31,7 @@ class GroupData(TypedDict):
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
     max_distance: int
+    min_dists: npt.NDArray[np.float64]
 
 
 def _make_agb_field_classification_dict() -> dict[str, GroupData]:
@@ -103,6 +104,10 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 
                 class_hc = np.empty(classifications_count)
 
+                min_dists = np.empty(classifications_count)
+                min_dists[0:6] = dists[0]
+                min_dists[6:9] = [max(dists[0] - 10 * i, 30) for i in range(1, 4)]
+
                 for i in range(classifications_count):
                     # Assign handicap for this classification
                     class_hc[i] = (
@@ -116,6 +121,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
                     "classes_long": agb_classes_field_long,
                     "class_HC": class_hc,
                     "max_distance": dists[1],
+                    "min_dists": min_dists,
                 }
 
                 classification_dict[groupname] = groupdata
@@ -333,6 +339,9 @@ def agb_field_classification_scores(
     round_max_dist = ALL_FIELD_ROUNDS[roundname].max_distance().value
     for i in range(len(class_scores)):
         # What classes are eligible based on category and distance
+        # Is round too short?
+        if group_data["min_dists"][i] > round_max_dist:
+            class_scores[i] = -9999
         # Is peg too long (i.e. red peg for unsighted)?
         if group_data["max_distance"] < round_max_dist:
             class_scores[i] = -9999
