@@ -239,12 +239,33 @@ class TestCalculateAgbFieldClassification:
                 "compound",
                 "GMB",
             ),
-            (
+            (  # Bowman classifications only on 12-target rounds
                 "wa_field_12_red_marked",
                 200,
                 "adult",
                 "compound",
                 "B1",
+            ),
+            (  # Archer classifications only on shorter rounds - A1
+                "wa_field_24_blue_marked",
+                400,
+                "adult",
+                "compound",
+                "A1",
+            ),
+            (  # Archer classifications only on shorter rounds - A2
+                "wa_field_24_yellow_marked",
+                400,
+                "adult",
+                "compound",
+                "A2",
+            ),
+            (  # Archer classifications only on shorter rounds - A3
+                "wa_field_24_white_marked",
+                400,
+                "adult",
+                "compound",
+                "A3",
             ),
             (
                 "wa_field_24_red_marked",
@@ -281,12 +302,26 @@ class TestCalculateAgbFieldClassification:
                 "traditional",
                 "UC",
             ),
-            (
+            (  # Bowman classifications only on 12-target rounds
                 "wa_field_12_blue_marked",
                 88,
                 "Under 18",
                 "traditional",
                 "B1",
+            ),
+            (  # Archer classifications only on shorter rounds - Junior
+                "wa_field_24_yellow_marked",
+                400,
+                "Under 18",
+                "traditional",
+                "A1",
+            ),
+            (  # Archer classifications only on shorter rounds - Junior
+                "wa_field_24_white_marked",
+                400,
+                "Under 18",
+                "traditional",
+                "A2",
             ),
             (
                 "wa_field_24_blue_marked",
