@@ -1,6 +1,13 @@
 What's New
 ==========
 
+Version 1.1.1
+-------------
+* Fixes a bug in version 1.1.0 whereby shorter-peg rounds were not restricted to
+  the Archer tier in field classifications.
+* Tests added to cover this.
+
+
 Version 1.1.0
 -------------
 * Updated field classifications to the 2025 Archery GB scheme:
