@@ -8,7 +8,7 @@ Supported units are provided as module attributes for easy autocompletion,
 from collections.abc import Collection, Set
 from typing import TypeVar, Union
 
-__all__ = [
+__all__ = [  # noqa: RUF022 - Non-alphabetical sort is more logical here
     "yard",
     "metre",
     "inch",

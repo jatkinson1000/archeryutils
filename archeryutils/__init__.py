@@ -6,11 +6,11 @@ from archeryutils.targets import Quantity, Target
 from archeryutils.utils import versions
 
 __all__ = [
+    "Pass",
+    "Quantity",
+    "Round",
+    "Target",
     "classifications",
     "handicaps",
-    "Pass",
-    "Round",
-    "Quantity",
-    "Target",
     "versions",
 ]
