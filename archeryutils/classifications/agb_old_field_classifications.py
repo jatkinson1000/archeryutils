@@ -58,12 +58,12 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
 
     """
     agb_field_classes = [
-        "Grand Master Bowman",
-        "Master Bowman",
-        "Bowman",
-        "1st Class",
-        "2nd Class",
-        "3rd Class",
+        "GMB",
+        "MB",
+        "B",
+        "1C",
+        "2C",
+        "3C",
     ]
 
     agb_field_scores = {
