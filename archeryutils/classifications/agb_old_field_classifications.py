@@ -58,12 +58,12 @@ def _make_old_agb_field_classification_dict() -> dict[str, GroupData]:
 
     """
     agb_field_classes = [
-        "Grand Master Bowman",
-        "Master Bowman",
-        "Bowman",
-        "1st Class",
-        "2nd Class",
-        "3rd Class",
+        "GMB",
+        "MB",
+        "B",
+        "1C",
+        "2C",
+        "3C",
     ]
 
     agb_field_scores = {
@@ -191,7 +191,7 @@ def calculate_old_agb_field_classification(
         bowstyle.lower().replace(" ", "") in ("compound", "recurve")
         and "wa_field_24_red_" not in roundname
     ):
-        return "unclassified"
+        return "UC"
     if (
         bowstyle.lower().replace(" ", "")
         in (
@@ -204,7 +204,7 @@ def calculate_old_agb_field_classification(
         )
         and "wa_field_24_blue_" not in roundname
     ):
-        return "unclassified"
+        return "UC"
 
     # What is the highest classification this score gets?
     class_scores = dict(
@@ -217,7 +217,7 @@ def calculate_old_agb_field_classification(
             return item
 
     # if lower than 3rd class score return "UC"
-    return "unclassified"
+    return "UC"
 
 
 def old_agb_field_classification_scores(
