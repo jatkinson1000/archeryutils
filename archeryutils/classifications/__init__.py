@@ -22,14 +22,14 @@ from .agb_outdoor_classifications import (
 )
 
 __all__ = [
-    "calculate_agb_outdoor_classification",
-    "agb_outdoor_classification_scores",
-    "calculate_agb_indoor_classification",
-    "agb_indoor_classification_scores",
-    "calculate_agb_old_indoor_classification",
-    "agb_old_indoor_classification_scores",
     "agb_field_classification_scores",
+    "agb_indoor_classification_scores",
+    "agb_old_indoor_classification_scores",
+    "agb_outdoor_classification_scores",
     "calculate_agb_field_classification",
+    "calculate_agb_indoor_classification",
+    "calculate_agb_old_indoor_classification",
+    "calculate_agb_outdoor_classification",
     "calculate_old_agb_field_classification",
     "old_agb_field_classification_scores",
 ]
