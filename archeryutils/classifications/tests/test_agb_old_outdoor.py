@@ -16,4 +16,5 @@ ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 
 class TestAgbOldIndoorClassificationScores:
     """Tests for the old_indoor classification scores function."""
+
     pass
