@@ -191,7 +191,7 @@ def calculate_agb_old_field_classification(
         bowstyle.lower().replace(" ", "") in ("compound", "recurve")
         and "wa_field_24_red_" not in roundname
     ):
-        return "unclassified"
+        return "UC"
     if (
         bowstyle.lower().replace(" ", "")
         in (
@@ -204,7 +204,7 @@ def calculate_agb_old_field_classification(
         )
         and "wa_field_24_blue_" not in roundname
     ):
-        return "unclassified"
+        return "UC"
 
     # What is the highest classification this score gets?
     class_scores = dict(
@@ -217,7 +217,7 @@ def calculate_agb_old_field_classification(
             return classification
 
     # if lower than 3rd class score return "UC"
-    return "unclassified"
+    return "UC"
 
 
 def agb_old_field_classification_scores(

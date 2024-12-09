@@ -264,14 +264,14 @@ class TestCalculateOldAgbFieldClassification:
                 1,
                 "Under 12",
                 "longbow",
-                "unclassified",
+                "UC",
             ),
             (
                 "wa_field_24_blue_marked",
                 1,
                 "Under 12",
                 "english longbow",
-                "unclassified",
+                "UC",
             ),
         ],
     )
@@ -302,13 +302,13 @@ class TestCalculateOldAgbFieldClassification:
                 "wa_field_24_blue_marked",
                 400,
                 "compound",
-                "unclassified",
+                "UC",
             ),
             (
                 "wa_field_24_red_marked",
                 337,
                 "barebow",
-                "unclassified",
+                "UC",
             ),
         ],
     )
