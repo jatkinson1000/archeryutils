@@ -1,4 +1,4 @@
-"""Tests for old field classification functions."""
+"""Tests for field classification functions."""
 
 import pytest
 
