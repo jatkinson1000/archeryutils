@@ -301,7 +301,7 @@ class HandicapTable:
             self.table = np.flip(self.table, axis=0)
 
         for irow, row in enumerate(self.table[:-1, :]):
-            for jscore in range(len(row)):
+            for jscore in range(len(np.asarray(row))):
                 if self.table[irow, jscore] == self.table[irow + 1, jscore]:
                     if self.int_prec:
                         self.table[irow, jscore] = _FILL
