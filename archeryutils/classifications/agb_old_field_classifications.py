@@ -210,11 +210,11 @@ def calculate_old_agb_field_classification(
     class_scores = dict(
         zip(group_data["classes"], group_data["class_scores"], strict=True)
     )
-    for item in class_scores:
-        if class_scores[item] > score:
+    for classification, classification_score in class_scores.items():
+        if classification_score > score:
             continue
         else:
-            return item
+            return classification
 
     # if lower than 3rd class score return "UC"
     return "unclassified"

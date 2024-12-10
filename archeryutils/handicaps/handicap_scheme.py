@@ -34,7 +34,7 @@ References
 import itertools as itr
 import warnings
 from abc import ABC, abstractmethod
-from typing import Optional, TypeVar, Union, overload
+from typing import Optional, TypeVar, Union, cast, overload
 
 import numpy as np
 import numpy.typing as npt
@@ -161,7 +161,9 @@ class HandicapScheme(ABC):
         """
         sig_t = self.sigma_t(handicap, dist)
         sig_r = dist * sig_t
-        return sig_r
+
+        # Perform a cast to return to satisfy typechecker
+        return cast(FloatArray, sig_r)
 
     def arrow_score(
         self,
