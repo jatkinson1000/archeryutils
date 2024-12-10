@@ -34,9 +34,9 @@ class GroupData(TypedDict):
     class_scores: list[int]
 
 
-def _make_old_agb_field_classification_dict() -> dict[str, GroupData]:
+def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
     """
-    Generate AGB outdoor classification data.
+    Generate old (pre-2025) AGB field classification data.
 
     Generate a dictionary of dictionaries providing handicaps for
     each classification band.
@@ -112,16 +112,16 @@ def _make_old_agb_field_classification_dict() -> dict[str, GroupData]:
     return classification_dict
 
 
-old_agb_field_classifications = _make_old_agb_field_classification_dict()
+old_agb_field_classifications = _make_agb_old_field_classification_dict()
 
-del _make_old_agb_field_classification_dict
+del _make_agb_old_field_classification_dict
 
 
-def calculate_old_agb_field_classification(
+def calculate_agb_old_field_classification(
     roundname: str, score: float, bowstyle: str, gender: str, age_group: str
 ) -> str:
     """
-    Calculate AGB field classification from score.
+    Calculate old (pre-2025) AGB field classification from score.
 
     Subroutine to calculate a classification from a score given suitable inputs.
 
@@ -156,7 +156,7 @@ def calculate_old_agb_field_classification(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
-    >>> class_func.calculate_agb_field_classification(
+    >>> class_func.calculate_agb_old_field_classification(
     ...     247,
     ...     "wa_field_24_red_marked",
     ...     "recurve",
@@ -220,14 +220,14 @@ def calculate_old_agb_field_classification(
     return "unclassified"
 
 
-def old_agb_field_classification_scores(
+def agb_old_field_classification_scores(
     roundname: str,  # noqa: ARG001 - Unused argument for consistency with other classification schemes
     bowstyle: str,
     gender: str,
     age_group: str,
 ) -> list[int]:
     """
-    Calculate AGB field classification scores for category.
+    Calculate old (pre-2025) AGB field classification scores for category.
 
     Subroutine to calculate classification scores for a specific category and round.
     Appropriate ArcheryGB age groups and classifications.
@@ -256,7 +256,7 @@ def old_agb_field_classification_scores(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
-    >>> class_func.agb_field_classification_scores(
+    >>> class_func.agb_old_field_classification_scores(
     ...     "wa_field_24_red_marked",
     ...     "recurve",
     ...     "male",
