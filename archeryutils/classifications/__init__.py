@@ -16,6 +16,10 @@ from .agb_old_indoor_classifications import (
     agb_old_indoor_classification_scores,
     calculate_agb_old_indoor_classification,
 )
+from .agb_old_outdoor_classifications import (
+    agb_old_outdoor_classification_scores,
+    calculate_agb_old_outdoor_classification,
+)
 from .agb_outdoor_classifications import (
     agb_outdoor_classification_scores,
     calculate_agb_outdoor_classification,
@@ -32,4 +36,6 @@ __all__ = [
     "calculate_agb_outdoor_classification",
     "calculate_old_agb_field_classification",
     "old_agb_field_classification_scores",
+    "agb_old_outdoor_classification_scores",
+    "calculate_agb_old_outdoor_classification",
 ]
