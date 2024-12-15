@@ -652,7 +652,11 @@ class HandicapScheme(ABC):
 
             if (abs(spre) > delta) and (abs(fcur) < abs(fpre)):
                 if xpre == xblk:
-                    stry = -fcur * (xcur - xpre) / (fcur - xpre)
+                    stry = (
+                        -fcur
+                        * (xcur - xpre)
+                        / ((fcur - xpre) if (fcur - xpre) != 0 else xtol)
+                    )
                 else:
                     dpre = (fpre - fcur) / (xpre - xcur)
                     dblk = (fblk - fcur) / (xblk - xcur)
