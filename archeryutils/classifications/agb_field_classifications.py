@@ -77,7 +77,6 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
     agb_classes_field = agb_classes_info_field["classes"]
     agb_classes_field_long = agb_classes_info_field["classes_long"]
 
-
     # Generate dict of classifications
     # loop over all bowstyles, genders, ages
     classification_dict = {}
@@ -90,7 +89,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 
         # Get max dists for category from json file data
         # Use metres as corresponding yards >= metric
-        dists = _assign_dists(bowstyle["bowstyle"], age)
+        min_dists, max_distance = _assign_dists(bowstyle["bowstyle"], age)
 
         # set step from datum based on age and gender steps required
         delta_hc_age_gender = cls_funcs.get_age_gender_step(
@@ -100,27 +99,18 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
             bowstyle["genderStep_field"],
         )
 
-        classifications_count = len(agb_classes_field)
-
-        class_hc = np.empty(classifications_count)
-
-        min_dists = np.empty(classifications_count)
-        min_dists[0:6] = dists[0]
-        min_dists[6:9] = [max(dists[0] - 10 * i, 30) for i in range(1, 4)]
-
-        for i in range(classifications_count):
-            # Assign handicap for this classification
-            class_hc[i] = (
-                bowstyle["datum_field"]
-                + delta_hc_age_gender
-                + (i - 2) * bowstyle["classStep_field"]
-            )
+        # set handicap threshold values for all classifications in the category
+        class_hc = (
+            bowstyle["datum_field"]
+            + delta_hc_age_gender
+            + (np.arange(len(agb_classes_field)) - 2) * bowstyle["classStep_field"]
+        )
 
         groupdata: GroupData = {
             "classes": agb_classes_field,
             "classes_long": agb_classes_field_long,
             "class_HC": class_hc,
-            "max_distance": dists[1],
+            "max_distance": max_distance,
             "min_dists": min_dists,
         }
 
@@ -166,8 +156,17 @@ def _assign_dists(
     # U15 All Blue, R/C Red, Others White
     # U12 R/C/CL Red, All Blue, All White,
     if bowstyle.lower().replace(" ", "") in ("compound", "recurve", "compoundlimited"):
-        return age["red"]
-    return age["blue"]
+        min_d, max_d = age["red"]
+    else:
+        min_d, max_d = age["blue"]
+
+    n_classes: int = 9  # [EMB, GMB, MB, B1, B2, B3, A1, A2, A3]
+
+    min_dists = np.empty(n_classes)
+    min_dists[0:6] = min_d
+    min_dists[6:9] = np.maximum(min_d - 10 * np.arange(1, 4), 30)
+
+    return min_dists, max_d
 
 
 agb_field_classifications = _make_agb_field_classification_dict()

@@ -93,16 +93,12 @@ def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
             bowstyle["genderStep_in"],
         )
 
-        classifications_count = len(agb_classes_in)
-
-        class_hc = np.empty(classifications_count)
-        for i in range(classifications_count):
-            # Assign handicap for this classification
-            class_hc[i] = (
-                bowstyle["datum_in"]
-                + delta_hc_age_gender
-                + (i - 1) * bowstyle["classStep_in"]
-            )
+        # set handicap threshold values for all classifications in the category
+        class_hc = (
+            bowstyle["datum_in"]
+            + delta_hc_age_gender
+            + (np.arange(len(agb_classes_in)) - 1) * bowstyle["classStep_in"]
+        )
 
         groupdata: GroupData = {
             "classes": agb_classes_in,

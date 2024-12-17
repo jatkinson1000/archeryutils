@@ -97,26 +97,18 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
             bowstyle["ageStep_out"],
             bowstyle["genderStep_out"],
         )
-        classifications_count = len(agb_classes_out)
 
-        class_hc = np.empty(classifications_count)
-        min_dists = np.empty(classifications_count)
+        # set handicap threshold values for all classifications in the category
+        class_hc = (
+            bowstyle["datum_out"]
+            + delta_hc_age_gender
+            + (np.arange(len(agb_classes_out)) - 2) * bowstyle["classStep_out"]
+        )
 
-        for i in range(classifications_count):
-            # Assign handicap for this classification
-            class_hc[i] = (
-                bowstyle["datum_out"]
-                + delta_hc_age_gender
-                + (i - 2) * bowstyle["classStep_out"]
-            )
-
-            # Get minimum distance that must be shot for this classification
-            min_dists[i] = _assign_min_dist(
-                n_class=i,
-                gender=gender,
-                age_group=age["age_group"],
-                max_dists=max_dist,
-            )
+        # get minimum distances to be shot for all classifications in the category
+        min_dists = _assign_min_dist(
+            gender=gender, age_group=age["age_group"], max_dists=max_dist
+        )
 
         # Assign prestige rounds for the category
         prestige_rounds = _assign_outdoor_prestige(
@@ -141,11 +133,10 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
 
 
 def _assign_min_dist(
-    n_class: int,
     gender: str,
     age_group: str,
     max_dists: list[int],
-) -> int:
+) -> npt.NDArray[int]:
     """
     Assign appropriate minimum distance required for a category and classification.
 
@@ -153,8 +144,6 @@ def _assign_min_dist(
 
     Parameters
     ----------
-    n_class : int
-        integer corresponding to classification [0=EMB, 8=A3]
     gender : str
         string defining gender
     age_group : str,
@@ -164,8 +153,8 @@ def _assign_min_dist(
 
     Returns
     -------
-    min_dist : int
-        minimum distance [m] required for this classification
+    min_dists : array of int
+        minimum distance [m] required for this category
 
     References
     ----------
@@ -181,20 +170,12 @@ def _assign_min_dist(
     # List of maximum distances for use in assigning maximum distance [metres]
     # Use metres because corresponding yards distances are >= metric ones
     dists = [90, 70, 60, 50, 40, 30, 20, 15]
-
-    # Number of MB categories (distance restrictions superceded by prestige rounds.)
-    n_mb: int = 3
+    n_classes: int = 9  # [EMB, GMB, MB, B1, B2, B3, A1, A2, A3]
 
     max_dist_index = dists.index(np.min(max_dists))
 
-    # B1 and above
-    if n_class <= n_mb:
-        # All MB and B1 require max distance for everyone:
-        return dists[max_dist_index]
-
-    # Below B1
     # Age group trickery:
-    # U16 males and above step down for B2 and beyond
+    # U16 males and above step down for B2 and less
     if gender.lower() in ("male") and age_group.lower().replace(" ", "") in (
         "adult",
         "50+",
@@ -202,14 +183,13 @@ def _assign_min_dist(
         "under18",
         "under16",
     ):
-        return dists[max_dist_index + (n_class - n_mb)]
+        idxs = np.array([0, 0, 0, 0, 1, 2, 3, 4, 5])
 
     # All other categories require max dist for B1 and B2 then step down
-    try:
-        return dists[max_dist_index + (n_class - n_mb) - 1]
-    except IndexError:
-        # Distances stack at the bottom end as we can't go below 15m
-        return dists[-1]
+    else:
+        idxs = np.array([0, 0, 0, 0, 0, 1, 2, 3, 4])
+
+    return np.take(dists, idxs + max_dist_index, mode="clip")
 
 
 def _assign_outdoor_prestige(
