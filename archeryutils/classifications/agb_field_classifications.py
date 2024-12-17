@@ -8,6 +8,7 @@ calculate_agb_field_classification
 agb_field_classification_scores
 """
 
+import itertools
 from typing import Any, TypedDict
 
 import numpy as np
@@ -76,55 +77,54 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
     agb_classes_field = agb_classes_info_field["classes"]
     agb_classes_field_long = agb_classes_info_field["classes_long"]
 
+
     # Generate dict of classifications
-    # loop over bowstyles
-    # loop over genders
-    # loop over ages
+    # loop over all bowstyles, genders, ages
     classification_dict = {}
-    for bowstyle in agb_bowstyles:
-        for gender in agb_genders:
-            for age in agb_ages:
-                groupname = cls_funcs.get_groupname(
-                    bowstyle["bowstyle"], gender, age["age_group"]
-                )
+    for bowstyle, gender, age in itertools.product(
+        agb_bowstyles, agb_genders, agb_ages
+    ):
+        groupname = cls_funcs.get_groupname(
+            bowstyle["bowstyle"], gender, age["age_group"]
+        )
 
-                # Get max dists for category from json file data
-                # Use metres as corresponding yards >= metric
-                dists = _assign_dists(bowstyle["bowstyle"], age)
+        # Get max dists for category from json file data
+        # Use metres as corresponding yards >= metric
+        dists = _assign_dists(bowstyle["bowstyle"], age)
 
-                # set step from datum based on age and gender steps required
-                delta_hc_age_gender = cls_funcs.get_age_gender_step(
-                    gender,
-                    age["step"],
-                    bowstyle["ageStep_field"],
-                    bowstyle["genderStep_field"],
-                )
+        # set step from datum based on age and gender steps required
+        delta_hc_age_gender = cls_funcs.get_age_gender_step(
+            gender,
+            age["step"],
+            bowstyle["ageStep_field"],
+            bowstyle["genderStep_field"],
+        )
 
-                classifications_count = len(agb_classes_field)
+        classifications_count = len(agb_classes_field)
 
-                class_hc = np.empty(classifications_count)
+        class_hc = np.empty(classifications_count)
 
-                min_dists = np.empty(classifications_count)
-                min_dists[0:6] = dists[0]
-                min_dists[6:9] = [max(dists[0] - 10 * i, 30) for i in range(1, 4)]
+        min_dists = np.empty(classifications_count)
+        min_dists[0:6] = dists[0]
+        min_dists[6:9] = [max(dists[0] - 10 * i, 30) for i in range(1, 4)]
 
-                for i in range(classifications_count):
-                    # Assign handicap for this classification
-                    class_hc[i] = (
-                        bowstyle["datum_field"]
-                        + delta_hc_age_gender
-                        + (i - 2) * bowstyle["classStep_field"]
-                    )
+        for i in range(classifications_count):
+            # Assign handicap for this classification
+            class_hc[i] = (
+                bowstyle["datum_field"]
+                + delta_hc_age_gender
+                + (i - 2) * bowstyle["classStep_field"]
+            )
 
-                groupdata: GroupData = {
-                    "classes": agb_classes_field,
-                    "classes_long": agb_classes_field_long,
-                    "class_HC": class_hc,
-                    "max_distance": dists[1],
-                    "min_dists": min_dists,
-                }
+        groupdata: GroupData = {
+            "classes": agb_classes_field,
+            "classes_long": agb_classes_field_long,
+            "class_HC": class_hc,
+            "max_distance": dists[1],
+            "min_dists": min_dists,
+        }
 
-                classification_dict[groupname] = groupdata
+        classification_dict[groupname] = groupdata
 
     return classification_dict
 
