@@ -98,7 +98,7 @@ def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
             bowstyle["datum_in"]
             + delta_hc_age_gender
             + (np.arange(len(agb_classes_in)) - 1) * bowstyle["classStep_in"]
-        )
+        ).astype(np.float64)
 
         groupdata: GroupData = {
             "classes": agb_classes_in,
