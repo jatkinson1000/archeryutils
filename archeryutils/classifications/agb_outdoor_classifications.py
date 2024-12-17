@@ -33,7 +33,7 @@ class GroupData(TypedDict):
     max_distance: list[int]
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
-    min_dists: npt.NDArray[np.float64]
+    min_dists: npt.NDArray[np.int64]
     prestige_rounds: list[str]
 
 
@@ -103,7 +103,7 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
             bowstyle["datum_out"]
             + delta_hc_age_gender
             + (np.arange(len(agb_classes_out)) - 2) * bowstyle["classStep_out"]
-        )
+        ).astype(np.float64)
 
         # get minimum distances to be shot for all classifications in the category
         min_dists = _assign_min_dist(
@@ -136,7 +136,7 @@ def _assign_min_dist(
     gender: str,
     age_group: str,
     max_dists: list[int],
-) -> npt.NDArray[int]:
+) -> npt.NDArray[np.int64]:
     """
     Assign appropriate minimum distance required for a category and classification.
 

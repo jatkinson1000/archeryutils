@@ -32,7 +32,7 @@ class GroupData(TypedDict):
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
     max_distance: int
-    min_dists: npt.NDArray[np.float64]
+    min_dists: npt.NDArray[np.int64]
 
 
 def _make_agb_field_classification_dict() -> dict[str, GroupData]:
@@ -104,7 +104,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
             bowstyle["datum_field"]
             + delta_hc_age_gender
             + (np.arange(len(agb_classes_field)) - 2) * bowstyle["classStep_field"]
-        )
+        ).astype(np.float64)
 
         groupdata: GroupData = {
             "classes": agb_classes_field,
@@ -122,7 +122,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 def _assign_dists(
     bowstyle: str,
     age: cls_funcs.AGBAgeData,
-) -> list[int]:
+) -> tuple[npt.NDArray[np.int64], int]:
     """
     Assign appropriate minimum distance required for a category and classification.
 
@@ -162,7 +162,7 @@ def _assign_dists(
 
     n_classes: int = 9  # [EMB, GMB, MB, B1, B2, B3, A1, A2, A3]
 
-    min_dists = np.empty(n_classes)
+    min_dists = np.zeros(n_classes, dtype=np.int64)
     min_dists[0:6] = min_d
     min_dists[6:9] = np.maximum(min_d - 10 * np.arange(1, 4), 30)
 
