@@ -7,6 +7,7 @@ calculate_agb_outdoor_classification
 agb_outdoor_classification_scores
 """
 
+import itertools
 from typing import Any, Literal, TypedDict, cast
 
 import numpy as np
@@ -73,70 +74,68 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     agb_classes_out_long = agb_classes_info_out["classes_long"]
 
     # Generate dict of classifications
-    # loop over bowstyles
-    # loop over genders
-    # loop over ages
+    # loop over all bowstyles, genders, ages
     classification_dict = {}
-    for bowstyle in agb_bowstyles:
-        for gender in agb_genders:
-            for age in agb_ages:
-                groupname = cls_funcs.get_groupname(
-                    bowstyle["bowstyle"],
-                    gender,
-                    age["age_group"],
-                )
+    for bowstyle, gender, age in itertools.product(
+        agb_bowstyles, agb_genders, agb_ages
+    ):
+        groupname = cls_funcs.get_groupname(
+            bowstyle["bowstyle"],
+            gender,
+            age["age_group"],
+        )
 
-                # Get max dists for category from json file data
-                # Use metres as corresponding yards >= metric
-                gender_key = cast(Literal["male", "female"], gender.lower())
-                max_dist = age[gender_key]
+        # Get max dists for category from json file data
+        # Use metres as corresponding yards >= metric
+        gender_key = cast(Literal["male", "female"], gender.lower())
+        max_dist = age[gender_key]
 
-                # set step from datum based on age and gender steps required
-                delta_hc_age_gender = cls_funcs.get_age_gender_step(
-                    gender,
-                    age["step"],
-                    bowstyle["ageStep_out"],
-                    bowstyle["genderStep_out"],
-                )
-                classifications_count = len(agb_classes_out)
+        # set step from datum based on age and gender steps required
+        delta_hc_age_gender = cls_funcs.get_age_gender_step(
+            gender,
+            age["step"],
+            bowstyle["ageStep_out"],
+            bowstyle["genderStep_out"],
+        )
+        classifications_count = len(agb_classes_out)
 
-                class_hc = np.empty(classifications_count)
-                min_dists = np.empty(classifications_count)
+        class_hc = np.empty(classifications_count)
+        min_dists = np.empty(classifications_count)
 
-                for i in range(classifications_count):
-                    # Assign handicap for this classification
-                    class_hc[i] = (
-                        bowstyle["datum_out"]
-                        + delta_hc_age_gender
-                        + (i - 2) * bowstyle["classStep_out"]
-                    )
+        for i in range(classifications_count):
+            # Assign handicap for this classification
+            class_hc[i] = (
+                bowstyle["datum_out"]
+                + delta_hc_age_gender
+                + (i - 2) * bowstyle["classStep_out"]
+            )
 
-                    # Get minimum distance that must be shot for this classification
-                    min_dists[i] = _assign_min_dist(
-                        n_class=i,
-                        gender=gender,
-                        age_group=age["age_group"],
-                        max_dists=max_dist,
-                    )
+            # Get minimum distance that must be shot for this classification
+            min_dists[i] = _assign_min_dist(
+                n_class=i,
+                gender=gender,
+                age_group=age["age_group"],
+                max_dists=max_dist,
+            )
 
-                # Assign prestige rounds for the category
-                prestige_rounds = _assign_outdoor_prestige(
-                    bowstyle=bowstyle["bowstyle"],
-                    age=age["age_group"],
-                    gender=gender,
-                    max_dist=max_dist,
-                )
+        # Assign prestige rounds for the category
+        prestige_rounds = _assign_outdoor_prestige(
+            bowstyle=bowstyle["bowstyle"],
+            age=age["age_group"],
+            gender=gender,
+            max_dist=max_dist,
+        )
 
-                groupdata: GroupData = {
-                    "classes": agb_classes_out,
-                    "max_distance": max_dist,
-                    "classes_long": agb_classes_out_long,
-                    "class_HC": class_hc,
-                    "min_dists": min_dists,
-                    "prestige_rounds": prestige_rounds,
-                }
+        groupdata: GroupData = {
+            "classes": agb_classes_out,
+            "max_distance": max_dist,
+            "classes_long": agb_classes_out_long,
+            "class_HC": class_hc,
+            "min_dists": min_dists,
+            "prestige_rounds": prestige_rounds,
+        }
 
-                classification_dict[groupname] = groupdata
+        classification_dict[groupname] = groupdata
 
     return classification_dict
 
