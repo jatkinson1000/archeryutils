@@ -246,6 +246,41 @@ class TestRound:
 
         assert round_ != ("Test", [pass_, pass_])
 
+    @pytest.mark.parametrize(
+        "passes,result",
+        [
+            pytest.param(
+                [
+                    Pass.at_target(100, "5_zone", 122, 50, False),
+                    Pass.at_target(100, "5_zone", 122, 40, False),
+                    Pass.at_target(100, "5_zone", 122, 30, False),
+                ],
+                300,
+            ),
+            pytest.param(
+                [
+                    Pass.at_target(100, "5_zone", 122, 50, False),
+                ],
+                100,
+            ),
+            pytest.param(
+                [
+                    Pass.at_target(100, "5_zone", 122, 50, False),
+                    Pass.at_target(50, "5_zone", 122, 40, False),
+                    Pass.at_target(25, "5_zone", 80, 30, False),
+                ],
+                175,
+            ),
+        ],
+    )
+    def test_n_arrows(self, passes: Iterable, result: int) -> None:
+        """Check that n_arrows attribute is calculated correctly for a Round."""
+        test_round = Round(
+            "MyRound",
+            passes,
+        )
+        assert test_round.n_arrows == result
+
     def test_max_score(self) -> None:
         """Check that max score is calculated correctly for a Round."""
         test_round = Round(
