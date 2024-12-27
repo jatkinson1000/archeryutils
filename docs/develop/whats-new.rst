@@ -1,6 +1,15 @@
 What's New
 ==========
 
+Latest
+------
+* Adds `n_arrows` attribute to `Round`.
+* Fixes issue whereby a divide-by-zero warning could arise in the handicap rootfinding
+  algorithm.
+* Update to latest ruff and mypy.
+* Bugfix: Field classification naming made consistent with other schemes.
+
+
 Version 1.1.1
 -------------
 * Fixes a bug in version 1.1.0 whereby shorter-peg rounds were not restricted to
