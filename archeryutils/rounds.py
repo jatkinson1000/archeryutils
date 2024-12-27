@@ -177,6 +177,8 @@ class Round:
         string identifing the governing body the round belongs to
     family : str or None
         string identifing the family the round belongs to (e.g. wa1440, western, etc.)
+    n_arrows : int
+        total number of arrows in this round
 
     Examples
     --------
@@ -214,6 +216,7 @@ class Round:
         self.location = location
         self.body = body
         self.family = family
+        self.n_arrows: int = sum(pass_i.n_arrows for pass_i in self.passes)
 
     def __repr__(self) -> str:
         """Return a representation of a Round instance."""
