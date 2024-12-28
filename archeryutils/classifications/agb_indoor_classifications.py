@@ -7,6 +7,7 @@ calculate_agb_indoor_classification
 agb_indoor_classification_scores
 """
 
+import itertools
 from typing import TypedDict
 
 import numpy as np
@@ -73,44 +74,38 @@ def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
     agb_classes_in_long = agb_classes_info_in["classes_long"]
 
     # Generate dict of classifications
-    # loop over bowstyles
-    # loop over ages
-    # loop over genders
+    # loop over all bowstyles, genders, ages
     classification_dict = {}
-    for bowstyle in agb_bowstyles:
-        for gender in agb_genders:
-            for age in agb_ages:
-                groupname = cls_funcs.get_groupname(
-                    bowstyle["bowstyle"],
-                    gender,
-                    age["age_group"],
-                )
+    for bowstyle, gender, age in itertools.product(
+        agb_bowstyles, agb_genders, agb_ages
+    ):
+        groupname = cls_funcs.get_groupname(
+            bowstyle["bowstyle"],
+            gender,
+            age["age_group"],
+        )
 
-                # set step from datum based on age and gender steps required
-                delta_hc_age_gender = cls_funcs.get_age_gender_step(
-                    gender,
-                    age["step"],
-                    bowstyle["ageStep_in"],
-                    bowstyle["genderStep_in"],
-                )
+        # set step from datum based on age and gender steps required
+        delta_hc_age_gender = cls_funcs.get_age_gender_step(
+            gender,
+            age["step"],
+            bowstyle["ageStep_in"],
+            bowstyle["genderStep_in"],
+        )
 
-                classifications_count = len(agb_classes_in)
+        # set handicap threshold values for all classifications in the category
+        class_hc = (
+            bowstyle["datum_in"]
+            + delta_hc_age_gender
+            + (np.arange(len(agb_classes_in)) - 1) * bowstyle["classStep_in"]
+        ).astype(np.float64)
 
-                class_hc = np.empty(classifications_count)
-                for i in range(classifications_count):
-                    # Assign handicap for this classification
-                    class_hc[i] = (
-                        bowstyle["datum_in"]
-                        + delta_hc_age_gender
-                        + (i - 1) * bowstyle["classStep_in"]
-                    )
-
-                groupdata: GroupData = {
-                    "classes": agb_classes_in,
-                    "classes_long": agb_classes_in_long,
-                    "class_HC": class_hc,
-                }
-                classification_dict[groupname] = groupdata
+        groupdata: GroupData = {
+            "classes": agb_classes_in,
+            "classes_long": agb_classes_in_long,
+            "class_HC": class_hc,
+        }
+        classification_dict[groupname] = groupdata
 
     return classification_dict
 
