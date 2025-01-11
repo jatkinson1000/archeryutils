@@ -27,6 +27,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.20.0",
+    "aenum; python_version<'3.12'",
 ]
 
 [project.optional-dependencies]
