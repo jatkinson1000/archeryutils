@@ -12,6 +12,7 @@ from typing import TypedDict
 import archeryutils.classifications.classification_utils as cls_funcs
 import archeryutils.handicaps as hc
 from archeryutils import load_rounds
+from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
 ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -19,6 +20,52 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
         "WA_indoor.json",
     ],
 )
+
+old_indoor_bowstyles = AGB_bowstyles.COMPOUND | AGB_bowstyles.RECURVE
+old_indoor_ages = AGB_ages.ADULT
+
+
+def _get_old_indoor_groupname(
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
+) -> str:
+    """
+    Wrap function to generate string id for a particular category with indoor guards.
+
+    Parameters
+    ----------
+    bowstyle : AGB_bowstyles
+        archer's bowstyle under AGB indoor target rules
+    gender : AGB_genders
+        archer's gender under AGB indoor target rules
+    age_group : AGB_ages
+        archer's age group under AGB indoor target rules
+
+    Returns
+    -------
+    groupname : str
+        single str id for this category
+    """
+    if bowstyle not in AGB_bowstyles or bowstyle not in old_indoor_bowstyles:
+        msg = (
+            f"{bowstyle} is not a recognised bowstyle for old indoor classifications. "
+            f"Please select from {old_indoor_bowstyles}."
+        )
+        raise ValueError(msg)
+    if gender not in AGB_genders:
+        msg = (
+            f"{gender} is not a recognised gender group for old indoor "
+            "classifications. Please select from `archeryutils.AGB_genders`."
+        )
+        raise ValueError(msg)
+    if age_group not in AGB_ages or age_group not in old_indoor_ages:
+        msg = (
+            f"{age_group} is not a recognised age group for old indoor "
+            f"classifications. Please select from {old_indoor_ages}."
+        )
+        raise ValueError(msg)
+    return cls_funcs.get_groupname(bowstyle, gender, age_group)
 
 
 class GroupData(TypedDict):
@@ -72,10 +119,18 @@ def _make_agb_old_indoor_classification_dict() -> dict[str, GroupData]:
     }
 
     classification_dict = {
-        cls_funcs.get_groupname("Compound", "Male", "Adult"): compound_male_adult,
-        cls_funcs.get_groupname("Compound", "Female", "Adult"): compound_female_adult,
-        cls_funcs.get_groupname("Recurve", "Male", "Adult"): recurve_male_adult,
-        cls_funcs.get_groupname("Recurve", "Female", "Adult"): recurve_female_adult,
+        _get_old_indoor_groupname(
+            AGB_bowstyles.COMPOUND, AGB_genders.MALE, AGB_ages.ADULT
+        ): compound_male_adult,
+        _get_old_indoor_groupname(
+            AGB_bowstyles.COMPOUND, AGB_genders.FEMALE, AGB_ages.ADULT
+        ): compound_female_adult,
+        _get_old_indoor_groupname(
+            AGB_bowstyles.RECURVE, AGB_genders.MALE, AGB_ages.ADULT
+        ): recurve_male_adult,
+        _get_old_indoor_groupname(
+            AGB_bowstyles.RECURVE, AGB_genders.FEMALE, AGB_ages.ADULT
+        ): recurve_female_adult,
     }
 
     return classification_dict
@@ -89,9 +144,9 @@ del _make_agb_old_indoor_classification_dict
 def calculate_agb_old_indoor_classification(
     score: float,
     roundname: str,
-    bowstyle: str,
-    gender: str,
-    age_group: str,
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
 ) -> str:
     """
     Calculate AGB indoor classification from score.
@@ -105,12 +160,12 @@ def calculate_agb_old_indoor_classification(
         numerical score on the round to calculate classification for
     roundname : str
         name of round shot as given by 'codename' in json
-    bowstyle : str
-        archer's bowstyle under AGB outdoor target rules
-    gender : str
-        archer's gender under AGB outdoor target rules
-    age_group : str
-        archer's age group under AGB outdoor target rules
+    bowstyle : AGB_bowstyles
+        archer's bowstyle under AGB indoor target rules
+    gender : AGB_genders
+        archer's gender under AGB indoor target rules
+    age_group : AGB_ages
+        archer's age group under AGB indoor target rules
 
     Returns
     -------
@@ -128,9 +183,9 @@ def calculate_agb_old_indoor_classification(
     >>> class_func.calculate_agb_old_indoor_classification(
     ...     547,
     ...     "wa18",
-    ...     "compound",
-    ...     "male",
-    ...     "adult",
+    ...     AGB_bowstyles.COMPOUND,
+    ...     AGB_genders.MALE,
+    ...     AGB_ages.ADULT,
     ... )
     'C'
 
@@ -151,7 +206,7 @@ def calculate_agb_old_indoor_classification(
         age_group,
     )
 
-    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    groupname = _get_old_indoor_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
     class_data = dict(zip(group_data["classes"], class_scores, strict=True))
 
@@ -169,9 +224,9 @@ def calculate_agb_old_indoor_classification(
 
 def agb_old_indoor_classification_scores(
     roundname: str,
-    bowstyle: str,
-    gender: str,
-    age_group: str,
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
 ) -> list[int]:
     """
     Calculate AGB indoor classification scores for category.
@@ -183,12 +238,12 @@ def agb_old_indoor_classification_scores(
     ----------
     roundname : str
         name of round shot as given by 'codename' in json
-    bowstyle : str
-        archer's bowstyle under AGB outdoor target rules
-    gender : str
-        archer's gender under AGB outdoor target rules
-    age_group : str
-        archer's age group under AGB outdoor target rules
+    bowstyle : AGB_bowstyles
+        archer's bowstyle under AGB indoor target rules
+    gender : AGB_genders
+        archer's gender under AGB indoor target rules
+    age_group : AGB_ages
+        archer's age group under AGB indoor target rules
 
     Returns
     -------
@@ -205,24 +260,19 @@ def agb_old_indoor_classification_scores(
     >>> from archeryutils import classifications as class_func
     >>> class_func.agb_old_indoor_classification_scores(
     ...     "portsmouth",
-    ...     "barebow",
-    ...     "male",
-    ...     "under 12",
+    ...     AGB_bowstyles.BAREBOW,
+    ...     AGB_genders.MALE,
+    ...     AGB_ages.U12,
     ... )
     [592, 582, 554, 505, 432, 315, 195, 139]
 
 
     """
     # enforce compound scoring
-    if bowstyle.lower() in ("compound"):
+    if bowstyle == AGB_bowstyles.COMPOUND:
         roundname = cls_funcs.get_compound_codename(roundname)
 
-    # deal with reduced categories:
-    age_group = "Adult"
-    if bowstyle.lower() not in ("compound"):
-        bowstyle = "Recurve"
-
-    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    groupname = _get_old_indoor_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
 
     # Get scores required on this round for each classification
@@ -233,7 +283,7 @@ def agb_old_indoor_classification_scores(
             "AGBold",
             rounded_score=True,
         )
-        for i, class_i in enumerate(group_data["classes"])
+        for i in range(len(group_data["classes"]))
     ]
 
     # Score threshold should be int (score_for_round called with round=True)

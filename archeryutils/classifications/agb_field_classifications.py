@@ -9,7 +9,7 @@ agb_field_classification_scores
 """
 
 import itertools
-from typing import Any, TypedDict
+from typing import TypedDict
 
 import numpy as np
 import numpy.typing as npt
@@ -17,11 +17,37 @@ import numpy.typing as npt
 import archeryutils.classifications.classification_utils as cls_funcs
 import archeryutils.handicaps as hc
 from archeryutils import load_rounds
+from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
 ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
     ]
+)
+
+field_bowstyles = (
+    AGB_bowstyles.COMPOUND
+    | AGB_bowstyles.RECURVE
+    | AGB_bowstyles.BAREBOW
+    | AGB_bowstyles.ENGLISHLONGBOW
+    | AGB_bowstyles.TRADITIONAL
+    | AGB_bowstyles.FLATBOW
+    | AGB_bowstyles.COMPOUNDLIMITED
+    | AGB_bowstyles.COMPOUNDBAREBOW
+)
+
+sighted_bowstyles = (
+    AGB_bowstyles.COMPOUND | AGB_bowstyles.RECURVE | AGB_bowstyles.COMPOUNDLIMITED
+)
+
+field_ages = (
+    AGB_ages.P50
+    | AGB_ages.ADULT
+    | AGB_ages.U18
+    | AGB_ages.U16
+    | AGB_ages.U15
+    | AGB_ages.U14
+    | AGB_ages.U12
 )
 
 
@@ -33,6 +59,49 @@ class GroupData(TypedDict):
     class_HC: npt.NDArray[np.float64]
     max_distance: float
     min_dists: npt.NDArray[np.float64]
+
+
+def _get_field_groupname(
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
+) -> str:
+    """
+    Wrap function to generate string id for a particular category with field guards.
+
+    Parameters
+    ----------
+    bowstyle : AGB_bowstyles
+        archer's bowstyle under AGB field target rules
+    gender : AGB_genders
+        archer's gender under AGB field target rules
+    age_group : AGB_ages
+        archer's age group under AGB field target rules
+
+    Returns
+    -------
+    groupname : str
+        single str id for this category
+    """
+    if bowstyle not in AGB_bowstyles or bowstyle not in field_bowstyles:
+        msg = (
+            f"{bowstyle} is not a recognised bowstyle for field classifications. "
+            f"Please select from {field_bowstyles}."
+        )
+        raise ValueError(msg)
+    if gender not in AGB_genders:
+        msg = (
+            f"{gender} is not a recognised gender group for field classifications. "
+            "Please select from `archeryutils.AGB_genders`."
+        )
+        raise ValueError(msg)
+    if age_group not in AGB_ages or age_group not in field_ages:
+        msg = (
+            f"{age_group} is not a recognised age group for field classifications. "
+            f"Please select from {field_ages}."
+        )
+        raise ValueError(msg)
+    return cls_funcs.get_groupname(bowstyle, gender, age_group)
 
 
 def _make_agb_field_classification_dict() -> dict[str, GroupData]:
@@ -61,17 +130,9 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
     ArcheryGB Shooting Administrative Procedures - SAP7 (2025)
     """
     # Read in age group info as list of dicts
-    agb_ages_full = cls_funcs.read_ages_json()
-    # Restrict Age groups to those for field
-    agb_ages: list[cls_funcs.AGBAgeData] = [
-        item
-        for item in agb_ages_full
-        if item["age_group"].lower().replace(" ", "") not in ["under21"]
-    ]
+    agb_age_data = cls_funcs.read_ages_json()
     # Read in bowstyleclass info as list of dicts
-    agb_bowstyles = cls_funcs.read_bowstyles_json()
-    # Read in gender info as list of dicts
-    agb_genders = cls_funcs.read_genders_json()
+    agb_bowstyle_data = cls_funcs.read_bowstyles_json()
     # Read in classification names as dict
     agb_classes_info_field = cls_funcs.read_classes_json("agb_field")
     agb_classes_field = agb_classes_info_field["classes"]
@@ -81,29 +142,39 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
     # loop over all bowstyles, genders, ages
     classification_dict = {}
     for bowstyle, gender, age in itertools.product(
-        agb_bowstyles, agb_genders, agb_ages
+        field_bowstyles, AGB_genders, field_ages
     ):
-        groupname = cls_funcs.get_groupname(
-            bowstyle["bowstyle"], gender, age["age_group"]
-        )
+        # Generate groupname
+        # use assert checks to satisfy mypy that names are all valid
+        if gender.name is None:
+            errmsg = f"Gender {gender} does not have a name."
+            raise ValueError(errmsg)
+        if age.name is None:
+            errmsg = f"Age {age} does not have a name."
+            raise ValueError(errmsg)
+        if bowstyle.name is None:
+            errmsg = f"Bowstyle {bowstyle} does not have a name."
+            raise ValueError(errmsg)
+        groupname = _get_field_groupname(bowstyle, gender, age)
 
         # Get max dists for category from json file data
         # Use metres as corresponding yards >= metric
-        min_dists, max_distance = _assign_dists(bowstyle["bowstyle"], age)
+        min_dists, max_distance = _assign_dists(bowstyle, agb_age_data[age.name])
 
         # set step from datum based on age and gender steps required
         delta_hc_age_gender = cls_funcs.get_age_gender_step(
-            gender,
-            age["step"],
-            bowstyle["ageStep_field"],
-            bowstyle["genderStep_field"],
+            gender.name,
+            agb_age_data[age.name]["step"],
+            agb_bowstyle_data[bowstyle.name]["ageStep_field"],
+            agb_bowstyle_data[bowstyle.name]["genderStep_field"],
         )
 
         # set handicap threshold values for all classifications in the category
         class_hc = (
-            bowstyle["datum_field"]
+            agb_bowstyle_data[bowstyle.name]["datum_field"]
             + delta_hc_age_gender
-            + (np.arange(len(agb_classes_field)) - 2) * bowstyle["classStep_field"]
+            + (np.arange(len(agb_classes_field)) - 2)
+            * agb_bowstyle_data[bowstyle.name]["classStep_field"]
         ).astype(np.float64)
 
         groupdata: GroupData = {
@@ -120,7 +191,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 
 
 def _assign_dists(
-    bowstyle: str,
+    bowstyle: AGB_bowstyles,
     age: cls_funcs.AGBAgeData,
 ) -> tuple[npt.NDArray[np.float64], float]:
     """
@@ -156,10 +227,10 @@ def _assign_dists(
     # U18 R/C/CL Red, Others Blue
     # U15 All Blue, R/C Red, Others White
     # U12 R/C/CL Red, All Blue, All White,
-    if bowstyle.lower().replace(" ", "") in ("compound", "recurve", "compoundlimited"):
-        min_d, max_d = age["red"]
+    if bowstyle in sighted_bowstyles:
+        min_d, max_d = age["sighted"]
     else:
-        min_d, max_d = age["blue"]
+        min_d, max_d = age["unsighted"]
 
     n_classes: int = 9  # [EMB, GMB, MB, B1, B2, B3, A1, A2, A3]
 
@@ -178,7 +249,11 @@ del _make_agb_field_classification_dict
 
 
 def calculate_agb_field_classification(
-    score: float, roundname: str, bowstyle: str, gender: str, age_group: str
+    score: float,
+    roundname: str,
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
 ) -> str:
     """
     Calculate AGB field classification from score.
@@ -192,12 +267,12 @@ def calculate_agb_field_classification(
         numerical score on the round to calculate classification for
     roundname : str
         name of round shot as given by 'codename' in json
-    bowstyle : str
-        archer's bowstyle under AGB field target rules
-    gender : str
-        archer's gender under AGB field target rules
-    age_group : str
-        archer's age group under AGB field target rules
+    bowstyle : AGB_bowstyles
+        archer's bowstyle under AGB field rules
+    gender : AGB_genders
+        archer's gender under AGB field rules
+    age_group : AGB_ages
+        archer's age group under AGB field rules
 
     Returns
     -------
@@ -215,9 +290,9 @@ def calculate_agb_field_classification(
     >>> class_func.calculate_agb_field_classification(
     ...     177,
     ...     "wa_field_24_blue_marked",
-    ...     "traditional",
-    ...     "male",
-    ...     "under 18",
+    ...     class_func.AGB_bowstyles.TRADITIONAL,
+    ...     class_func.AGB_genders.MALE,
+    ...     class_func.AGB_ages.U18,
     ... )
     'B1'
 
@@ -234,9 +309,8 @@ def calculate_agb_field_classification(
     roundname = roundname.replace("unmarked", "marked")
     roundname = roundname.replace("mixed", "marked")
 
-    # No under 21 category in field, use adult scores
-    if age_group.lower().replace(" ", "") in ("under21"):
-        age_group = "Adult"
+    groupname = _get_field_groupname(bowstyle, gender, age_group)
+    group_data = agb_field_classifications[groupname]
 
     # Get scores required on this round for each classification
     all_class_scores = agb_field_classification_scores(
@@ -246,8 +320,6 @@ def calculate_agb_field_classification(
         age_group,
     )
 
-    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
-    group_data = agb_field_classifications[groupname]
     class_data = dict(zip(group_data["classes"], all_class_scores, strict=True))
 
     # Of the classes remaining, what is the highest classification this score gets?
@@ -261,7 +333,10 @@ def calculate_agb_field_classification(
 
 
 def agb_field_classification_scores(
-    roundname: str, bowstyle: str, gender: str, age_group: str
+    roundname: str,
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
 ) -> list[int]:
     """
     Calculate AGB field classification scores for category.
@@ -295,9 +370,9 @@ def agb_field_classification_scores(
     >>> from archeryutils import classifications as class_func
     >>> class_func.agb_field_classification_scores(
     ...     "wa_field_24_red_marked",
-    ...     "compound",
-    ...     "male",
-    ...     "adult",
+    ...     class_func.AGB_bowstyles.COMPOUND,
+    ...     class_func.AGB_genders.MALE,
+    ...     class_func.AGB_ages.ADULT,
     ... )
     [408, 391, 369, 345, 318, 286, 248, 204, 157]
 
@@ -305,18 +380,15 @@ def agb_field_classification_scores(
 
     >>> class_func.agb_field_classification_scores(
     ...     "wa_field_12_red_unmarked",
-    ...     "compound",
-    ...     "male",
-    ...     "adult",
+    ...     class_func.AGB_bowstyles.COMPOUND,
+    ...     class_func.AGB_genders.MALE,
+    ...     class_func.AGB_ages.ADULT,
     ... )
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
 
     """
-    # No under 21 category in field, use adult scores
-    if age_group.lower().replace(" ", "") in ("under21"):
-        age_group = "Adult"
-
-    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    groupname = _get_field_groupname(bowstyle, gender, age_group)
+    print(groupname)
     group_data = agb_field_classifications[groupname]
 
     # Enforce unmarked/mixed being same score as marked
@@ -335,6 +407,7 @@ def agb_field_classification_scores(
         )
         for i in range(len(group_data["classes"]))
     ]
+    print(class_scores)
 
     # Reduce list based on other criteria besides handicap
     # What classes are eligible based on category and distance
@@ -344,9 +417,11 @@ def agb_field_classification_scores(
         # Is round too short?
         if group_data["min_dists"][i] > round_max_dist:
             class_scores[i] = -9999
+            print("short", group_data["min_dists"][i], round_max_dist)
         # Is peg too long (i.e. red peg for unsighted)?
         if group_data["max_distance"] < round_max_dist:
             class_scores[i] = -9999
+            print("long", group_data["max_distance"], round_max_dist)
     # What classes are eligible based on round length (24 targets)
     if "12" in roundname:
         class_scores[0:3] = [-9999] * 3
