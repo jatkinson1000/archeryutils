@@ -1,5 +1,6 @@
 """Module providing various classification functionalities."""
 
+from .AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 from .agb_field_classifications import (
     agb_field_classification_scores,
     calculate_agb_field_classification,
@@ -22,6 +23,9 @@ from .agb_outdoor_classifications import (
 )
 
 __all__ = [
+    "AGB_ages",
+    "AGB_bowstyles",
+    "AGB_genders",
     "agb_field_classification_scores",
     "agb_indoor_classification_scores",
     "agb_old_field_classification_scores",
