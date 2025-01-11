@@ -246,8 +246,7 @@ def parse_optional_units(
 
     if units not in supported:
         msg = (
-            f"Unit {units!r} not recognised. "
-            f"Select from {definitive_units(supported)}."
+            f"Unit {units!r} not recognised. Select from {definitive_units(supported)}."
         )
         raise ValueError(msg)
     return quantity, definitive_unit(units)

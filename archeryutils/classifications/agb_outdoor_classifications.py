@@ -15,6 +15,7 @@ import numpy.typing as npt
 import archeryutils.classifications.classification_utils as cls_funcs
 import archeryutils.handicaps as hc
 from archeryutils import load_rounds
+from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
 ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -24,16 +25,66 @@ ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     ],
 )
 
+outdoor_bowstyles = (
+    AGB_bowstyles.COMPOUND
+    | AGB_bowstyles.RECURVE
+    | AGB_bowstyles.BAREBOW
+    | AGB_bowstyles.LONGBOW
+)
+
 
 class GroupData(TypedDict):
     """Structure for AGB Outdoor classification data."""
 
     classes: list[str]
-    max_distance: list[int]
+    max_distances: list[int]
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
     min_dists: npt.NDArray[np.float64]
     prestige_rounds: list[str]
+
+
+def _get_outdoor_groupname(
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
+) -> str:
+    """
+    Wrap function to generate string id for a particular category with outdoor guards.
+
+    Parameters
+    ----------
+    bowstyle : AGB_bowstyles
+        archer's bowstyle under AGB outdoor target rules
+    gender : AGB_genders
+        archer's gender under AGB outdoor target rules
+    age_group : AGB_ages
+        archer's age group under AGB outdoor target rules
+
+    Returns
+    -------
+    groupname : str
+        single str id for this category
+    """
+    if bowstyle not in AGB_bowstyles or bowstyle not in outdoor_bowstyles:
+        msg = (
+            f"{bowstyle} is not a recognised bowstyle for outdoor classifications. "
+            f"Please select from {outdoor_bowstyles}."
+        )
+        raise ValueError(msg)
+    if gender not in AGB_genders:
+        msg = (
+            f"{gender} is not a recognised gender group for outdoor classifications. "
+            "Please select from `archeryutils.AGB_genders`."
+        )
+        raise ValueError(msg)
+    if age_group not in AGB_ages:
+        msg = (
+            f"{age_group} is not a recognised age group for outdoor classifications. "
+            "Please select from `archeryutils.AGB_ages`."
+        )
+        raise ValueError(msg)
+    return cls_funcs.get_groupname(bowstyle, gender, age_group)
 
 
 def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
@@ -62,11 +113,9 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
     """
     # Read in age group info as list of dicts
-    agb_ages = cls_funcs.read_ages_json()
+    agb_age_data = cls_funcs.read_ages_json()
     # Read in bowstyleclass info as list of dicts
-    agb_bowstyles = cls_funcs.read_bowstyles_json()
-    # Read in gender info as list of dicts
-    agb_genders = cls_funcs.read_genders_json()
+    agb_bowstyle_data = cls_funcs.read_bowstyles_json()
     # Read in classification names as dict
     agb_classes_info_out = cls_funcs.read_classes_json("agb_outdoor")
     agb_classes_out = agb_classes_info_out["classes"]
@@ -77,26 +126,37 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     # loop over genders
     # loop over ages
     classification_dict = {}
-    for bowstyle in agb_bowstyles:
-        for gender in agb_genders:
-            for age in agb_ages:
-                groupname = cls_funcs.get_groupname(
-                    bowstyle["bowstyle"],
+    for bowstyle in outdoor_bowstyles:
+        for gender in AGB_genders:
+            for age in AGB_ages:
+                # Generate groupname
+                # use assert checks to satisfy mypy that names are all valid
+                if gender.name is None:
+                    errmsg = f"Gender {gender} does not have a name."
+                    raise ValueError(errmsg)
+                if age.name is None:
+                    errmsg = f"Age {age} does not have a name."
+                    raise ValueError(errmsg)
+                if bowstyle.name is None:
+                    errmsg = f"Bowstyle {bowstyle} does not have a name."
+                    raise ValueError(errmsg)
+                groupname = _get_outdoor_groupname(
+                    bowstyle,
                     gender,
-                    age["age_group"],
+                    age,
                 )
 
                 # Get max dists for category from json file data
                 # Use metres as corresponding yards >= metric
-                gender_key = cast(Literal["male", "female"], gender.lower())
-                max_dist = age[gender_key]
+                gender_key = cast(Literal["male", "female"], gender.name.lower())
+                max_dists = agb_age_data[age.name][gender_key]
 
                 # set step from datum based on age and gender steps required
                 delta_hc_age_gender = cls_funcs.get_age_gender_step(
-                    gender,
-                    age["step"],
-                    bowstyle["ageStep_out"],
-                    bowstyle["genderStep_out"],
+                    gender.name,
+                    agb_age_data[age.name]["step"],
+                    agb_bowstyle_data[bowstyle.name]["ageStep_out"],
+                    agb_bowstyle_data[bowstyle.name]["genderStep_out"],
                 )
                 classifications_count = len(agb_classes_out)
 
@@ -106,30 +166,30 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
                 for i in range(classifications_count):
                     # Assign handicap for this classification
                     class_hc[i] = (
-                        bowstyle["datum_out"]
+                        agb_bowstyle_data[bowstyle.name]["datum_out"]
                         + delta_hc_age_gender
-                        + (i - 2) * bowstyle["classStep_out"]
+                        + (i - 2) * agb_bowstyle_data[bowstyle.name]["classStep_out"]
                     )
 
                     # Get minimum distance that must be shot for this classification
                     min_dists[i] = _assign_min_dist(
                         n_class=i,
                         gender=gender,
-                        age_group=age["age_group"],
-                        max_dists=max_dist,
+                        age_group=age,
+                        max_dists=max_dists,
                     )
 
                 # Assign prestige rounds for the category
                 prestige_rounds = _assign_outdoor_prestige(
-                    bowstyle=bowstyle["bowstyle"],
-                    age=age["age_group"],
+                    bowstyle=bowstyle,
+                    age=age,
                     gender=gender,
-                    max_dist=max_dist,
+                    max_dists=max_dists,
                 )
 
                 groupdata: GroupData = {
                     "classes": agb_classes_out,
-                    "max_distance": max_dist,
+                    "max_distances": max_dists,
                     "classes_long": agb_classes_out_long,
                     "class_HC": class_hc,
                     "min_dists": min_dists,
@@ -143,8 +203,8 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
 
 def _assign_min_dist(
     n_class: int,
-    gender: str,
-    age_group: str,
+    gender: AGB_genders,
+    age_group: AGB_ages,
     max_dists: list[int],
 ) -> int:
     """
@@ -195,13 +255,10 @@ def _assign_min_dist(
 
     # Below B1
     # Age group trickery:
-    # U16 males and above step down for B2 and beyond
-    if gender.lower() in ("male") and age_group.lower().replace(" ", "") in (
-        "adult",
-        "50+",
-        "under21",
-        "under18",
-        "under16",
+    # U15 males and below step down for B2 and beyond to align with female scores/hcs
+    if (
+        gender == AGB_genders.MALE
+        and age_group not in AGB_ages.U15 | AGB_ages.U14 | AGB_ages.U12
     ):
         return dists[max_dist_index + (n_class - n_mb)]
 
@@ -214,10 +271,10 @@ def _assign_min_dist(
 
 
 def _assign_outdoor_prestige(
-    bowstyle: str,
-    gender: str,
-    age: str,
-    max_dist: list[int],
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age: AGB_ages,
+    max_dists: list[int],
 ) -> list[str]:
     """
     Assign appropriate outdoor prestige rounds for a category.
@@ -226,14 +283,14 @@ def _assign_outdoor_prestige(
 
     Parameters
     ----------
-    bowstyle : str
-        string defining bowstyle
-    gender : str
-        string defining gender
-    age : str,
-        string defining age group
-    max_dist: List[int]
-        list of integers defining the maximum distances for category
+    bowstyle : AGB_bowstyles
+        enum defining bowstyle
+    gender : AGB_genders
+        enum defining gender
+    age : AGB_ages,
+        enum defining age group
+    max_dists: List[int]
+        list of integers defining the maximum distances for category in [m] and [yds]
 
     Returns
     -------
@@ -294,13 +351,13 @@ def _assign_outdoor_prestige(
     distance_check: list[str] = []
 
     # 720 rounds - bowstyle dependent
-    if bowstyle.lower() == "compound":
+    if bowstyle == AGB_bowstyles.COMPOUND:
         # Everyone gets the 'adult' 720
         prestige_rounds.append(prestige_720_compound[0])
         # Check rest for junior eligible shorter rounds
         distance_check = distance_check + prestige_720_compound[1:]
 
-    elif bowstyle.lower() == "barebow":
+    elif bowstyle == AGB_bowstyles.BAREBOW:
         # Everyone gets the 'adult' 720
         prestige_rounds.append(prestige_720_barebow[0])
         # Check rest for junior eligible shorter rounds
@@ -312,11 +369,11 @@ def _assign_outdoor_prestige(
         # Check rest for junior eligible shorter rounds
         distance_check = distance_check + prestige_720[1:]
 
-        # Additional fix for Male 50+, U18, and U16 recurve
-        if gender.lower() == "male":
-            if age.lower() in ("50+", "under 18"):
+        # Additional fix for Male 50+, U18, and U16 recurve/longbow
+        if gender == AGB_genders.MALE:
+            if age in AGB_ages.P50 | AGB_ages.U18:
                 prestige_rounds.append(prestige_720[1])  # 60m
-            elif age.lower() == "under 16":
+            elif age == AGB_ages.U16:
                 prestige_rounds.append(prestige_720[2])  # 50m
 
     # Imperial and 1440 rounds - Check based on distance
@@ -325,7 +382,7 @@ def _assign_outdoor_prestige(
 
     # Check all other rounds based on distance
     for roundname in distance_check:
-        if ALL_OUTDOOR_ROUNDS[roundname].max_distance().value >= np.min(max_dist):
+        if ALL_OUTDOOR_ROUNDS[roundname].max_distance().value >= np.min(max_dists):
             prestige_rounds.append(roundname)
 
     return prestige_rounds
@@ -339,9 +396,9 @@ del _make_agb_outdoor_classification_dict
 def calculate_agb_outdoor_classification(
     score: float,
     roundname: str,
-    bowstyle: str,
-    gender: str,
-    age_group: str,
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
 ) -> str:
     """
     Calculate AGB outdoor classification from score.
@@ -355,11 +412,11 @@ def calculate_agb_outdoor_classification(
         numerical score on the round to calculate classification for
     roundname : str
         name of round shot as given by 'codename' in json
-    bowstyle : str
+    bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
-    gender : str
+    gender : AGB_genders
         archer's gender under AGB outdoor target rules
-    age_group : str
+    age_group : AGB_ages
         archer's age group under AGB outdoor target rules
 
     Returns
@@ -407,7 +464,7 @@ def calculate_agb_outdoor_classification(
         age_group,
     )
 
-    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    groupname = _get_outdoor_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
 
     # dictionary ordering guaranteed in python 3.7+
@@ -481,9 +538,9 @@ def _check_prestige_distance(
 
 def agb_outdoor_classification_scores(
     roundname: str,
-    bowstyle: str,
-    gender: str,
-    age_group: str,
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
 ) -> list[int]:
     """
     Calculate AGB outdoor classification scores for category.
@@ -495,11 +552,11 @@ def agb_outdoor_classification_scores(
     ----------
     roundname : str
         name of round shot as given by 'codename' in json
-    bowstyle : str
+    bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
-    gender : str
+    gender : AGB_genders
         archer's gender under AGB outdoor target rules
-    age_group : str
+    age_group : AGB_ages
         archer's age group under AGB outdoor target rules
 
     Returns
@@ -517,9 +574,9 @@ def agb_outdoor_classification_scores(
     >>> from archeryutils import classifications as class_func
     >>> class_func.agb_outdoor_classification_scores(
     ...     "hereford",
-    ...     "recurve",
-    ...     "female",
-    ...     "adult",
+    ...     class_func.AGB_bowstyles.RECURVE,
+    ...     class_func.AGB_genders.FEMALE,
+    ...     class_func.AGB_ages.ADULT,
     ... )
     [1232, 1178, 1107, 1015, 900, 763, 614, 466, 336]
 
@@ -527,19 +584,20 @@ def agb_outdoor_classification_scores(
 
     >>> class_func.agb_outdoor_classification_scores(
     ...     "bristol_ii",
-    ...     "recurve",
-    ...     "female",
-    ...     "adult",
+    ...     class_func.AGB_bowstyles.RECURVE,
+    ...     class_func.AGB_genders.FEMALE,
+    ...     class_func.AGB_ages.ADULT,
     ... )
     [-9999, -9999, -9999, -9999, -9999, 931, 797, 646, 493]
 
     """
-    if bowstyle.lower() in ("traditional", "flatbow", "asiatic"):
-        bowstyle = "Barebow"
-    elif bowstyle.lower() in ("compound barebow", "compound longbow"):
-        bowstyle = "Compound"
+    # # deal with reduced categories:
+    # if bowstyle in AGB_bowstyles.FLATBOW | AGB_bowstyles.TRADITIONAL:
+    #     bowstyle = AGB_bowstyles.BAREBOW
+    # elif bowstyle in AGB_bowstyles.COMPOUNDLIMITED | AGB_bowstyles.COMPOUNDBAREBOW:
+    #     bowstyle = AGB_bowstyles.COMPOUND
 
-    groupname = cls_funcs.get_groupname(bowstyle, gender, age_group)
+    groupname = _get_outdoor_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
 
     # Get scores required on this round for each classification
