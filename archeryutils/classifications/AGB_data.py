@@ -1,6 +1,14 @@
 """Set of useful enums for input to Archery GB classification routines."""
 
-from enum import Enum, Flag, auto
+# To support python versions < 3.12 we can use the aenum library as a separate
+# dependency before it was integrated into python3.11
+# It is needed for iterable Flag in 3.11 and use of `in` for Flag in 3.12
+import sys
+
+if sys.version_info >= (3, 12):
+    from enum import Enum, Flag, auto
+else:
+    from aenum import Enum, Flag, auto
 
 
 class AGB_genders(Enum):
