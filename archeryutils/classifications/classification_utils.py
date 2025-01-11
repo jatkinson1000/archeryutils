@@ -243,7 +243,7 @@ def get_groupname(
     groupname : str
         single str id for this category
     """
-    groupname = f"{age_group.name}_" f"{gender.name}_" f"{bowstyle.name}"
+    groupname = f"{age_group.name}_{gender.name}_{bowstyle.name}"
 
     return groupname
 
