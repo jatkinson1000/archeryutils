@@ -29,6 +29,13 @@ install as an editable package::
     cd archeryutils
     pip install -e .[test,lint,docs]
 
+.. note::
+   If you are installing in zsh you will need to use quotes for the optional dependencies:
+
+   .. code-block:: bash
+
+      pip install -e '.[test,lint,docs]'
+
 Testing
 ~~~~~~~
 
