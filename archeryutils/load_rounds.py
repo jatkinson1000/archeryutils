@@ -131,7 +131,7 @@ class DotDict(dict[str, Any]):
 
     def __getattr__(self, name: str) -> Any:
         """
-        getter.
+        Getter.
 
         Parameters
         ----------
@@ -144,7 +144,7 @@ class DotDict(dict[str, Any]):
 
     def __setattr__(self, name: str, value: Any) -> None:
         """
-        setter.
+        Setter.
 
         Parameters
         ----------
@@ -157,7 +157,7 @@ class DotDict(dict[str, Any]):
 
     def __delattr__(self, name: str) -> None:
         """
-        delete.
+        Delete.
 
         Parameters
         ----------
