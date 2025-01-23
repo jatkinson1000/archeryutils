@@ -308,7 +308,7 @@ class TestAgbOutdoorClassificationScores:
         with pytest.raises(
             KeyError,
             match=(
-                f"{age_group.lower().replace(' ','')}_"
+                f"{age_group.lower().replace(' ', '')}_"
                 f"{gender.lower()}_{bowstyle.lower()}"
             ),
         ):

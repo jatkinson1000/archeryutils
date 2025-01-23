@@ -244,9 +244,7 @@ def get_groupname(bowstyle: str, gender: str, age_group: str) -> str:
         bowstyle = "longbow"
 
     groupname = (
-        f"{age_group.lower().replace(' ', '')}_"
-        f"{gender.lower()}_"
-        f"{bowstyle.lower()}"
+        f"{age_group.lower().replace(' ', '')}_{gender.lower()}_{bowstyle.lower()}"
     )
 
     return groupname
