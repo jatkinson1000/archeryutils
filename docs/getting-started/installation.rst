@@ -27,7 +27,7 @@ install as an editable package::
 
     git clone git@github.com:jatkinson1000/archeryutils.git
     cd archeryutils
-    pip install -e .[test,int,docs]
+    pip install -e .[test,lint,docs]
 
 Testing
 ~~~~~~~
@@ -35,7 +35,7 @@ Testing
 To run tests on a development installation either install
 `pytest <https://docs.pytest.org/>`__ using pip, or install as an optional dependency::
 
-    pip install -e ".[test]"
+    pip install -e .[test]
 
 and then run::
 
@@ -54,6 +54,8 @@ lint
 
 For applying quality control to the code::
 
+    pip install -e .[lint]
+
 * ruff (0.7.3 or later)
 * mypy (1.0.0 or later)
 * coverage
@@ -66,7 +68,7 @@ docs
 
 For building documentation::
 
-    pip install -e ".[docs]"
+    pip install -e .[docs]
 
 * sphinx
 * sphinx_rtd_theme

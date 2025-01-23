@@ -45,10 +45,11 @@ It is recommended to use a virtual environment.
 If you want a local install that you can edit instead, clone the repository,
 navigate to `archeryutils/`, and run:
 
-    python3 -m pip install -e .[test,lint,docs]
+    python3 -m pip install -e .
 
 Please refer to the online documentation for
-[full installation guidance](https://archeryutils.readthedocs.io/en/latest/getting-started/installation.html).
+[full installation guidance](https://archeryutils.readthedocs.io/en/latest/getting-started/installation.html)
+including optional dependencies for developing and testing.
 
 ### Getting Started
 There are examples of some of the different functionalities in the jupyter notebook
