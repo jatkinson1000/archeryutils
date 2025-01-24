@@ -26,6 +26,16 @@ ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     ],
 )
 
+AGB_FIELD_CLASSES = [
+    "GMB",
+    "MB",
+    "B",
+    "1C",
+    "2C",
+    "3C",
+]
+UNCLASSIFIED = "UC"
+
 
 class GroupData(TypedDict):
     """Structure for AGB Field classification data."""
@@ -57,15 +67,6 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
 
     """
-    agb_field_classes = [
-        "Grand Master Bowman",
-        "Master Bowman",
-        "Bowman",
-        "1st Class",
-        "2nd Class",
-        "3rd Class",
-    ]
-
     agb_field_scores = {
         ("Compound", "Male", "Adult"): [393, 377, 344, 312, 279, 247],
         ("Compound", "Female", "Adult"): [376, 361, 330, 299, 268, 237],
@@ -105,7 +106,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
     classification_dict = {}
 
     for group, scores in agb_field_scores.items():
-        groupdata: GroupData = {"classes": agb_field_classes, "class_scores": scores}
+        groupdata: GroupData = {"classes": AGB_FIELD_CLASSES, "class_scores": scores}
         groupname = cls_funcs.get_groupname(*group)
         classification_dict[groupname] = groupdata
 
@@ -191,7 +192,7 @@ def calculate_agb_old_field_classification(
         bowstyle.lower().replace(" ", "") in ("compound", "recurve")
         and "wa_field_24_red_" not in roundname
     ):
-        return "unclassified"
+        return UNCLASSIFIED
     if (
         bowstyle.lower().replace(" ", "")
         in (
@@ -204,7 +205,7 @@ def calculate_agb_old_field_classification(
         )
         and "wa_field_24_blue_" not in roundname
     ):
-        return "unclassified"
+        return UNCLASSIFIED
 
     # What is the highest classification this score gets?
     class_scores = dict(
@@ -217,7 +218,7 @@ def calculate_agb_old_field_classification(
             return classification
 
     # if lower than 3rd class score return "UC"
-    return "unclassified"
+    return UNCLASSIFIED
 
 
 def agb_old_field_classification_scores(
