@@ -8,6 +8,7 @@ Latest
   algorithm.
 * Update to latest ruff and mypy.
 * Bugfix: Field classification naming made consistent with other schemes.
+* Move to use flattened loops in classification dict generation by `@TomHall2020 <https://github.com/TomHall2020>`_
 
 
 Version 1.1.1
