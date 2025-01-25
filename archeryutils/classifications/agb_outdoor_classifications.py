@@ -154,7 +154,7 @@ def _assign_min_dist(
     Returns
     -------
     min_dists : array of int
-        minimum distance [m] required for this category
+        minimum distance [m] required by category for each classification (EMB -> A3)
 
     References
     ----------
@@ -189,6 +189,7 @@ def _assign_min_dist(
     else:
         idxs = np.array([0, 0, 0, 0, 0, 1, 2, 3, 4])
 
+    # Extract relevant distances for each classification from the dists array
     return np.take(dists, idxs + max_dist_index, mode="clip")
 
 
