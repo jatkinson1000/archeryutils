@@ -30,10 +30,10 @@ class GroupData(TypedDict):
     """Structure for AGB Outdoor classification data."""
 
     classes: list[str]
-    max_distance: list[int]
+    max_distance: list[float]
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
-    min_dists: npt.NDArray[np.int64]
+    min_dists: npt.NDArray[np.float64]
     prestige_rounds: list[str]
 
 
@@ -135,8 +135,8 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
 def _assign_min_dist(
     gender: str,
     age_group: str,
-    max_dists: list[int],
-) -> npt.NDArray[np.int64]:
+    max_dists: list[float],
+) -> npt.NDArray[np.float64]:
     """
     Assign appropriate minimum distance required for a category and classification.
 
@@ -196,7 +196,7 @@ def _assign_outdoor_prestige(
     bowstyle: str,
     gender: str,
     age: str,
-    max_dist: list[int],
+    max_dist: list[float],
 ) -> list[str]:
     """
     Assign appropriate outdoor prestige rounds for a category.

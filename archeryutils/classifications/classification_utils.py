@@ -23,10 +23,10 @@ class AGBAgeData(TypedDict):
 
     desc: str
     age_group: str
-    male: list[int]
-    female: list[int]
-    red: list[int]
-    blue: list[int]
+    male: list[float]
+    female: list[float]
+    red: list[float]
+    blue: list[float]
     step: int
 
 

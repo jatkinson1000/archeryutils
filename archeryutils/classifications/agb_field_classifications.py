@@ -31,8 +31,8 @@ class GroupData(TypedDict):
     classes: list[str]
     classes_long: list[str]
     class_HC: npt.NDArray[np.float64]
-    max_distance: int
-    min_dists: npt.NDArray[np.int64]
+    max_distance: float
+    min_dists: npt.NDArray[np.float64]
 
 
 def _make_agb_field_classification_dict() -> dict[str, GroupData]:
@@ -122,7 +122,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 def _assign_dists(
     bowstyle: str,
     age: cls_funcs.AGBAgeData,
-) -> tuple[npt.NDArray[np.int64], int]:
+) -> tuple[npt.NDArray[np.float64], float]:
     """
     Assign appropriate distance required for a category and classification.
 
@@ -165,7 +165,7 @@ def _assign_dists(
 
     # EMB to bowman requires a minimum appropriate distance
     # Archer tiers can be shot at shorter pegs (min dist reduced by 10m for each tier)
-    min_dists = np.zeros(n_classes, dtype=np.int64)
+    min_dists = np.zeros(n_classes, dtype=np.float64)
     min_dists[0:6] = min_d
     min_dists[6:9] = np.maximum(min_d - 10 * np.arange(1, 4), 30)
 
