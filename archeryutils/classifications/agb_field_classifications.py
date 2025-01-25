@@ -124,21 +124,22 @@ def _assign_dists(
     age: cls_funcs.AGBAgeData,
 ) -> tuple[npt.NDArray[np.int64], int]:
     """
-    Assign appropriate minimum distance required for a category and classification.
+    Assign appropriate distance required for a category and classification.
 
-    Appropriate for 2024 ArcheryGB age groups and classifications.
+    Appropriate for 2025 ArcheryGB field age groups and classifications.
 
     Parameters
     ----------
     bowstyle : str,
         string defining bowstyle
     age : dict[str, any],
-        dict containing age group data
+        Typed dict containing age group data
 
     Returns
     -------
-    dists : list[float]
-        [minimum, maximum] distances required for this classification
+    tuple
+        ndarray of minimum distances required for each classification for this bowstyle
+        int of maximum distance that is shot by this bowstyle
 
     References
     ----------
@@ -162,6 +163,8 @@ def _assign_dists(
 
     n_classes: int = 9  # [EMB, GMB, MB, B1, B2, B3, A1, A2, A3]
 
+    # EMB to bowman requires a minimum appropriate distance
+    # Archer tiers can be shot at shorter pegs (min dist reduced by 10m for each tier)
     min_dists = np.zeros(n_classes, dtype=np.int64)
     min_dists[0:6] = min_d
     min_dists[6:9] = np.maximum(min_d - 10 * np.arange(1, 4), 30)
