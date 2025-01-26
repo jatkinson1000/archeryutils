@@ -240,7 +240,8 @@ def _assign_min_dist(
     # U15 males and younger step down for B2 and below to align with female scores/hcs
     if (
         gender == AGB_genders.MALE
-        and age_group not in AGB_ages.U15 | AGB_ages.U14 | AGB_ages.U12
+        and age_group
+        not in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12
     ):
         idxs = np.array([0, 0, 0, 0, 1, 2, 3, 4, 5])
 
@@ -353,9 +354,9 @@ def _assign_outdoor_prestige(
 
         # Additional fix for Male 50+, U18, and U16 recurve/longbow
         if gender == AGB_genders.MALE:
-            if age in AGB_ages.P50 | AGB_ages.U18:
+            if age in AGB_ages.AGE_50_PLUS | AGB_ages.AGE_UNDER_18:
                 prestige_rounds.append(prestige_720[1])  # 60m
-            elif age == AGB_ages.U16:
+            elif age == AGB_ages.AGE_UNDER_16:
                 prestige_rounds.append(prestige_720[2])  # 50m
 
     # Imperial and 1440 rounds - Check based on distance
@@ -558,7 +559,7 @@ def agb_outdoor_classification_scores(
     ...     "hereford",
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.FEMALE,
-    ...     class_func.AGB_ages.ADULT,
+    ...     class_func.AGB_ages.AGE_ADULT,
     ... )
     [1232, 1178, 1107, 1015, 900, 763, 614, 466, 336]
 
@@ -568,7 +569,7 @@ def agb_outdoor_classification_scores(
     ...     "bristol_ii",
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.FEMALE,
-    ...     class_func.AGB_ages.ADULT,
+    ...     class_func.AGB_ages.AGE_ADULT,
     ... )
     [-9999, -9999, -9999, -9999, -9999, 931, 797, 646, 493]
 

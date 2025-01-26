@@ -51,7 +51,7 @@ sighted_bowstyles = (
     AGB_bowstyles.COMPOUND | AGB_bowstyles.RECURVE | AGB_bowstyles.COMPOUNDLIMITED
 )
 
-old_field_ages = AGB_ages.ADULT | AGB_ages.U18
+old_field_ages = AGB_ages.AGE_ADULT | AGB_ages.AGE_UNDER_18
 
 
 class GroupData(TypedDict):
@@ -128,7 +128,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
 
     """
     agb_field_scores = {
-        (AGB_bowstyles.COMPOUND, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.COMPOUND, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             393,
             377,
             344,
@@ -136,7 +136,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             279,
             247,
         ],
-        (AGB_bowstyles.COMPOUND, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.COMPOUND, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             376,
             361,
             330,
@@ -144,7 +144,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             268,
             237,
         ],
-        (AGB_bowstyles.RECURVE, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.RECURVE, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             338,
             317,
             288,
@@ -152,7 +152,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             231,
             203,
         ],
-        (AGB_bowstyles.RECURVE, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.RECURVE, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             322,
             302,
             275,
@@ -160,7 +160,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             220,
             193,
         ],
-        (AGB_bowstyles.BAREBOW, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.BAREBOW, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             328,
             307,
             279,
@@ -168,7 +168,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             224,
             197,
         ],
-        (AGB_bowstyles.BAREBOW, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.BAREBOW, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             303,
             284,
             258,
@@ -176,7 +176,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             207,
             182,
         ],
-        (AGB_bowstyles.LONGBOW, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.LONGBOW, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             201,
             188,
             171,
@@ -184,7 +184,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             137,
             121,
         ],
-        (AGB_bowstyles.LONGBOW, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.LONGBOW, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             152,
             142,
             129,
@@ -192,7 +192,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             103,
             91,
         ],
-        (AGB_bowstyles.TRADITIONAL, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.TRADITIONAL, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             262,
             245,
             223,
@@ -200,7 +200,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             178,
             157,
         ],
-        (AGB_bowstyles.TRADITIONAL, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.TRADITIONAL, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             197,
             184,
             167,
@@ -208,7 +208,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             134,
             118,
         ],
-        (AGB_bowstyles.FLATBOW, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.FLATBOW, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             262,
             245,
             223,
@@ -216,7 +216,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             178,
             157,
         ],
-        (AGB_bowstyles.FLATBOW, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.FLATBOW, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             197,
             184,
             167,
@@ -224,7 +224,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             134,
             118,
         ],
-        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             338,
             317,
             288,
@@ -232,7 +232,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             231,
             203,
         ],
-        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             322,
             302,
             275,
@@ -240,7 +240,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             220,
             193,
         ],
-        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.MALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.MALE, AGB_ages.AGE_ADULT): [
             328,
             307,
             279,
@@ -248,7 +248,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             224,
             197,
         ],
-        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.FEMALE, AGB_ages.ADULT): [
+        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.FEMALE, AGB_ages.AGE_ADULT): [
             303,
             284,
             258,
@@ -256,7 +256,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             207,
             182,
         ],
-        (AGB_bowstyles.COMPOUND, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.COMPOUND, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             385,
             369,
             337,
@@ -264,7 +264,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             273,
             242,
         ],
-        (AGB_bowstyles.COMPOUND, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.COMPOUND, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             357,
             343,
             314,
@@ -272,7 +272,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             255,
             225,
         ],
-        (AGB_bowstyles.RECURVE, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.RECURVE, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             311,
             292,
             265,
@@ -280,7 +280,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             213,
             187,
         ],
-        (AGB_bowstyles.RECURVE, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.RECURVE, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             280,
             263,
             239,
@@ -288,7 +288,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             191,
             168,
         ],
-        (AGB_bowstyles.BAREBOW, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.BAREBOW, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             298,
             279,
             254,
@@ -296,7 +296,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             204,
             179,
         ],
-        (AGB_bowstyles.BAREBOW, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.BAREBOW, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             251,
             236,
             214,
@@ -304,7 +304,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             172,
             151,
         ],
-        (AGB_bowstyles.LONGBOW, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.LONGBOW, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             161,
             150,
             137,
@@ -312,7 +312,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             109,
             96,
         ],
-        (AGB_bowstyles.LONGBOW, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.LONGBOW, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             122,
             114,
             103,
@@ -320,7 +320,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             83,
             73,
         ],
-        (AGB_bowstyles.TRADITIONAL, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.TRADITIONAL, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             210,
             196,
             178,
@@ -328,7 +328,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             143,
             126,
         ],
-        (AGB_bowstyles.TRADITIONAL, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.TRADITIONAL, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             158,
             147,
             134,
@@ -336,7 +336,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             107,
             95,
         ],
-        (AGB_bowstyles.FLATBOW, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.FLATBOW, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             210,
             196,
             178,
@@ -344,7 +344,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             143,
             126,
         ],
-        (AGB_bowstyles.FLATBOW, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.FLATBOW, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             158,
             147,
             134,
@@ -352,7 +352,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             107,
             95,
         ],
-        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             311,
             292,
             265,
@@ -360,7 +360,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             213,
             187,
         ],
-        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.COMPOUNDLIMITED, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             280,
             263,
             239,
@@ -368,7 +368,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             191,
             168,
         ],
-        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.MALE, AGB_ages.U18): [
+        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.MALE, AGB_ages.AGE_UNDER_18): [
             298,
             279,
             254,
@@ -376,7 +376,7 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
             204,
             179,
         ],
-        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.FEMALE, AGB_ages.U18): [
+        (AGB_bowstyles.COMPOUNDBAREBOW, AGB_genders.FEMALE, AGB_ages.AGE_UNDER_18): [
             251,
             236,
             214,
@@ -450,7 +450,7 @@ def calculate_agb_old_field_classification(
     ...     "wa_field_24_red_marked",
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.ADULT,
+    ...     class_func.AGB_ages.AGE_ADULT,
     ... )
     '2nd Class'
 
@@ -529,7 +529,7 @@ def agb_old_field_classification_scores(
     ...     "wa_field_24_red_marked",
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.ADULT,
+    ...     class_func.AGB_ages.AGE_ADULT,
     ... )
     [338, 317, 288, 260, 231, 203]
 
