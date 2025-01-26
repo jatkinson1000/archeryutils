@@ -21,27 +21,27 @@ class TestAgbOldFieldClassificationScores:
         [
             (
                 "wa_field_24_blue_marked",
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
-                AGB_ages.P50,
+                AGB_ages.AGE_50_PLUS,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
-                AGB_ages.U21,
+                AGB_ages.AGE_UNDER_21,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 [298, 279, 254, 229, 204, 179],
             ),
             (
                 "wa_field_24_blue_marked",
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 [298, 279, 254, 229, 204, 179],
             ),
         ],
@@ -68,25 +68,25 @@ class TestAgbOldFieldClassificationScores:
             (
                 "wa_field_24_blue_marked",
                 AGB_genders.MALE,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 "wa_field_24_blue_marked",
                 AGB_genders.FEMALE,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 [303, 284, 258, 233, 207, 182],
             ),
             (
                 "wa_field_24_blue_marked",
                 AGB_genders.MALE,
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 [298, 279, 254, 229, 204, 179],
             ),
             (
                 "wa_field_24_blue_marked",
                 AGB_genders.FEMALE,
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 [251, 236, 214, 193, 172, 151],
             ),
         ],
@@ -160,7 +160,7 @@ class TestAgbOldFieldClassificationScores:
             roundname=roundname,
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.ADULT,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == scores_expected
@@ -173,7 +173,7 @@ class TestAgbOldFieldClassificationScores:
                 "wa_field_24_red_marked",
                 "invalidbowstyle",
                 AGB_genders.MALE,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 (
                     "invalidbowstyle is not a recognised bowstyle for old field "
                     "classifications. Please select from "
@@ -185,7 +185,7 @@ class TestAgbOldFieldClassificationScores:
                 "wa_field_24_red_marked",
                 AGB_bowstyles.RECURVE,
                 "invalidgender",
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 (
                     "invalidgender is not a recognised gender group for old field "
                     "classifications. Please select from `archeryutils.AGB_genders`."
@@ -198,7 +198,8 @@ class TestAgbOldFieldClassificationScores:
                 "invalidage",
                 (
                     "invalidage is not a recognised age group for old field "
-                    "classifications. Please select from AGB_ages.ADULT|U18."
+                    "classifications. "
+                    "Please select from AGB_ages.AGE_ADULT|AGE_UNDER_18."
                 ),
             ),
         ],
@@ -233,56 +234,56 @@ class TestCalculateOldAgbFieldClassification:
             (
                 "wa_field_24_red_marked",
                 400,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 AGB_bowstyles.COMPOUND,
                 "GMB",
             ),
             (
                 "wa_field_24_red_marked",
                 337,
-                AGB_ages.P50,
+                AGB_ages.AGE_50_PLUS,
                 AGB_bowstyles.RECURVE,
                 "MB",
             ),
             (
                 "wa_field_24_blue_marked",
                 306,
-                AGB_ages.U21,
+                AGB_ages.AGE_UNDER_21,
                 AGB_bowstyles.BAREBOW,
                 "B",
             ),
             (
                 "wa_field_24_blue_marked",
                 177,
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
                 "1C",
             ),
             (
                 "wa_field_24_blue_marked",
                 143,
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.FLATBOW,
                 "2C",
             ),
             (
                 "wa_field_24_blue_marked",
                 96,
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "3C",
             ),
             (
                 "wa_field_24_blue_marked",
                 1,
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
                 "wa_field_24_blue_marked",
                 1,
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.ENGLISHLONGBOW,
                 "UC",
             ),
@@ -338,7 +339,7 @@ class TestCalculateOldAgbFieldClassification:
             score=score,
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.ADULT,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert class_returned == class_expected
@@ -382,5 +383,5 @@ class TestCalculateOldAgbFieldClassification:
                 roundname=roundname,
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.ADULT,
+                age_group=AGB_ages.AGE_ADULT,
             )

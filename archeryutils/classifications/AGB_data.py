@@ -21,14 +21,14 @@ class AGB_genders(Enum):
 class AGB_ages(Flag):
     """An enum for holding information about AGB ages."""
 
-    P50 = auto()
-    ADULT = auto()
-    U21 = auto()
-    U18 = auto()
-    U16 = auto()
-    U15 = auto()
-    U14 = auto()
-    U12 = auto()
+    AGE_50_PLUS = auto()
+    AGE_ADULT = auto()
+    AGE_UNDER_21 = auto()
+    AGE_UNDER_18 = auto()
+    AGE_UNDER_16 = auto()
+    AGE_UNDER_15 = auto()
+    AGE_UNDER_14 = auto()
+    AGE_UNDER_12 = auto()
 
 
 class AGB_bowstyles(Flag):

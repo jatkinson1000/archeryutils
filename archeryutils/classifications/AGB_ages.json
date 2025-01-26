@@ -1,5 +1,5 @@
 {
-  "P50" : {
+  "AGE_50_PLUS" : {
     "age_group" : "50+",
     "male" : [70, 80],
     "female" : [60, 60],
@@ -7,7 +7,7 @@
     "unsighted" : [50, 50],
     "step" : 1
   },
-  "ADULT" : {
+  "AGE_ADULT" : {
     "age_group" : "Adult",
     "male" : [90, 100],
     "female" : [70, 80],
@@ -15,7 +15,7 @@
     "unsighted" : [50, 50],
     "step" : 0
   },
-  "U21" : {
+  "AGE_UNDER_21" : {
     "age_group" : "Under 21",
     "male" : [90, 100],
     "female" : [70, 80],
@@ -23,7 +23,7 @@
     "unsighted" : [50, 50],
     "step" : 1
   },
-  "U18" : {
+  "AGE_UNDER_18" : {
     "age_group" : "Under 18",
     "male" : [70, 80],
     "female" : [60, 60],
@@ -31,7 +31,7 @@
     "unsighted" : [50, 50],
     "step" : 2
   },
-  "U16" : {
+  "AGE_UNDER_16" : {
     "age_group" : "Under 16",
     "male" : [60, 60],
     "female" : [50, 50],
@@ -39,7 +39,7 @@
     "unsighted" : [40, 50],
     "step" : 3
   },
-  "U15" : {
+  "AGE_UNDER_15" : {
     "age_group" : "Under 15",
     "male" : [50, 50],
     "female" : [50, 50],
@@ -47,7 +47,7 @@
     "unsighted" : [30, 50],
     "step" : 4
   },
-  "U14" : {
+  "AGE_UNDER_14" : {
     "age_group" : "Under 14",
     "male" : [40, 40],
     "female" : [40, 40],
@@ -55,7 +55,7 @@
     "unsighted" : [30, 50],
     "step" : 5
   },
-  "U12" : {
+  "AGE_UNDER_12" : {
     "age_group" : "Under 12",
     "male" : [30, 30],
     "female" : [30, 30],

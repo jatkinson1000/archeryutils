@@ -301,7 +301,7 @@ def agb_indoor_classification_scores(
     ...     ",
     ...     class_func.AGB_bowstyles.BAREBOW,
     ...     class_func.AGB_.MALE,
-    ...     class_func.AGB_ages.U12,
+    ...     class_func.AGB_ages.AGE_UNDER_12,
     ... )
     [411, 360, 301, 240, 183, 134, 95, 66]
 

@@ -14,29 +14,34 @@ class TestStringUtils:
         [
             (
                 AGB_bowstyles.BAREBOW,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 AGB_genders.MALE,
-                "ADULT_MALE_BAREBOW",
+                "AGE_ADULT_MALE_BAREBOW",
             ),
             (
                 AGB_bowstyles.BAREBOW,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 AGB_genders.MALE,
-                "ADULT_MALE_BAREBOW",
+                "AGE_ADULT_MALE_BAREBOW",
             ),
-            (AGB_bowstyles.BAREBOW, AGB_ages.U18, AGB_genders.MALE, "U18_MALE_BAREBOW"),
+            (
+                AGB_bowstyles.BAREBOW,
+                AGB_ages.AGE_UNDER_18,
+                AGB_genders.MALE,
+                "AGE_UNDER_18_MALE_BAREBOW",
+            ),
             (
                 AGB_bowstyles.RECURVE,
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 AGB_genders.FEMALE,
-                "U18_FEMALE_RECURVE",
+                "AGE_UNDER_18_FEMALE_RECURVE",
             ),
             # Check English Longbow becomes Longbow
             (
                 AGB_bowstyles.ENGLISHLONGBOW,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 AGB_genders.FEMALE,
-                "ADULT_FEMALE_LONGBOW",
+                "AGE_ADULT_FEMALE_LONGBOW",
             ),
         ],
     )

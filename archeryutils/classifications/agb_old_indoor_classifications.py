@@ -22,7 +22,7 @@ ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 old_indoor_bowstyles = AGB_bowstyles.COMPOUND | AGB_bowstyles.RECURVE
-old_indoor_ages = AGB_ages.ADULT
+old_indoor_ages = AGB_ages.AGE_ADULT
 
 
 def _get_old_indoor_groupname(
@@ -120,16 +120,16 @@ def _make_agb_old_indoor_classification_dict() -> dict[str, GroupData]:
 
     classification_dict = {
         _get_old_indoor_groupname(
-            AGB_bowstyles.COMPOUND, AGB_genders.MALE, AGB_ages.ADULT
+            AGB_bowstyles.COMPOUND, AGB_genders.MALE, AGB_ages.AGE_ADULT
         ): compound_male_adult,
         _get_old_indoor_groupname(
-            AGB_bowstyles.COMPOUND, AGB_genders.FEMALE, AGB_ages.ADULT
+            AGB_bowstyles.COMPOUND, AGB_genders.FEMALE, AGB_ages.AGE_ADULT
         ): compound_female_adult,
         _get_old_indoor_groupname(
-            AGB_bowstyles.RECURVE, AGB_genders.MALE, AGB_ages.ADULT
+            AGB_bowstyles.RECURVE, AGB_genders.MALE, AGB_ages.AGE_ADULT
         ): recurve_male_adult,
         _get_old_indoor_groupname(
-            AGB_bowstyles.RECURVE, AGB_genders.FEMALE, AGB_ages.ADULT
+            AGB_bowstyles.RECURVE, AGB_genders.FEMALE, AGB_ages.AGE_ADULT
         ): recurve_female_adult,
     }
 
@@ -185,7 +185,7 @@ def calculate_agb_old_indoor_classification(
     ...     "wa18",
     ...     AGB_bowstyles.COMPOUND,
     ...     AGB_genders.MALE,
-    ...     AGB_ages.ADULT,
+    ...     AGB_ages.AGE_ADULT,
     ... )
     'C'
 
@@ -262,7 +262,7 @@ def agb_old_indoor_classification_scores(
     ...     "portsmouth",
     ...     AGB_bowstyles.BAREBOW,
     ...     AGB_genders.MALE,
-    ...     AGB_ages.U12,
+    ...     AGB_ages.AGE_UNDER_12,
     ... )
     [592, 582, 554, 505, 432, 315, 195, 139]
 

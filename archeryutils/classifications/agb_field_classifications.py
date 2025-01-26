@@ -41,13 +41,13 @@ sighted_bowstyles = (
 )
 
 field_ages = (
-    AGB_ages.P50
-    | AGB_ages.ADULT
-    | AGB_ages.U18
-    | AGB_ages.U16
-    | AGB_ages.U15
-    | AGB_ages.U14
-    | AGB_ages.U12
+    AGB_ages.AGE_50_PLUS
+    | AGB_ages.AGE_ADULT
+    | AGB_ages.AGE_UNDER_18
+    | AGB_ages.AGE_UNDER_16
+    | AGB_ages.AGE_UNDER_15
+    | AGB_ages.AGE_UNDER_14
+    | AGB_ages.AGE_UNDER_12
 )
 
 
@@ -292,7 +292,7 @@ def calculate_agb_field_classification(
     ...     "wa_field_24_blue_marked",
     ...     class_func.AGB_bowstyles.TRADITIONAL,
     ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.U18,
+    ...     class_func.AGB_ages.AGE_UNDER_18,
     ... )
     'B1'
 
@@ -372,7 +372,7 @@ def agb_field_classification_scores(
     ...     "wa_field_24_red_marked",
     ...     class_func.AGB_bowstyles.COMPOUND,
     ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.ADULT,
+    ...     class_func.AGB_ages.AGE_ADULT,
     ... )
     [408, 391, 369, 345, 318, 286, 248, 204, 157]
 
@@ -382,7 +382,7 @@ def agb_field_classification_scores(
     ...     "wa_field_12_red_unmarked",
     ...     class_func.AGB_bowstyles.COMPOUND,
     ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.ADULT,
+    ...     class_func.AGB_ages.AGE_ADULT,
     ... )
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
 

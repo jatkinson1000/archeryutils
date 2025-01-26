@@ -26,35 +26,35 @@ class TestAgbIndoorClassificationScores:
         "age_group,scores_expected",
         [
             (
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 [378, 437, 483, 518, 546, 566, 582, 593],
             ),
             (
-                AGB_ages.P50,
+                AGB_ages.AGE_50_PLUS,
                 [316, 387, 444, 488, 522, 549, 569, 583],
             ),
             (
-                AGB_ages.U21,
+                AGB_ages.AGE_UNDER_21,
                 [316, 387, 444, 488, 522, 549, 569, 583],
             ),
             (
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 [250, 326, 395, 450, 493, 526, 552, 571],
             ),
             (
-                AGB_ages.U16,
+                AGB_ages.AGE_UNDER_16,
                 [187, 260, 336, 403, 457, 498, 530, 555],
             ),
             (
-                AGB_ages.U15,
+                AGB_ages.AGE_UNDER_15,
                 [134, 196, 271, 346, 411, 463, 503, 534],
             ),
             (
-                AGB_ages.U14,
+                AGB_ages.AGE_UNDER_14,
                 [92, 141, 206, 281, 355, 419, 469, 508],
             ),
             (
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 [62, 98, 149, 215, 291, 364, 426, 475],
             ),
         ],
@@ -78,19 +78,19 @@ class TestAgbIndoorClassificationScores:
         "age_group,scores_expected",
         [
             (
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 [331, 399, 454, 496, 528, 553, 572, 586],
             ),
             (
-                AGB_ages.U16,
+                AGB_ages.AGE_UNDER_16,
                 [145, 211, 286, 360, 423, 472, 510, 539],
             ),
             (
-                AGB_ages.U15,
+                AGB_ages.AGE_UNDER_15,
                 [134, 196, 271, 346, 411, 463, 503, 534],
             ),
             (
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 [62, 98, 149, 215, 291, 364, 426, 475],
             ),
         ],
@@ -147,7 +147,7 @@ class TestAgbIndoorClassificationScores:
             roundname="portsmouth",
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.ADULT,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == scores_expected[::-1]
@@ -183,7 +183,7 @@ class TestAgbIndoorClassificationScores:
             roundname="portsmouth",
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.ADULT,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == scores_expected[::-1]
@@ -219,7 +219,7 @@ class TestAgbIndoorClassificationScores:
             roundname=roundname,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.ADULT,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == scores_expected[::-1]
@@ -232,7 +232,7 @@ class TestAgbIndoorClassificationScores:
                 "portsmouth",
                 "invalidbowstyle",
                 AGB_genders.MALE,
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 (
                     "invalidbowstyle is not a recognised bowstyle for indoor "
                     "classifications. Please select from "
@@ -243,7 +243,7 @@ class TestAgbIndoorClassificationScores:
                 "portsmouth",
                 AGB_bowstyles.RECURVE,
                 "invalidgender",
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 (
                     "invalidgender is not a recognised gender group for indoor "
                     "classifications. Please select from `archeryutils.AGB_genders`."
@@ -293,7 +293,7 @@ class TestAgbIndoorClassificationScores:
                 roundname="invalid_roundname",
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.ADULT,
+                age_group=AGB_ages.AGE_ADULT,
             )
 
 
@@ -305,61 +305,61 @@ class TestCalculateAgbIndoorClassification:
         [
             (
                 594,  # 1 above GMB
-                AGB_ages.ADULT,
+                AGB_ages.AGE_ADULT,
                 AGB_bowstyles.COMPOUND,
                 "I-GMB",
             ),
             (
                 582,  # 1 below GMB
-                AGB_ages.P50,
+                AGB_ages.AGE_50_PLUS,
                 AGB_bowstyles.RECURVE,
                 "I-MB",
             ),
             (
                 520,  # midway to MB
-                AGB_ages.U21,
+                AGB_ages.AGE_UNDER_21,
                 AGB_bowstyles.BAREBOW,
                 "I-B1",
             ),
             (
                 551,  # 1 below
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 AGB_bowstyles.RECURVE,
                 "I-B1",
             ),
             (
                 526,  # boundary value
-                AGB_ages.U18,
+                AGB_ages.AGE_UNDER_18,
                 AGB_bowstyles.RECURVE,
                 "I-B1",
             ),
             (
                 449,  # Boundary
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.COMPOUND,
                 "I-B2",
             ),
             (
                 40,  # Midway
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "I-A1",
             ),
             (
                 12,  # On boundary
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
                 40,  # Midway
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.ENGLISHLONGBOW,
                 "I-A1",
             ),
             (
                 1,
-                AGB_ages.U12,
+                AGB_ages.AGE_UNDER_12,
                 AGB_bowstyles.ENGLISHLONGBOW,
                 "UC",
             ),
@@ -396,7 +396,7 @@ class TestCalculateAgbIndoorClassification:
                 roundname="invalid_roundname",
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.ADULT,
+                age_group=AGB_ages.AGE_ADULT,
             )
 
     @pytest.mark.parametrize("score", [1000, 601, -1, -100])
@@ -417,5 +417,5 @@ class TestCalculateAgbIndoorClassification:
                 roundname="portsmouth",
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.ADULT,
+                age_group=AGB_ages.AGE_ADULT,
             )
