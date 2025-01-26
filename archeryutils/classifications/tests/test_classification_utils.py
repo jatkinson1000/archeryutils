@@ -3,6 +3,7 @@
 import pytest
 
 import archeryutils.classifications.classification_utils as class_utils
+from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
 
 class TestStringUtils:
@@ -11,19 +12,44 @@ class TestStringUtils:
     @pytest.mark.parametrize(
         "bowstyle,age_group,gender,groupname_expected",
         [
-            ("barebow", "adult", "male", "adult_male_barebow"),
-            ("Barebow", "Adult", "Male", "adult_male_barebow"),
-            ("Barebow", "Under 18", "Male", "under18_male_barebow"),
-            ("RECURVE", "UnDeR 18", "femaLe", "under18_female_recurve"),
+            (
+                AGB_bowstyles.BAREBOW,
+                AGB_ages.AGE_ADULT,
+                AGB_genders.MALE,
+                "AGE_ADULT_MALE_BAREBOW",
+            ),
+            (
+                AGB_bowstyles.BAREBOW,
+                AGB_ages.AGE_ADULT,
+                AGB_genders.MALE,
+                "AGE_ADULT_MALE_BAREBOW",
+            ),
+            (
+                AGB_bowstyles.BAREBOW,
+                AGB_ages.AGE_UNDER_18,
+                AGB_genders.MALE,
+                "AGE_UNDER_18_MALE_BAREBOW",
+            ),
+            (
+                AGB_bowstyles.RECURVE,
+                AGB_ages.AGE_UNDER_18,
+                AGB_genders.FEMALE,
+                "AGE_UNDER_18_FEMALE_RECURVE",
+            ),
             # Check English Longbow becomes Longbow
-            ("English Longbow", "adult", "femaLe", "adult_female_longbow"),
+            (
+                AGB_bowstyles.ENGLISHLONGBOW,
+                AGB_ages.AGE_ADULT,
+                AGB_genders.FEMALE,
+                "AGE_ADULT_FEMALE_LONGBOW",
+            ),
         ],
     )
     def test_get_groupname(
         self,
-        age_group: str,
-        gender: str,
-        bowstyle: str,
+        bowstyle: AGB_bowstyles,
+        age_group: AGB_ages,
+        gender: AGB_genders,
         groupname_expected: str,
     ) -> None:
         """Check get_groupname(handicap=float) returns expected value for a case."""
