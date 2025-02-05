@@ -27,24 +27,23 @@ install as an editable package::
 
     git clone git@github.com:jatkinson1000/archeryutils.git
     cd archeryutils
-    pip install -e .[test,lint,docs]
+    pip install -e .[dev]
 
 .. note::
    If you are installing in zsh you will need to use quotes for the optional dependencies:
 
    .. code-block:: bash
 
-      pip install -e '.[test,lint,docs]'
+      pip install -e '.[dev]'
+
+The `dev` optional dependencies combine the `test`, `lint`, and `docs` subgroups
+detailed below.
 
 Testing
 ~~~~~~~
 
-To run tests on a development installation either install
-`pytest <https://docs.pytest.org/>`__ using pip, or install as an optional dependency::
-
-    pip install -e .[test]
-
-and then run::
+The test suite for archeryutils makes use of `pytest <https://docs.pytest.org/>`__.
+To run tests on a development installation run::
 
     pytest ./
 
@@ -53,8 +52,17 @@ from within the base directory.
 Optional dependencies
 ~~~~~~~~~~~~~~~~~~~~~
 
-In a similar way to pytest above, there are other optional dependencies that can be
-installed with archeryutils:
+archeryutils has a series of optional dependencies that can be installed:
+
+test
+^^^^
+
+For developing and running the test suite on the code::
+
+    pip install -e .[test]
+
+* pytest (7.2.0 or later)
+* pytest-mock
 
 lint
 ^^^^

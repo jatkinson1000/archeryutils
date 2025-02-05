@@ -52,6 +52,9 @@ docs = [
     "ruff>=0.7.3",
     "blackdoc",
 ]
+dev = [
+    "archeryutils[test,lint,docs]",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/jatkinson1000/archeryutils"

@@ -47,6 +47,10 @@ navigate to `archeryutils/`, and run:
 
     python3 -m pip install -e .
 
+or, for full developer dependencies:
+
+    python3 -m pip install -e .[dev]
+
 Please refer to the online documentation for
 [full installation guidance](https://archeryutils.readthedocs.io/en/latest/getting-started/installation.html)
 including optional dependencies for developing and testing.
