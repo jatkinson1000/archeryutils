@@ -17,6 +17,8 @@ import json
 from pathlib import Path
 from typing import Literal, TypedDict
 
+from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
+
 
 class AGBAgeData(TypedDict):
     """Structure for AGB age group data."""
@@ -25,14 +27,14 @@ class AGBAgeData(TypedDict):
     age_group: str
     male: list[float]
     female: list[float]
-    red: list[float]
-    blue: list[float]
+    sighted: list[float]
+    unsighted: list[float]
     step: int
 
 
 def read_ages_json(
     age_file: Path = Path(__file__).parent / "AGB_ages.json",
-) -> list[AGBAgeData]:
+) -> dict[str, AGBAgeData]:
     """
     Read AGB age categories in from neighbouring json file to list of dicts.
 
@@ -57,11 +59,11 @@ def read_ages_json(
     """
     with open(age_file, encoding="utf-8") as json_file:
         ages = json.load(json_file)
-    if isinstance(ages, list):
+    if isinstance(ages, dict):
         return ages
     msg = (
         f"Unexpected ages input when reading from json file. "
-        f"Expected list(dict()) but got {type(ages)}. Check {age_file}."
+        f"Expected dict() but got {type(ages)}. Check {age_file}."
     )
     raise TypeError(msg)
 
@@ -86,7 +88,7 @@ class AGBBowstyleData(TypedDict):
 
 def read_bowstyles_json(
     bowstyles_file: Path = Path(__file__).parent / "AGB_bowstyles.json",
-) -> list[AGBBowstyleData]:
+) -> dict[str, AGBBowstyleData]:
     """
     Read AGB  bowstyles in from neighbouring json file to list of dicts.
 
@@ -111,11 +113,11 @@ def read_bowstyles_json(
     """
     with open(bowstyles_file, encoding="utf-8") as json_file:
         bowstyles = json.load(json_file)
-    if isinstance(bowstyles, list):
+    if isinstance(bowstyles, dict):
         return bowstyles
     msg = (
         f"Unexpected bowstyles input when reading from json file. "
-        f"Expected list(dict()) but got {type(bowstyles)}. Check {bowstyles_file}."
+        f"Expected dict() but got {type(bowstyles)}. Check {bowstyles_file}."
     )
     raise TypeError(msg)
 
@@ -221,31 +223,27 @@ def read_classes_json(
     raise TypeError(msg)
 
 
-def get_groupname(bowstyle: str, gender: str, age_group: str) -> str:
+def get_groupname(
+    bowstyle: AGB_bowstyles, gender: AGB_genders, age_group: AGB_ages
+) -> str:
     """
     Generate a single string id for a particular category.
 
     Parameters
     ----------
-    bowstyle : str
+    bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
-    gender : str
+    gender : AGB_genders
         archer's gender under AGB outdoor target rules
-    age_group : str
+    age_group : AGB_ages
         archer's age group under AGB outdoor target rules
 
     Returns
     -------
     groupname : str
-        single, lower case str id for this category
+        single str id for this category
     """
-    # Guard against English Longbow as a synonym for Longbow
-    if bowstyle.lower() in ["english longbow", "englishlongbow"]:
-        bowstyle = "longbow"
-
-    groupname = (
-        f"{age_group.lower().replace(' ', '')}_{gender.lower()}_{bowstyle.lower()}"
-    )
+    groupname = f"{age_group.name}_{gender.name}_{bowstyle.name}"
 
     return groupname
 
