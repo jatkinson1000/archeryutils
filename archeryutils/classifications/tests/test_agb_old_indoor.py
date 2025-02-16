@@ -24,6 +24,30 @@ class TestAgbOldIndoorClassificationScores:
                 AGB_ages.AGE_ADULT,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
+        ],
+    )
+    def test_agb_old_indoor_classification_scores_ages(
+        self,
+        age_group: AGB_ages,
+        scores_expected: list[int],
+    ) -> None:
+        """
+        Check that old_indoor classification returns expected value for a case.
+
+        ALl ages should return the same values.
+        """
+        scores = class_funcs.agb_old_indoor_classification_scores(
+            roundname="portsmouth",
+            bowstyle=AGB_bowstyles.RECURVE,
+            gender=AGB_genders.MALE,
+            age_group=age_group,
+        )
+
+        assert scores == scores_expected
+
+    @pytest.mark.parametrize(
+        "age_group,scores_expected",
+        [
             (
                 AGB_ages.AGE_50_PLUS,
                 [592, 582, 554, 505, 432, 315, 195, 139],
@@ -42,21 +66,20 @@ class TestAgbOldIndoorClassificationScores:
             ),
         ],
     )
-    def test_agb_old_indoor_classification_scores_ages(
+    def test_agb_old_indoor_classification_scores_coaxed_ages(
         self,
         age_group: AGB_ages,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that old_indoor classification returns expected value for a case.
-
-        ALl ages should return the same values.
-        """
-        scores = class_funcs.agb_old_indoor_classification_scores(
-            roundname="portsmouth",
+        """Check that field classification returns expected value for a coaxed case."""
+        coaxed_vals = class_funcs.coax_old_indoor_group(
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.MALE,
             age_group=age_group,
+        )
+        scores = class_funcs.agb_old_indoor_classification_scores(
+            roundname="portsmouth",
+            **coaxed_vals,
         )
 
         assert scores == scores_expected

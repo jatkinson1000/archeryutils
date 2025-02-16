@@ -179,11 +179,14 @@ class TestAgbIndoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that appropriate scores returned for valid but non-indoor styles."""
-        scores = class_funcs.agb_indoor_classification_scores(
-            roundname="portsmouth",
+        coaxed_vals = class_funcs.coax_indoor_group(
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
             age_group=AGB_ages.AGE_ADULT,
+        )
+        scores = class_funcs.agb_indoor_classification_scores(
+            roundname="portsmouth",
+            **coaxed_vals,
         )
 
         assert scores == scores_expected[::-1]

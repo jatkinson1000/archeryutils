@@ -20,6 +20,14 @@ from typing import Literal, TypedDict
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
 
+class AGBCategory(TypedDict):
+    """Structure for AGB category data (bowstyle, gender, age_group)."""
+
+    bowstyle: AGB_bowstyles
+    gender: AGB_genders
+    age_group: AGB_ages
+
+
 class AGBAgeData(TypedDict):
     """Structure for AGB age group data."""
 

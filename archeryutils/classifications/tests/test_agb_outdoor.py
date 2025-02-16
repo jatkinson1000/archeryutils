@@ -231,11 +231,14 @@ class TestAgbOutdoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that appropriate scores returned for valid non-outdoor bowstyles."""
-        scores = class_funcs.agb_outdoor_classification_scores(
-            roundname=roundname,
+        coaxed_vals = class_funcs.coax_outdoor_group(
             bowstyle=bowstyle,
             gender=gender,
             age_group=AGB_ages.AGE_ADULT,
+        )
+        scores = class_funcs.agb_outdoor_classification_scores(
+            roundname=roundname,
+            **coaxed_vals,
         )
 
         assert scores == scores_expected[::-1]

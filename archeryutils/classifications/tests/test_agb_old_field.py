@@ -26,22 +26,7 @@ class TestAgbOldFieldClassificationScores:
             ),
             (
                 "wa_field_24_blue_marked",
-                AGB_ages.AGE_50_PLUS,
-                [328, 307, 279, 252, 224, 197],
-            ),
-            (
-                "wa_field_24_blue_marked",
-                AGB_ages.AGE_UNDER_21,
-                [328, 307, 279, 252, 224, 197],
-            ),
-            (
-                "wa_field_24_blue_marked",
                 AGB_ages.AGE_UNDER_18,
-                [298, 279, 254, 229, 204, 179],
-            ),
-            (
-                "wa_field_24_blue_marked",
-                AGB_ages.AGE_UNDER_12,
                 [298, 279, 254, 229, 204, 179],
             ),
         ],
@@ -58,6 +43,45 @@ class TestAgbOldFieldClassificationScores:
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
             age_group=age_group,
+        )
+
+        assert scores == scores_expected
+
+    @pytest.mark.parametrize(
+        "roundname,age_group,scores_expected",
+        [
+            (
+                "wa_field_24_blue_marked",
+                AGB_ages.AGE_50_PLUS,
+                [328, 307, 279, 252, 224, 197],
+            ),
+            (
+                "wa_field_24_blue_marked",
+                AGB_ages.AGE_UNDER_21,
+                [328, 307, 279, 252, 224, 197],
+            ),
+            (
+                "wa_field_24_blue_marked",
+                AGB_ages.AGE_UNDER_18,
+                [298, 279, 254, 229, 204, 179],
+            ),
+        ],
+    )
+    def test_agb_old_field_classification_scores_coaxed_ages(
+        self,
+        roundname: str,
+        age_group: AGB_ages,
+        scores_expected: list[int],
+    ) -> None:
+        """Check that field classification returns expected value for a coaxed age."""
+        coaxed_vals = class_funcs.coax_old_field_group(
+            bowstyle=AGB_bowstyles.BAREBOW,
+            gender=AGB_genders.MALE,
+            age_group=age_group,
+        )
+        scores = class_funcs.agb_old_field_classification_scores(
+            roundname=roundname,
+            **coaxed_vals,
         )
 
         assert scores == scores_expected
@@ -239,6 +263,38 @@ class TestCalculateOldAgbFieldClassification:
                 "GMB",
             ),
             (
+                "wa_field_24_blue_marked",
+                177,
+                AGB_ages.AGE_UNDER_18,
+                AGB_bowstyles.TRADITIONAL,
+                "1C",
+            ),
+        ],
+    )
+    def test_calculate_agb_old_field_classification(
+        self,
+        roundname: str,
+        score: float,
+        age_group: AGB_ages,
+        bowstyle: AGB_bowstyles,
+        class_expected: str,
+    ) -> None:
+        """Check that field classification returns expected value for a few cases."""
+        # pylint: disable=too-many-arguments
+        class_returned = class_funcs.calculate_agb_old_field_classification(
+            roundname=roundname,
+            score=score,
+            bowstyle=bowstyle,
+            gender=AGB_genders.MALE,
+            age_group=age_group,
+        )
+
+        assert class_returned == class_expected
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,class_expected",
+        [
+            (
                 "wa_field_24_red_marked",
                 337,
                 AGB_ages.AGE_50_PLUS,
@@ -251,13 +307,6 @@ class TestCalculateOldAgbFieldClassification:
                 AGB_ages.AGE_UNDER_21,
                 AGB_bowstyles.BAREBOW,
                 "B",
-            ),
-            (
-                "wa_field_24_blue_marked",
-                177,
-                AGB_ages.AGE_UNDER_18,
-                AGB_bowstyles.TRADITIONAL,
-                "1C",
             ),
             (
                 "wa_field_24_blue_marked",
@@ -289,7 +338,7 @@ class TestCalculateOldAgbFieldClassification:
             ),
         ],
     )
-    def test_calculate_agb_old_field_classification(
+    def test_calculate_agb_old_field_classification_coaxed_ages(
         self,
         roundname: str,
         score: float,
@@ -297,14 +346,16 @@ class TestCalculateOldAgbFieldClassification:
         bowstyle: AGB_bowstyles,
         class_expected: str,
     ) -> None:
-        """Check that field classification returns expected value for a few cases."""
-        # pylint: disable=too-many-arguments
-        class_returned = class_funcs.calculate_agb_old_field_classification(
-            roundname=roundname,
-            score=score,
+        """Check that field classification returns expected value for a coaxed case."""
+        coaxed_vals = class_funcs.coax_old_field_group(
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
             age_group=age_group,
+        )
+        class_returned = class_funcs.calculate_agb_old_field_classification(
+            roundname=roundname,
+            score=score,
+            **coaxed_vals,
         )
 
         assert class_returned == class_expected

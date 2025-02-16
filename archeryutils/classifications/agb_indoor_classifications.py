@@ -84,6 +84,47 @@ def _get_indoor_groupname(
     return cls_funcs.get_groupname(bowstyle, gender, age_group)
 
 
+def coax_indoor_group(
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
+) -> cls_funcs.AGBCategory:
+    """
+    Coax category not conforming to indoor classification rules to one that does.
+
+    Parameters
+    ----------
+    bowstyle : AGB_bowstyles
+        archer's bowstyle
+    gender : AGB_genders
+        archer's gender under AGB
+    age_group : AGB_ages
+        archer's age group
+
+    Returns
+    -------
+    TypedDict
+        typed dict of archer's bowstyle, gender, and age_group under AGB coaxed to
+        indoor target rules
+    """
+    if bowstyle in (AGB_bowstyles.FLATBOW | AGB_bowstyles.TRADITIONAL):
+        coax_bowstyle = AGB_bowstyles.BAREBOW
+    elif bowstyle in (AGB_bowstyles.COMPOUNDLIMITED | AGB_bowstyles.COMPOUNDBAREBOW):
+        coax_bowstyle = AGB_bowstyles.COMPOUND
+    else:
+        coax_bowstyle = bowstyle
+
+    coax_gender = gender
+
+    coax_age_group = age_group
+
+    return {
+        "bowstyle": coax_bowstyle,
+        "gender": coax_gender,
+        "age_group": coax_age_group,
+    }
+
+
 def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
     """
     Generate new (2023) AGB indoor classification data.

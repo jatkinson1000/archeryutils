@@ -31,11 +31,6 @@ class TestAgbFieldClassificationScores:
             ),
             (
                 "wa_field_24_blue_marked",
-                AGB_ages.AGE_UNDER_21,
-                [336, 311, 283, 249, 212, 173, 135, 101, 74],
-            ),
-            (
-                "wa_field_24_blue_marked",
                 AGB_ages.AGE_UNDER_18,
                 [305, 275, 241, 203, 164, 127, 94, 68, 48],
             ),
@@ -58,6 +53,35 @@ class TestAgbFieldClassificationScores:
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
             age_group=age_group,
+        )
+
+        assert scores == scores_expected
+
+    @pytest.mark.parametrize(
+        "roundname,age_group,scores_expected",
+        [
+            (
+                "wa_field_24_blue_marked",
+                AGB_ages.AGE_UNDER_21,
+                [336, 311, 283, 249, 212, 173, 135, 101, 74],
+            ),
+        ],
+    )
+    def test_agb_field_classification_scores_nonages(
+        self,
+        roundname: str,
+        age_group: AGB_ages,
+        scores_expected: list[int],
+    ) -> None:
+        """Check that field classification returns expected value for a case."""
+        coaxed_vals = class_funcs.coax_field_group(
+            bowstyle=AGB_bowstyles.BAREBOW,
+            gender=AGB_genders.MALE,
+            age_group=age_group,
+        )
+        scores = class_funcs.agb_field_classification_scores(
+            roundname=roundname,
+            **coaxed_vals,
         )
 
         assert scores == scores_expected
@@ -291,20 +315,6 @@ class TestCalculateAgbFieldClassification:
             ),
             (
                 "wa_field_24_blue_marked",
-                306,
-                AGB_ages.AGE_UNDER_21,
-                AGB_bowstyles.BAREBOW,
-                "MB",
-            ),
-            (
-                "wa_field_24_red_marked",
-                306,
-                AGB_ages.AGE_UNDER_21,
-                AGB_bowstyles.BAREBOW,
-                "UC",
-            ),
-            (
-                "wa_field_24_blue_marked",
                 177,
                 AGB_ages.AGE_UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
@@ -383,6 +393,54 @@ class TestCalculateAgbFieldClassification:
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
             age_group=age_group,
+        )
+
+        assert class_returned == class_expected
+
+    @pytest.mark.parametrize(
+        "roundname,score,age_group,bowstyle,class_expected",
+        [
+            (
+                "wa_field_24_blue_marked",
+                306,
+                AGB_ages.AGE_UNDER_21,
+                AGB_bowstyles.BAREBOW,
+                "MB",
+            ),
+            (
+                "wa_field_24_red_marked",
+                306,
+                AGB_ages.AGE_UNDER_21,
+                AGB_bowstyles.BAREBOW,
+                "UC",
+            ),
+            (
+                "wa_field_24_red_marked",
+                306,
+                AGB_ages.AGE_UNDER_21,
+                AGB_bowstyles.RECURVE,
+                "B1",
+            ),
+        ],
+    )
+    def test_calculate_agb_field_classification_nonages(
+        self,
+        roundname: str,
+        score: float,
+        age_group: AGB_ages,
+        bowstyle: AGB_bowstyles,
+        class_expected: str,
+    ) -> None:
+        """Check that field classification returns expected value for non-field ages."""
+        coaxed_vals = class_funcs.coax_field_group(
+            bowstyle=bowstyle,
+            gender=AGB_genders.MALE,
+            age_group=age_group,
+        )
+        class_returned = class_funcs.calculate_agb_field_classification(
+            roundname=roundname,
+            score=score,
+            **coaxed_vals,
         )
 
         assert class_returned == class_expected

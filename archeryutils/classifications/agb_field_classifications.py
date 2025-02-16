@@ -104,6 +104,45 @@ def _get_field_groupname(
     return cls_funcs.get_groupname(bowstyle, gender, age_group)
 
 
+def coax_field_group(
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
+) -> cls_funcs.AGBCategory:
+    """
+    Coax category not conforming to field classification rules to one that does.
+
+    Parameters
+    ----------
+    bowstyle : AGB_bowstyles
+        archer's bowstyle
+    gender : AGB_genders
+        archer's gender under AGB
+    age_group : AGB_ages
+        archer's age group
+
+    Returns
+    -------
+    TypedDict
+        typed dict of archer's bowstyle, gender, and age_group under AGB coaxed to
+        field rules
+    """
+    coax_bowstyle = bowstyle
+
+    coax_gender = gender
+
+    if age_group in (AGB_ages.AGE_UNDER_21):
+        coax_age_group = AGB_ages.AGE_ADULT
+    else:
+        coax_age_group = age_group
+
+    return {
+        "bowstyle": coax_bowstyle,
+        "gender": coax_gender,
+        "age_group": coax_age_group,
+    }
+
+
 def _make_agb_field_classification_dict() -> dict[str, GroupData]:
     """
     Generate AGB field classification data.
