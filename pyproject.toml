@@ -36,7 +36,8 @@ test = [
     "pytest-mock",
 ]
 lint = [
-    "mypy>=1.0.0",
+    # "mypy>=1.0.0",
+    "mypy @ git+https://github.com/python/mypy.git@master",
     "coverage",
     "pytest>=7.2.0",
     "pytest-mock",
