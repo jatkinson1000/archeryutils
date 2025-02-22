@@ -428,7 +428,6 @@ def agb_field_classification_scores(
 
     """
     groupname = _get_field_groupname(bowstyle, gender, age_group)
-    print(groupname)
     group_data = agb_field_classifications[groupname]
 
     # Enforce unmarked/mixed being same score as marked
@@ -447,7 +446,6 @@ def agb_field_classification_scores(
         )
         for i in range(len(group_data["classes"]))
     ]
-    print(class_scores)
 
     # Reduce list based on other criteria besides handicap
     # What classes are eligible based on category and distance
