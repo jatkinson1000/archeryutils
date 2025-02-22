@@ -98,12 +98,14 @@ def coax_old_indoor_group(
         typed dict of archer's bowstyle, gender, and age_group under AGB coaxed to
         old indoor rules
     """
-    if bowstyle in (AGB_bowstyles.FLATBOW | AGB_bowstyles.TRADITIONAL):
-        coax_bowstyle = AGB_bowstyles.BAREBOW
-    elif bowstyle in (AGB_bowstyles.COMPOUNDLIMITED | AGB_bowstyles.COMPOUNDBAREBOW):
+    if bowstyle in (
+        AGB_bowstyles.COMPOUND
+        | AGB_bowstyles.COMPOUNDLIMITED
+        | AGB_bowstyles.COMPOUNDBAREBOW
+    ):
         coax_bowstyle = AGB_bowstyles.COMPOUND
     else:
-        coax_bowstyle = bowstyle
+        coax_bowstyle = AGB_bowstyles.RECURVE
 
     coax_gender = gender
 

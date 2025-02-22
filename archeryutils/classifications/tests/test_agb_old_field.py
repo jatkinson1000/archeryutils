@@ -65,6 +65,12 @@ class TestAgbOldFieldClassificationScores:
                 AGB_ages.AGE_UNDER_18,
                 [298, 279, 254, 229, 204, 179],
             ),
+            # Check adult passes through coaxing unchanged
+            (
+                "wa_field_24_blue_marked",
+                AGB_ages.AGE_ADULT,
+                [328, 307, 279, 252, 224, 197],
+            ),
         ],
     )
     def test_agb_old_field_classification_scores_coaxed_ages(

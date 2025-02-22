@@ -46,34 +46,49 @@ class TestAgbOldIndoorClassificationScores:
         assert scores == scores_expected
 
     @pytest.mark.parametrize(
-        "age_group,scores_expected",
+        "age_group,bowstyle,scores_expected",
         [
             (
                 AGB_ages.AGE_50_PLUS,
+                AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
                 AGB_ages.AGE_UNDER_21,
+                AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
                 AGB_ages.AGE_UNDER_18,
+                AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
                 AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
+            ),
+            (
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.BAREBOW,
+                [592, 582, 554, 505, 432, 315, 195, 139],
+            ),
+            (
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUNDLIMITED,
+                [581, 570, 554, 529, 484, 396, 279, 206],
             ),
         ],
     )
-    def test_agb_old_indoor_classification_scores_coaxed_ages(
+    def test_agb_old_indoor_classification_scores_coaxed(
         self,
         age_group: AGB_ages,
+        bowstyle: AGB_bowstyles,
         scores_expected: list[int],
     ) -> None:
-        """Check that field classification returns expected value for a coaxed case."""
+        """Check old indoor classification returns expected value for a coaxed case."""
         coaxed_vals = class_funcs.coax_old_indoor_group(
-            bowstyle=AGB_bowstyles.RECURVE,
+            bowstyle=bowstyle,
             gender=AGB_genders.MALE,
             age_group=age_group,
         )

@@ -221,6 +221,13 @@ class TestAgbOutdoorClassificationScores:
                 AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
+            # Check coaxing and a valid bowstyle
+            (
+                "wa1440_70",
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.FEMALE,
+                [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
+            ),
         ],
     )
     def test_agb_outdoor_classification_scores_nonbowstyles(

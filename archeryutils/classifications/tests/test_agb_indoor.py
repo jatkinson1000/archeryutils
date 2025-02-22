@@ -171,6 +171,11 @@ class TestAgbIndoorClassificationScores:
                 AGB_bowstyles.COMPOUNDBAREBOW,
                 [472, 508, 532, 549, 560, 571, 583, 594],
             ),
+            # Check valid bowstyle passes through coaxing unchanged.
+            (
+                AGB_bowstyles.RECURVE,
+                [378, 437, 483, 518, 546, 566, 582, 593],
+            ),
         ],
     )
     def test_agb_indoor_classification_scores_nonbowstyles(

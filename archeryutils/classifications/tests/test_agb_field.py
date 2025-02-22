@@ -65,6 +65,12 @@ class TestAgbFieldClassificationScores:
                 AGB_ages.AGE_UNDER_21,
                 [336, 311, 283, 249, 212, 173, 135, 101, 74],
             ),
+            # Test that valid values pass through coaxing OK
+            (
+                "wa_field_24_blue_marked",
+                AGB_ages.AGE_ADULT,
+                [336, 311, 283, 249, 212, 173, 135, 101, 74],
+            ),
         ],
     )
     def test_agb_field_classification_scores_nonages(
