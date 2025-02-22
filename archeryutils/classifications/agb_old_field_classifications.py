@@ -86,7 +86,7 @@ def _get_old_field_groupname(
     if bowstyle not in AGB_bowstyles or bowstyle not in old_field_bowstyles:
         msg = (
             f"{bowstyle} is not a recognised bowstyle for old field classifications. "
-            f"Please select from {old_field_bowstyles}."
+            f"Please select from `{old_field_bowstyles}`."
         )
         raise ValueError(msg)
     if gender not in AGB_genders:
@@ -98,7 +98,7 @@ def _get_old_field_groupname(
     if age_group not in AGB_ages or age_group not in old_field_ages:
         msg = (
             f"{age_group} is not a recognised age group for old field "
-            f"classifications. Please select from {old_field_ages}."
+            f"classifications. Please select from `{old_field_ages}`."
         )
         raise ValueError(msg)
     return cls_funcs.get_groupname(bowstyle, gender, age_group)

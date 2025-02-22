@@ -239,7 +239,7 @@ class TestAgbIndoorClassificationScores:
                 (
                     "invalidbowstyle is not a recognised bowstyle for indoor "
                     "classifications. Please select from "
-                    "AGB_bowstyles.COMPOUND|RECURVE|BAREBOW|LONGBOW."
+                    "`AGB_bowstyles.COMPOUND|RECURVE|BAREBOW|LONGBOW`."
                 ),
             ),
             (

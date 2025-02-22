@@ -57,7 +57,7 @@ def _get_old_indoor_groupname(
     if bowstyle not in AGB_bowstyles or bowstyle not in old_indoor_bowstyles:
         msg = (
             f"{bowstyle} is not a recognised bowstyle for old indoor classifications. "
-            f"Please select from {old_indoor_bowstyles}."
+            f"Please select from `{old_indoor_bowstyles}`."
         )
         raise ValueError(msg)
     if gender not in AGB_genders:
@@ -69,7 +69,7 @@ def _get_old_indoor_groupname(
     if age_group not in AGB_ages or age_group not in old_indoor_ages:
         msg = (
             f"{age_group} is not a recognised age group for old indoor "
-            f"classifications. Please select from {old_indoor_ages}."
+            f"classifications. Please select from `{old_indoor_ages}`."
         )
         raise ValueError(msg)
     return cls_funcs.get_groupname(bowstyle, gender, age_group)

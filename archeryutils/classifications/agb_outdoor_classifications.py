@@ -70,7 +70,7 @@ def _get_outdoor_groupname(
     if bowstyle not in AGB_bowstyles or bowstyle not in outdoor_bowstyles:
         msg = (
             f"{bowstyle} is not a recognised bowstyle for outdoor classifications. "
-            f"Please select from {outdoor_bowstyles}."
+            f"Please select from `{outdoor_bowstyles}`."
         )
         raise ValueError(msg)
     if gender not in AGB_genders:

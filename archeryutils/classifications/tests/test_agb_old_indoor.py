@@ -149,8 +149,6 @@ class TestAgbOldIndoorClassificationScores:
         "bowstyle,gender,age_group,msg",
         # Check all systems, different distances, negative and large handicaps.
         [
-            # No invalid bowstyle as anything non-compound returns non-compound.
-            # No invalid age as only one table for all ages.
             (
                 AGB_bowstyles.RECURVE,
                 "invalidgender",
@@ -158,6 +156,26 @@ class TestAgbOldIndoorClassificationScores:
                 (
                     "invalidgender is not a recognised gender group for old indoor "
                     "classifications. Please select from `archeryutils.AGB_genders`."
+                ),
+            ),
+            (
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                (
+                    "AGB_bowstyles.BAREBOW is not a recognised bowstyle for old indoor "
+                    "classifications. "
+                    "Please select from `AGB_bowstyles.COMPOUND|RECURVE`."
+                ),
+            ),
+            (
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_UNDER_12,
+                (
+                    "AGB_ages.AGE_UNDER_12 is not a recognised age group for "
+                    "old indoor classifications. "
+                    "Please select from `AGB_ages.AGE_ADULT`."
                 ),
             ),
         ],
@@ -279,7 +297,7 @@ class TestCalculateAgbOldIndoorClassification:
             _ = class_funcs.calculate_agb_old_indoor_classification(
                 score=score,
                 roundname=roundname,
-                bowstyle=AGB_bowstyles.BAREBOW,
+                bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.MALE,
                 age_group=AGB_ages.AGE_ADULT,
             )

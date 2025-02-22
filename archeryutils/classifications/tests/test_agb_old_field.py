@@ -201,8 +201,8 @@ class TestAgbOldFieldClassificationScores:
                 (
                     "invalidbowstyle is not a recognised bowstyle for old field "
                     "classifications. Please select from "
-                    "AGB_bowstyles.COMPOUND|RECURVE|BAREBOW|ENGLISHLONGBOW|TRADITIONAL"
-                    "|FLATBOW|COMPOUNDLIMITED|COMPOUNDBAREBOW."
+                    "`AGB_bowstyles.COMPOUND|RECURVE|BAREBOW|ENGLISHLONGBOW|TRADITIONAL"
+                    "|FLATBOW|COMPOUNDLIMITED|COMPOUNDBAREBOW`."
                 ),
             ),
             (
@@ -223,7 +223,7 @@ class TestAgbOldFieldClassificationScores:
                 (
                     "invalidage is not a recognised age group for old field "
                     "classifications. "
-                    "Please select from AGB_ages.AGE_ADULT|AGE_UNDER_18."
+                    "Please select from `AGB_ages.AGE_ADULT|AGE_UNDER_18`."
                 ),
             ),
         ],

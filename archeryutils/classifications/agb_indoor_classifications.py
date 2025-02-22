@@ -66,7 +66,7 @@ def _get_indoor_groupname(
     if bowstyle not in AGB_bowstyles or bowstyle not in indoor_bowstyles:
         msg = (
             f"{bowstyle} is not a recognised bowstyle for indoor classifications. "
-            f"Please select from {indoor_bowstyles}."
+            f"Please select from `{indoor_bowstyles}`."
         )
         raise ValueError(msg)
     if gender not in AGB_genders:
