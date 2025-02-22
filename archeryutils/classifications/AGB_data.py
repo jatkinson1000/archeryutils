@@ -7,7 +7,7 @@ import sys
 
 if sys.version_info >= (3, 12):
     from enum import Enum, Flag, auto
-else:
+else:  # pragma: no cover
     from aenum import Enum, Flag, auto
 
 

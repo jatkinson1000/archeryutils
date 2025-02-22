@@ -171,20 +171,17 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
     ):
         # Generate groupname
         # use assert checks to satisfy mypy that names are all valid
-        if gender.name is None:
+        # cannot be reached in practice, so ignore for coverage
+        if gender.name is None:  # pragma: no cover
             errmsg = f"Gender {gender} does not have a name."
             raise ValueError(errmsg)
-        if age.name is None:
+        if age.name is None:  # pragma: no cover
             errmsg = f"Age {age} does not have a name."
             raise ValueError(errmsg)
-        if bowstyle.name is None:
+        if bowstyle.name is None:  # pragma: no cover
             errmsg = f"Bowstyle {bowstyle} does not have a name."
             raise ValueError(errmsg)
-        groupname = _get_outdoor_groupname(
-            bowstyle,
-            gender,
-            age,
-        )
+        groupname = _get_outdoor_groupname(bowstyle, gender, age)
 
         # Get max dists for category from json file data
         # Use metres as corresponding yards >= metric
