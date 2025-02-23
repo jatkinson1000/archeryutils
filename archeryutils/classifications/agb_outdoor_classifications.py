@@ -461,9 +461,9 @@ def calculate_agb_outdoor_classification(
     >>> class_func.calculate_agb_outdoor_classification(
     ...     858,
     ...     "hereford",
-    ...     "recurve",
-    ...     "female",
-    ...     "under 18",
+    ...     class_func.AGB_bowstyles.RECURVE,
+    ...     class_func.AGB_genders.FEMALE,
+    ...     class_func.AGB_ages.AGE_UNDER_18,
     ... )
     'B1'
 

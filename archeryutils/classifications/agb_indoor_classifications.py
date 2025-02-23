@@ -261,9 +261,9 @@ def calculate_agb_indoor_classification(
     >>> class_func.calculate_agb_indoor_classification(
     ...     547,
     ...     "wa18",
-    ...     "compound",
-    ...     "male",
-    ...     "50+",
+    ...     class_func.AGB_bowstyles.COMPOUND,
+    ...     class_func.AGB_genders.MALE,
+    ...     class_func.AGB_ages.AGE_50_PLUS,
     ... )
     'I-B2'
 
@@ -338,7 +338,7 @@ def agb_indoor_classification_scores(
     >>> class_func.agb_indoor_classification_scores(
     ...     ",
     ...     class_func.AGB_bowstyles.BAREBOW,
-    ...     class_func.AGB_.MALE,
+    ...     class_func.AGB_genders.MALE,
     ...     class_func.AGB_ages.AGE_UNDER_12,
     ... )
     [411, 360, 301, 240, 183, 134, 95, 66]
@@ -347,9 +347,9 @@ def agb_indoor_classification_scores(
 
     >>> class_func.agb_indoor_classification_scores(
     ...     "worcester",
-    ...     "compound",
-    ...     "female",
-    ...     "adult",
+    ...     class_func.AGB_bowstyles.COMPOUND,
+    ...     class_func.AGB_genders.FEMALE,
+    ...     class_func.AGB_ages.AGE_ADULT,
     ... )
     [-9999, -9999, 298, 289, 276, 257, 233, 200]
 
