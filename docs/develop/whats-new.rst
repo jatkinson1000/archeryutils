@@ -3,6 +3,7 @@ What's New
 
 Latest
 ------
+* Add new AGB 900 rounds in `#116 <https://github.com/jatkinson1000/archeryutils/pull/116>`_
 * Adds `n_arrows` attribute to `Round`.
 * Fixes issue whereby a divide-by-zero warning could arise in the handicap rootfinding
   algorithm.
