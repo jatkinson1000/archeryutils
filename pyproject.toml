@@ -43,7 +43,7 @@ lint = [
     "blackdoc",
 ]
 docs = [
-    "sphinx",
+    "sphinx<8.2.0",
     "sphinx_rtd_theme",
     "sphinx-toolbox",
     "nbsphinx",
