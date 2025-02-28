@@ -461,7 +461,8 @@ class TestCalculateAgbIndoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                f"Invalid score of {score} for a portsmouth. "
+                f"Invalid score of {score} for a "
+                f"{ALL_INDOOR_ROUNDS['portsmouth'].name}. "
                 f"Should be in range 0-{ALL_INDOOR_ROUNDS['portsmouth'].max_score()}."
             ),
         ):

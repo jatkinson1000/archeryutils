@@ -499,8 +499,8 @@ def calculate_agb_outdoor_classification(
     # Check score is valid
     if score < 0 or score > ALL_OUTDOOR_ROUNDS[roundname].max_score():
         msg = (
-            f"Invalid score of {score} for a {roundname}. "
-            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}.",
+            f"Invalid score of {score} for a {ALL_OUTDOOR_ROUNDS[roundname].name}. "
+            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}."
         )
         raise ValueError(msg)
 

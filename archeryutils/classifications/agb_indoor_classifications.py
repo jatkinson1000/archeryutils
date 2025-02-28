@@ -298,7 +298,7 @@ def calculate_agb_indoor_classification(
     # Check score is valid
     if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
         msg = (
-            f"Invalid score of {score} for a {roundname}. "
+            f"Invalid score of {score} for a {ALL_INDOOR_ROUNDS[roundname].name}. "
             f"Should be in range 0-{ALL_INDOOR_ROUNDS[roundname].max_score()}."
         )
         raise ValueError(msg)

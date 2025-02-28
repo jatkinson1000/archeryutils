@@ -1,5 +1,7 @@
 """Tests for agb outdoor classification functions."""
 
+import re
+
 import pytest
 
 import archeryutils.classifications as class_funcs
@@ -610,8 +612,12 @@ class TestCalculateAgbOutdoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                f"Invalid score of {score} for a wa1440_90. "
-                f"Should be in range 0-{ALL_OUTDOOR_ROUNDS['wa1440_90'].max_score()}."
+                re.escape(
+                    f"Invalid score of {score} for a "
+                    f"{ALL_OUTDOOR_ROUNDS['wa1440_90'].name}. "
+                    f"Should be in range "
+                    f"0-{ALL_OUTDOOR_ROUNDS['wa1440_90'].max_score()}."
+                )
             ),
         ):
             _ = class_funcs.calculate_agb_outdoor_classification(
