@@ -7,12 +7,14 @@ calculate_AGB_old_indoor_classification
 AGB_old_indoor_classification_scores
 """
 
+import warnings
 from typing import TypedDict
 
 import archeryutils.classifications.classification_utils as cls_funcs
 import archeryutils.handicaps as hc
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
+from archeryutils.rounds import Round
 
 ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -186,7 +188,7 @@ del _make_agb_old_indoor_classification_dict
 
 def calculate_agb_old_indoor_classification(
     score: float,
-    roundname: str,
+    archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -201,8 +203,8 @@ def calculate_agb_old_indoor_classification(
     ----------
     score : int
         numerical score on the round to calculate classification for
-    roundname : str
-        name of round shot as given by 'codename' in json
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB indoor target rules
     gender : AGB_genders
@@ -223,9 +225,11 @@ def calculate_agb_old_indoor_classification(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> agb_indoor = load_rounds.AGB_indoor
     >>> class_func.calculate_agb_old_indoor_classification(
     ...     547,
-    ...     "wa18",
+    ...     agb_indoor.wa18,
     ...     AGB_bowstyles.COMPOUND,
     ...     AGB_genders.MALE,
     ...     AGB_ages.AGE_ADULT,
@@ -233,6 +237,29 @@ def calculate_agb_old_indoor_classification(
     'C'
 
     """
+    if isinstance(archery_round, str) and archery_round in ALL_INDOOR_ROUNDS:
+        warnings.warn(
+            "Passing a string as 'archery_round' is deprecated and will be removed "
+            "in a future version.\n"
+            "Please pass an archeryutils `Round` instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        roundname = archery_round
+    elif (
+        isinstance(archery_round, Round) and archery_round in ALL_INDOOR_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_INDOOR_ROUNDS.keys())[
+            list(ALL_INDOOR_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of indoor classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
     # Check score is valid
     if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
         msg = (
@@ -266,7 +293,7 @@ def calculate_agb_old_indoor_classification(
 
 
 def agb_old_indoor_classification_scores(
-    roundname: str,
+    archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -279,8 +306,8 @@ def agb_old_indoor_classification_scores(
 
     Parameters
     ----------
-    roundname : str
-        name of round shot as given by 'codename' in json
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB indoor target rules
     gender : AGB_genders
@@ -301,16 +328,41 @@ def agb_old_indoor_classification_scores(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> agb_outdoor = load_rounds.AGB_indoor
     >>> class_func.agb_old_indoor_classification_scores(
-    ...     "portsmouth",
-    ...     AGB_bowstyles.BAREBOW,
+    ...     agb_indoor.portsmouth,
+    ...     AGB_bowstyles.RECURVE,
     ...     AGB_genders.MALE,
-    ...     AGB_ages.AGE_UNDER_12,
+    ...     AGB_ages.AGE_ADULT,
     ... )
     [592, 582, 554, 505, 432, 315, 195, 139]
 
 
     """
+    if isinstance(archery_round, str) and archery_round in ALL_INDOOR_ROUNDS:
+        warnings.warn(
+            "Passing a string as 'archery_round' is deprecated and will be removed "
+            "in a future version.\n"
+            "Please pass an archeryutils `Round` instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        roundname = archery_round
+    elif (
+        isinstance(archery_round, Round) and archery_round in ALL_INDOOR_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_INDOOR_ROUNDS.keys())[
+            list(ALL_INDOOR_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of indoor classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
     # enforce compound scoring
     if bowstyle is AGB_bowstyles.COMPOUND:
         roundname = cls_funcs.get_compound_codename(roundname)
