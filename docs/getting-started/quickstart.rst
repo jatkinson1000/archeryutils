@@ -342,7 +342,7 @@ Or, given a round we can output the scores required for each classification band
     )
     print(class_scores)
 
-    agb_indoor = load_rounds.WA_indoor
+    agb_indoor = load_rounds.AGB_indoor
     class_scores = class_func.agb_indoor_classification_scores(
         agb_indoor.portsmouth,
         AGB_bowstyles.COMPOUND,

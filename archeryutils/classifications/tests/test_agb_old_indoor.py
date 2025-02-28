@@ -323,7 +323,7 @@ class TestCalculateAgbOldIndoorClassification:
         """Check old_indoor classification returns expected value for a few cases."""
         class_returned = class_funcs.calculate_agb_old_indoor_classification(
             score=score,
-            archery_round="portsmouth",
+            archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=gender,
             age_group=AGB_ages.AGE_ADULT,

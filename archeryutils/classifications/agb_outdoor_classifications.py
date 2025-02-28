@@ -481,6 +481,7 @@ def calculate_agb_outdoor_classification(
             stacklevel=2,
         )
         roundname = archery_round
+        archery_round = ALL_OUTDOOR_ROUNDS[roundname]
     elif (
         isinstance(archery_round, Round)
         and archery_round in ALL_OUTDOOR_ROUNDS.values()
@@ -507,7 +508,7 @@ def calculate_agb_outdoor_classification(
     # Get scores required on this round for each classification
     # Enforcing full size face and compound scoring (for compounds)
     all_class_scores = agb_outdoor_classification_scores(
-        roundname,
+        archery_round,
         bowstyle,
         gender,
         age_group,

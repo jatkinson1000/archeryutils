@@ -246,6 +246,7 @@ def calculate_agb_old_indoor_classification(
             stacklevel=2,
         )
         roundname = archery_round
+        archery_round = ALL_INDOOR_ROUNDS[roundname]
     elif (
         isinstance(archery_round, Round) and archery_round in ALL_INDOOR_ROUNDS.values()
     ):
@@ -270,7 +271,7 @@ def calculate_agb_old_indoor_classification(
 
     # Get scores required on this round for each classification
     class_scores = agb_old_indoor_classification_scores(
-        roundname,
+        archery_round,
         bowstyle,
         gender,
         age_group,

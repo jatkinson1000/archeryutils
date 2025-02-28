@@ -374,13 +374,14 @@ def calculate_agb_field_classification(
     # Enforce unmarked/mixed being same score as marked
     roundname = roundname.replace("unmarked", "marked")
     roundname = roundname.replace("mixed", "marked")
+    archery_round = ALL_FIELD_ROUNDS[roundname]
 
     groupname = _get_field_groupname(bowstyle, gender, age_group)
     group_data = agb_field_classifications[groupname]
 
     # Get scores required on this round for each classification
     all_class_scores = agb_field_classification_scores(
-        roundname,
+        archery_round,
         bowstyle,
         gender,
         age_group,

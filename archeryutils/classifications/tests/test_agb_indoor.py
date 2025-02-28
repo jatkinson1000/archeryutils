@@ -108,7 +108,7 @@ class TestAgbIndoorClassificationScores:
         Also checks that compound rounds are being enforced.
         """
         scores = class_funcs.agb_indoor_classification_scores(
-            archery_round="portsmouth",
+            archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.FEMALE,
             age_group=age_group,
