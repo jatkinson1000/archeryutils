@@ -231,7 +231,7 @@ class Target:
         }
 
         target = cls("Custom", diameter, distance, indoor)
-        target._face_spec = spec  # noqa: SLF001 private member access
+        target._face_spec = spec
         return target
 
     def __repr__(self) -> str:
