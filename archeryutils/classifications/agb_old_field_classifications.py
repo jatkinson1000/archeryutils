@@ -423,7 +423,7 @@ def calculate_agb_old_field_classification(
         ]
     else:
         error = (
-            "This round is not recognised for the purposes of indoor classification.\n"
+            "This round is not recognised for the purposes of field classification.\n"
             "Please select an appropriate option using `archeryutils.load_rounds`."
         )
         raise ValueError(error)
@@ -463,7 +463,7 @@ def calculate_agb_old_field_classification(
 
 
 def agb_old_field_classification_scores(
-    archery_round: Round | str,  # noqa: ARG001 - Unused argument for consistency with other classification schemes
+    archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -509,6 +509,26 @@ def agb_old_field_classification_scores(
     [338, 317, 288, 260, 231, 203]
 
     """
+    if isinstance(archery_round, str) and archery_round in ALL_AGBFIELD_ROUNDS:
+        warnings.warn(
+            "Passing a string as 'archery_round' is deprecated and will be removed "
+            "in a future version.\n"
+            "Please pass an archeryutils `Round` instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+    elif (
+        isinstance(archery_round, Round)
+        and archery_round in ALL_AGBFIELD_ROUNDS.values()
+    ):
+        pass
+    else:
+        error = (
+            "This round is not recognised for the purposes of field classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
     groupname = _get_old_field_groupname(bowstyle, gender, age_group)
     group_data = old_agb_field_classifications[groupname]
 
