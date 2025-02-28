@@ -215,7 +215,7 @@ class TestAgbOldIndoorClassificationScores:
                 age_group=age_group,
             )
 
-    def test_agb_indoor_classification_scores_invalid_round(
+    def test_agb_old_indoor_classification_scores_invalid_round(
         self,
     ) -> None:
         """Check that indoor classification raises error for invalid round."""
@@ -231,14 +231,14 @@ class TestAgbOldIndoorClassificationScores:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.agb_indoor_classification_scores(
+            _ = class_funcs.agb_old_indoor_classification_scores(
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
                 age_group=AGB_ages.AGE_ADULT,
             )
 
-    def test_agb_indoor_classification_scores_invalid_string_round(
+    def test_agb_old_indoor_classification_scores_invalid_string_round(
         self,
     ) -> None:
         """Check that indoor classification raises error for invalid string round."""
@@ -250,25 +250,25 @@ class TestAgbOldIndoorClassificationScores:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.agb_indoor_classification_scores(
+            _ = class_funcs.agb_old_indoor_classification_scores(
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
                 age_group=AGB_ages.AGE_ADULT,
             )
 
-    def test_agb_indoor_classification_scores_string_round(
+    def test_agb_old_indoor_classification_scores_string_round(
         self,
     ) -> None:
         """Check that indoor classification can process a string roundname."""
-        scores = class_funcs.agb_indoor_classification_scores(
-            archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
+        scores = class_funcs.agb_old_indoor_classification_scores(
+            archery_round="portsmouth",
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
             age_group=AGB_ages.AGE_ADULT,
         )
 
-        assert scores == [472, 508, 532, 549, 560, 571, 583, 594][::-1]
+        assert scores == [581, 570, 554, 529, 484, 396, 279, 206]
 
 
 class TestCalculateAgbOldIndoorClassification:
