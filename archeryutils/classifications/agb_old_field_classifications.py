@@ -14,11 +14,13 @@ old_agb_field_classification_scores
 
 """
 
+import warnings
 from typing import TypedDict
 
 import archeryutils.classifications.classification_utils as cls_funcs
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
+from archeryutils.rounds import Round
 
 ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -348,7 +350,7 @@ del _make_agb_old_field_classification_dict
 
 
 def calculate_agb_old_field_classification(
-    roundname: str,
+    archery_round: Round | str,
     score: float,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
@@ -363,8 +365,8 @@ def calculate_agb_old_field_classification(
     ----------
     score : float
         numerical score on the round to calculate classification for
-    roundname : str
-        name of round shot as given by 'codename' in json
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
     bowstyle : AGB_bowstyles
         archer's bowstyle under old AGB field rules
     gender : AGB_genders
@@ -390,9 +392,11 @@ def calculate_agb_old_field_classification(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> wa_field = load_rounds.WA_field
     >>> class_func.calculate_agb_old_field_classification(
     ...     247,
-    ...     "wa_field_24_red_marked",
+    ...     wa_field.wa_field_24_red_marked,
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.MALE,
     ...     class_func.AGB_ages.AGE_ADULT,
@@ -400,10 +404,34 @@ def calculate_agb_old_field_classification(
     '2nd Class'
 
     """
+    if isinstance(archery_round, str) and archery_round in ALL_AGBFIELD_ROUNDS:
+        warnings.warn(
+            "Passing a string as 'archery_round' is deprecated and will be removed "
+            "in a future version.\n"
+            "Please pass an archeryutils `Round` instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        roundname = archery_round
+    elif (
+        isinstance(archery_round, Round)
+        and archery_round in ALL_AGBFIELD_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_AGBFIELD_ROUNDS.keys())[
+            list(ALL_AGBFIELD_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of indoor classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
     # Check score is valid
     if score < 0 or score > ALL_AGBFIELD_ROUNDS[roundname].max_score():
         msg = (
-            f"Invalid score of {score} for a {roundname}. "
+            f"Invalid score of {score} for a {ALL_AGBFIELD_ROUNDS[roundname].name}. "
             f"Should be in range 0-{ALL_AGBFIELD_ROUNDS[roundname].max_score()}."
         )
         raise ValueError(msg)
@@ -435,7 +463,7 @@ def calculate_agb_old_field_classification(
 
 
 def agb_old_field_classification_scores(
-    roundname: str,  # noqa: ARG001 - Unused argument for consistency with other classification schemes
+    archery_round: Round | str,  # noqa: ARG001 - Unused argument for consistency with other classification schemes
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -448,7 +476,7 @@ def agb_old_field_classification_scores(
 
     Parameters
     ----------
-    roundname : str
+    archery_round : Round | str
         name of round shot as given by 'codename' in json
     bowstyle : AGB_bowstyles
         archer's bowstyle under old AGB field rules
@@ -470,8 +498,10 @@ def agb_old_field_classification_scores(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> wa_field = load_rounds.WA_field
     >>> class_func.agb_old_field_classification_scores(
-    ...     "wa_field_24_red_marked",
+    ...     wa_field.wa_field_24_red_marked,
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.MALE,
     ...     class_func.AGB_ages.AGE_ADULT,
