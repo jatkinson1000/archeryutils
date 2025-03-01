@@ -8,7 +8,6 @@ agb_indoor_classification_scores
 """
 
 import itertools
-import warnings
 from typing import Tuple, TypedDict
 
 import numpy as np
@@ -224,6 +223,7 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
     ----------
     archery_round : Round | str
         an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
 
     Returns
     -------
@@ -239,13 +239,6 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
 
     """
     if isinstance(archery_round, str) and archery_round in ALL_INDOOR_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
         roundname = archery_round
         archery_round = ALL_INDOOR_ROUNDS[roundname]
     elif (
@@ -284,6 +277,7 @@ def calculate_agb_indoor_classification(
         numerical score on the round to calculate classification for
     archery_round : Round | str
         an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB indoor target rules
     gender : AGB_genders
@@ -370,6 +364,7 @@ def agb_indoor_classification_scores(
     ----------
     archery_round : Round | str
         an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB indoor target rules
     gender : AGB_genders

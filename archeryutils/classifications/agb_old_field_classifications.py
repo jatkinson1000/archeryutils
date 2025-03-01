@@ -14,7 +14,6 @@ old_agb_field_classification_scores
 
 """
 
-import warnings
 from typing import Tuple, TypedDict
 
 import archeryutils.classifications.classification_utils as cls_funcs
@@ -357,6 +356,7 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
     ----------
     archery_round : Round | str
         an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
 
     Returns
     -------
@@ -372,13 +372,6 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
 
     """
     if isinstance(archery_round, str) and archery_round in ALL_FIELD_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
         roundname = archery_round
         archery_round = ALL_FIELD_ROUNDS[roundname]
     elif (
@@ -416,6 +409,7 @@ def calculate_agb_old_field_classification(
         numerical score on the round to calculate classification for
     archery_round : Round | str
         an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : AGB_bowstyles
         archer's bowstyle under old AGB field rules
     gender : AGB_genders
@@ -504,7 +498,8 @@ def agb_old_field_classification_scores(
     Parameters
     ----------
     archery_round : Round | str
-        name of round shot as given by 'codename' in json
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : AGB_bowstyles
         archer's bowstyle under old AGB field rules
     gender : AGB_genders
