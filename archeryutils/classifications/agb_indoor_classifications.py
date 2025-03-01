@@ -451,7 +451,7 @@ def agb_indoor_classification_scores(
         )
         if next_score == score:
             # If already at max score this classification is impossible
-            if score == ALL_INDOOR_ROUNDS[roundname].max_score():
+            if score == archery_round.max_score():
                 int_class_scores[i] = -9999
             # If gap in table increase to next score
             # (we assume here that no two classifications are only 1 point apart...)

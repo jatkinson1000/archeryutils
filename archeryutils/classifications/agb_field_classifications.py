@@ -483,7 +483,7 @@ def agb_field_classification_scores(
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
 
     """
-    archery_round, roundname = _check_round_eligibility(archery_round)
+    archery_round, _ = _check_round_eligibility(archery_round)
 
     groupname = _get_field_groupname(bowstyle, gender, age_group)
     group_data = agb_field_classifications[groupname]
@@ -494,7 +494,7 @@ def agb_field_classification_scores(
     class_scores = [
         hc.score_for_round(
             group_data["class_HC"][i],
-            ALL_FIELD_ROUNDS[roundname],
+            archery_round,
             hc_scheme,
             rounded_score=True,
         )
@@ -503,7 +503,7 @@ def agb_field_classification_scores(
 
     # Reduce list based on other criteria besides handicap
     # What classes are eligible based on category and distance
-    round_max_dist = ALL_FIELD_ROUNDS[roundname].max_distance().value
+    round_max_dist = archery_round.max_distance().value
     for i in range(len(class_scores)):
         # What classes are eligible based on category and distance
         # Is round too short?
@@ -513,7 +513,7 @@ def agb_field_classification_scores(
         if group_data["max_distance"] < round_max_dist:
             class_scores[i] = -9999
     # What classes are eligible based on round length (24 targets)
-    if "12" in roundname:
+    if "12" in archery_round.name:
         class_scores[0:3] = [-9999] * 3
 
     # Score threshold should be int (score_for_round called with round=True)

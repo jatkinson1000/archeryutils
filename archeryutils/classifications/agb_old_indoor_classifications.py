@@ -373,6 +373,7 @@ def agb_old_indoor_classification_scores(
     # enforce compound scoring
     if bowstyle is AGB_bowstyles.COMPOUND:
         roundname = cls_funcs.get_compound_codename(roundname)
+        archery_round = ALL_INDOOR_ROUNDS[roundname]
 
     groupname = _get_old_indoor_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]
@@ -381,7 +382,7 @@ def agb_old_indoor_classification_scores(
     class_scores = [
         hc.score_for_round(
             group_data["class_HC"][i],
-            ALL_INDOOR_ROUNDS[roundname],
+            archery_round,
             "AGBold",
             rounded_score=True,
         )
