@@ -9,7 +9,7 @@ agb_outdoor_classification_scores
 
 import itertools
 import warnings
-from typing import Any, Literal, TypedDict, cast
+from typing import Any, Literal, Tuple, TypedDict, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -416,6 +416,56 @@ agb_outdoor_classifications = _make_agb_outdoor_classification_dict()
 del _make_agb_outdoor_classification_dict
 
 
+def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
+    """
+    Check round is eligible for outdoor classifications.
+
+    Parameters
+    ----------
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+
+    Returns
+    -------
+    archery_round : Round
+        an archeryutils Round from the value passed in
+    roundname : str
+        codename of the round as it appears in the rounds dict
+
+    Raises
+    ------
+    ValueError
+        If requested round is not in the rounds dict for this scheme
+
+    """
+    if isinstance(archery_round, str) and archery_round in ALL_OUTDOOR_ROUNDS:
+        warnings.warn(
+            "Passing a string as 'archery_round' is deprecated and will be removed "
+            "in a future version.\n"
+            "Please pass an archeryutils `Round` instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        roundname = archery_round
+        archery_round = ALL_OUTDOOR_ROUNDS[roundname]
+    elif (
+        isinstance(archery_round, Round)
+        and archery_round in ALL_OUTDOOR_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_OUTDOOR_ROUNDS.keys())[
+            list(ALL_OUTDOOR_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of outdoor classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
+    return archery_round, roundname
+
+
 def calculate_agb_outdoor_classification(
     score: float,
     archery_round: Round | str,
@@ -472,36 +522,13 @@ def calculate_agb_outdoor_classification(
     'B1'
 
     """
-    if isinstance(archery_round, str) and archery_round in ALL_OUTDOOR_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
-        roundname = archery_round
-        archery_round = ALL_OUTDOOR_ROUNDS[roundname]
-    elif (
-        isinstance(archery_round, Round)
-        and archery_round in ALL_OUTDOOR_ROUNDS.values()
-    ):
-        # Get string key for this round:
-        roundname = list(ALL_OUTDOOR_ROUNDS.keys())[
-            list(ALL_OUTDOOR_ROUNDS.values()).index(archery_round)
-        ]
-    else:
-        error = (
-            "This round is not recognised for the purposes of outdoor classification.\n"
-            "Please select an appropriate option using `archeryutils.load_rounds`."
-        )
-        raise ValueError(error)
+    archery_round, roundname = _check_round_eligibility(archery_round)
 
     # Check score is valid
-    if score < 0 or score > ALL_OUTDOOR_ROUNDS[roundname].max_score():
+    if score < 0 or score > archery_round.max_score():
         msg = (
-            f"Invalid score of {score} for a {ALL_OUTDOOR_ROUNDS[roundname].name}. "
-            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}."
+            f"Invalid score of {score} for a {archery_round.name}. "
+            f"Should be in range 0-{archery_round.max_score()}."
         )
         raise ValueError(msg)
 
@@ -643,29 +670,7 @@ def agb_outdoor_classification_scores(
     [-9999, -9999, -9999, -9999, -9999, 931, 797, 646, 493]
 
     """
-    if isinstance(archery_round, str) and archery_round in ALL_OUTDOOR_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
-        roundname = archery_round
-    elif (
-        isinstance(archery_round, Round)
-        and archery_round in ALL_OUTDOOR_ROUNDS.values()
-    ):
-        # Get string key for this round:
-        roundname = list(ALL_OUTDOOR_ROUNDS.keys())[
-            list(ALL_OUTDOOR_ROUNDS.values()).index(archery_round)
-        ]
-    else:
-        error = (
-            "This round is not recognised for the purposes of outdoor classification.\n"
-            "Please select an appropriate option using `archeryutils.load_rounds`."
-        )
-        raise ValueError(error)
+    archery_round, roundname = _check_round_eligibility(archery_round)
 
     groupname = _get_outdoor_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
@@ -687,7 +692,7 @@ def agb_outdoor_classification_scores(
         class_scores[0:3] = [-9999] * 3
 
         # If not prestige, what classes are eligible based on category and distance
-        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance().value
+        round_max_dist = archery_round.max_distance().value
         for i in range(3, len(class_scores)):
             if group_data["min_dists"][i] > round_max_dist:
                 class_scores[i] = -9999

@@ -15,14 +15,14 @@ old_agb_field_classification_scores
 """
 
 import warnings
-from typing import TypedDict
+from typing import Tuple, TypedDict
 
 import archeryutils.classifications.classification_utils as cls_funcs
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 from archeryutils.rounds import Round
 
-ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
+ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
     ],
@@ -349,6 +349,55 @@ old_agb_field_classifications = _make_agb_old_field_classification_dict()
 del _make_agb_old_field_classification_dict
 
 
+def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
+    """
+    Check round is eligible for old field classifications.
+
+    Parameters
+    ----------
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+
+    Returns
+    -------
+    archery_round : Round
+        an archeryutils Round from the value passed in
+    roundname : str
+        codename of the round as it appears in the rounds dict
+
+    Raises
+    ------
+    ValueError
+        If requested round is not in the rounds dict for this scheme
+
+    """
+    if isinstance(archery_round, str) and archery_round in ALL_FIELD_ROUNDS:
+        warnings.warn(
+            "Passing a string as 'archery_round' is deprecated and will be removed "
+            "in a future version.\n"
+            "Please pass an archeryutils `Round` instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        roundname = archery_round
+        archery_round = ALL_FIELD_ROUNDS[roundname]
+    elif (
+        isinstance(archery_round, Round) and archery_round in ALL_FIELD_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_FIELD_ROUNDS.keys())[
+            list(ALL_FIELD_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of field classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
+    return archery_round, roundname
+
+
 def calculate_agb_old_field_classification(
     archery_round: Round | str,
     score: float,
@@ -404,35 +453,13 @@ def calculate_agb_old_field_classification(
     '2nd Class'
 
     """
-    if isinstance(archery_round, str) and archery_round in ALL_AGBFIELD_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
-        roundname = archery_round
-    elif (
-        isinstance(archery_round, Round)
-        and archery_round in ALL_AGBFIELD_ROUNDS.values()
-    ):
-        # Get string key for this round:
-        roundname = list(ALL_AGBFIELD_ROUNDS.keys())[
-            list(ALL_AGBFIELD_ROUNDS.values()).index(archery_round)
-        ]
-    else:
-        error = (
-            "This round is not recognised for the purposes of field classification.\n"
-            "Please select an appropriate option using `archeryutils.load_rounds`."
-        )
-        raise ValueError(error)
+    archery_round, roundname = _check_round_eligibility(archery_round)
 
     # Check score is valid
-    if score < 0 or score > ALL_AGBFIELD_ROUNDS[roundname].max_score():
+    if score < 0 or score > archery_round.max_score():
         msg = (
-            f"Invalid score of {score} for a {ALL_AGBFIELD_ROUNDS[roundname].name}. "
-            f"Should be in range 0-{ALL_AGBFIELD_ROUNDS[roundname].max_score()}."
+            f"Invalid score of {score} for a {archery_round.name}. "
+            f"Should be in range 0-{archery_round.max_score()}."
         )
         raise ValueError(msg)
 
@@ -509,25 +536,7 @@ def agb_old_field_classification_scores(
     [338, 317, 288, 260, 231, 203]
 
     """
-    if isinstance(archery_round, str) and archery_round in ALL_AGBFIELD_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
-    elif (
-        isinstance(archery_round, Round)
-        and archery_round in ALL_AGBFIELD_ROUNDS.values()
-    ):
-        pass
-    else:
-        error = (
-            "This round is not recognised for the purposes of field classification.\n"
-            "Please select an appropriate option using `archeryutils.load_rounds`."
-        )
-        raise ValueError(error)
+    archery_round, _ = _check_round_eligibility(archery_round)
 
     groupname = _get_old_field_groupname(bowstyle, gender, age_group)
     group_data = old_agb_field_classifications[groupname]

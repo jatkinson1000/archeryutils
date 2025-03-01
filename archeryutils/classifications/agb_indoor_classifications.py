@@ -9,7 +9,7 @@ agb_indoor_classification_scores
 
 import itertools
 import warnings
-from typing import TypedDict
+from typing import Tuple, TypedDict
 
 import numpy as np
 import numpy.typing as npt
@@ -216,6 +216,55 @@ agb_indoor_classifications = _make_agb_indoor_classification_dict()
 del _make_agb_indoor_classification_dict
 
 
+def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
+    """
+    Check round is eligible for indoor classifications.
+
+    Parameters
+    ----------
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+
+    Returns
+    -------
+    archery_round : Round
+        an archeryutils Round from the value passed in
+    roundname : str
+        codename of the round as it appears in the rounds dict
+
+    Raises
+    ------
+    ValueError
+        If requested round is not in the rounds dict for this scheme
+
+    """
+    if isinstance(archery_round, str) and archery_round in ALL_INDOOR_ROUNDS:
+        warnings.warn(
+            "Passing a string as 'archery_round' is deprecated and will be removed "
+            "in a future version.\n"
+            "Please pass an archeryutils `Round` instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        roundname = archery_round
+        archery_round = ALL_INDOOR_ROUNDS[roundname]
+    elif (
+        isinstance(archery_round, Round) and archery_round in ALL_INDOOR_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_INDOOR_ROUNDS.keys())[
+            list(ALL_INDOOR_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of indoor classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
+    return archery_round, roundname
+
+
 def calculate_agb_indoor_classification(
     score: float,
     archery_round: Round | str,
@@ -272,35 +321,13 @@ def calculate_agb_indoor_classification(
     'I-B2'
 
     """
-    if isinstance(archery_round, str) and archery_round in ALL_INDOOR_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
-        roundname = archery_round
-        archery_round = ALL_INDOOR_ROUNDS[roundname]
-    elif (
-        isinstance(archery_round, Round) and archery_round in ALL_INDOOR_ROUNDS.values()
-    ):
-        # Get string key for this round:
-        roundname = list(ALL_INDOOR_ROUNDS.keys())[
-            list(ALL_INDOOR_ROUNDS.values()).index(archery_round)
-        ]
-    else:
-        error = (
-            "This round is not recognised for the purposes of indoor classification.\n"
-            "Please select an appropriate option using `archeryutils.load_rounds`."
-        )
-        raise ValueError(error)
+    archery_round, roundname = _check_round_eligibility(archery_round)
 
     # Check score is valid
-    if score < 0 or score > ALL_INDOOR_ROUNDS[roundname].max_score():
+    if score < 0 or score > archery_round.max_score():
         msg = (
-            f"Invalid score of {score} for a {ALL_INDOOR_ROUNDS[roundname].name}. "
-            f"Should be in range 0-{ALL_INDOOR_ROUNDS[roundname].max_score()}."
+            f"Invalid score of {score} for a {archery_round.name}. "
+            f"Should be in range 0-{archery_round.max_score()}."
         )
         raise ValueError(msg)
 
@@ -384,28 +411,7 @@ def agb_indoor_classification_scores(
     [-9999, -9999, 298, 289, 276, 257, 233, 200]
 
     """
-    if isinstance(archery_round, str) and archery_round in ALL_INDOOR_ROUNDS:
-        warnings.warn(
-            "Passing a string as 'archery_round' is deprecated and will be removed "
-            "in a future version.\n"
-            "Please pass an archeryutils `Round` instead.",
-            FutureWarning,
-            stacklevel=2,
-        )
-        roundname = archery_round
-    elif (
-        isinstance(archery_round, Round) and archery_round in ALL_INDOOR_ROUNDS.values()
-    ):
-        # Get string key for this round:
-        roundname = list(ALL_INDOOR_ROUNDS.keys())[
-            list(ALL_INDOOR_ROUNDS.values()).index(archery_round)
-        ]
-    else:
-        error = (
-            "This round is not recognised for the purposes of indoor classification.\n"
-            "Please select an appropriate option using `archeryutils.load_rounds`."
-        )
-        raise ValueError(error)
+    archery_round, roundname = _check_round_eligibility(archery_round)
 
     groupname = _get_indoor_groupname(bowstyle, gender, age_group)
     group_data = agb_indoor_classifications[groupname]
