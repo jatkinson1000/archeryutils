@@ -257,7 +257,7 @@ def get_groupname(
 
 
 def get_age_gender_step(
-    gender: str,
+    gender: AGB_genders,
     age_cat: int,
     age_step: float,
     gender_step: float,
@@ -271,7 +271,7 @@ def get_age_gender_step(
 
     Parameters
     ----------
-    gender : str
+    gender : AGB_genders
         gender this classification applies to
     age_cat : int
         age category as an integer (number of age steps below adult e.g. 50+=1, U14=5)
@@ -290,14 +290,14 @@ def get_age_gender_step(
     # There is a danger that gender step overtakes age step at U15/U16
     # interface. If this happens set to age step to align U16 with U16
     if (
-        gender.lower() == "female"
+        gender is AGB_genders.FEMALE
         and age_cat == under_16_int
         and age_step < gender_step
     ):
         return age_cat * age_step + age_step
 
     # For females under 16 or older apply gender step and age steps
-    if gender.lower() == "female" and age_cat <= under_16_int:
+    if gender is AGB_genders.FEMALE and age_cat <= under_16_int:
         return gender_step + age_cat * age_step
 
     # Default case for males, and females aged U15 or younger - apply only age steps

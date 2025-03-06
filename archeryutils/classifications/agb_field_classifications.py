@@ -203,7 +203,7 @@ def _make_agb_field_classification_dict() -> dict[str, GroupData]:
 
         # set step from datum based on age and gender steps required
         delta_hc_age_gender = cls_funcs.get_age_gender_step(
-            gender.name,
+            gender,
             agb_age_data[age.name]["step"],
             agb_bowstyle_data[bowstyle.name]["ageStep_field"],
             agb_bowstyle_data[bowstyle.name]["genderStep_field"],
