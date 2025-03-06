@@ -277,7 +277,7 @@ def _assign_min_dist(
     # Age group trickery:
     # U15 males and younger step down for B2 and below to align with female scores/hcs
     if (
-        gender == AGB_genders.MALE
+        gender is AGB_genders.MALE
         and age_group
         not in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12
     ):
@@ -372,13 +372,13 @@ def _assign_outdoor_prestige(
     distance_check: list[str] = []
 
     # 720 rounds - bowstyle dependent
-    if bowstyle == AGB_bowstyles.COMPOUND:
+    if bowstyle is AGB_bowstyles.COMPOUND:
         # Everyone gets the 'adult' 720
         prestige_rounds.append(prestige_720_compound[0])
         # Check rest for junior eligible shorter rounds
         distance_check = distance_check + prestige_720_compound[1:]
 
-    elif bowstyle == AGB_bowstyles.BAREBOW:
+    elif bowstyle is AGB_bowstyles.BAREBOW:
         # Everyone gets the 'adult' 720
         prestige_rounds.append(prestige_720_barebow[0])
         # Check rest for junior eligible shorter rounds
@@ -391,10 +391,10 @@ def _assign_outdoor_prestige(
         distance_check = distance_check + prestige_720[1:]
 
         # Additional fix for Male 50+, U18, and U16 recurve/longbow
-        if gender == AGB_genders.MALE:
+        if gender is AGB_genders.MALE:
             if age in AGB_ages.AGE_50_PLUS | AGB_ages.AGE_UNDER_18:
                 prestige_rounds.append(prestige_720[1])  # 60m
-            elif age == AGB_ages.AGE_UNDER_16:
+            elif age is AGB_ages.AGE_UNDER_16:
                 prestige_rounds.append(prestige_720[2])  # 50m
 
     # Imperial and 1440 rounds - Check based on distance

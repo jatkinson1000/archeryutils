@@ -312,7 +312,7 @@ def agb_old_indoor_classification_scores(
 
     """
     # enforce compound scoring
-    if bowstyle == AGB_bowstyles.COMPOUND:
+    if bowstyle is AGB_bowstyles.COMPOUND:
         roundname = cls_funcs.get_compound_codename(roundname)
 
     groupname = _get_old_indoor_groupname(bowstyle, gender, age_group)
