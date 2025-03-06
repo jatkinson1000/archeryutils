@@ -455,11 +455,9 @@ def agb_field_classification_scores(
         # Is round too short?
         if group_data["min_dists"][i] > round_max_dist:
             class_scores[i] = -9999
-            print("short", group_data["min_dists"][i], round_max_dist)
         # Is peg too long (i.e. red peg for unsighted)?
         if group_data["max_distance"] < round_max_dist:
             class_scores[i] = -9999
-            print("long", group_data["max_distance"], round_max_dist)
     # What classes are eligible based on round length (24 targets)
     if "12" in roundname:
         class_scores[0:3] = [-9999] * 3
