@@ -354,12 +354,6 @@ def agb_indoor_classification_scores(
     [-9999, -9999, 298, 289, 276, 257, 233, 200]
 
     """
-    # # deal with reduced categories:
-    # if bowstyle in AGB_bowstyles.FLATBOW | AGB_bowstyles.TRADITIONAL:
-    #     bowstyle = AGB_bowstyles.BAREBOW
-    # elif bowstyle in AGB_bowstyles.COMPOUNDLIMITED | AGB_bowstyles.COMPOUNDBAREBOW:
-    #     bowstyle = AGB_bowstyles.COMPOUND
-
     groupname = _get_indoor_groupname(bowstyle, gender, age_group)
     group_data = agb_indoor_classifications[groupname]
 
