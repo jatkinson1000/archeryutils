@@ -170,8 +170,8 @@ def _make_agb_indoor_classification_dict() -> dict[str, GroupData]:
         indoor_bowstyles, AGB_genders, AGB_ages
     ):
         # Generate groupname
-        # use assert checks to satisfy mypy that names are all valid
-        # cannot be reached in practice, so ignore for coverage
+        # The following satisfies mypy that names are all valid strings
+        # Cannot currently be reached, so ignore for coverage
         if gender.name is None:  # pragma: no cover
             errmsg = f"Gender {gender} does not have a name."
             raise ValueError(errmsg)
