@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 from archeryutils.rounds import Pass, Round
 
@@ -42,13 +42,13 @@ LOCATIONS = {
 }
 
 
-def read_json_to_round_dict(json_filelist: Union[str, list[str]]) -> dict[str, Round]:
+def read_json_to_round_dict(json_filelist: str | list[str]) -> dict[str, Round]:
     """
     Read round information from a json file into a dictionary of rounds.
 
     Parameters
     ----------
-    json_filelist : list of str
+    json_filelist : str | list[str]
         filenames of json round files in ./round_data_files/
 
     Returns

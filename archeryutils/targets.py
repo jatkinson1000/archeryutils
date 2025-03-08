@@ -3,7 +3,7 @@
 from collections.abc import Mapping
 from functools import partial
 from types import MappingProxyType
-from typing import Literal, NamedTuple, TypeAlias, Union, get_args
+from typing import Literal, NamedTuple, TypeAlias, get_args
 
 from archeryutils import length
 
@@ -143,8 +143,8 @@ class Target:
     def __init__(
         self,
         scoring_system: ScoringSystem,
-        diameter: Union[float, tuple[float, str]],
-        distance: Union[float, tuple[float, str]],
+        diameter: float | tuple[float, str],
+        distance: float | tuple[float, str],
         indoor: bool = False,
     ) -> None:
         if scoring_system not in self._supported_systems:
@@ -173,9 +173,9 @@ class Target:
     @classmethod
     def from_face_spec(
         cls,
-        face_spec: Union[FaceSpec, tuple[FaceSpec, str]],
-        diameter: Union[float, tuple[float, str]],
-        distance: Union[float, tuple[float, str]],
+        face_spec: FaceSpec | tuple[FaceSpec, str],
+        diameter: float | tuple[float, str],
+        distance: float | tuple[float, str],
         indoor: bool = False,
     ) -> "Target":
         """

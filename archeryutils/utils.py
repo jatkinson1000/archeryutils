@@ -10,7 +10,6 @@ import platform
 import struct
 import subprocess
 import sys
-from typing import Union
 
 
 def _get_sys_info() -> list:  # pragma: no cover
@@ -74,7 +73,7 @@ def versions() -> None:  # pragma: no cover
         ("IPython", lambda mod: mod.__version__),
     ]
 
-    deps_blob: list[tuple[str, Union[str, None]]] = []
+    deps_blob: list[tuple[str, str | None]] = []
     for modname, ver_f in deps:
         try:
             if modname in sys.modules:

@@ -1,7 +1,6 @@
 """Module to define a Pass and Round classes for archery applications."""
 
 from collections.abc import Iterable
-from typing import Optional, Union
 
 from archeryutils.targets import Quantity, ScoringSystem, Target
 
@@ -51,8 +50,8 @@ class Pass:
         cls,
         n_arrows: int,
         scoring_system: ScoringSystem,
-        diameter: Union[float, tuple[float, str]],
-        distance: Union[float, tuple[float, str]],
+        diameter: float | tuple[float, str],
+        distance: float | tuple[float, str],
         indoor: bool = False,
     ) -> "Pass":
         """
@@ -67,9 +66,9 @@ class Pass:
             number of arrows in this pass
         scoring_system : ScoringSystem
             Literal string value of target face/scoring system type.
-        diameter : float or tuple of float, str
+        diameter : float | tuple[float, str]
             Target diameter size (and units, default [cm])
-        distance : float or tuple of float, str
+        distance : float | tuple[float, str]
             Target distance (and units, default [metres])
         indoor : bool
             is round indoors for arrow diameter purposes? default = False
@@ -171,11 +170,11 @@ class Round:
         Formal name of the round
     passes : list of Pass
         a list of Pass classes making up the round
-    location : str or None
+    location : str | None
         string identifing where the round is shot
-    body : str or None
+    body : str | None
         string identifing the governing body the round belongs to
-    family : str or None
+    family : str | None
         string identifing the family the round belongs to (e.g. wa1440, western, etc.)
     n_arrows : int
         total number of arrows in this round
@@ -201,9 +200,9 @@ class Round:
         self,
         name: str,
         passes: Iterable[Pass],
-        location: Optional[str] = None,
-        body: Optional[str] = None,
-        family: Optional[str] = None,
+        location: str | None = None,
+        body: str | None = None,
+        family: str | None = None,
     ) -> None:
         self.name = name
         self.passes = list(passes)

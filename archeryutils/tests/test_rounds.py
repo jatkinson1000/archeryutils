@@ -1,6 +1,6 @@
 """Tests for Pass and Round classes."""
 
-from typing import Iterable, Union
+from typing import Iterable
 
 import pytest
 
@@ -306,7 +306,7 @@ class TestRound:
         self,
         unit: str,
         get_unit: bool,
-        max_dist_expected: Union[float, tuple[float, str]],
+        max_dist_expected: float | tuple[float, str],
     ) -> None:
         """
         Check that max distance is calculated correctly for a Round.

@@ -8,7 +8,6 @@ Makes use of the basic handicap equations in .handicap_equations.
 import decimal
 import warnings
 from itertools import chain
-from typing import Optional, Union
 
 import numpy as np
 from numpy.typing import NDArray
@@ -27,9 +26,9 @@ class HandicapTable:
 
     Parameters
     ----------
-    handicap_sys : Union[str, HandicapScheme]
+    handicap_sys : str | HandicapScheme
         identifier for the handicap system to use
-    hcs : Union[FloatArray, NDArray[np.int\\_]]
+    hcs : FloatArray | NDArray[np.int\\_]
         handicap values to calculate scores for
     round_list : list[rounds.Round]
         list of Round classes to show in the handicap table
@@ -40,7 +39,7 @@ class HandicapTable:
     clean_gaps : bool, default=True
         clean out gaps of repeated scores (using only first occurrence)
         gaps will be filled with -9999 (int_prec=True) or np.nan (int_prec=False)
-    arrow_d : float or None, default=None
+    arrow_d : float | None, default=None
         user-specified arrow diameter in [metres]
 
 
@@ -58,20 +57,20 @@ class HandicapTable:
         clean out gaps of repeated scores (using only first occurrence)
     hcs : NDArray[np.float\\_]
         handicap values to calculate scores for
-    table: NDArray[Union[np.float\\_, np.int\\_]]
+    table: NDArray[np.float\\_ | np.int\\_]
         the generated handicap table containing appropriate score values
 
     """
 
     def __init__(  # noqa: PLR0913 - Too many arguments
         self,
-        handicap_sys: Union[str, HandicapScheme],
-        hcs: Union[FloatArray, NDArray[np.int_]],
+        handicap_sys: str | HandicapScheme,
+        hcs: FloatArray | NDArray[np.int_],
         round_list: list[rounds.Round],
         rounded_scores: bool = True,
         int_prec: bool = True,
         clean_gaps: bool = True,
-        arrow_d: Optional[float] = None,
+        arrow_d: float | None = None,
     ):
         self.hc_sys = hc.handicap_scheme(handicap_sys)
         self.round_list = round_list
@@ -83,7 +82,7 @@ class HandicapTable:
         self.hcs = self._check_print_table_inputs(hcs)
 
         # Set up empty handicap table and populate
-        self.table: NDArray[Union[np.float64, np.int_]] = np.empty(
+        self.table: NDArray[np.float64 | np.int_] = np.empty(
             [len(self.hcs), len(self.round_list) + 1],
         )
         self.table[:, 0] = self.hcs[:]
@@ -245,14 +244,14 @@ class HandicapTable:
 
     def _check_print_table_inputs(
         self,
-        hcs_in: Union[FloatArray, NDArray[np.int_]],
+        hcs_in: FloatArray | NDArray[np.int_],
     ) -> NDArray[np.float64]:
         """
         Sanitise and format inputs to handicap printing code.
 
         Parameters
         ----------
-        hcs_in : float or ndarray
+        hcs_in : float | ndarray
             handicap value(s) to calculate score(s) for
 
         Returns
@@ -350,7 +349,7 @@ class HandicapTable:
 
     @staticmethod
     def _format_row(
-        row: NDArray[Union[np.float64, np.int_]],
+        row: NDArray[np.float64 | np.int_],
         hc_dp: int = 0,
         int_prec: bool = False,
     ) -> str:
