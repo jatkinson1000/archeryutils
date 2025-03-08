@@ -286,13 +286,13 @@ Given a score we can calculate the classification it achieves:
 
 .. ipython:: python
 
-    from archeryutils import classifications as class_func
+    from archeryutils import classifications as cf
     from archeryutils.classifications import AGB_ages, AGB_bowstyles, AGB_genders
     from archeryutils import load_rounds
 
     # AGB Outdoor
     agb_outdoor_imperial = load_rounds.AGB_outdoor_imperial
-    class_from_score = class_func.calculate_agb_outdoor_classification(
+    class_from_score = cf.calculate_agb_outdoor_classification(
         965,
         agb_outdoor_imperial.hereford,
         AGB_bowstyles.RECURVE,
@@ -305,7 +305,7 @@ Given a score we can calculate the classification it achieves:
 
     # AGB Indoor
     wa_indoor = load_rounds.WA_indoor
-    class_from_score = class_func.calculate_agb_indoor_classification(
+    class_from_score = cf.calculate_agb_indoor_classification(
         562,
         wa_indoor.wa18,
         AGB_bowstyles.COMPOUND,
@@ -318,7 +318,7 @@ Given a score we can calculate the classification it achieves:
 
     # AGB Field
     wa_field = load_rounds.WA_field
-    class_from_score = class_func.calculate_agb_field_classification(
+    class_from_score = cf.calculate_agb_field_classification(
         168,
         wa_field.wa_field_24_blue_unmarked,
         AGB_bowstyles.TRADITIONAL,
@@ -334,7 +334,7 @@ Or, given a round we can output the scores required for each classification band
 .. ipython:: python
 
     agb_outdoor_imperial = load_rounds.AGB_outdoor_imperial
-    class_scores = class_func.agb_outdoor_classification_scores(
+    class_scores = cf.agb_outdoor_classification_scores(
         agb_outdoor_imperial.hereford,
         AGB_bowstyles.RECURVE,
         AGB_genders.MALE,
@@ -343,7 +343,7 @@ Or, given a round we can output the scores required for each classification band
     print(class_scores)
 
     agb_indoor = load_rounds.AGB_indoor
-    class_scores = class_func.agb_indoor_classification_scores(
+    class_scores = cf.agb_indoor_classification_scores(
         agb_indoor.portsmouth,
         AGB_bowstyles.COMPOUND,
         AGB_genders.FEMALE,
@@ -352,7 +352,7 @@ Or, given a round we can output the scores required for each classification band
     print(class_scores)
 
     wa_field = load_rounds.WA_field
-    class_scores = class_func.agb_field_classification_scores(
+    class_scores = cf.agb_field_classification_scores(
         wa_field.wa_field_24_blue_unmarked,
         AGB_bowstyles.FLATBOW,
         AGB_genders.FEMALE,

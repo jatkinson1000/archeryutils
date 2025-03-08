@@ -302,15 +302,15 @@ def calculate_agb_indoor_classification(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> agb_indoor = load_rounds.AGB_indoor
-    >>> class_func.calculate_agb_indoor_classification(
+    >>> cf.calculate_agb_indoor_classification(
     ...     547,
     ...     agb_indoor.wa18,
-    ...     class_func.AGB_bowstyles.COMPOUND,
-    ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.AGE_50_PLUS,
+    ...     cf.AGB_bowstyles.COMPOUND,
+    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_ages.AGE_50_PLUS,
     ... )
     'I-B2'
 
@@ -384,24 +384,24 @@ def agb_indoor_classification_scores(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> agb_outdoor = load_rounds.AGB_indoor
-    >>> class_func.agb_indoor_classification_scores(
+    >>> cf.agb_indoor_classification_scores(
     ...     agb_indoor.portsmouth,
-    ...     class_func.AGB_bowstyles.BAREBOW,
-    ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.AGE_UNDER_12,
+    ...     cf.AGB_bowstyles.BAREBOW,
+    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_ages.AGE_UNDER_12,
     ... )
     [411, 360, 301, 240, 183, 134, 95, 66]
 
     If a classification cannot be achieved a fill value of `-9999` is returned:
 
-    >>> class_func.agb_indoor_classification_scores(
+    >>> cf.agb_indoor_classification_scores(
     ...     agb_indoor.worcester,
-    ...     class_func.AGB_bowstyles.COMPOUND,
-    ...     class_func.AGB_genders.FEMALE,
-    ...     class_func.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_bowstyles.COMPOUND,
+    ...     cf.AGB_genders.FEMALE,
+    ...     cf.AGB_ages.AGE_ADULT,
     ... )
     [-9999, -9999, 298, 289, 276, 257, 233, 200]
 

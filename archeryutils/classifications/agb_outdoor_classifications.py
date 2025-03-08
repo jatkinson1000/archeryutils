@@ -503,15 +503,15 @@ def calculate_agb_outdoor_classification(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> agb_outdoor = load_rounds.AGB_outdoor_imperial
-    >>> class_func.calculate_agb_outdoor_classification(
+    >>> cf.calculate_agb_outdoor_classification(
     ...     858,
     ...     agb_outdoor.hereford,
-    ...     class_func.AGB_bowstyles.RECURVE,
-    ...     class_func.AGB_genders.FEMALE,
-    ...     class_func.AGB_ages.AGE_UNDER_18,
+    ...     cf.AGB_bowstyles.RECURVE,
+    ...     cf.AGB_genders.FEMALE,
+    ...     cf.AGB_ages.AGE_UNDER_18,
     ... )
     'B1'
 
@@ -643,24 +643,24 @@ def agb_outdoor_classification_scores(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> agb_outdoor = load_rounds.AGB_outdoor_imperial
-    >>> class_func.agb_outdoor_classification_scores(
+    >>> cf.agb_outdoor_classification_scores(
     ...     agb_outdoor.hereford,
-    ...     class_func.AGB_bowstyles.RECURVE,
-    ...     class_func.AGB_genders.FEMALE,
-    ...     class_func.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_bowstyles.RECURVE,
+    ...     cf.AGB_genders.FEMALE,
+    ...     cf.AGB_ages.AGE_ADULT,
     ... )
     [1232, 1178, 1107, 1015, 900, 763, 614, 466, 336]
 
     If a classification cannot be achieved a fill value of `-9999` is returned:
 
-    >>> class_func.agb_outdoor_classification_scores(
+    >>> cf.agb_outdoor_classification_scores(
     ...     agb_outdoor.bristol_ii,
-    ...     class_func.AGB_bowstyles.RECURVE,
-    ...     class_func.AGB_genders.FEMALE,
-    ...     class_func.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_bowstyles.RECURVE,
+    ...     cf.AGB_genders.FEMALE,
+    ...     cf.AGB_ages.AGE_ADULT,
     ... )
     [-9999, -9999, -9999, -9999, -9999, 931, 797, 646, 493]
 
