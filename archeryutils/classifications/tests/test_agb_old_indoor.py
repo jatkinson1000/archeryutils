@@ -4,6 +4,7 @@ import pytest
 
 import archeryutils.classifications as class_funcs
 from archeryutils import load_rounds
+from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
 ALL_INDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -20,30 +21,14 @@ class TestAgbOldIndoorClassificationScores:
         "age_group,scores_expected",
         [
             (
-                "adult",
-                [592, 582, 554, 505, 432, 315, 195, 139],
-            ),
-            (
-                "50+",
-                [592, 582, 554, 505, 432, 315, 195, 139],
-            ),
-            (
-                "under21",
-                [592, 582, 554, 505, 432, 315, 195, 139],
-            ),
-            (
-                "Under 18",
-                [592, 582, 554, 505, 432, 315, 195, 139],
-            ),
-            (
-                "Under 12",
+                AGB_ages.AGE_ADULT,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
         ],
     )
     def test_agb_old_indoor_classification_scores_ages(
         self,
-        age_group: str,
+        age_group: AGB_ages,
         scores_expected: list[int],
     ) -> None:
         """
@@ -53,9 +38,63 @@ class TestAgbOldIndoorClassificationScores:
         """
         scores = class_funcs.agb_old_indoor_classification_scores(
             roundname="portsmouth",
-            bowstyle="recurve",
-            gender="male",
+            bowstyle=AGB_bowstyles.RECURVE,
+            gender=AGB_genders.MALE,
             age_group=age_group,
+        )
+
+        assert scores == scores_expected
+
+    @pytest.mark.parametrize(
+        "age_group,bowstyle,scores_expected",
+        [
+            (
+                AGB_ages.AGE_50_PLUS,
+                AGB_bowstyles.RECURVE,
+                [592, 582, 554, 505, 432, 315, 195, 139],
+            ),
+            (
+                AGB_ages.AGE_UNDER_21,
+                AGB_bowstyles.RECURVE,
+                [592, 582, 554, 505, 432, 315, 195, 139],
+            ),
+            (
+                AGB_ages.AGE_UNDER_18,
+                AGB_bowstyles.RECURVE,
+                [592, 582, 554, 505, 432, 315, 195, 139],
+            ),
+            (
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
+                [592, 582, 554, 505, 432, 315, 195, 139],
+            ),
+            (
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.BAREBOW,
+                [592, 582, 554, 505, 432, 315, 195, 139],
+            ),
+            (
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUNDLIMITED,
+                [581, 570, 554, 529, 484, 396, 279, 206],
+            ),
+        ],
+    )
+    def test_agb_old_indoor_classification_scores_coaxed(
+        self,
+        age_group: AGB_ages,
+        bowstyle: AGB_bowstyles,
+        scores_expected: list[int],
+    ) -> None:
+        """Check old indoor classification returns expected value for a coaxed case."""
+        coaxed_vals = class_funcs.coax_old_indoor_group(
+            bowstyle=bowstyle,
+            gender=AGB_genders.MALE,
+            age_group=age_group,
+        )
+        scores = class_funcs.agb_old_indoor_classification_scores(
+            roundname="portsmouth",
+            **coaxed_vals,
         )
 
         assert scores == scores_expected
@@ -66,9 +105,9 @@ class TestAgbOldIndoorClassificationScores:
         """Check that old_indoor classification returns expected value for a case."""
         scores = class_funcs.agb_old_indoor_classification_scores(
             roundname="portsmouth",
-            bowstyle="recurve",
-            gender="female",
-            age_group="adult",
+            bowstyle=AGB_bowstyles.RECURVE,
+            gender=AGB_genders.FEMALE,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == [582, 569, 534, 479, 380, 255, 139, 93]
@@ -77,21 +116,21 @@ class TestAgbOldIndoorClassificationScores:
         "bowstyle,gender,scores_expected",
         [
             (
-                "compound",
-                "male",
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.MALE,
                 [581, 570, 554, 529, 484, 396, 279, 206],
             ),
             (
-                "compound",
-                "female",
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.FEMALE,
                 [570, 562, 544, 509, 449, 347, 206, 160],
             ),
         ],
     )
     def test_agb_old_indoor_classification_scores_bowstyles(
         self,
-        bowstyle: str,
-        gender: str,
+        bowstyle: AGB_bowstyles,
+        gender: AGB_genders,
         scores_expected: list[int],
     ) -> None:
         """
@@ -103,7 +142,7 @@ class TestAgbOldIndoorClassificationScores:
             roundname="portsmouth",
             bowstyle=bowstyle,
             gender=gender,
-            age_group="adult",
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == scores_expected
@@ -114,39 +153,59 @@ class TestAgbOldIndoorClassificationScores:
         """Check gent compound worcester supposed loophole."""
         scores = class_funcs.agb_old_indoor_classification_scores(
             roundname="worcester",
-            bowstyle="compound",
-            gender="male",
-            age_group="adult",
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == [300, 299, 289, 264, 226, 162, 96, 65]
 
     @pytest.mark.parametrize(
-        "bowstyle,gender,age_group",
+        "bowstyle,gender,age_group,msg",
         # Check all systems, different distances, negative and large handicaps.
         [
-            # No invalid bowstyle as anything non-compound returns non-compound.
-            # No invalid age as only one table for all ages.
             (
-                "recurve",
+                AGB_bowstyles.RECURVE,
                 "invalidgender",
-                "adult",
+                AGB_ages.AGE_ADULT,
+                (
+                    "invalidgender is not a recognised gender group for old indoor "
+                    "classifications. Please select from `archeryutils.AGB_genders`."
+                ),
+            ),
+            (
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                (
+                    "AGB_bowstyles.BAREBOW is not a recognised bowstyle for old indoor "
+                    "classifications. "
+                    "Please select from `AGB_bowstyles.COMPOUND|RECURVE`."
+                ),
+            ),
+            (
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_UNDER_12,
+                (
+                    "AGB_ages.AGE_UNDER_12 is not a recognised age group for "
+                    "old indoor classifications. "
+                    "Please select from `AGB_ages.AGE_ADULT`."
+                ),
             ),
         ],
     )
     def test_agb_old_indoor_classification_scores_invalid(
         self,
-        bowstyle: str,
-        gender: str,
-        age_group: str,
+        bowstyle: AGB_bowstyles,
+        gender: AGB_genders,
+        age_group: AGB_ages,
+        msg: str,
     ) -> None:
         """Check that old_indoor classification returns expected value for a case."""
         with pytest.raises(
-            KeyError,
-            match=(
-                f"{age_group.lower().replace(' ', '')}_"
-                f"{gender.lower()}_{bowstyle.lower()}"
-            ),
+            ValueError,
+            match=msg,
         ):
             _ = class_funcs.agb_old_indoor_classification_scores(
                 roundname="portsmouth",
@@ -164,37 +223,37 @@ class TestCalculateAgbOldIndoorClassification:
         [
             (
                 400,
-                "male",
+                AGB_genders.MALE,
                 "F",
             ),
             (
                 337,
-                "female",
+                AGB_genders.FEMALE,
                 "F",
             ),
             (
                 592,
-                "male",
+                AGB_genders.MALE,
                 "A",
             ),
             (
                 582,
-                "female",
+                AGB_genders.FEMALE,
                 "A",
             ),
             (
                 581,
-                "male",
+                AGB_genders.MALE,
                 "C",
             ),
             (
                 120,
-                "male",
+                AGB_genders.MALE,
                 "UC",
             ),
             (
                 1,
-                "male",
+                AGB_genders.MALE,
                 "UC",
             ),
         ],
@@ -202,16 +261,16 @@ class TestCalculateAgbOldIndoorClassification:
     def test_calculate_agb_old_indoor_classification(
         self,
         score: float,
-        gender: str,
+        gender: AGB_genders,
         class_expected: str,
     ) -> None:
         """Check old_indoor classification returns expected value for a few cases."""
         class_returned = class_funcs.calculate_agb_old_indoor_classification(
             score=score,
             roundname="portsmouth",
-            bowstyle="recurve",
+            bowstyle=AGB_bowstyles.RECURVE,
             gender=gender,
-            age_group="adult",
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert class_returned == class_expected
@@ -253,7 +312,7 @@ class TestCalculateAgbOldIndoorClassification:
             _ = class_funcs.calculate_agb_old_indoor_classification(
                 score=score,
                 roundname=roundname,
-                bowstyle="barebow",
-                gender="male",
-                age_group="adult",
+                bowstyle=AGB_bowstyles.RECURVE,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
             )

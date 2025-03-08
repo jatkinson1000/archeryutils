@@ -264,19 +264,38 @@ For full details see the summary on
 and `here <https://archerygb.org/resources/indoor-classifications-and-handicaps>`_,
 and the Shooting Administrative Procedures.
 
+The classification routines make use of built in types to specify the age, bowstyle, and gender for the category for which data is being collected.
+This allows the code to be robust, less prone to unexpected errors and misuse, and to provide useful feedback when given invalid options.
+
+The options available are as follows:
+
+.. ipython:: python
+
+    from archeryutils.classifications import AGB_ages, AGB_bowstyles, AGB_genders
+
+    for age in AGB_ages:
+        print(age.name)
+    for bowstyle in AGB_bowstyles:
+        print(bowstyle.name)
+    for gender in AGB_genders:
+        print(gender.name)
+
+They can be specified as the input to a function using dot notation as the following examples illustrate:
+
 Given a score we can calculate the classification it achieves:
 
 .. ipython:: python
 
     from archeryutils import classifications as class_func
+    from archeryutils.classifications import AGB_ages, AGB_bowstyles, AGB_genders
 
     # AGB Outdoor
     class_from_score = class_func.calculate_agb_outdoor_classification(
         965,
         "hereford",
-        "recurve",
-        "male",
-        "50+",
+        AGB_bowstyles.RECURVE,
+        AGB_genders.MALE,
+        AGB_ages.AGE_50_PLUS,
     )
     print(
         f"A score of 965 on a Hereford is class {class_from_score} for a 50+ male recurve."
@@ -286,9 +305,9 @@ Given a score we can calculate the classification it achieves:
     class_from_score = class_func.calculate_agb_indoor_classification(
         562,
         "wa18",
-        "compound",
-        "female",
-        "adult",
+        AGB_bowstyles.COMPOUND,
+        AGB_genders.FEMALE,
+        AGB_ages.AGE_ADULT,
     )
     print(
         f"A score of 562 on a WA 18 is class {class_from_score} for adult female compound."
@@ -298,9 +317,9 @@ Given a score we can calculate the classification it achieves:
     class_from_score = class_func.calculate_agb_field_classification(
         168,
         "wa_field_24_blue_unmarked",
-        "traditional",
-        "male",
-        "under 18",
+        AGB_bowstyles.TRADITIONAL,
+        AGB_genders.FEMALE,
+        AGB_ages.AGE_ADULT,
     )
     print(
         f"A score of 168 on a WA Unmarked 24 is class {class_from_score} for an under 18 male traditional."
@@ -312,25 +331,25 @@ Or, given a round we can output the scores required for each classification band
 
     class_scores = class_func.agb_outdoor_classification_scores(
         "hereford",
-        "recurve",
-        "male",
-        "adult",
+        AGB_bowstyles.RECURVE,
+        AGB_genders.MALE,
+        AGB_ages.AGE_ADULT,
     )
     print(class_scores)
 
     class_scores = class_func.agb_indoor_classification_scores(
         "portsmouth",
-        "compound",
-        "female",
-        "adult",
+        AGB_bowstyles.COMPOUND,
+        AGB_genders.FEMALE,
+        AGB_ages.AGE_ADULT,
     )
     print(class_scores)
 
     class_scores = class_func.agb_field_classification_scores(
         "wa_field_24_blue_marked",
-        "flatbow",
-        "female",
-        "under 18",
+        AGB_bowstyles.FLATBOW,
+        AGB_genders.FEMALE,
+        AGB_ages.AGE_UNDER_18,
     )
     print(class_scores)
 

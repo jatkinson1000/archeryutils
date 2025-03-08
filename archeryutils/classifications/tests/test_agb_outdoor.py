@@ -4,6 +4,7 @@ import pytest
 
 import archeryutils.classifications as class_funcs
 from archeryutils import load_rounds
+from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
 ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -27,42 +28,42 @@ class TestAgbOutdoorClassificationScores:
         [
             (
                 "wa1440_90",
-                "adult",
+                AGB_ages.AGE_ADULT,
                 [426, 566, 717, 866, 999, 1110, 1197, 1266, 1320],
             ),
             (
                 "wa1440_70",
-                "50+",
+                AGB_ages.AGE_50_PLUS,
                 [364, 503, 659, 817, 960, 1079, 1173, 1247, 1305],
             ),
             (
                 "wa1440_90",
-                "under21",
+                AGB_ages.AGE_UNDER_21,
                 [313, 435, 577, 728, 877, 1008, 1117, 1203, 1270],
             ),
             (
                 "wa1440_70",
-                "Under 18",
+                AGB_ages.AGE_UNDER_18,
                 [259, 373, 514, 671, 828, 969, 1086, 1179, 1252],
             ),
             (
                 "wa1440_60",
-                "Under 16",
+                AGB_ages.AGE_UNDER_16,
                 [227, 335, 474, 635, 799, 946, 1068, 1165, 1241],
             ),
             (
                 "metric_iii",
-                "Under 15",
+                AGB_ages.AGE_UNDER_15,
                 [270, 389, 534, 693, 849, 988, 1101, 1191, 1261],
             ),
             (
                 "metric_iv",
-                "Under 14",
+                AGB_ages.AGE_UNDER_14,
                 [396, 524, 666, 814, 952, 1070, 1166, 1242, 1301],
             ),
             (
                 "metric_v",
-                "Under 12",
+                AGB_ages.AGE_UNDER_12,
                 [406, 550, 706, 858, 992, 1104, 1193, 1263, 1317],
             ),
         ],
@@ -70,14 +71,14 @@ class TestAgbOutdoorClassificationScores:
     def test_agb_outdoor_classification_scores_ages(
         self,
         roundname: str,
-        age_group: str,
+        age_group: AGB_ages,
         scores_expected: list[int],
     ) -> None:
         """Check that  classification returns expected value for a case."""
         scores = class_funcs.agb_outdoor_classification_scores(
             roundname=roundname,
-            bowstyle="recurve",
-            gender="male",
+            bowstyle=AGB_bowstyles.RECURVE,
+            gender=AGB_genders.MALE,
             age_group=age_group,
         )
 
@@ -88,22 +89,22 @@ class TestAgbOutdoorClassificationScores:
         [
             (
                 "wa1440_70",
-                "adult",
+                AGB_ages.AGE_ADULT,
                 [392, 536, 693, 849, 988, 1101, 1191, 1261, 1316],
             ),
             (
                 "metric_iii",
-                "Under 16",
+                AGB_ages.AGE_UNDER_16,
                 [293, 418, 567, 727, 881, 1014, 1122, 1207, 1274],
             ),
             (
                 "metric_iii",
-                "Under 15",
+                AGB_ages.AGE_UNDER_15,
                 [270, 389, 534, 693, 849, 988, 1101, 1191, 1261],
             ),
             (
                 "metric_v",
-                "Under 12",
+                AGB_ages.AGE_UNDER_12,
                 [406, 550, 706, 858, 992, 1104, 1193, 1263, 1317],
             ),
         ],
@@ -111,7 +112,7 @@ class TestAgbOutdoorClassificationScores:
     def test_agb_outdoor_classification_scores_genders(
         self,
         roundname: str,
-        age_group: str,
+        age_group: AGB_ages,
         scores_expected: list[int],
     ) -> None:
         """
@@ -122,8 +123,8 @@ class TestAgbOutdoorClassificationScores:
         """
         scores = class_funcs.agb_outdoor_classification_scores(
             roundname=roundname,
-            bowstyle="recurve",
-            gender="female",
+            bowstyle=AGB_bowstyles.RECURVE,
+            gender=AGB_genders.FEMALE,
             age_group=age_group,
         )
 
@@ -134,44 +135,44 @@ class TestAgbOutdoorClassificationScores:
         [
             (
                 "wa1440_90",
-                "compound",
-                "male",
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.MALE,
                 [866, 982, 1081, 1162, 1229, 1283, 1327, 1362, 1389],
             ),
             (
                 "wa1440_70",
-                "compound",
-                "female",
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
             (
                 "wa1440_90",
-                "barebow",
-                "male",
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
                 [290, 380, 484, 598, 717, 835, 945, 1042, 1124],
             ),
             (
                 "wa1440_70",
-                "barebow",
-                "female",
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.FEMALE,
                 [252, 338, 441, 558, 682, 806, 921, 1023, 1108],
             ),
             (
                 "wa1440_90",
-                "longbow",
-                "male",
+                AGB_bowstyles.LONGBOW,
+                AGB_genders.MALE,
                 [85, 124, 177, 248, 337, 445, 566, 696, 825],
             ),
             (
                 "wa1440_70",
-                "longbow",
-                "female",
+                AGB_bowstyles.LONGBOW,
+                AGB_genders.FEMALE,
                 [64, 94, 136, 195, 274, 373, 493, 625, 761],
             ),
             (
                 "wa1440_70",
-                "english longbow",
-                "female",
+                AGB_bowstyles.ENGLISHLONGBOW,
+                AGB_genders.FEMALE,
                 [64, 94, 136, 195, 274, 373, 493, 625, 761],
             ),
         ],
@@ -179,8 +180,8 @@ class TestAgbOutdoorClassificationScores:
     def test_agb_outdoor_classification_scores_bowstyles(
         self,
         roundname: str,
-        bowstyle: str,
-        gender: str,
+        bowstyle: AGB_bowstyles,
+        gender: AGB_genders,
         scores_expected: list[int],
     ) -> None:
         """Check that outdoor classification returns expected value for a case."""
@@ -188,7 +189,7 @@ class TestAgbOutdoorClassificationScores:
             roundname=roundname,
             bowstyle=bowstyle,
             gender=gender,
-            age_group="adult",
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == scores_expected[::-1]
@@ -198,32 +199,33 @@ class TestAgbOutdoorClassificationScores:
         [
             (
                 "wa1440_90",
-                "flatbow",
-                "male",
+                AGB_bowstyles.FLATBOW,
+                AGB_genders.MALE,
                 [290, 380, 484, 598, 717, 835, 945, 1042, 1124],
             ),
             (
                 "wa1440_70",
-                "traditional",
-                "female",
+                AGB_bowstyles.TRADITIONAL,
+                AGB_genders.FEMALE,
                 [252, 338, 441, 558, 682, 806, 921, 1023, 1108],
             ),
             (
                 "wa1440_70",
-                "asiatic",
-                "female",
-                [252, 338, 441, 558, 682, 806, 921, 1023, 1108],
-            ),
-            (
-                "wa1440_70",
-                "compound barebow",
-                "female",
+                AGB_bowstyles.COMPOUNDBAREBOW,
+                AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
             (
                 "wa1440_70",
-                "compound limited",
-                "female",
+                AGB_bowstyles.COMPOUNDLIMITED,
+                AGB_genders.FEMALE,
+                [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
+            ),
+            # Check coaxing and a valid bowstyle
+            (
+                "wa1440_70",
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
         ],
@@ -231,16 +233,19 @@ class TestAgbOutdoorClassificationScores:
     def test_agb_outdoor_classification_scores_nonbowstyles(
         self,
         roundname: str,
-        bowstyle: str,
-        gender: str,
+        bowstyle: AGB_bowstyles,
+        gender: AGB_genders,
         scores_expected: list[int],
     ) -> None:
         """Check that appropriate scores returned for valid non-outdoor bowstyles."""
-        scores = class_funcs.agb_outdoor_classification_scores(
-            roundname=roundname,
+        coaxed_vals = class_funcs.coax_outdoor_group(
             bowstyle=bowstyle,
             gender=gender,
-            age_group="adult",
+            age_group=AGB_ages.AGE_ADULT,
+        )
+        scores = class_funcs.agb_outdoor_classification_scores(
+            roundname=roundname,
+            **coaxed_vals,
         )
 
         assert scores == scores_expected[::-1]
@@ -259,58 +264,65 @@ class TestAgbOutdoorClassificationScores:
         roundname: str,
         scores_expected: list[int],
     ) -> None:
-        """
-        Check that outdoor classification returns single face scores only.
-
-        Includes check that Worcester returns null above max score.
-        """
+        """Check that outdoor classification returns single face scores only."""
         scores = class_funcs.agb_outdoor_classification_scores(
             roundname=roundname,
-            bowstyle="compound",
-            gender="male",
-            age_group="adult",
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
         )
 
         assert scores == scores_expected[::-1]
 
     @pytest.mark.parametrize(
-        "roundname,bowstyle,gender,age_group",
+        "roundname,bowstyle,gender,age_group,msg",
         # Check all systems, different distances, negative and large handicaps.
         [
             (
                 "wa1440_90",
                 "invalidbowstyle",
-                "male",
-                "adult",
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                (
+                    "invalidbowstyle is not a recognised bowstyle for outdoor "
+                    "classifications. Please select from "
+                    "`AGB_bowstyles.COMPOUND|RECURVE|BAREBOW|LONGBOW`."
+                ),
             ),
             (
                 "wa1440_90",
-                "recurve",
+                AGB_bowstyles.RECURVE,
                 "invalidgender",
-                "adult",
+                AGB_ages.AGE_ADULT,
+                (
+                    "invalidgender is not a recognised gender group for outdoor "
+                    "classifications. Please select from `archeryutils.AGB_genders`."
+                ),
             ),
             (
                 "wa1440_90",
-                "barebow",
-                "male",
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
                 "invalidage",
+                (
+                    "invalidage is not a recognised age group for outdoor "
+                    "classifications. Please select from `archeryutils.AGB_ages`."
+                ),
             ),
         ],
     )
     def test_agb_outdoor_classification_scores_invalid(
         self,
         roundname: str,
-        bowstyle: str,
-        gender: str,
-        age_group: str,
+        bowstyle: AGB_bowstyles,
+        gender: AGB_genders,
+        age_group: AGB_ages,
+        msg: str,
     ) -> None:
         """Check that outdoor classification returns expected value for a case."""
         with pytest.raises(
-            KeyError,
-            match=(
-                f"{age_group.lower().replace(' ', '')}_"
-                f"{gender.lower()}_{bowstyle.lower()}"
-            ),
+            ValueError,
+            match=msg,
         ):
             _ = class_funcs.agb_outdoor_classification_scores(
                 roundname=roundname,
@@ -329,9 +341,9 @@ class TestAgbOutdoorClassificationScores:
         ):
             _ = class_funcs.agb_outdoor_classification_scores(
                 roundname="invalid_roundname",
-                bowstyle="barebow",
-                gender="female",
-                age_group="adult",
+                bowstyle=AGB_bowstyles.BAREBOW,
+                gender=AGB_genders.FEMALE,
+                age_group=AGB_ages.AGE_ADULT,
             )
 
 
@@ -344,71 +356,71 @@ class TestCalculateAgbOutdoorClassification:
             (
                 "wa1440_90",
                 1390,  # 1 above EMB
-                "adult",
-                "compound",
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUND,
                 "EMB",
             ),
             (
                 "wa1440_70",
                 1382,  # 1 below EMB
-                "50+",
-                "compound",
+                AGB_ages.AGE_50_PLUS,
+                AGB_bowstyles.COMPOUND,
                 "GMB",
             ),
             (
                 "wa1440_90",
                 900,  # midway MB
-                "under21",
-                "barebow",
+                AGB_ages.AGE_UNDER_21,
+                AGB_bowstyles.BAREBOW,
                 "MB",
             ),
             (
                 "wa1440_70",
                 1269,  # 1 below MB
-                "Under 18",
-                "compound",
+                AGB_ages.AGE_UNDER_18,
+                AGB_bowstyles.COMPOUND,
                 "B1",
             ),
             (
                 "wa1440_70",
                 969,  # boundary value
-                "Under 18",
-                "recurve",
+                AGB_ages.AGE_UNDER_18,
+                AGB_bowstyles.RECURVE,
                 "B1",
             ),
             (
                 "metric_v",
                 992,  # Boundary
-                "Under 12",
-                "recurve",
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
                 "B2",
             ),
             (
                 "metric_v",
                 222,  # Midway
-                "Under 12",
-                "longbow",
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.LONGBOW,
                 "A1",
             ),
             (
                 "metric_v",
                 91,  # On boundary
-                "Under 12",
-                "longbow",
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
                 "metric_v",
                 1,
-                "Under 12",
-                "longbow",
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
                 "metric_v",
                 250,
-                "Under 12",
-                "longbow",
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.LONGBOW,
                 "A1",
             ),
         ],
@@ -417,8 +429,8 @@ class TestCalculateAgbOutdoorClassification:
         self,
         score: float,
         roundname: str,
-        age_group: str,
-        bowstyle: str,
+        age_group: AGB_ages,
+        bowstyle: AGB_bowstyles,
         class_expected: str,
     ) -> None:
         """Check that outdoor classification returns expected value for a few cases."""
@@ -426,7 +438,7 @@ class TestCalculateAgbOutdoorClassification:
             roundname=roundname,
             score=score,
             bowstyle=bowstyle,
-            gender="male",
+            gender=AGB_genders.MALE,
             age_group=age_group,
         )
 
@@ -438,71 +450,71 @@ class TestCalculateAgbOutdoorClassification:
             (
                 "wa720_70",  # Not prestige only 70m => B2
                 720,
-                "adult",
-                "compound",
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUND,
                 "B2",
             ),
             (
                 "wa720_50_b",  # Not prestige only 50m => A1
                 720,
-                "adult",
-                "compound",
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUND,
                 "A1",
             ),
             (
                 "wa720_50_c",  # Prestige => EMB
                 720,
-                "adult",
-                "compound",
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUND,
                 "EMB",
             ),
             (
                 "metric_80_30",  # This and next 2 check Prestige by age
                 720,
-                "adult",
-                "compound",
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUND,
                 "A3",  # 30m for adults gets A3
             ),
             (
                 "metric_80_30",
                 720,
-                "Under 14",
-                "compound",
+                AGB_ages.AGE_UNDER_14,
+                AGB_bowstyles.COMPOUND,
                 "B3",  # Max dist reqd. for B1 and B2
             ),
             (
                 "metric_80_30",
                 720,
-                "Under 12",
-                "compound",
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.COMPOUND,
                 "EMB",  # Age appropriate
             ),
             (
                 "metric_122_50",
                 720,
-                "Under 16",
-                "compound",
+                AGB_ages.AGE_UNDER_16,
+                AGB_bowstyles.COMPOUND,
                 "B2",  # Under 16+ Max dist reqd. for B1 (not B2)
             ),
             (
                 "wa720_60",  # Recurve 50+ get 60m 720
                 720,
-                "50+",
-                "recurve",
+                AGB_ages.AGE_50_PLUS,
+                AGB_bowstyles.RECURVE,
                 "EMB",
             ),
             (
                 "wa720_60",  # Recurve U18 get 60m 720
                 720,
-                "Under 18",
-                "recurve",
+                AGB_ages.AGE_UNDER_18,
+                AGB_bowstyles.RECURVE,
                 "EMB",
             ),
             (
                 "metric_122_50",  # Recurve U18 get 50m Metric 122
                 720,
-                "Under 16",
-                "recurve",
+                AGB_ages.AGE_UNDER_16,
+                AGB_bowstyles.RECURVE,
                 "EMB",
             ),
         ],
@@ -511,8 +523,8 @@ class TestCalculateAgbOutdoorClassification:
         self,
         score: float,
         roundname: str,
-        age_group: str,
-        bowstyle: str,
+        age_group: AGB_ages,
+        bowstyle: AGB_bowstyles,
         class_expected: str,
     ) -> None:
         """Check that prestige and distanec limitations are working for a few cases."""
@@ -520,7 +532,7 @@ class TestCalculateAgbOutdoorClassification:
             roundname=roundname,
             score=score,
             bowstyle=bowstyle,
-            gender="male",
+            gender=AGB_genders.MALE,
             age_group=age_group,
         )
 
@@ -537,9 +549,9 @@ class TestCalculateAgbOutdoorClassification:
             _ = class_funcs.calculate_agb_outdoor_classification(
                 roundname="invalid_roundname",
                 score=400,
-                bowstyle="recurve",
-                gender="male",
-                age_group="adult",
+                bowstyle=AGB_bowstyles.RECURVE,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
             )
 
     @pytest.mark.parametrize("score", [3000, 1441, -1, -100])
@@ -558,7 +570,7 @@ class TestCalculateAgbOutdoorClassification:
             _ = class_funcs.calculate_agb_outdoor_classification(
                 score=score,
                 roundname="wa1440_90",
-                bowstyle="barebow",
-                gender="male",
-                age_group="adult",
+                bowstyle=AGB_bowstyles.BAREBOW,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
             )

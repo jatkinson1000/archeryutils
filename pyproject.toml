@@ -27,6 +27,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.20.0",
+    "aenum; python_version<'3.12'",
 ]
 
 [project.optional-dependencies]
@@ -35,7 +36,8 @@ test = [
     "pytest-mock",
 ]
 lint = [
-    "mypy>=1.0.0",
+    # "mypy>=1.0.0",
+    "mypy @ git+https://github.com/python/mypy.git@master",
     "coverage",
     "pytest>=7.2.0",
     "pytest-mock",
