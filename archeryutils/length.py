@@ -6,7 +6,7 @@ Supported units are provided as module attributes for easy autocompletion,
 """
 
 from collections.abc import Collection, Set
-from typing import TypeVar, Union
+from typing import TypeVar
 
 __all__ = [  # noqa: RUF022 - Non-alphabetical sort is more logical here
     "yard",
@@ -186,7 +186,7 @@ def definitive_units(aliases: Collection[str]) -> set[str]:
 
 
 def parse_optional_units(
-    value: Union[T, tuple[T, str]],
+    value: T | tuple[T, str],
     supported: Set[str],
     default: str = "metre",
 ) -> tuple[T, str]:
@@ -197,7 +197,7 @@ def parse_optional_units(
 
     Parameters
     ----------
-    value : Any or tuple of Any, str
+    value : T | tuple[T, str]
         Either a single object, or a tuple with the desired units.
     supported: set of str
         Set of units (and aliases) that are expected/supported.
@@ -212,7 +212,7 @@ def parse_optional_units(
 
     Returns
     -------
-    tuple of Any, str
+    tuple[T, str]
         original value, definitive name of unit
 
     Notes

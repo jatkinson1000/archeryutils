@@ -21,8 +21,6 @@ Routine Listings
 
 """
 
-from typing import Optional, Union
-
 import numpy as np
 import numpy.typing as npt
 
@@ -41,7 +39,7 @@ _CLASSES = {
 
 
 def handicap_scheme(  # noqa: D417 - Missing argument in docstring (**kwargs)
-    handicap_sys: Union[str, HandicapScheme],
+    handicap_sys: str | HandicapScheme,
     **kwargs: float,
 ) -> HandicapScheme:
     r"""
@@ -49,7 +47,7 @@ def handicap_scheme(  # noqa: D417 - Missing argument in docstring (**kwargs)
 
     Parameters
     ----------
-    handicap_sys : Union[str, HandicapScheme]
+    handicap_sys : str | HandicapScheme
         String identifying the handicap scheme class to be generated, or an existing
         HandicapScheme
     \\**kwargs : float
@@ -102,8 +100,8 @@ def handicap_scheme(  # noqa: D417 - Missing argument in docstring (**kwargs)
 def arrow_score(
     handicap: FloatArray,
     target: targets.Target,
-    handicap_sys: Union[str, HandicapScheme],
-    arw_d: Optional[float] = None,
+    handicap_sys: str | HandicapScheme,
+    arw_d: float | None = None,
 ) -> FloatArray:
     """
     Calculate the average arrow score for a given target and handicap rating.
@@ -114,9 +112,9 @@ def arrow_score(
         handicap value to calculate score for
     target : targets.Target
         A Target class specifying the target to be used
-    handicap_sys : Union[str, HandicapScheme]
+    handicap_sys : str | HandicapScheme
         identifier for the handicap system to use
-    arw_d : float or None, default=None
+    arw_d : float | None, default=None
         user-specified arrow diameter in [metres]
 
     Returns
@@ -154,8 +152,8 @@ def arrow_score(
 def score_for_passes(
     handicap: FloatArray,
     rnd: rounds.Round,
-    handicap_sys: Union[str, HandicapScheme],
-    arw_d: Optional[float] = None,
+    handicap_sys: str | HandicapScheme,
+    arw_d: float | None = None,
     rounded_score: bool = True,
 ) -> npt.NDArray[np.float64]:
     """
@@ -167,9 +165,9 @@ def score_for_passes(
         handicap value to calculate score for
     rnd : rounds.Round
         A Round class specifying the round being shot
-    handicap_sys : Union[str, HandicapScheme]
+    handicap_sys : str | HandicapScheme
         identifier for the handicap system to use
-    arw_d : float or None, default=None
+    arw_d : float | None, default=None
         user-specified arrow diameter in [metres]
     rounded_score : bool, default=True
         round score to integer value?
@@ -218,8 +216,8 @@ def score_for_passes(
 def score_for_round(
     handicap: FloatArray,
     rnd: rounds.Round,
-    handicap_sys: Union[str, HandicapScheme],
-    arw_d: Optional[float] = None,
+    handicap_sys: str | HandicapScheme,
+    arw_d: float | None = None,
     rounded_score: bool = True,
 ):
     """
@@ -231,9 +229,9 @@ def score_for_round(
         handicap value to calculate score for
     rnd : rounds.Round
         A Round class specifying the round being shot
-    handicap_sys : Union[str, HandicapScheme]
+    handicap_sys : str | HandicapScheme
         identifier for the handicap system to use
-    arw_d : float or None, default=None
+    arw_d : float | None, default=None
         user-specified arrow diameter in [metres]
     rounded_score : bool, default=True
         round score to integer value?
@@ -280,10 +278,10 @@ def score_for_round(
 def handicap_from_score(
     score: float,
     rnd: rounds.Round,
-    handicap_sys: Union[str, HandicapScheme],
-    arw_d: Optional[float] = None,
+    handicap_sys: str | HandicapScheme,
+    arw_d: float | None = None,
     int_prec: bool = False,
-) -> Union[int, float]:
+) -> int | float:
     """
     Calculate the handicap of a given score on a given round.
 
@@ -293,9 +291,9 @@ def handicap_from_score(
         score achieved on the round
     rnd : rounds.Round
         the rounds.Round object to calculate the handicap for
-    handicap_sys : str or HandicapScheme
+    handicap_sys : str | HandicapScheme
         identifier for the handicap system to use
-    arw_d : float or None, default=None
+    arw_d : float | None, default=None
         user-specified arrow diameter in [metres]
     int_prec : bool, default=False
         display results as integers? default = False
@@ -303,7 +301,7 @@ def handicap_from_score(
 
     Returns
     -------
-    int or float
+    int | float
         Handicap for score. Has type int if int_prec is True, else float.
 
     Examples

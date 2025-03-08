@@ -34,7 +34,7 @@ References
 import itertools as itr
 import warnings
 from abc import ABC, abstractmethod
-from typing import Optional, TypeVar, Union, cast, overload
+from typing import TypeVar, cast, overload
 
 import numpy as np
 import numpy.typing as npt
@@ -134,7 +134,7 @@ class HandicapScheme(ABC):
         ----------
         handicap : FloatArray
             handicap to calculate sigma_r at
-        dist : float or ndarray
+        dist : float
             distance to target [metres]
 
         Returns
@@ -169,7 +169,7 @@ class HandicapScheme(ABC):
         self,
         handicap: FloatArray,
         target: targets.Target,
-        arw_d: Optional[float] = None,
+        arw_d: float | None = None,
     ) -> FloatArray:
         """Calculate the average arrow score for a given target and handicap rating.
 
@@ -179,7 +179,7 @@ class HandicapScheme(ABC):
             handicap value to calculate score for
         target : targets.Target
             A Target class specifying the target to be used
-        arw_d : float or None, default=None
+        arw_d : float | None, default=None
             user-specified arrow diameter in [metres]
 
         Returns
@@ -263,7 +263,7 @@ class HandicapScheme(ABC):
         self,
         handicap: FloatArray,
         rnd: rounds.Round,
-        arw_d: Optional[float] = None,
+        arw_d: float | None = None,
         rounded_score: bool = True,
     ) -> npt.NDArray[np.float64]:
         """Calculate the expected score for all passes in a round at a given handicap.
@@ -274,7 +274,7 @@ class HandicapScheme(ABC):
             handicap value to calculate score for
         rnd : rounds.Round
             A Round class specifying the round being shot
-        arw_d : float or None, default=None
+        arw_d : float | None, default=None
             user-specified arrow diameter in [metres]
         rounded_score : bool, default=True
             round score to integer value?
@@ -323,7 +323,7 @@ class HandicapScheme(ABC):
         self,
         handicap: FloatArray,
         rnd: rounds.Round,
-        arw_d: Optional[float] = None,
+        arw_d: float | None = None,
         rounded_score: bool = True,
     ) -> FloatArray:
         """Calculate the expected score for a round at a given handicap.
@@ -334,7 +334,7 @@ class HandicapScheme(ABC):
             handicap value to calculate score for
         rnd : rounds.Round
             A Round class specifying the round being shot
-        arw_d : float or None, default=None
+        arw_d : float | None, default=None
             user-specified arrow diameter in [metres]
         rounded_score : bool, default=True
             round score to integer value?
@@ -405,9 +405,9 @@ class HandicapScheme(ABC):
         self,
         score: float,
         rnd: rounds.Round,
-        arw_d: Optional[float] = None,
+        arw_d: float | None = None,
         int_prec: bool = False,
-    ) -> Union[int, float]:
+    ) -> int | float:
         """Calculate the handicap of a given score on a given round.
 
         Parameters
@@ -416,7 +416,7 @@ class HandicapScheme(ABC):
             score achieved on the round
         rnd : rounds.Round
             the rounds.Round object to calculate the handicap for
-        arw_d : float or None, default=None
+        arw_d : float | None, default=None
             user-specified arrow diameter in [metres]
         int_prec : bool, default=False
             display results as integers? default = False
@@ -424,7 +424,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        handicap: int or float
+        handicap: int | float
             Handicap for score. Has type int if int_prec is True, else float.
 
         Raises
@@ -502,9 +502,9 @@ class HandicapScheme(ABC):
     def _get_max_score_handicap(
         self,
         rnd: rounds.Round,
-        arw_d: Optional[float] = None,
+        arw_d: float | None = None,
         int_prec: bool = False,
-    ) -> Union[int, float]:
+    ) -> int | float:
         """Get handicap for maximum score on a round.
 
         Start high and drop down until no longer rounding to max score.
@@ -514,14 +514,14 @@ class HandicapScheme(ABC):
         ----------
         rnd : rounds.Round
             round being used
-        arw_d : float or None, default=None
+        arw_d : float | None, default=None
             user-specified arrow diameter in [metres]
         int_prec : bool, default=False
             display results as integers?
 
         Returns
         -------
-        handicap : int or float
+        handicap : int | float
             Handicap for maximum score. Has type int if int_prec is True, else float.
 
         Warns
@@ -577,7 +577,7 @@ class HandicapScheme(ABC):
         self,
         score: float,
         rnd: rounds.Round,
-        arw_d: Optional[float] = None,
+        arw_d: float | None = None,
     ) -> float:
         """Get handicap for general score on a round through rootfinding algorithm.
 
@@ -587,7 +587,7 @@ class HandicapScheme(ABC):
             score to get handicap for
         rnd : rounds.Round
             round being used
-        arw_d : float or None, default=None
+        arw_d : float | None, default=None
             user-specified arrow diameter in [metres]
 
         Returns
@@ -693,7 +693,7 @@ class HandicapScheme(ABC):
         hc_est: float,
         score_est: float,
         round_est: rounds.Round,
-        arw_d: Optional[float] = None,
+        arw_d: float | None = None,
     ) -> float:
         """Return error between predicted score and desired score.
 
@@ -705,7 +705,7 @@ class HandicapScheme(ABC):
             target score
         round_est : rounds.Round
             round being used
-        arw_d : float or None, default=None
+        arw_d : float | None, default=None
             arrow diameter in [metres]
 
         Returns
