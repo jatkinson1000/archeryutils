@@ -2,7 +2,7 @@
 
 import pytest
 
-import archeryutils.classifications as class_funcs
+import archeryutils.classifications as cf
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 from archeryutils.rounds import Pass, Round
@@ -37,7 +37,7 @@ class TestAgbOldIndoorClassificationScores:
 
         ALl ages should return the same values.
         """
-        scores = class_funcs.agb_old_indoor_classification_scores(
+        scores = cf.agb_old_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.MALE,
@@ -88,12 +88,12 @@ class TestAgbOldIndoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check old indoor classification returns expected value for a coaxed case."""
-        coaxed_vals = class_funcs.coax_old_indoor_group(
+        coaxed_vals = cf.coax_old_indoor_group(
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
             age_group=age_group,
         )
-        scores = class_funcs.agb_old_indoor_classification_scores(
+        scores = cf.agb_old_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             **coaxed_vals,
         )
@@ -104,7 +104,7 @@ class TestAgbOldIndoorClassificationScores:
         self,
     ) -> None:
         """Check that old_indoor classification returns expected value for a case."""
-        scores = class_funcs.agb_old_indoor_classification_scores(
+        scores = cf.agb_old_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.FEMALE,
@@ -139,7 +139,7 @@ class TestAgbOldIndoorClassificationScores:
 
         Also checks that compound scoring is enforced.
         """
-        scores = class_funcs.agb_old_indoor_classification_scores(
+        scores = cf.agb_old_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=bowstyle,
             gender=gender,
@@ -152,7 +152,7 @@ class TestAgbOldIndoorClassificationScores:
         self,
     ) -> None:
         """Check gent compound worcester supposed loophole."""
-        scores = class_funcs.agb_old_indoor_classification_scores(
+        scores = cf.agb_old_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["worcester"],
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
@@ -208,7 +208,7 @@ class TestAgbOldIndoorClassificationScores:
             ValueError,
             match=msg,
         ):
-            _ = class_funcs.agb_old_indoor_classification_scores(
+            _ = cf.agb_old_indoor_classification_scores(
                 archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
                 bowstyle=bowstyle,
                 gender=gender,
@@ -231,7 +231,7 @@ class TestAgbOldIndoorClassificationScores:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.agb_old_indoor_classification_scores(
+            _ = cf.agb_old_indoor_classification_scores(
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
@@ -250,7 +250,7 @@ class TestAgbOldIndoorClassificationScores:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.agb_old_indoor_classification_scores(
+            _ = cf.agb_old_indoor_classification_scores(
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
@@ -261,7 +261,7 @@ class TestAgbOldIndoorClassificationScores:
         self,
     ) -> None:
         """Check that indoor classification can process a string roundname."""
-        scores = class_funcs.agb_old_indoor_classification_scores(
+        scores = cf.agb_old_indoor_classification_scores(
             archery_round="portsmouth",
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
@@ -321,7 +321,7 @@ class TestCalculateAgbOldIndoorClassification:
         class_expected: str,
     ) -> None:
         """Check old_indoor classification returns expected value for a few cases."""
-        class_returned = class_funcs.calculate_agb_old_indoor_classification(
+        class_returned = cf.calculate_agb_old_indoor_classification(
             score=score,
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
@@ -348,7 +348,7 @@ class TestCalculateAgbOldIndoorClassification:
                 f"Should be in range 0-{ALL_INDOOR_ROUNDS['portsmouth'].max_score()}."
             ),
         ):
-            _ = class_funcs.calculate_agb_old_indoor_classification(
+            _ = cf.calculate_agb_old_indoor_classification(
                 score=score,
                 archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
                 bowstyle=AGB_bowstyles.RECURVE,
@@ -372,7 +372,7 @@ class TestCalculateAgbOldIndoorClassification:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.calculate_agb_old_indoor_classification(
+            _ = cf.calculate_agb_old_indoor_classification(
                 archery_round=my_round,
                 score=666,
                 bowstyle=AGB_bowstyles.RECURVE,
@@ -392,7 +392,7 @@ class TestCalculateAgbOldIndoorClassification:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.calculate_agb_old_indoor_classification(
+            _ = cf.calculate_agb_old_indoor_classification(
                 archery_round="invalid_roundname",
                 score=666,
                 bowstyle=AGB_bowstyles.RECURVE,
@@ -404,7 +404,7 @@ class TestCalculateAgbOldIndoorClassification:
         self,
     ) -> None:
         """Check that indoor classification can process a string roundname."""
-        my_class = class_funcs.calculate_agb_old_indoor_classification(
+        my_class = cf.calculate_agb_old_indoor_classification(
             archery_round="portsmouth",
             score=578,
             bowstyle=AGB_bowstyles.COMPOUND,

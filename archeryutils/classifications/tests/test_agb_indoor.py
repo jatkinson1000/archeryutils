@@ -2,7 +2,7 @@
 
 import pytest
 
-import archeryutils.classifications as class_funcs
+import archeryutils.classifications as cf
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 from archeryutils.rounds import Pass, Round
@@ -66,7 +66,7 @@ class TestAgbIndoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that  classification returns expected value for a case."""
-        scores = class_funcs.agb_indoor_classification_scores(
+        scores = cf.agb_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.MALE,
@@ -107,7 +107,7 @@ class TestAgbIndoorClassificationScores:
         Male equivalents already checked above.
         Also checks that compound rounds are being enforced.
         """
-        scores = class_funcs.agb_indoor_classification_scores(
+        scores = cf.agb_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.FEMALE,
@@ -144,7 +144,7 @@ class TestAgbIndoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that indoor classification returns expected value for a case."""
-        scores = class_funcs.agb_indoor_classification_scores(
+        scores = cf.agb_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
@@ -185,12 +185,12 @@ class TestAgbIndoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that appropriate scores returned for valid but non-indoor styles."""
-        coaxed_vals = class_funcs.coax_indoor_group(
+        coaxed_vals = cf.coax_indoor_group(
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
             age_group=AGB_ages.AGE_ADULT,
         )
-        scores = class_funcs.agb_indoor_classification_scores(
+        scores = cf.agb_indoor_classification_scores(
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             **coaxed_vals,
         )
@@ -224,7 +224,7 @@ class TestAgbIndoorClassificationScores:
 
         Includes check that Worcester returns null above max score.
         """
-        scores = class_funcs.agb_indoor_classification_scores(
+        scores = cf.agb_indoor_classification_scores(
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
@@ -283,7 +283,7 @@ class TestAgbIndoorClassificationScores:
             ValueError,
             match=msg,
         ):
-            _ = class_funcs.agb_indoor_classification_scores(
+            _ = cf.agb_indoor_classification_scores(
                 archery_round=archery_round,
                 bowstyle=bowstyle,
                 gender=gender,
@@ -306,7 +306,7 @@ class TestAgbIndoorClassificationScores:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.agb_indoor_classification_scores(
+            _ = cf.agb_indoor_classification_scores(
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
@@ -325,7 +325,7 @@ class TestAgbIndoorClassificationScores:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.agb_indoor_classification_scores(
+            _ = cf.agb_indoor_classification_scores(
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
@@ -336,7 +336,7 @@ class TestAgbIndoorClassificationScores:
         self,
     ) -> None:
         """Check that indoor classification can process a string roundname."""
-        scores = class_funcs.agb_indoor_classification_scores(
+        scores = cf.agb_indoor_classification_scores(
             archery_round="portsmouth",
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
@@ -422,7 +422,7 @@ class TestCalculateAgbIndoorClassification:
         class_expected: str,
     ) -> None:
         """Check that indoor classification returns expected value for a few cases."""
-        class_returned = class_funcs.calculate_agb_indoor_classification(
+        class_returned = cf.calculate_agb_indoor_classification(
             score=score,
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=bowstyle,
@@ -444,7 +444,7 @@ class TestCalculateAgbIndoorClassification:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.calculate_agb_indoor_classification(
+            _ = cf.calculate_agb_indoor_classification(
                 score=400,
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.RECURVE,
@@ -466,7 +466,7 @@ class TestCalculateAgbIndoorClassification:
                 f"Should be in range 0-{ALL_INDOOR_ROUNDS['portsmouth'].max_score()}."
             ),
         ):
-            _ = class_funcs.calculate_agb_indoor_classification(
+            _ = cf.calculate_agb_indoor_classification(
                 score=score,
                 archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
                 bowstyle=AGB_bowstyles.BAREBOW,
@@ -490,7 +490,7 @@ class TestCalculateAgbIndoorClassification:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.calculate_agb_indoor_classification(
+            _ = cf.calculate_agb_indoor_classification(
                 archery_round=my_round,
                 score=666,
                 bowstyle=AGB_bowstyles.RECURVE,
@@ -510,7 +510,7 @@ class TestCalculateAgbIndoorClassification:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.calculate_agb_indoor_classification(
+            _ = cf.calculate_agb_indoor_classification(
                 archery_round="invalid_roundname",
                 score=666,
                 bowstyle=AGB_bowstyles.BAREBOW,
@@ -522,7 +522,7 @@ class TestCalculateAgbIndoorClassification:
         self,
     ) -> None:
         """Check that indoor classification can process a string roundname."""
-        my_class = class_funcs.calculate_agb_indoor_classification(
+        my_class = cf.calculate_agb_indoor_classification(
             archery_round="portsmouth",
             score=578,
             bowstyle=AGB_bowstyles.COMPOUND,

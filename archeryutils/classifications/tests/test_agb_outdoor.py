@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-import archeryutils.classifications as class_funcs
+import archeryutils.classifications as cf
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 from archeryutils.rounds import Pass, Round
@@ -78,7 +78,7 @@ class TestAgbOutdoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that  classification returns expected value for a case."""
-        scores = class_funcs.agb_outdoor_classification_scores(
+        scores = cf.agb_outdoor_classification_scores(
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.MALE,
@@ -124,7 +124,7 @@ class TestAgbOutdoorClassificationScores:
         Male equivalents already checked above.
         Also checks that compound rounds are being enforced.
         """
-        scores = class_funcs.agb_outdoor_classification_scores(
+        scores = cf.agb_outdoor_classification_scores(
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.FEMALE,
@@ -188,7 +188,7 @@ class TestAgbOutdoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that outdoor classification returns expected value for a case."""
-        scores = class_funcs.agb_outdoor_classification_scores(
+        scores = cf.agb_outdoor_classification_scores(
             archery_round=archery_round,
             bowstyle=bowstyle,
             gender=gender,
@@ -241,12 +241,12 @@ class TestAgbOutdoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that appropriate scores returned for valid non-outdoor bowstyles."""
-        coaxed_vals = class_funcs.coax_outdoor_group(
+        coaxed_vals = cf.coax_outdoor_group(
             bowstyle=bowstyle,
             gender=gender,
             age_group=AGB_ages.AGE_ADULT,
         )
-        scores = class_funcs.agb_outdoor_classification_scores(
+        scores = cf.agb_outdoor_classification_scores(
             archery_round=archery_round,
             **coaxed_vals,
         )
@@ -268,7 +268,7 @@ class TestAgbOutdoorClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that outdoor classification returns single face scores only."""
-        scores = class_funcs.agb_outdoor_classification_scores(
+        scores = cf.agb_outdoor_classification_scores(
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
@@ -327,7 +327,7 @@ class TestAgbOutdoorClassificationScores:
             ValueError,
             match=msg,
         ):
-            _ = class_funcs.agb_outdoor_classification_scores(
+            _ = cf.agb_outdoor_classification_scores(
                 archery_round=archery_round,
                 bowstyle=bowstyle,
                 gender=gender,
@@ -350,7 +350,7 @@ class TestAgbOutdoorClassificationScores:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.agb_outdoor_classification_scores(
+            _ = cf.agb_outdoor_classification_scores(
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
@@ -369,7 +369,7 @@ class TestAgbOutdoorClassificationScores:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.agb_outdoor_classification_scores(
+            _ = cf.agb_outdoor_classification_scores(
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
@@ -380,7 +380,7 @@ class TestAgbOutdoorClassificationScores:
         self,
     ) -> None:
         """Check that outdoor classification can process a string roundname."""
-        scores = class_funcs.agb_outdoor_classification_scores(
+        scores = cf.agb_outdoor_classification_scores(
             archery_round="wa1440_70",
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.FEMALE,
@@ -477,7 +477,7 @@ class TestCalculateAgbOutdoorClassification:
         class_expected: str,
     ) -> None:
         """Check that outdoor classification returns expected value for a few cases."""
-        class_returned = class_funcs.calculate_agb_outdoor_classification(
+        class_returned = cf.calculate_agb_outdoor_classification(
             archery_round=archery_round,
             score=score,
             bowstyle=bowstyle,
@@ -573,7 +573,7 @@ class TestCalculateAgbOutdoorClassification:
         class_expected: str,
     ) -> None:
         """Check that prestige and distanec limitations are working for a few cases."""
-        class_returned = class_funcs.calculate_agb_outdoor_classification(
+        class_returned = cf.calculate_agb_outdoor_classification(
             archery_round=archery_round,
             score=score,
             bowstyle=bowstyle,
@@ -595,7 +595,7 @@ class TestCalculateAgbOutdoorClassification:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.calculate_agb_outdoor_classification(
+            _ = cf.calculate_agb_outdoor_classification(
                 archery_round="invalid_roundname",
                 score=400,
                 bowstyle=AGB_bowstyles.RECURVE,
@@ -620,7 +620,7 @@ class TestCalculateAgbOutdoorClassification:
                 )
             ),
         ):
-            _ = class_funcs.calculate_agb_outdoor_classification(
+            _ = cf.calculate_agb_outdoor_classification(
                 score=score,
                 archery_round=ALL_OUTDOOR_ROUNDS["wa1440_90"],
                 bowstyle=AGB_bowstyles.BAREBOW,
@@ -644,7 +644,7 @@ class TestCalculateAgbOutdoorClassification:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.calculate_agb_outdoor_classification(
+            _ = cf.calculate_agb_outdoor_classification(
                 archery_round=my_round,
                 score=666,
                 bowstyle=AGB_bowstyles.BAREBOW,
@@ -664,7 +664,7 @@ class TestCalculateAgbOutdoorClassification:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.calculate_agb_outdoor_classification(
+            _ = cf.calculate_agb_outdoor_classification(
                 archery_round="invalid_roundname",
                 score=666,
                 bowstyle=AGB_bowstyles.BAREBOW,
@@ -676,7 +676,7 @@ class TestCalculateAgbOutdoorClassification:
         self,
     ) -> None:
         """Check that outdoor classification can process a string roundname."""
-        my_class = class_funcs.calculate_agb_outdoor_classification(
+        my_class = cf.calculate_agb_outdoor_classification(
             archery_round="wa1440_70",
             score=1200,
             bowstyle=AGB_bowstyles.COMPOUND,

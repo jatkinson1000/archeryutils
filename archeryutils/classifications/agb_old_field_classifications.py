@@ -434,15 +434,15 @@ def calculate_agb_old_field_classification(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> wa_field = load_rounds.WA_field
-    >>> class_func.calculate_agb_old_field_classification(
+    >>> cf.calculate_agb_old_field_classification(
     ...     247,
     ...     wa_field.wa_field_24_red_marked,
-    ...     class_func.AGB_bowstyles.RECURVE,
-    ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_bowstyles.RECURVE,
+    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_ages.AGE_ADULT,
     ... )
     '2nd Class'
 
@@ -519,14 +519,14 @@ def agb_old_field_classification_scores(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> wa_field = load_rounds.WA_field
-    >>> class_func.agb_old_field_classification_scores(
+    >>> cf.agb_old_field_classification_scores(
     ...     wa_field.wa_field_24_red_marked,
-    ...     class_func.AGB_bowstyles.RECURVE,
-    ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_bowstyles.RECURVE,
+    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_ages.AGE_ADULT,
     ... )
     [338, 317, 288, 260, 231, 203]
 

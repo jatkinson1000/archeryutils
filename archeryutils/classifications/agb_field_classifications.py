@@ -374,15 +374,15 @@ def calculate_agb_field_classification(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> wa_field = load_rounds.WA_field
-    >>> class_func.calculate_agb_field_classification(
+    >>> cf.calculate_agb_field_classification(
     ...     177,
     ...     wa_field.wa_field_24_blue_marked,
-    ...     class_func.AGB_bowstyles.TRADITIONAL,
-    ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.AGE_UNDER_18,
+    ...     cf.AGB_bowstyles.TRADITIONAL,
+    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_ages.AGE_UNDER_18,
     ... )
     'B1'
 
@@ -456,24 +456,24 @@ def agb_field_classification_scores(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> wa_field = load_rounds.WA_field
-    >>> class_func.agb_field_classification_scores(
+    >>> cf.agb_field_classification_scores(
     ...     wa_field.wa_field_24_red_marked,
-    ...     class_func.AGB_bowstyles.COMPOUND,
-    ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_bowstyles.COMPOUND,
+    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_ages.AGE_ADULT,
     ... )
     [408, 391, 369, 345, 318, 286, 248, 204, 157]
 
     If a classification cannot be achieved a fill value of `-9999` is returned:
 
-    >>> class_func.agb_field_classification_scores(
+    >>> cf.agb_field_classification_scores(
     ...     wa_field.wa_field_12_red_unmarked,
-    ...     class_func.AGB_bowstyles.COMPOUND,
-    ...     class_func.AGB_genders.MALE,
-    ...     class_func.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_bowstyles.COMPOUND,
+    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_ages.AGE_ADULT,
     ... )
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
 

@@ -2,7 +2,7 @@
 
 import pytest
 
-import archeryutils.classifications as class_funcs
+import archeryutils.classifications as cf
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 from archeryutils.rounds import Pass, Round
@@ -49,7 +49,7 @@ class TestAgbFieldClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        scores = cf.agb_field_classification_scores(
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
@@ -81,12 +81,12 @@ class TestAgbFieldClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that field classification returns expected value for a case."""
-        coaxed_vals = class_funcs.coax_field_group(
+        coaxed_vals = cf.coax_field_group(
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
             age_group=age_group,
         )
-        scores = class_funcs.agb_field_classification_scores(
+        scores = cf.agb_field_classification_scores(
             archery_round=archery_round,
             **coaxed_vals,
         )
@@ -130,7 +130,7 @@ class TestAgbFieldClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        scores = cf.agb_field_classification_scores(
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=gender,
@@ -202,7 +202,7 @@ class TestAgbFieldClassificationScores:
         scores_expected: list[int],
     ) -> None:
         """Check that field classification returns expected value for a case."""
-        scores = class_funcs.agb_field_classification_scores(
+        scores = cf.agb_field_classification_scores(
             archery_round=archery_round,
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
@@ -264,7 +264,7 @@ class TestAgbFieldClassificationScores:
             ValueError,
             match=msg,
         ):
-            _ = class_funcs.agb_field_classification_scores(
+            _ = cf.agb_field_classification_scores(
                 archery_round=archery_round,
                 bowstyle=bowstyle,
                 gender=gender,
@@ -287,7 +287,7 @@ class TestAgbFieldClassificationScores:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.agb_field_classification_scores(
+            _ = cf.agb_field_classification_scores(
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
@@ -306,7 +306,7 @@ class TestAgbFieldClassificationScores:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.agb_field_classification_scores(
+            _ = cf.agb_field_classification_scores(
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
@@ -317,7 +317,7 @@ class TestAgbFieldClassificationScores:
         self,
     ) -> None:
         """Check that field classification can process a string roundname."""
-        scores = class_funcs.agb_field_classification_scores(
+        scores = cf.agb_field_classification_scores(
             archery_round="wa_field_24_blue_marked",
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
@@ -449,7 +449,7 @@ class TestCalculateAgbFieldClassification:
         class_expected: str,
     ) -> None:
         """Check that field classification returns expected value for a few cases."""
-        class_returned = class_funcs.calculate_agb_field_classification(
+        class_returned = cf.calculate_agb_field_classification(
             archery_round=archery_round,
             score=score,
             bowstyle=bowstyle,
@@ -494,12 +494,12 @@ class TestCalculateAgbFieldClassification:
         class_expected: str,
     ) -> None:
         """Check that field classification returns expected value for non-field ages."""
-        coaxed_vals = class_funcs.coax_field_group(
+        coaxed_vals = cf.coax_field_group(
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
             age_group=age_group,
         )
-        class_returned = class_funcs.calculate_agb_field_classification(
+        class_returned = cf.calculate_agb_field_classification(
             archery_round=archery_round,
             score=score,
             **coaxed_vals,
@@ -532,7 +532,7 @@ class TestCalculateAgbFieldClassification:
         class_expected: str,
     ) -> None:
         """Check field classification returns unclassified for inappropriate rounds."""
-        class_returned = class_funcs.calculate_agb_field_classification(
+        class_returned = cf.calculate_agb_field_classification(
             archery_round=archery_round,
             score=score,
             bowstyle=bowstyle,
@@ -560,7 +560,7 @@ class TestCalculateAgbFieldClassification:
                 f"0-{ALL_AGBFIELD_ROUNDS['wa_field_24_blue_marked'].max_score()}."
             ),
         ):
-            _ = class_funcs.calculate_agb_field_classification(
+            _ = cf.calculate_agb_field_classification(
                 score=score,
                 archery_round=ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 bowstyle=AGB_bowstyles.BAREBOW,
@@ -584,7 +584,7 @@ class TestCalculateAgbFieldClassification:
                 "Some Roundname",
                 [Pass.at_target(36, "10_zone", 122, 70.0)],
             )
-            _ = class_funcs.calculate_agb_field_classification(
+            _ = cf.calculate_agb_field_classification(
                 archery_round=my_round,
                 score=333,
                 bowstyle=AGB_bowstyles.RECURVE,
@@ -604,7 +604,7 @@ class TestCalculateAgbFieldClassification:
                 "Please select an appropriate option using `archeryutils.load_rounds`."
             ),
         ):
-            _ = class_funcs.calculate_agb_field_classification(
+            _ = cf.calculate_agb_field_classification(
                 archery_round="invalid_roundname",
                 score=333,
                 bowstyle=AGB_bowstyles.BAREBOW,
@@ -616,7 +616,7 @@ class TestCalculateAgbFieldClassification:
         self,
     ) -> None:
         """Check that field classification can process a string roundname."""
-        my_class = class_funcs.calculate_agb_field_classification(
+        my_class = cf.calculate_agb_field_classification(
             archery_round="wa_field_24_blue_marked",
             score=252,
             bowstyle=AGB_bowstyles.BAREBOW,

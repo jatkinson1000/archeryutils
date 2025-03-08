@@ -267,10 +267,10 @@ def calculate_agb_old_indoor_classification(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> agb_indoor = load_rounds.AGB_indoor
-    >>> class_func.calculate_agb_old_indoor_classification(
+    >>> cf.calculate_agb_old_indoor_classification(
     ...     547,
     ...     agb_indoor.wa18,
     ...     AGB_bowstyles.COMPOUND,
@@ -350,10 +350,10 @@ def agb_old_indoor_classification_scores(
 
     Examples
     --------
-    >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import classifications as cf
     >>> from archeryutils import load_rounds
     >>> agb_outdoor = load_rounds.AGB_indoor
-    >>> class_func.agb_old_indoor_classification_scores(
+    >>> cf.agb_old_indoor_classification_scores(
     ...     agb_indoor.portsmouth,
     ...     AGB_bowstyles.RECURVE,
     ...     AGB_genders.MALE,
