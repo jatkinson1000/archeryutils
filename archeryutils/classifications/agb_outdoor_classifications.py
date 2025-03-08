@@ -8,7 +8,7 @@ agb_outdoor_classification_scores
 """
 
 import itertools
-from typing import Any, Literal, TypedDict, cast
+from typing import Any, Literal, Tuple, TypedDict, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -17,6 +17,7 @@ import archeryutils.classifications.classification_utils as cls_funcs
 import archeryutils.handicaps as hc
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
+from archeryutils.rounds import Round
 
 ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -414,9 +415,53 @@ agb_outdoor_classifications = _make_agb_outdoor_classification_dict()
 del _make_agb_outdoor_classification_dict
 
 
+def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
+    """
+    Check round is eligible for outdoor classifications.
+
+    Parameters
+    ----------
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
+
+    Returns
+    -------
+    archery_round : Round
+        an archeryutils Round from the value passed in
+    roundname : str
+        codename of the round as it appears in the rounds dict
+
+    Raises
+    ------
+    ValueError
+        If requested round is not in the rounds dict for this scheme
+
+    """
+    if isinstance(archery_round, str) and archery_round in ALL_OUTDOOR_ROUNDS:
+        roundname = archery_round
+        archery_round = ALL_OUTDOOR_ROUNDS[roundname]
+    elif (
+        isinstance(archery_round, Round)
+        and archery_round in ALL_OUTDOOR_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_OUTDOOR_ROUNDS.keys())[
+            list(ALL_OUTDOOR_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of outdoor classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
+    return archery_round, roundname
+
+
 def calculate_agb_outdoor_classification(
     score: float,
-    roundname: str,
+    archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -431,8 +476,9 @@ def calculate_agb_outdoor_classification(
     ----------
     score : int
         numerical score on the round to calculate classification for
-    roundname : str
-        name of round shot as given by 'codename' in json
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
     gender : AGB_genders
@@ -458,9 +504,11 @@ def calculate_agb_outdoor_classification(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> agb_outdoor = load_rounds.AGB_outdoor_imperial
     >>> class_func.calculate_agb_outdoor_classification(
     ...     858,
-    ...     "hereford",
+    ...     agb_outdoor.hereford,
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.FEMALE,
     ...     class_func.AGB_ages.AGE_UNDER_18,
@@ -468,18 +516,20 @@ def calculate_agb_outdoor_classification(
     'B1'
 
     """
+    archery_round, roundname = _check_round_eligibility(archery_round)
+
     # Check score is valid
-    if score < 0 or score > ALL_OUTDOOR_ROUNDS[roundname].max_score():
+    if score < 0 or score > archery_round.max_score():
         msg = (
-            f"Invalid score of {score} for a {roundname}. "
-            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}.",
+            f"Invalid score of {score} for a {archery_round.name}. "
+            f"Should be in range 0-{archery_round.max_score()}."
         )
         raise ValueError(msg)
 
     # Get scores required on this round for each classification
     # Enforcing full size face and compound scoring (for compounds)
     all_class_scores = agb_outdoor_classification_scores(
-        roundname,
+        archery_round,
         bowstyle,
         gender,
         age_group,
@@ -558,7 +608,7 @@ def _check_prestige_distance(
 
 
 def agb_outdoor_classification_scores(
-    roundname: str,
+    archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -571,8 +621,9 @@ def agb_outdoor_classification_scores(
 
     Parameters
     ----------
-    roundname : str
-        name of round shot as given by 'codename' in json
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
     gender : AGB_genders
@@ -593,8 +644,10 @@ def agb_outdoor_classification_scores(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> agb_outdoor = load_rounds.AGB_outdoor_imperial
     >>> class_func.agb_outdoor_classification_scores(
-    ...     "hereford",
+    ...     agb_outdoor.hereford,
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.FEMALE,
     ...     class_func.AGB_ages.AGE_ADULT,
@@ -604,7 +657,7 @@ def agb_outdoor_classification_scores(
     If a classification cannot be achieved a fill value of `-9999` is returned:
 
     >>> class_func.agb_outdoor_classification_scores(
-    ...     "bristol_ii",
+    ...     agb_outdoor.bristol_ii,
     ...     class_func.AGB_bowstyles.RECURVE,
     ...     class_func.AGB_genders.FEMALE,
     ...     class_func.AGB_ages.AGE_ADULT,
@@ -612,11 +665,7 @@ def agb_outdoor_classification_scores(
     [-9999, -9999, -9999, -9999, -9999, 931, 797, 646, 493]
 
     """
-    # # deal with reduced categories:
-    # if bowstyle in AGB_bowstyles.FLATBOW | AGB_bowstyles.TRADITIONAL:
-    #     bowstyle = AGB_bowstyles.BAREBOW
-    # elif bowstyle in AGB_bowstyles.COMPOUNDLIMITED | AGB_bowstyles.COMPOUNDBAREBOW:
-    #     bowstyle = AGB_bowstyles.COMPOUND
+    archery_round, roundname = _check_round_eligibility(archery_round)
 
     groupname = _get_outdoor_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
@@ -638,7 +687,7 @@ def agb_outdoor_classification_scores(
         class_scores[0:3] = [-9999] * 3
 
         # If not prestige, what classes are eligible based on category and distance
-        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance().value
+        round_max_dist = archery_round.max_distance().value
         for i in range(3, len(class_scores)):
             if group_data["min_dists"][i] > round_max_dist:
                 class_scores[i] = -9999

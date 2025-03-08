@@ -3,13 +3,12 @@ Code for calculating Archery GB Field classifications.
 
 Routine Listings
 ----------------
-_make_agb_field_classification_dict
 calculate_agb_field_classification
 agb_field_classification_scores
 """
 
 import itertools
-from typing import TypedDict
+from typing import Tuple, TypedDict
 
 import numpy as np
 import numpy.typing as npt
@@ -18,6 +17,7 @@ import archeryutils.classifications.classification_utils as cls_funcs
 import archeryutils.handicaps as hc
 from archeryutils import load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
+from archeryutils.rounds import Round
 
 ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
@@ -288,9 +288,56 @@ agb_field_classifications = _make_agb_field_classification_dict()
 del _make_agb_field_classification_dict
 
 
+def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
+    """
+    Check round is eligible for field classifications.
+
+    Parameters
+    ----------
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
+
+    Returns
+    -------
+    archery_round : Round
+        an archeryutils Round from the value passed in
+    roundname : str
+        codename of the round as it appears in the rounds dict
+
+    Raises
+    ------
+    ValueError
+        If requested round is not in the rounds dict for this scheme
+
+    """
+    if isinstance(archery_round, str) and archery_round in ALL_FIELD_ROUNDS:
+        roundname = archery_round
+    elif (
+        isinstance(archery_round, Round) and archery_round in ALL_FIELD_ROUNDS.values()
+    ):
+        # Get string key for this round:
+        roundname = list(ALL_FIELD_ROUNDS.keys())[
+            list(ALL_FIELD_ROUNDS.values()).index(archery_round)
+        ]
+    else:
+        error = (
+            "This round is not recognised for the purposes of field classification.\n"
+            "Please select an appropriate option using `archeryutils.load_rounds`."
+        )
+        raise ValueError(error)
+
+    # Enforce unmarked/mixed being same score as marked
+    roundname = roundname.replace("unmarked", "marked")
+    roundname = roundname.replace("mixed", "marked")
+    archery_round = ALL_FIELD_ROUNDS[roundname]
+
+    return archery_round, roundname
+
+
 def calculate_agb_field_classification(
     score: float,
-    roundname: str,
+    archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -305,8 +352,9 @@ def calculate_agb_field_classification(
     ----------
     score : int
         numerical score on the round to calculate classification for
-    roundname : str
-        name of round shot as given by 'codename' in json
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB field rules
     gender : AGB_genders
@@ -327,9 +375,11 @@ def calculate_agb_field_classification(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> wa_field = load_rounds.WA_field
     >>> class_func.calculate_agb_field_classification(
     ...     177,
-    ...     "wa_field_24_blue_marked",
+    ...     wa_field.wa_field_24_blue_marked,
     ...     class_func.AGB_bowstyles.TRADITIONAL,
     ...     class_func.AGB_genders.MALE,
     ...     class_func.AGB_ages.AGE_UNDER_18,
@@ -337,24 +387,22 @@ def calculate_agb_field_classification(
     'B1'
 
     """
+    archery_round, _ = _check_round_eligibility(archery_round)
+
     # Check score is valid
-    if score < 0 or score > ALL_FIELD_ROUNDS[roundname].max_score():
+    if score < 0 or score > archery_round.max_score():
         msg = (
-            f"Invalid score of {score} for a {roundname}. "
-            f"Should be in range 0-{ALL_FIELD_ROUNDS[roundname].max_score()}."
+            f"Invalid score of {score} for a {archery_round.name}. "
+            f"Should be in range 0-{archery_round.max_score()}."
         )
         raise ValueError(msg)
-
-    # Enforce unmarked/mixed being same score as marked
-    roundname = roundname.replace("unmarked", "marked")
-    roundname = roundname.replace("mixed", "marked")
 
     groupname = _get_field_groupname(bowstyle, gender, age_group)
     group_data = agb_field_classifications[groupname]
 
     # Get scores required on this round for each classification
     all_class_scores = agb_field_classification_scores(
-        roundname,
+        archery_round,
         bowstyle,
         gender,
         age_group,
@@ -373,7 +421,7 @@ def calculate_agb_field_classification(
 
 
 def agb_field_classification_scores(
-    roundname: str,
+    archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
@@ -386,8 +434,9 @@ def agb_field_classification_scores(
 
     Parameters
     ----------
-    roundname : str
-        name of round shot as given by 'codename' in json
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
     bowstyle : str
         archer's bowstyle under AGB field target rules
     gender : str
@@ -408,8 +457,10 @@ def agb_field_classification_scores(
     Examples
     --------
     >>> from archeryutils import classifications as class_func
+    >>> from archeryutils import load_rounds
+    >>> wa_field = load_rounds.WA_field
     >>> class_func.agb_field_classification_scores(
-    ...     "wa_field_24_red_marked",
+    ...     wa_field.wa_field_24_red_marked,
     ...     class_func.AGB_bowstyles.COMPOUND,
     ...     class_func.AGB_genders.MALE,
     ...     class_func.AGB_ages.AGE_ADULT,
@@ -419,7 +470,7 @@ def agb_field_classification_scores(
     If a classification cannot be achieved a fill value of `-9999` is returned:
 
     >>> class_func.agb_field_classification_scores(
-    ...     "wa_field_12_red_unmarked",
+    ...     wa_field.wa_field_12_red_unmarked,
     ...     class_func.AGB_bowstyles.COMPOUND,
     ...     class_func.AGB_genders.MALE,
     ...     class_func.AGB_ages.AGE_ADULT,
@@ -427,12 +478,10 @@ def agb_field_classification_scores(
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
 
     """
+    archery_round, _ = _check_round_eligibility(archery_round)
+
     groupname = _get_field_groupname(bowstyle, gender, age_group)
     group_data = agb_field_classifications[groupname]
-
-    # Enforce unmarked/mixed being same score as marked
-    roundname = roundname.replace("unmarked", "marked")
-    roundname = roundname.replace("mixed", "marked")
 
     hc_scheme = "AGB"
 
@@ -440,7 +489,7 @@ def agb_field_classification_scores(
     class_scores = [
         hc.score_for_round(
             group_data["class_HC"][i],
-            ALL_FIELD_ROUNDS[roundname],
+            archery_round,
             hc_scheme,
             rounded_score=True,
         )
@@ -449,7 +498,7 @@ def agb_field_classification_scores(
 
     # Reduce list based on other criteria besides handicap
     # What classes are eligible based on category and distance
-    round_max_dist = ALL_FIELD_ROUNDS[roundname].max_distance().value
+    round_max_dist = archery_round.max_distance().value
     for i in range(len(class_scores)):
         # What classes are eligible based on category and distance
         # Is round too short?
@@ -459,7 +508,7 @@ def agb_field_classification_scores(
         if group_data["max_distance"] < round_max_dist:
             class_scores[i] = -9999
     # What classes are eligible based on round length (24 targets)
-    if "12" in roundname:
+    if "12" in archery_round.name:
         class_scores[0:3] = [-9999] * 3
 
     # Score threshold should be int (score_for_round called with round=True)

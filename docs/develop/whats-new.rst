@@ -3,6 +3,8 @@ What's New
 
 Latest
 ------
+* Allow inputs to classification functions to be an archeryutils `Round`
+  as well as a string in `#119 <https://github.com/jatkinson1000/archeryutils/pull/119>`_
 * Add new AGB 900 rounds in `#116 <https://github.com/jatkinson1000/archeryutils/pull/116>`_
 * API change to use enums for inputs to classification functions
   in `#113 <https://github.com/jatkinson1000/archeryutils/pull/113>`_
