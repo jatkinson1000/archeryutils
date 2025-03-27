@@ -112,6 +112,7 @@ def read_json_to_round_dict(json_filelist: str | list[str]) -> dict[str, Round]:
             round_dict[round_i["codename"]] = Round(
                 round_i["name"],
                 passes,
+                codename=round_i["codename"],
                 location=round_i["location"],
                 body=round_i["body"],
                 family=round_i["family"],
