@@ -31,6 +31,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+django = [
+    "django>=5",
+]
 test = [
     "pytest>=7.2.0",
     "pytest-mock",
