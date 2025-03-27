@@ -8,7 +8,9 @@ class RoundField(models.CharField):
 
     def __init__(self, rounds, **kwargs):
         self.rounds = rounds
-        self._round_dict = rounds  # TOOD: allow more complex round structures to be passed
+        self._round_dict = (
+            rounds  # TOOD: allow more complex round structures to be passed
+        )
 
         # TODO Hack for deconstruction for now
         if isinstance(rounds, list):
@@ -51,4 +53,5 @@ class RoundField(models.CharField):
 
     def formfield(self, **kwargs):
         from . import forms
+
         return forms.RoundField(rounds=self.rounds, required=not self.blank)

@@ -5,10 +5,11 @@ from archeryutils.rounds import Round
 
 
 class RoundField(forms.ChoiceField):
-
     def __init__(self, rounds, **kwargs):
         self.rounds = rounds
-        choices = BLANK_CHOICE_DASH + [(round.codename, round.name) for (codename, round) in rounds.items()]
+        choices = BLANK_CHOICE_DASH + [
+            (round.codename, round.name) for (codename, round) in rounds.items()
+        ]
         kwargs.setdefault("choices", choices)
         super().__init__(**kwargs)
 
