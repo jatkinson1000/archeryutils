@@ -156,8 +156,8 @@ The software provides the backend for the community website
 several other applications and websites.
 
 The models implemented by _archeryutils_ have previously been used in comparative
-analyses of athlete's performance and equipment, and it there is ongoing research in
-this are that uses the software.
+analyses of athlete's performance and equipment, and there is ongoing research in
+this area that uses the software.
 
 
 # Acknowledgments
