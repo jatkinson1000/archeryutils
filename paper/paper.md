@@ -1,5 +1,5 @@
 ---
-title: 'archeryutils: a Python package for archery calculations'
+title: "archeryutils: a Python package for archery calculations"
 tags:
   - Python
   - Sport
@@ -17,7 +17,7 @@ affiliations:
     index: 1
   - name: Institute of Computing for Climate Science, University of Cambridge, UK
     index: 2
-date: 08 December 2024
+date: 21 April 2025
 bibliography: paper.bib
 
 ---
@@ -28,7 +28,7 @@ The sport of archery lends itself well to mathematical analysis and indeed there
 are several approaches to modelling performance across
 different distances and target types.
 
-_archeryutils_ is a Python package that provides of base types and functions
+_archeryutils_ is a Python package that provides base types and functions
 for developing code with archery applications, as well as implementations of popular
 mathematical models used in the sport.
 
@@ -84,12 +84,13 @@ As well as a constructors for creating generic targets and rounds, _archeryutils
 with many popular national and international rounds predefined for users.
 These components provide a starting point for a variety of applications.
 
-Implementation of the mathematical models is provided in the `handicaps` module.
-Available models include the old Archery GB model of @lane2013construction,
-the Archery Australia model of @park2014modelling, and the 2023 Archery GB
-handicap model, all streamlined into a common API.
-There is also the option for users to define custom models for immediate use by
-building on the provided abstract base class.
+Implementation of mathematical models for precision is provided by the `handicaps`
+module.
+Available models include both Archery GB handicap schemes of @lane2013construction
+and the updated 2023 model and both Archery Australia models of @park2014modelling,
+all streamlined into a common API.
+There is also the option for users to define custom models by
+building on the abstract base class provided.
 
 One other notable component of _archeryutils_ is the `classifications` module.
 This provides an implementation of the [Archery GB classification progression
@@ -103,8 +104,8 @@ so can be regarded as the definitive source.
 
 # Theory - Precision Models
 
-Whilst specific implementations vary, models for an archer's precision
-take following form:
+Whilst specific implementations vary, models for an archer's precision (also called
+'handicap' or 'skill level' in literature) take following form:
 
 $$ \sigma_{\theta} (h, d) = \theta (h) \cdot g(d) $$
 
