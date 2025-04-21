@@ -254,10 +254,13 @@ class HandicapScheme(ABC):
         score_drops = (inner - outer for inner, outer in itr.pairwise(ring_scores))
         max_score = max(ring_scores)
 
-        return max_score - sum(
+        s_bar = max_score - sum(
             score_drop * np.exp(-(((arw_rad + (ring_diam / 2)) / sig_r) ** 2))
             for ring_diam, score_drop in zip(ring_sizes, score_drops, strict=True)
         )
+
+        # Perform a cast to return to satisfy typechecker
+        return cast(FloatArray, s_bar)
 
     def score_for_passes(
         self,
