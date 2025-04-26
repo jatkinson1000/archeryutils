@@ -24,7 +24,7 @@ References
 import numpy as np
 import numpy.typing as npt
 
-from .handicap_scheme import FloatArray, HandicapScheme
+from .handicap_scheme import HandicapScheme
 
 
 class HandicapAA(HandicapScheme):
@@ -90,7 +90,7 @@ class HandicapAA(HandicapScheme):
             "kd": kd,  # Distance scaling factor [1/metres].
         }
 
-    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
@@ -102,7 +102,7 @@ class HandicapAA(HandicapScheme):
 
         Returns
         -------
-        sig_t : FloatArray
+        sig_t : NDArray[np.float64]
             angular deviation [rad]
 
         Notes
@@ -224,7 +224,7 @@ class HandicapAA2(HandicapScheme):
             "d0": d0,  # Normalisation distance [metres].
         }
 
-    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
@@ -236,7 +236,7 @@ class HandicapAA2(HandicapScheme):
 
         Returns
         -------
-        sig_t : FloatArray
+        sig_t : NDArray[np.float64]
             angular deviation [rad]
 
         Notes

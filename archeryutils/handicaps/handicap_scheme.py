@@ -41,8 +41,6 @@ import numpy.typing as npt
 
 from archeryutils import rounds, targets
 
-FloatArray = npt.NDArray[np.float64]
-
 
 class HandicapScheme(ABC):
     r"""
@@ -94,7 +92,7 @@ class HandicapScheme(ABC):
         return f"<HandicapScheme: '{self.name}'>"
 
     @abstractmethod
-    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
@@ -106,12 +104,12 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        sig_t : FloatArray
+        sig_t : NDArray[np.float64]
             angular deviation [rad]
 
         """
 
-    def sigma_r(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
+    def sigma_r(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate radial deviation for a given handicap and distance.
 
         Standard deviation as a proxy for 'group size' based on
@@ -127,7 +125,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        sig_r : FloatArray
+        sig_r : NDArray[np.float64]
             standard deviation of group size [metres]
 
         Examples
@@ -157,7 +155,7 @@ class HandicapScheme(ABC):
         handicap: npt.ArrayLike,
         target: targets.Target,
         arw_d: float | None = None,
-    ) -> FloatArray:
+    ) -> npt.NDArray[np.float64]:
         """Calculate the average arrow score for a given target and handicap rating.
 
         Parameters
@@ -171,7 +169,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        s_bar : FloatArray
+        s_bar : NDArray[np.float64]
             average score of the arrow for this set of parameters
 
         References
@@ -211,8 +209,11 @@ class HandicapScheme(ABC):
         return self._s_bar(spec, arw_rad, sig_r)
 
     def _s_bar(
-        self, target_specs: targets.FaceSpec, arw_rad: float, sig_r: FloatArray
-    ) -> FloatArray:
+        self,
+        target_specs: targets.FaceSpec,
+        arw_rad: float,
+        sig_r: npt.NDArray[np.float64],
+    ) -> npt.NDArray[np.float64]:
         """Calculate expected score directly from target ring sizes.
 
         Parameters
@@ -221,12 +222,12 @@ class HandicapScheme(ABC):
             Mapping of target ring *diameters* in [metres], to points scored
         arw_rad : float
             arrow radius in [metres]
-        sig_r : float
+        sig_r : NDArray[np.float64]
             standard deviation of group size [metres]
 
         Returns
         -------
-        s_bar : FloatArray
+        s_bar : NDArray[np.float64]
             expected average score per arrow
 
         Notes
@@ -254,7 +255,7 @@ class HandicapScheme(ABC):
         rnd: rounds.Round,
         arw_d: float | None = None,
         rounded_score: bool = True,
-    ) -> FloatArray:
+    ) -> npt.NDArray[np.float64]:
         """Calculate the expected score for all passes in a round at a given handicap.
 
         Parameters
@@ -271,7 +272,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        pass_scores : FloatArray
+        pass_scores : NDArray[np.float64]
             average score for each pass in the round
 
         Examples
@@ -314,7 +315,7 @@ class HandicapScheme(ABC):
         rnd: rounds.Round,
         arw_d: float | None = None,
         rounded_score: bool = True,
-    ) -> FloatArray:
+    ) -> npt.NDArray[np.float64]:
         """Calculate the expected score for a round at a given handicap.
 
         Parameters
@@ -330,7 +331,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        round_score : FloatArray
+        round_score : NDArray[np.float64]
             average score of the round for this set of parameters
 
         Examples
@@ -371,7 +372,7 @@ class HandicapScheme(ABC):
         return self._rounded_score(round_score) if rounded_score else round_score
 
     @staticmethod
-    def _rounded_score(score: FloatArray) -> FloatArray:
+    def _rounded_score(score: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
         """
         Round a decimal score to an integer value.
 
@@ -380,12 +381,12 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        score : FloatArray
+        score : NDArray[np.float64]
             raw scores to be rounded according to the handicap system convention
 
         Returns
         -------
-        FloatArray
+        NDArray[np.float64]
             scores after appropriate rounding
         """
         return np.around(score)

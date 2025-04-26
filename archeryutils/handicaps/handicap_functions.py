@@ -26,7 +26,7 @@ import numpy.typing as npt
 
 from archeryutils import rounds, targets
 
-from .handicap_scheme import FloatArray, HandicapScheme
+from .handicap_scheme import HandicapScheme
 from .handicap_scheme_aa import HandicapAA, HandicapAA2
 from .handicap_scheme_agb import HandicapAGB, HandicapAGBold
 
@@ -102,7 +102,7 @@ def arrow_score(
     target: targets.Target,
     handicap_sys: str | HandicapScheme,
     arw_d: float | None = None,
-) -> FloatArray:
+) -> npt.NDArray[np.float64]:
     """
     Calculate the average arrow score for a given target and handicap rating.
 
@@ -119,7 +119,7 @@ def arrow_score(
 
     Returns
     -------
-    FloatArray
+    NDArray[np.float64]
         average expected arrow score for this handicap and target
 
     Warnings
@@ -238,7 +238,7 @@ def score_for_round(
 
     Returns
     -------
-    round_score : FloatArray
+    round_score : NDArray[np.float64]
         average score of the round for this set of parameters
 
     Examples

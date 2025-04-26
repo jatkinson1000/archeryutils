@@ -15,7 +15,7 @@ import numpy.typing as npt
 import archeryutils.handicaps.handicap_functions as hc
 from archeryutils import rounds
 
-from .handicap_scheme import FloatArray, HandicapScheme
+from .handicap_scheme import HandicapScheme
 
 _FILL = -9999
 
@@ -28,7 +28,7 @@ class HandicapTable:
     ----------
     handicap_sys : str | HandicapScheme
         identifier for the handicap system to use
-    hcs : FloatArray | NDArray[np.int\\_]
+    hcs : ArrayLike
         handicap values to calculate scores for
     round_list : list[rounds.Round]
         list of Round classes to show in the handicap table
@@ -55,9 +55,9 @@ class HandicapTable:
         display numbers in table as integers rather than decimals to improve appearance
     clean_gaps : bool
         clean out gaps of repeated scores (using only first occurrence)
-    hcs : NDArray[np.float\\_]
+    hcs : NDArray[np.float64]
         handicap values to calculate scores for
-    table: NDArray[np.float\\_ | np.int\\_]
+    table: NDArray[np.float64 | np.int\\_]
         the generated handicap table containing appropriate score values
 
     """
@@ -79,7 +79,7 @@ class HandicapTable:
         self.clean_gaps = clean_gaps
 
         # Sanitise inputs
-        self.hcs = self._check_print_table_inputs(hcs)
+        self.hcs: npt.NDArray[np.float64] = self._check_print_table_inputs(hcs)
 
         # Set up empty handicap table and populate
         self.table: npt.NDArray[np.float64 | np.int_] = np.empty(
@@ -256,7 +256,7 @@ class HandicapTable:
 
         Returns
         -------
-        hcs : NDArray
+        hcs : NDArray[np.float64]
             handicaps prepared for use in table printing routines
 
         Raises
@@ -356,7 +356,7 @@ class HandicapTable:
 
         Parameters
         ----------
-        row : NDArray
+        row : NDArray[np.float64 | np.int_]
             numpy array of data for one table row
         hc_dp : int, default=0
             handicap decimal places
