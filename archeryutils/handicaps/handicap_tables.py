@@ -10,7 +10,7 @@ import warnings
 from itertools import chain
 
 import numpy as np
-from numpy.typing import NDArray
+import numpy.typing as npt
 
 import archeryutils.handicaps.handicap_functions as hc
 from archeryutils import rounds
@@ -65,7 +65,7 @@ class HandicapTable:
     def __init__(  # noqa: PLR0913 - Too many arguments
         self,
         handicap_sys: str | HandicapScheme,
-        hcs: FloatArray | NDArray[np.int_],
+        hcs: npt.ArrayLike,
         round_list: list[rounds.Round],
         rounded_scores: bool = True,
         int_prec: bool = True,
@@ -82,7 +82,7 @@ class HandicapTable:
         self.hcs = self._check_print_table_inputs(hcs)
 
         # Set up empty handicap table and populate
-        self.table: NDArray[np.float64 | np.int_] = np.empty(
+        self.table: npt.NDArray[np.float64 | np.int_] = np.empty(
             [len(self.hcs), len(self.round_list) + 1],
         )
         self.table[:, 0] = self.hcs[:]
@@ -244,19 +244,19 @@ class HandicapTable:
 
     def _check_print_table_inputs(
         self,
-        hcs_in: FloatArray | NDArray[np.int_],
-    ) -> NDArray[np.float64]:
+        hcs_in: npt.ArrayLike,
+    ) -> npt.NDArray[np.float64]:
         """
         Sanitise and format inputs to handicap printing code.
 
         Parameters
         ----------
-        hcs_in : float | ndarray
+        hcs_in : ArrayLike
             handicap value(s) to calculate score(s) for
 
         Returns
         -------
-        hcs : ndarray
+        hcs : NDArray
             handicaps prepared for use in table printing routines
 
         Raises
@@ -267,15 +267,13 @@ class HandicapTable:
             If no rounds are provided for the handicap table
 
         """
-        if not isinstance(hcs_in, np.ndarray):
-            if isinstance(hcs_in, list):
-                hcs_in = np.array(hcs_in)
-            elif isinstance(hcs_in, (float, int)):
-                hcs_in = np.array([hcs_in])
-            else:
-                msg = "Expected float or ndarray for hcs."
-                raise TypeError(msg)
-        hcs = hcs_in.astype(float)
+        hcs_in = np.asarray(hcs_in)  # Explicitly cast to array for calculations
+
+        try:
+            hcs = hcs_in.astype(np.float64)
+        except ValueError as exc:
+            msg = "Cannot convert supplied handicaps to float for HandicapTable."
+            raise TypeError(msg) from exc
 
         if len(self.round_list) == 0:
             msg = "No rounds provided for handicap table."
@@ -349,7 +347,7 @@ class HandicapTable:
 
     @staticmethod
     def _format_row(
-        row: NDArray[np.float64 | np.int_],
+        row: npt.NDArray[np.float64 | np.int_],
         hc_dp: int = 0,
         int_prec: bool = False,
     ) -> str:

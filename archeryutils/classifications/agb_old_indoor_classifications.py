@@ -9,6 +9,9 @@ AGB_old_indoor_classification_scores
 
 from typing import Tuple, TypedDict
 
+import numpy as np
+import numpy.typing as npt
+
 import archeryutils.classifications.classification_utils as cls_funcs
 import archeryutils.handicaps as hc
 from archeryutils import load_rounds
@@ -30,7 +33,7 @@ class GroupData(TypedDict):
     """Structure for old AGB Indoor classification data."""
 
     classes: list[str]
-    class_HC: list[int]
+    class_HC: npt.NDArray[np.float64]
 
 
 def _get_old_indoor_groupname(
@@ -147,19 +150,19 @@ def _make_agb_old_indoor_classification_dict() -> dict[str, GroupData]:
     # for both bowstyles, for both genders
     compound_male_adult: GroupData = {
         "classes": agb_indoor_classes,
-        "class_HC": [5, 12, 24, 37, 49, 62, 73, 79],
+        "class_HC": np.array([5, 12, 24, 37, 49, 62, 73, 79]),
     }
     compound_female_adult: GroupData = {
         "classes": agb_indoor_classes,
-        "class_HC": [12, 18, 30, 43, 55, 67, 79, 83],
+        "class_HC": np.array([12, 18, 30, 43, 55, 67, 79, 83]),
     }
     recurve_male_adult: GroupData = {
         "classes": agb_indoor_classes,
-        "class_HC": [14, 21, 33, 46, 58, 70, 80, 85],
+        "class_HC": np.array([14, 21, 33, 46, 58, 70, 80, 85]),
     }
     recurve_female_adult: GroupData = {
         "classes": agb_indoor_classes,
-        "class_HC": [21, 27, 39, 51, 64, 75, 85, 90],
+        "class_HC": np.array([21, 27, 39, 51, 64, 75, 85, 90]),
     }
 
     classification_dict = {

@@ -98,7 +98,7 @@ def handicap_scheme(  # noqa: D417 - Missing argument in docstring (**kwargs)
 
 
 def arrow_score(
-    handicap: FloatArray,
+    handicap: npt.ArrayLike,
     target: targets.Target,
     handicap_sys: str | HandicapScheme,
     arw_d: float | None = None,
@@ -108,8 +108,8 @@ def arrow_score(
 
     Parameters
     ----------
-    handicap : FloatArray
-        handicap value to calculate score for
+    handicap : ArrayLike
+        handicap(s) to calculate score for
     target : targets.Target
         A Target class specifying the target to be used
     handicap_sys : str | HandicapScheme
@@ -150,7 +150,7 @@ def arrow_score(
 
 
 def score_for_passes(
-    handicap: FloatArray,
+    handicap: npt.ArrayLike,
     rnd: rounds.Round,
     handicap_sys: str | HandicapScheme,
     arw_d: float | None = None,
@@ -161,8 +161,8 @@ def score_for_passes(
 
     Parameters
     ----------
-    handicap : FloatArray
-        handicap value to calculate score for
+    handicap : ArrayLike
+        handicap value(s) to calculate score for
     rnd : rounds.Round
         A Round class specifying the round being shot
     handicap_sys : str | HandicapScheme
@@ -214,7 +214,7 @@ def score_for_passes(
 
 
 def score_for_round(
-    handicap: FloatArray,
+    handicap: npt.ArrayLike,
     rnd: rounds.Round,
     handicap_sys: str | HandicapScheme,
     arw_d: float | None = None,
@@ -225,8 +225,8 @@ def score_for_round(
 
     Parameters
     ----------
-    handicap : FloatArray
-        handicap value to calculate score for
+    handicap : ArrayLike
+        handicap(s) to calculate score for
     rnd : rounds.Round
         A Round class specifying the round being shot
     handicap_sys : str | HandicapScheme

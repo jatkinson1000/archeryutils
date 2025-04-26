@@ -23,6 +23,7 @@ References
 """
 
 import numpy as np
+import numpy.typing as npt
 
 from .handicap_scheme import FloatArray, HandicapScheme
 
@@ -92,13 +93,13 @@ class HandicapAGB(HandicapScheme):
             "kd": kd,
         }
 
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
@@ -124,6 +125,7 @@ class HandicapAGB(HandicapScheme):
         array([0.00094983, 0.00376062, 0.02100276])
 
         """
+        handicap = np.asarray(handicap)  # Ensure numpy array for calculations
         return (
             self.params["ang_0"]
             * ((1.0 + self.params["step"] / 100.0) ** (handicap + self.params["datum"]))
@@ -211,13 +213,13 @@ class HandicapAGBold(HandicapScheme):
             "p1": p1,  # Exponent of distance scaling.
         }
 
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
@@ -253,10 +255,13 @@ class HandicapAGBold(HandicapScheme):
         array([0.00112649, 0.00478762, 0.05520862])
 
         """
+        handicap = np.asarray(handicap)  # Ensure numpy array for calculations
+
         k_factor = self.params["k1"] * self.params["k2"] ** (
             handicap + self.params["k3"]
         )
         f_factor = 1.0 + k_factor * dist ** self.params["p1"]
+
         return (
             self.params["ang_0"]
             * ((1.0 + self.params["step"] / 100.0) ** (handicap + self.params["datum"]))

@@ -34,14 +34,14 @@ References
 import itertools as itr
 import warnings
 from abc import ABC, abstractmethod
-from typing import TypeVar, cast, overload
+from typing import TypeVar, cast
 
 import numpy as np
 import numpy.typing as npt
 
 from archeryutils import rounds, targets
 
-FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float64])
+FloatArray = npt.NDArray[np.float64]
 
 
 class HandicapScheme(ABC):
@@ -93,26 +93,14 @@ class HandicapScheme(ABC):
         """Return a representation of a HandicapScheme instance."""
         return f"<HandicapScheme: '{self.name}'>"
 
-    @overload
     @abstractmethod
-    def sigma_t(self, handicap: float, dist: float) -> float: ...
-
-    @overload
-    @abstractmethod
-    def sigma_t(
-        self,
-        handicap: npt.NDArray[np.float64],
-        dist: float,
-    ) -> npt.NDArray[np.float64]: ...
-
-    @abstractmethod
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
@@ -123,7 +111,7 @@ class HandicapScheme(ABC):
 
         """
 
-    def sigma_r(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_r(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
         """Calculate radial deviation for a given handicap and distance.
 
         Standard deviation as a proxy for 'group size' based on
@@ -132,8 +120,8 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_r at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_r at
         dist : float
             distance to target [metres]
 
@@ -162,12 +150,11 @@ class HandicapScheme(ABC):
         sig_t = self.sigma_t(handicap, dist)
         sig_r = dist * sig_t
 
-        # Perform a cast to return to satisfy typechecker
-        return cast(FloatArray, sig_r)
+        return sig_r
 
     def arrow_score(
         self,
-        handicap: FloatArray,
+        handicap: npt.ArrayLike,
         target: targets.Target,
         arw_d: float | None = None,
     ) -> FloatArray:
@@ -175,8 +162,8 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap value to calculate score for
+        handicap : ArrayLike
+            handicap(s) to calculate score for
         target : targets.Target
             A Target class specifying the target to be used
         arw_d : float | None, default=None
@@ -239,7 +226,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        s_bar : float
+        s_bar : FloatArray
             expected average score per arrow
 
         Notes
@@ -254,24 +241,26 @@ class HandicapScheme(ABC):
         score_drops = (inner - outer for inner, outer in itr.pairwise(ring_scores))
         max_score = max(ring_scores)
 
-        return max_score - sum(
-            score_drop * np.exp(-(((arw_rad + (ring_diam / 2)) / sig_r) ** 2))
-            for ring_diam, score_drop in zip(ring_sizes, score_drops, strict=True)
+        return max_score - np.asarray(
+            sum(
+                score_drop * np.exp(-(((arw_rad + (ring_diam / 2)) / sig_r) ** 2))
+                for ring_diam, score_drop in zip(ring_sizes, score_drops, strict=True)
+            )
         )
 
     def score_for_passes(
         self,
-        handicap: FloatArray,
+        handicap: npt.ArrayLike,
         rnd: rounds.Round,
         arw_d: float | None = None,
         rounded_score: bool = True,
-    ) -> npt.NDArray[np.float64]:
+    ) -> FloatArray:
         """Calculate the expected score for all passes in a round at a given handicap.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap value to calculate score for
+        handicap : ArrayLike
+            handicap(s) to calculate score for
         rnd : rounds.Round
             A Round class specifying the round being shot
         arw_d : float | None, default=None
@@ -282,7 +271,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        pass_scores : NDArray
+        pass_scores : FloatArray
             average score for each pass in the round
 
         Examples
@@ -321,7 +310,7 @@ class HandicapScheme(ABC):
 
     def score_for_round(
         self,
-        handicap: FloatArray,
+        handicap: npt.ArrayLike,
         rnd: rounds.Round,
         arw_d: float | None = None,
         rounded_score: bool = True,
@@ -330,8 +319,8 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap value to calculate score for
+        handicap : ArrayLike
+            handicap(s) to calculate score for
         rnd : rounds.Round
             A Round class specifying the round being shot
         arw_d : float | None, default=None
@@ -715,4 +704,5 @@ class HandicapScheme(ABC):
 
         """
         val = self.score_for_round(hc_est, round_est, arw_d=arw_d, rounded_score=False)
-        return val - score_est
+        # val is known to be a 0D array, so cast to float for type checker
+        return cast(float, val) - score_est

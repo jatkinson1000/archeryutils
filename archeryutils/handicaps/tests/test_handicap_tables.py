@@ -208,6 +208,6 @@ class TestHandicapTable:
         """Check that inappropriate handicaps triggers error."""
         with pytest.raises(
             TypeError,
-            match=("Expected float or ndarray for hcs."),
+            match=("Cannot convert supplied handicaps to float for HandicapTable."),
         ):
             hc.HandicapTable("AGB", "a", [york, hereford])  # type: ignore

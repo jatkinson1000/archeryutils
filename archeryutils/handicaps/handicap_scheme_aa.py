@@ -22,6 +22,7 @@ References
 """
 
 import numpy as np
+import numpy.typing as npt
 
 from .handicap_scheme import FloatArray, HandicapScheme
 
@@ -89,13 +90,13 @@ class HandicapAA(HandicapScheme):
             "kd": kd,  # Distance scaling factor [1/metres].
         }
 
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
@@ -134,6 +135,8 @@ class HandicapAA(HandicapScheme):
         array([0.0127633 , 0.00433436, 0.00112364])
 
         """
+        handicap = np.asarray(handicap)  # Ensure numpy array for calculations
+
         # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma
         # between AGB and AA
         # Required so code elsewhere is unchanged
@@ -221,13 +224,13 @@ class HandicapAA2(HandicapScheme):
             "d0": d0,  # Normalisation distance [metres].
         }
 
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> FloatArray:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
@@ -266,6 +269,8 @@ class HandicapAA2(HandicapScheme):
         array([0.01280085, 0.00434711, 0.00112695])
 
         """
+        handicap = np.asarray(handicap)  # Ensure numpy array for calculations
+
         # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma
         # between AGB and AA
         # Required so code elsewhere is unchanged
