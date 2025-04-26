@@ -12,12 +12,17 @@ authors:
   - name: Thomas Hall
     orcid: 0000-0003-1689-6676
     affiliation: 1
+  - name: Liam Patinson
+    orcid: 0000-0001-8604-6904
+    affiliation: 3
 affiliations:
-  - name: Archery GB
+  - name: Archery GB, UK
     index: 1
   - name: Institute of Computing for Climate Science, University of Cambridge, UK
     index: 2
-date: 21 April 2025
+  - name: University of York, UK
+    index: 3
+date: 26 April 2025
 bibliography: paper.bib
 
 ---
