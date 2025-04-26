@@ -49,10 +49,9 @@ measure of performance across all targets and distances.
 As a precision-based sport, archery lends itself well to mathematical
 modelling with examples in literature being @lane2013construction, @park2014modelling, and the
 2023 handicap system by Archery GB [@handicaps].
-Like many scientific models, these are described in papers where they are used by
-the authors, but no software implementation is publicly available.
-This presents a barrier to further research and development for those who understand
-how to use the models, but not how they are constructed or implemented.
+Although these models are well described in their respective papers, no software
+implementations have been made publicly available, presenting a barrier to further
+research and development.
 _archeryutils_ has been developed as a tool to remove this barrier and improve
 reproducibility.
 
@@ -84,7 +83,7 @@ As well as a constructors for creating generic targets and rounds, _archeryutils
 with many popular national and international rounds predefined for users.
 These components provide a starting point for a variety of applications.
 
-Implementation of mathematical models for precision is provided by the `handicaps`
+The implementation of the mathematical models for precision can be found in the `handicaps`
 module.
 Available models include both Archery GB handicap schemes of @lane2013construction
 and the updated 2023 model and both Archery Australia models of @park2014modelling,
@@ -157,7 +156,7 @@ The software provides the backend for the community website
 several other applications and websites.
 
 The models implemented by _archeryutils_ have previously been used in comparative
-analyses of athlete's performance and equipment, and there is ongoing research in
+analyses of athletes' performance and equipment, and there is ongoing research in
 this area that uses the software.
 
 
