@@ -55,10 +55,9 @@ As a precision-based sport, archery lends itself well to mathematical
 modelling with examples in literature being @lane2013construction, @park2014modelling, and the
 2023 handicap system by Archery GB [@handicaps].
 Although these models are well described in their respective papers, no software
-implementations have been made publicly available, presenting a barrier to further
-research and development.
-_archeryutils_ has been developed as a tool to remove this barrier and improve
-reproducibility.
+implementations have been made publicly available, presenting barriers to further
+research and development and reproducibility.
+_archeryutils_ has been developed to remove these barriers.
 
 Archery score data is increasingly
 readily available in electronic formats, be it from competition results
@@ -100,7 +99,7 @@ One other notable component of _archeryutils_ is the `classifications` module.
 This provides an implementation of the [Archery GB classification progression
 schemes](https://archerygb.org/resources/outdoor-classifications-and-handicaps)
 in which archers are categorised and rewarded for their
-performance depending on their age, gender, and bowstyle
+performance depending on their age, gender, and bowstyle/division
 across the target indoor, target outdoor, and field disciplines.
 _archeryutils_ was used to develop these schemes and generate the associated data,
 so can be regarded as the definitive source.
