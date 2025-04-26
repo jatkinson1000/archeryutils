@@ -200,11 +200,13 @@ class Round:
         self,
         name: str,
         passes: Iterable[Pass],
+        codename: str | None = None,
         location: str | None = None,
         body: str | None = None,
         family: str | None = None,
     ) -> None:
         self.name = name
+        self.codename = codename
         self.passes = list(passes)
         if not self.passes:
             msg = "passes must contain at least one Pass object but none supplied."
