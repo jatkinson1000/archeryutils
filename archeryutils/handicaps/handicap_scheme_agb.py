@@ -25,7 +25,7 @@ References
 import numpy as np
 import numpy.typing as npt
 
-from .handicap_scheme import HandicapScheme
+from .handicap_scheme import HandicapScheme, _cast_float_array
 
 
 class HandicapAGB(HandicapScheme):
@@ -76,14 +76,14 @@ class HandicapAGB(HandicapScheme):
     ):
         super().__init__()
 
-        self.name = "AGB"
+        self.name: str = "AGB"
 
         self.arw_d_out: float = 5.5e-3
         self.arw_d_in: float = 9.3e-3
 
         # AGB Uses a descending scale with ceil. All numbers typically in [-75, 300]
         self.desc_scale: bool = True
-        self.scale_bounds: list[float] = [-75, 300]
+        self.scale_bounds: npt.NDArray[np.float64] = np.array([-75, 300])
         self.max_score_rounding_lim: float = 1.0
 
         self.params = {
@@ -125,7 +125,8 @@ class HandicapAGB(HandicapScheme):
         array([0.00094983, 0.00376062, 0.02100276])
 
         """
-        handicap = np.asarray(handicap)  # Ensure numpy array for calculations
+        handicap = _cast_float_array(handicap)  # Cast for calculation
+
         return (
             self.params["ang_0"]
             * ((1.0 + self.params["step"] / 100.0) ** (handicap + self.params["datum"]))
@@ -193,15 +194,15 @@ class HandicapAGBold(HandicapScheme):
     ):
         super().__init__()
 
-        self.name = "AGBold"
+        self.name: str = "AGBold"
 
-        self.arw_d_out = 7.14e-3
-        self.arw_d_in = 7.14e-3
+        self.arw_d_out: float = 7.14e-3
+        self.arw_d_in: float = 7.14e-3
 
         # AGBold Uses a descending scale with round. All numbers typically in [-75, 300]
-        self.desc_scale = True
-        self.scale_bounds = [-75, 300]
-        self.max_score_rounding_lim = 0.5
+        self.desc_scale: bool = True
+        self.scale_bounds: npt.NDArray[np.float64] = np.array([-75, 300])
+        self.max_score_rounding_lim: float = 0.5
 
         self.params = {
             "datum": datum,  # Offset required to set handicap 0 at desired score.
@@ -255,7 +256,7 @@ class HandicapAGBold(HandicapScheme):
         array([0.00112649, 0.00478762, 0.05520862])
 
         """
-        handicap = np.asarray(handicap)  # Ensure numpy array for calculations
+        handicap = _cast_float_array(handicap)  # Cast for calculation
 
         k_factor = self.params["k1"] * self.params["k2"] ** (
             handicap + self.params["k3"]

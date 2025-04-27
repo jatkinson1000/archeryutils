@@ -42,6 +42,31 @@ import numpy.typing as npt
 from archeryutils import rounds, targets
 
 
+def _cast_float_array(var_in: npt.ArrayLike) -> npt.NDArray[np.float64]:
+    """Check we can cast to np.float64 array and do so.
+
+    Parameters
+    ----------
+    var_in : ArrayLike
+        input that is an ArrayLik
+
+    Returns
+    -------
+    NDArray[np.float64]
+        var_in cast to NDArray[np.float64]
+
+    Raises
+    ------
+    TypeError
+        If an ArrayLike that cannot be cast is passed in.
+
+    """
+    if np.can_cast(np.asarray(var_in), np.float64):
+        return np.asarray(var_in).astype(np.float64, casting="safe")
+    err_msg = f"Inappropriate input for handicaps code. Must be numeric value."
+    raise TypeError(err_msg)
+
+
 class HandicapScheme(ABC):
     r"""
     Abstract Base Class to represent a generic handicap scheme.
@@ -56,7 +81,7 @@ class HandicapScheme(ABC):
         diameter of an indoor arrow [metres] for this scheme, default 9.3e-3
     desc_scale: bool
         does the scheme use a descending scale (lower handicap is better), default True
-    scale_bounds: list[int]
+    scale_bounds: NDArray[np.float64]
         Reasonable upper and lower bounds on the handicap scale for bounding searches
     max_score_rounding_lim: float
         Limit to round the max score to when searching
@@ -84,7 +109,7 @@ class HandicapScheme(ABC):
 
         # Handicap Scale parameters
         self.desc_scale: bool
-        self.scale_bounds: list[float]
+        self.scale_bounds: npt.NDArray[np.float64]
         self.max_score_rounding_lim: float
 
     def __repr__(self) -> str:
@@ -141,7 +166,7 @@ class HandicapScheme(ABC):
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.sigma_t(np.asarray([10.0, 50.0, 100.0]), "AGB", 25.0)
+        >>> agb_scheme.sigma_r(np.asarray([10.0, 50.0, 100.0]), 25.0)
         array([0.0237457 , 0.09401539, 0.5250691 ])
 
         """
@@ -192,7 +217,7 @@ class HandicapScheme(ABC):
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.sigma_t(np.array([10.0, 50.0, 100.0]), my720target)
+        >>> agb_scheme.arrow_score(np.array([10.0, 50.0, 100.0]), my720target)
         array([9.40118268, 6.05227962, 0.46412515])
 
         """
@@ -523,10 +548,10 @@ class HandicapScheme(ABC):
         max_score = rnd.max_score()
 
         if self.desc_scale:
-            handicap = min(self.scale_bounds)
+            handicap = self.scale_bounds.min()
             delta_hc = 1.0
         else:
-            handicap = max(self.scale_bounds)
+            handicap = self.scale_bounds.max()
             delta_hc = -1.0
 
         target = max_score - self.max_score_rounding_lim

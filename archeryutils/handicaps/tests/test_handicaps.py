@@ -192,6 +192,28 @@ class TestSigmaT:
 
         assert theta == pytest.approx(theta_expected)
 
+    @pytest.mark.parametrize(
+        "hc_system",
+        [
+            "AGB",
+            "AGBold",
+            "AA",
+            "AA2",
+        ],
+    )
+    def test_bad_type(self, hc_system: str) -> None:
+        """Check TypeError is raised when sigma_t cannot cast to NDArray[np.float64]."""
+        handicap_array = "A string is not a numeric handicsap"
+        hc_sys = hc.handicap_scheme(hc_system)
+        with pytest.raises(
+            TypeError,
+            match=("Inappropriate input for handicaps code. Must be numeric value."),
+        ):
+            theta_array = hc_sys.sigma_t(
+                handicap=handicap_array,
+                dist=100.0,
+            )
+
     def test_array(self) -> None:
         """Check that sigma_t(handicap=ndarray) returns expected value for a case."""
         handicap_array = np.array([25.46, -12.0, 200.0])
@@ -203,6 +225,28 @@ class TestSigmaT:
         )
 
         np.testing.assert_allclose(theta_array, theta_expected_array)
+
+    @pytest.mark.parametrize(
+        "hc_system",
+        [
+            "AGB",
+            "AGBold",
+            "AA",
+            "AA2",
+        ],
+    )
+    def test_bad_array_type(self, hc_system: str) -> None:
+        """Check TypeError is raised when sigma_t cannot cast to NDArray[np.float64]."""
+        handicap_array = np.array(["a", "b", "c"])
+        hc_sys = hc.handicap_scheme(hc_system)
+        with pytest.raises(
+            TypeError,
+            match=("Inappropriate input for handicaps code. Must be numeric value."),
+        ):
+            theta_array = hc_sys.sigma_t(
+                handicap=handicap_array,
+                dist=100.0,
+            )
 
 
 class TestSigmaR:
