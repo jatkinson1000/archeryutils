@@ -34,7 +34,7 @@ References
 import itertools as itr
 import warnings
 from abc import ABC, abstractmethod
-from typing import TypeVar, cast
+from typing import cast
 
 import numpy as np
 import numpy.typing as npt
