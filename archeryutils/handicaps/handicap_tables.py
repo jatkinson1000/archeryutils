@@ -267,10 +267,8 @@ class HandicapTable:
             If no rounds are provided for the handicap table
 
         """
-        hcs_in = np.asarray(hcs_in)  # Explicitly cast to array for calculations
-
         try:
-            hcs = hcs_in.astype(np.float64)
+            hcs = np.asarray(hcs_in, dtype=np.float64)
         except ValueError as exc:
             msg = "Cannot convert supplied handicaps to float for HandicapTable."
             raise TypeError(msg) from exc

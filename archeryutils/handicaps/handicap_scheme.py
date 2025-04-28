@@ -34,7 +34,6 @@ References
 import itertools as itr
 import warnings
 from abc import ABC, abstractmethod
-from typing import cast
 
 import numpy as np
 import numpy.typing as npt
@@ -43,12 +42,12 @@ from archeryutils import rounds, targets
 
 
 def _cast_float_array(var_in: npt.ArrayLike) -> npt.NDArray[np.float64]:
-    """Check we can cast to np.float64 array and do so.
+    """Ensure we can cast to a np.float64 array and do so.
 
     Parameters
     ----------
     var_in : ArrayLike
-        input that is an ArrayLik
+        input that is an ArrayLike
 
     Returns
     -------
@@ -61,10 +60,11 @@ def _cast_float_array(var_in: npt.ArrayLike) -> npt.NDArray[np.float64]:
         If an ArrayLike that cannot be cast is passed in.
 
     """
-    if np.can_cast(np.asarray(var_in), np.float64):
-        return np.asarray(var_in).astype(np.float64, casting="safe")
-    err_msg = f"Inappropriate input for handicaps code. Must be numeric value."
-    raise TypeError(err_msg)
+    try:
+        return np.asarray(var_in, dtype=np.float64)
+    except ValueError as exc:
+        err_msg = f"Inappropriate input for handicaps code. Must be numeric value."
+        raise TypeError(err_msg) from None
 
 
 class HandicapScheme(ABC):
@@ -730,5 +730,5 @@ class HandicapScheme(ABC):
 
         """
         val = self.score_for_round(hc_est, round_est, arw_d=arw_d, rounded_score=False)
-        # val is known to be a 0D array, so cast to float for type checker
-        return cast(float, val) - score_est
+        # val is known to be a 0D array, so cast to float for subsequent use
+        return float(val) - score_est
