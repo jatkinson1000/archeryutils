@@ -3,6 +3,7 @@ What's New
 
 Latest
 ------
+* Better use of numpy typing in `#133 <https://github.com/jatkinson1000/archeryutils/pull/133>`_
 * Allow inputs to classification functions to be an archeryutils `Round`
   as well as a string in `#119 <https://github.com/jatkinson1000/archeryutils/pull/119>`_
 * Add new AGB 900 rounds in `#116 <https://github.com/jatkinson1000/archeryutils/pull/116>`_
