@@ -10,12 +10,12 @@ import warnings
 from itertools import chain
 
 import numpy as np
-from numpy.typing import NDArray
+import numpy.typing as npt
 
 import archeryutils.handicaps.handicap_functions as hc
 from archeryutils import rounds
 
-from .handicap_scheme import FloatArray, HandicapScheme
+from .handicap_scheme import HandicapScheme
 
 _FILL = -9999
 
@@ -28,7 +28,7 @@ class HandicapTable:
     ----------
     handicap_sys : str | HandicapScheme
         identifier for the handicap system to use
-    hcs : FloatArray | NDArray[np.int\\_]
+    hcs : ArrayLike
         handicap values to calculate scores for
     round_list : list[rounds.Round]
         list of Round classes to show in the handicap table
@@ -55,9 +55,9 @@ class HandicapTable:
         display numbers in table as integers rather than decimals to improve appearance
     clean_gaps : bool
         clean out gaps of repeated scores (using only first occurrence)
-    hcs : NDArray[np.float\\_]
+    hcs : NDArray[np.float64]
         handicap values to calculate scores for
-    table: NDArray[np.float\\_ | np.int\\_]
+    table: NDArray[np.float64 | np.int\\_]
         the generated handicap table containing appropriate score values
 
     """
@@ -65,7 +65,7 @@ class HandicapTable:
     def __init__(  # noqa: PLR0913 - Too many arguments
         self,
         handicap_sys: str | HandicapScheme,
-        hcs: FloatArray | NDArray[np.int_],
+        hcs: npt.ArrayLike,
         round_list: list[rounds.Round],
         rounded_scores: bool = True,
         int_prec: bool = True,
@@ -79,10 +79,10 @@ class HandicapTable:
         self.clean_gaps = clean_gaps
 
         # Sanitise inputs
-        self.hcs = self._check_print_table_inputs(hcs)
+        self.hcs: npt.NDArray[np.float64] = self._check_print_table_inputs(hcs)
 
         # Set up empty handicap table and populate
-        self.table: NDArray[np.float64 | np.int_] = np.empty(
+        self.table: npt.NDArray[np.float64 | np.int_] = np.empty(
             [len(self.hcs), len(self.round_list) + 1],
         )
         self.table[:, 0] = self.hcs[:]
@@ -244,19 +244,19 @@ class HandicapTable:
 
     def _check_print_table_inputs(
         self,
-        hcs_in: FloatArray | NDArray[np.int_],
-    ) -> NDArray[np.float64]:
+        hcs_in: npt.ArrayLike,
+    ) -> npt.NDArray[np.float64]:
         """
         Sanitise and format inputs to handicap printing code.
 
         Parameters
         ----------
-        hcs_in : float | ndarray
+        hcs_in : ArrayLike
             handicap value(s) to calculate score(s) for
 
         Returns
         -------
-        hcs : ndarray
+        hcs : NDArray[np.float64]
             handicaps prepared for use in table printing routines
 
         Raises
@@ -267,15 +267,11 @@ class HandicapTable:
             If no rounds are provided for the handicap table
 
         """
-        if not isinstance(hcs_in, np.ndarray):
-            if isinstance(hcs_in, list):
-                hcs_in = np.array(hcs_in)
-            elif isinstance(hcs_in, (float, int)):
-                hcs_in = np.array([hcs_in])
-            else:
-                msg = "Expected float or ndarray for hcs."
-                raise TypeError(msg)
-        hcs = hcs_in.astype(float)
+        try:
+            hcs = np.asarray(hcs_in, dtype=np.float64)
+        except ValueError as exc:
+            msg = "Cannot convert supplied handicaps to float for HandicapTable."
+            raise TypeError(msg) from exc
 
         if len(self.round_list) == 0:
             msg = "No rounds provided for handicap table."
@@ -349,7 +345,7 @@ class HandicapTable:
 
     @staticmethod
     def _format_row(
-        row: NDArray[np.float64 | np.int_],
+        row: npt.NDArray[np.float64 | np.int_],
         hc_dp: int = 0,
         int_prec: bool = False,
     ) -> str:
@@ -358,7 +354,7 @@ class HandicapTable:
 
         Parameters
         ----------
-        row : NDArray
+        row : NDArray[np.float64 | np.int_]
             numpy array of data for one table row
         hc_dp : int, default=0
             handicap decimal places

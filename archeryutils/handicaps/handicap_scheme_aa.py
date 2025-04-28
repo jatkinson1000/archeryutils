@@ -22,8 +22,9 @@ References
 """
 
 import numpy as np
+import numpy.typing as npt
 
-from .handicap_scheme import FloatArray, HandicapScheme
+from .handicap_scheme import HandicapScheme, _cast_float_array
 
 
 class HandicapAA(HandicapScheme):
@@ -72,15 +73,15 @@ class HandicapAA(HandicapScheme):
     ):
         super().__init__()
 
-        self.name = "AA"
+        self.name: str = "AA"
 
-        self.arw_d_out = 5.0e-3
+        self.arw_d_out: float = 5.0e-3
         self.arw_d_in: float = 9.3e-3
 
         # AA Uses an ascending scale with round. All numbers typically in [-250, 175]
-        self.desc_scale = False
-        self.scale_bounds = [-250, 175]
-        self.max_score_rounding_lim = 0.5
+        self.desc_scale: bool = False
+        self.scale_bounds: npt.NDArray[np.float64] = np.array([-250, 175])
+        self.max_score_rounding_lim: float = 0.5
 
         self.params = {
             "ang_0": ang_0,  # Baseline angle used for group size 1.0 [millirad].
@@ -89,19 +90,19 @@ class HandicapAA(HandicapScheme):
             "kd": kd,  # Distance scaling factor [1/metres].
         }
 
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
         Returns
         -------
-        sig_t : FloatArray
+        sig_t : NDArray[np.float64]
             angular deviation [rad]
 
         Notes
@@ -134,6 +135,8 @@ class HandicapAA(HandicapScheme):
         array([0.0127633 , 0.00433436, 0.00112364])
 
         """
+        handicap = _cast_float_array(handicap)  # Cast for calculation
+
         # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma
         # between AGB and AA
         # Required so code elsewhere is unchanged
@@ -202,15 +205,15 @@ class HandicapAA2(HandicapScheme):
     ):
         super().__init__()
 
-        self.name = "AA2"
+        self.name: str = "AA2"
 
-        self.arw_d_out = 5.0e-3
-        self.arw_d_in = 9.3e-3
+        self.arw_d_out: float = 5.0e-3
+        self.arw_d_in: float = 9.3e-3
 
         # AA Uses an ascending scale with round. All numbers typically in [-250, 175]
-        self.desc_scale = False
-        self.scale_bounds = [-250, 175]
-        self.max_score_rounding_lim = 0.5
+        self.desc_scale: bool = False
+        self.scale_bounds: npt.NDArray[np.float64] = np.array([-250, 175])
+        self.max_score_rounding_lim: float = 0.5
 
         self.params = {
             "ang_0": ang_0,
@@ -221,19 +224,19 @@ class HandicapAA2(HandicapScheme):
             "d0": d0,  # Normalisation distance [metres].
         }
 
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
         Returns
         -------
-        sig_t : FloatArray
+        sig_t : NDArray[np.float64]
             angular deviation [rad]
 
         Notes
@@ -266,6 +269,8 @@ class HandicapAA2(HandicapScheme):
         array([0.01280085, 0.00434711, 0.00112695])
 
         """
+        handicap = _cast_float_array(handicap)  # Cast for calculation
+
         # Factor of sqrt(2) to deal with factor of 2 in differing definitions of sigma
         # between AGB and AA
         # Required so code elsewhere is unchanged

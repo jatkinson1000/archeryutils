@@ -34,14 +34,37 @@ References
 import itertools as itr
 import warnings
 from abc import ABC, abstractmethod
-from typing import TypeVar, cast, overload
 
 import numpy as np
 import numpy.typing as npt
 
 from archeryutils import rounds, targets
 
-FloatArray = TypeVar("FloatArray", float, npt.NDArray[np.float64])
+
+def _cast_float_array(var_in: npt.ArrayLike) -> npt.NDArray[np.float64]:
+    """Ensure we can cast to a np.float64 array and do so.
+
+    Parameters
+    ----------
+    var_in : ArrayLike
+        input that is an ArrayLike
+
+    Returns
+    -------
+    NDArray[np.float64]
+        var_in cast to NDArray[np.float64]
+
+    Raises
+    ------
+    TypeError
+        If an ArrayLike that cannot be cast is passed in.
+
+    """
+    try:
+        return np.asarray(var_in, dtype=np.float64)
+    except ValueError as exc:
+        err_msg = f"Inappropriate input for handicaps code. Must be numeric value."
+        raise TypeError(err_msg) from None
 
 
 class HandicapScheme(ABC):
@@ -58,7 +81,7 @@ class HandicapScheme(ABC):
         diameter of an indoor arrow [metres] for this scheme, default 9.3e-3
     desc_scale: bool
         does the scheme use a descending scale (lower handicap is better), default True
-    scale_bounds: list[int]
+    scale_bounds: NDArray[np.float64]
         Reasonable upper and lower bounds on the handicap scale for bounding searches
     max_score_rounding_lim: float
         Limit to round the max score to when searching
@@ -86,44 +109,32 @@ class HandicapScheme(ABC):
 
         # Handicap Scale parameters
         self.desc_scale: bool
-        self.scale_bounds: list[float]
+        self.scale_bounds: npt.NDArray[np.float64]
         self.max_score_rounding_lim: float
 
     def __repr__(self) -> str:
         """Return a representation of a HandicapScheme instance."""
         return f"<HandicapScheme: '{self.name}'>"
 
-    @overload
     @abstractmethod
-    def sigma_t(self, handicap: float, dist: float) -> float: ...
-
-    @overload
-    @abstractmethod
-    def sigma_t(
-        self,
-        handicap: npt.NDArray[np.float64],
-        dist: float,
-    ) -> npt.NDArray[np.float64]: ...
-
-    @abstractmethod
-    def sigma_t(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_t(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate angular deviation for given handicap and distance.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_t at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_t at
         dist : float
             distance to target [metres]
 
         Returns
         -------
-        sig_t : FloatArray
+        sig_t : NDArray[np.float64]
             angular deviation [rad]
 
         """
 
-    def sigma_r(self, handicap: FloatArray, dist: float) -> FloatArray:
+    def sigma_r(self, handicap: npt.ArrayLike, dist: float) -> npt.NDArray[np.float64]:
         """Calculate radial deviation for a given handicap and distance.
 
         Standard deviation as a proxy for 'group size' based on
@@ -132,14 +143,14 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap to calculate sigma_r at
+        handicap : ArrayLike
+            handicap(s) to calculate sigma_r at
         dist : float
             distance to target [metres]
 
         Returns
         -------
-        sig_r : FloatArray
+        sig_r : NDArray[np.float64]
             standard deviation of group size [metres]
 
         Examples
@@ -155,28 +166,27 @@ class HandicapScheme(ABC):
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.sigma_t(np.asarray([10.0, 50.0, 100.0]), "AGB", 25.0)
+        >>> agb_scheme.sigma_r(np.asarray([10.0, 50.0, 100.0]), 25.0)
         array([0.0237457 , 0.09401539, 0.5250691 ])
 
         """
         sig_t = self.sigma_t(handicap, dist)
         sig_r = dist * sig_t
 
-        # Perform a cast to return to satisfy typechecker
-        return cast(FloatArray, sig_r)
+        return sig_r
 
     def arrow_score(
         self,
-        handicap: FloatArray,
+        handicap: npt.ArrayLike,
         target: targets.Target,
         arw_d: float | None = None,
-    ) -> FloatArray:
+    ) -> npt.NDArray[np.float64]:
         """Calculate the average arrow score for a given target and handicap rating.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap value to calculate score for
+        handicap : ArrayLike
+            handicap(s) to calculate score for
         target : targets.Target
             A Target class specifying the target to be used
         arw_d : float | None, default=None
@@ -184,7 +194,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        s_bar : FloatArray
+        s_bar : NDArray[np.float64]
             average score of the arrow for this set of parameters
 
         References
@@ -207,7 +217,7 @@ class HandicapScheme(ABC):
 
         It can also be passed an array of handicaps:
 
-        >>> agb_scheme.sigma_t(np.array([10.0, 50.0, 100.0]), my720target)
+        >>> agb_scheme.arrow_score(np.array([10.0, 50.0, 100.0]), my720target)
         array([9.40118268, 6.05227962, 0.46412515])
 
         """
@@ -224,8 +234,11 @@ class HandicapScheme(ABC):
         return self._s_bar(spec, arw_rad, sig_r)
 
     def _s_bar(
-        self, target_specs: targets.FaceSpec, arw_rad: float, sig_r: FloatArray
-    ) -> FloatArray:
+        self,
+        target_specs: targets.FaceSpec,
+        arw_rad: float,
+        sig_r: npt.NDArray[np.float64],
+    ) -> npt.NDArray[np.float64]:
         """Calculate expected score directly from target ring sizes.
 
         Parameters
@@ -234,12 +247,12 @@ class HandicapScheme(ABC):
             Mapping of target ring *diameters* in [metres], to points scored
         arw_rad : float
             arrow radius in [metres]
-        sig_r : float
+        sig_r : NDArray[np.float64]
             standard deviation of group size [metres]
 
         Returns
         -------
-        s_bar : float
+        s_bar : NDArray[np.float64]
             expected average score per arrow
 
         Notes
@@ -254,14 +267,16 @@ class HandicapScheme(ABC):
         score_drops = (inner - outer for inner, outer in itr.pairwise(ring_scores))
         max_score = max(ring_scores)
 
-        return max_score - sum(
-            score_drop * np.exp(-(((arw_rad + (ring_diam / 2)) / sig_r) ** 2))
-            for ring_diam, score_drop in zip(ring_sizes, score_drops, strict=True)
+        return max_score - np.asarray(
+            sum(
+                score_drop * np.exp(-(((arw_rad + (ring_diam / 2)) / sig_r) ** 2))
+                for ring_diam, score_drop in zip(ring_sizes, score_drops, strict=True)
+            )
         )
 
     def score_for_passes(
         self,
-        handicap: FloatArray,
+        handicap: npt.ArrayLike,
         rnd: rounds.Round,
         arw_d: float | None = None,
         rounded_score: bool = True,
@@ -270,8 +285,8 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap value to calculate score for
+        handicap : ArrayLike
+            handicap(s) to calculate score for
         rnd : rounds.Round
             A Round class specifying the round being shot
         arw_d : float | None, default=None
@@ -282,7 +297,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        pass_scores : NDArray
+        pass_scores : NDArray[np.float64]
             average score for each pass in the round
 
         Examples
@@ -321,17 +336,17 @@ class HandicapScheme(ABC):
 
     def score_for_round(
         self,
-        handicap: FloatArray,
+        handicap: npt.ArrayLike,
         rnd: rounds.Round,
         arw_d: float | None = None,
         rounded_score: bool = True,
-    ) -> FloatArray:
+    ) -> npt.NDArray[np.float64]:
         """Calculate the expected score for a round at a given handicap.
 
         Parameters
         ----------
-        handicap : FloatArray
-            handicap value to calculate score for
+        handicap : ArrayLike
+            handicap(s) to calculate score for
         rnd : rounds.Round
             A Round class specifying the round being shot
         arw_d : float | None, default=None
@@ -341,7 +356,7 @@ class HandicapScheme(ABC):
 
         Returns
         -------
-        round_score : FloatArray
+        round_score : NDArray[np.float64]
             average score of the round for this set of parameters
 
         Examples
@@ -382,7 +397,7 @@ class HandicapScheme(ABC):
         return self._rounded_score(round_score) if rounded_score else round_score
 
     @staticmethod
-    def _rounded_score(score: FloatArray) -> FloatArray:
+    def _rounded_score(score: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
         """
         Round a decimal score to an integer value.
 
@@ -391,12 +406,12 @@ class HandicapScheme(ABC):
 
         Parameters
         ----------
-        score : FloatArray
+        score : NDArray[np.float64]
             raw scores to be rounded according to the handicap system convention
 
         Returns
         -------
-        FloatArray
+        NDArray[np.float64]
             scores after appropriate rounding
         """
         return np.around(score)
@@ -533,10 +548,10 @@ class HandicapScheme(ABC):
         max_score = rnd.max_score()
 
         if self.desc_scale:
-            handicap = min(self.scale_bounds)
+            handicap = self.scale_bounds.min()
             delta_hc = 1.0
         else:
-            handicap = max(self.scale_bounds)
+            handicap = self.scale_bounds.max()
             delta_hc = -1.0
 
         target = max_score - self.max_score_rounding_lim
@@ -715,4 +730,5 @@ class HandicapScheme(ABC):
 
         """
         val = self.score_for_round(hc_est, round_est, arw_d=arw_d, rounded_score=False)
-        return val - score_est
+        # val is known to be a 0D array, so cast to float for subsequent use
+        return float(val) - score_est
