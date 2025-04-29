@@ -7,7 +7,7 @@ tags:
 authors:
   - name: Jack Atkinson
     orcid: 0000-0001-5001-4812
-    affiliation: 1,2
+    affiliation: "1, 2"
     corresponding: true
   - name: Thomas Hall
     orcid: 0000-0003-1689-6676
