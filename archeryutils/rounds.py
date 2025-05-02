@@ -157,6 +157,8 @@ class Round:
         Formal name of the round
     passes : iterable of Pass
         an iterable of Pass classes making up the round
+    codename : str or None
+        A machine readable identifier for the round
     location : str or None, default=None
         string identifing where the round is shot
     body : str or None, default=None
