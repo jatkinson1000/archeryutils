@@ -68,6 +68,8 @@ def read_json_to_round_dict(json_filelist: str | list[str]) -> dict[str, Round]:
             data = json.load(json_round_file)
 
         for round_i in data:
+            codename = round_i["codename"]
+
             # Assign location
             if "location" not in round_i:
                 round_i["location"] = None
@@ -109,9 +111,10 @@ def read_json_to_round_dict(json_filelist: str | list[str]) -> dict[str, Round]:
                 for pass_i in round_i["passes"]
             ]
 
-            round_dict[round_i["codename"]] = Round(
+            round_dict[codename] = Round(
                 round_i["name"],
                 passes,
+                codename=codename,
                 location=round_i["location"],
                 body=round_i["body"],
                 family=round_i["family"],

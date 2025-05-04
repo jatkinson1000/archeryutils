@@ -157,6 +157,8 @@ class Round:
         Formal name of the round
     passes : iterable of Pass
         an iterable of Pass classes making up the round
+    codename : str or None
+        A machine readable identifier for the round
     location : str or None, default=None
         string identifing where the round is shot
     body : str or None, default=None
@@ -196,15 +198,17 @@ class Round:
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         name: str,
         passes: Iterable[Pass],
+        codename: str | None = None,
         location: str | None = None,
         body: str | None = None,
         family: str | None = None,
     ) -> None:
         self.name = name
+        self.codename = codename
         self.passes = list(passes)
         if not self.passes:
             msg = "passes must contain at least one Pass object but none supplied."
