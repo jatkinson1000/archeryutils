@@ -12,7 +12,7 @@ from archeryutils.classifications.AGB_data import AGB_ages
 from archeryutils.classifications.classification_utils import read_ages_json, AGBAgeData
 
 
-def calculate_age_group(year_of_birth: int, year_of_event: int = None, ages_json: dict[str, AGBAgeData] = None) -> AGB_ages:
+def calculate_age_group(year_of_birth: int, year_of_event: int | None = None, ages_json: dict[str, AGBAgeData] | None = None) -> AGB_ages:
     """
     Calculate the age group for an athlete.
 
@@ -41,11 +41,11 @@ def calculate_age_group(year_of_birth: int, year_of_event: int = None, ages_json
         year_of_event = datetime.datetime.now().year
 
     # Order any age groups with a min_age flag, with the oldest first
-    over_ages = filter(lambda age: age[1].get("min_age"), ages_json.items())
+    over_ages = list(filter(lambda age: age[1].get("min_age"), ages_json.items()))
     over_ages = sorted(over_ages, key=lambda age: age[1]["min_age"], reverse=True)
 
     # Order any age groups with a max_age flag, with the youngest first
-    under_ages = filter(lambda age: age[1].get("max_age"), ages_json.items())
+    under_ages = list(filter(lambda age: age[1].get("max_age"), ages_json.items()))
     under_ages = sorted(under_ages, key=lambda age: age[1]["max_age"])
 
     # If no min or max age is hit, assume the first unmarked category
