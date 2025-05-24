@@ -18,16 +18,16 @@ def calculate_age_group(
     ages_json: dict[str, AGBAgeData] | None = None,
 ) -> AGB_ages:
     """
-    Calculate the age group for an athlete.
+    Calculate the age group for an athlete given birth year.
 
     Parameters
     ----------
     year_of_birth : int
-        The year that the athelete was born in
-    year_of_event : int | None
+        The year that the athlete was born in
+    year_of_event : int | None, default = None
         The year that the event is taking place in.
         Defaults to the current year as per datetime.datetime.now()
-    ages_json : dict[str, AGBAgeData]
+    ages_json : dict[str, AGBAgeData], default = None
         The available age groups. Defaults to those found in the "./AGB_ages.json"
 
     Returns
@@ -37,7 +37,7 @@ def calculate_age_group(
 
     References
     ----------
-    Archery GB Rules of Shooting
+    Archery GB Rules of Shooting (2023)
     """
     if ages_json is None:
         ages_json = read_ages_json()
@@ -45,30 +45,33 @@ def calculate_age_group(
     if year_of_event is None:
         year_of_event = datetime.datetime.now().year
 
-    # Order any age groups with a min_age flag, with the oldest first
-    over_ages = list(filter(lambda age: age[1].get("min_age"), ages_json.items()))
-    over_ages = sorted(over_ages, key=lambda age: age[1]["min_age"], reverse=True)
+    age_this_year = year_of_event - year_of_birth
 
-    # Order any age groups with a max_age flag, with the youngest first
-    under_ages = list(filter(lambda age: age[1].get("max_age"), ages_json.items()))
-    under_ages = sorted(under_ages, key=lambda age: age[1]["max_age"])
+    # Extract appropriate age group.
+    # Note some mypy ignores are required after filtering out `None` min/max ages
 
-    # If no min or max age is hit, assume the first unmarked category
-    adult_age_key = next(
-        filter(
-            lambda age: not age[1].get("max_age") and not age[1].get("min_age"),
-            ages_json.items(),
-        )
-    )[0]
+    # Order any age groups with a non-None min_age, sort oldest first
+    over_ages = sorted(
+        ((key, data) for key, data in ages_json.items() if data["min_age"] is not None),
+        key=lambda data: data[1]["min_age"],  # type: ignore[arg-type, return-value]
+        reverse=True,
+    )
 
-    birthday_this_year = year_of_event - year_of_birth
+    # Order any age groups with a non-None max_age, sort youngest first
+    under_ages = sorted(
+        ((key, data) for key, data in ages_json.items() if data["max_age"] is not None),
+        key=lambda data: data[1]["max_age"],  # type: ignore[arg-type, return-value]
+    )
 
+    # Filter out the maximum upper age group to which archer can belong
     for age_key, age_data in over_ages:
-        if birthday_this_year >= age_data["min_age"]:
+        if age_this_year >= age_data["min_age"]:  # type: ignore[operator]
             return AGB_ages[age_key]
 
+    # Filter out the minimum lower age group to which archer can belong
     for age_key, age_data in under_ages:
-        if birthday_this_year <= age_data["max_age"]:
+        if age_this_year <= age_data["max_age"]:  # type: ignore[operator]
             return AGB_ages[age_key]
 
-    return AGB_ages[adult_age_key]
+    # If no min or max age is hit, assume adult
+    return AGB_ages.AGE_ADULT
