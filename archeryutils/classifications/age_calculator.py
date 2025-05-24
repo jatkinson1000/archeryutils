@@ -15,7 +15,6 @@ from archeryutils.classifications.classification_utils import AGBAgeData, read_a
 def calculate_age_group(
     year_of_birth: int,
     year_of_event: int | None = None,
-    ages_json: dict[str, AGBAgeData] | None = None,
 ) -> AGB_ages:
     """
     Calculate the age group for an athlete given birth year.
@@ -25,10 +24,8 @@ def calculate_age_group(
     year_of_birth : int
         The year that the athlete was born in
     year_of_event : int | None, default = None
-        The year that the event is taking place in.
+        The year that the event is taking place in
         Defaults to the current year as per datetime.datetime.now()
-    ages_json : dict[str, AGBAgeData], default = None
-        The available age groups. Defaults to those found in the "./AGB_ages.json"
 
     Returns
     -------
@@ -39,8 +36,7 @@ def calculate_age_group(
     ----------
     Archery GB Rules of Shooting (2023)
     """
-    if ages_json is None:
-        ages_json = read_ages_json()
+    ages_json = read_ages_json()
 
     if year_of_event is None:
         year_of_event = datetime.datetime.now().year
