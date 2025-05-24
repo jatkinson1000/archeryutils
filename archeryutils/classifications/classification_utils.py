@@ -15,7 +15,7 @@ get_compound_codename
 
 import json
 from pathlib import Path
-from typing import Literal, NotRequired, TypedDict
+from typing import Literal, TypedDict
 
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 
@@ -33,8 +33,8 @@ class AGBAgeData(TypedDict):
 
     desc: str
     age_group: str
-    min_age: NotRequired[int]
-    max_age: NotRequired[int]
+    min_age: int | None
+    max_age: int | None
     male: list[float]
     female: list[float]
     sighted: list[float]
