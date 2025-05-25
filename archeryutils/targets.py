@@ -21,6 +21,7 @@ ScoringSystem: TypeAlias = Literal[
     "WA_field",
     "IFAA_field",
     "IFAA_field_expert",
+    "AA_national_field",
     "Beiter_hit_miss",
     "Worcester",
     "Worcester_2_ring",
@@ -411,6 +412,9 @@ class Target:
 
         elif system == "IFAA_field":
             spec = {_rnd6(n * diameter / 5): 5 - n // 2 for n in range(1, 6, 2)}
+
+        elif system == "AA_national_field":
+            spec = {_rnd6(n * diameter / 5): 6 - n for n in range(1, 6)}
 
         elif system == "Beiter_hit_miss":
             spec = {diameter: 1}

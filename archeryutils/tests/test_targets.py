@@ -163,6 +163,7 @@ class TestTarget:
             ("WA_field", 6),
             ("IFAA_field", 5),
             ("IFAA_field_expert", 5),
+            ("AA_national_field", 5),
             ("Worcester", 5),
             ("Worcester_2_ring", 5),
             ("Beiter_hit_miss", 1),
@@ -191,6 +192,7 @@ class TestTarget:
             ("WA_field", 1),
             ("IFAA_field", 3),
             ("IFAA_field_expert", 1),
+            ("AA_national_field", 1),
             ("Worcester", 1),
             ("Worcester_2_ring", 4),
             ("Beiter_hit_miss", 1),
@@ -271,6 +273,17 @@ class TestTarget:
                     0.1: 5,
                     0.3: 4,
                     0.5: 3,
+                },
+            ),
+            (
+                "AA_national_field",
+                20,
+                {
+                    0.04: 5,
+                    0.08: 4,
+                    0.12: 3,
+                    0.16: 2,
+                    0.2: 1,
                 },
             ),
             (
