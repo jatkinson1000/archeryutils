@@ -1,0 +1,52 @@
+[
+  {"name" : "Australian Indoor 1",
+   "codename" : "australian_indoor_1",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone", "distance" : 18, "dist_unit" : "metre"}]
+  },
+  {"name" : "Australian Indoor 1 Compound",
+   "codename" : "australian_indoor_1_compound",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_compound", "distance" : 18, "dist_unit" : "metre"}]
+  },
+  {"name" : "Australian Indoor 1 Triple",
+   "codename" : "australian_indoor_1_triple",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 18, "dist_unit" : "metre"}]
+  },
+  {"name" : "Australian Indoor 1 Compound Triple",
+   "codename" : "australian_indoor_1_compound_triple",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring_compound", "distance" : 18, "dist_unit" : "metre"}]
+  },
+
+
+  {"name" : "Australian Indoor 2",
+   "codename" : "australian_indoor_2",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 25, "dist_unit" : "metre"}]
+  },
+  {"name" : "Australian Indoor 2 Compound",
+   "codename" : "australian_indoor_2_compound",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_compound", "distance" : 25, "dist_unit" : "metre"}]
+  },
+  {"name" : "Australian Indoor 2 Triple",
+   "codename" : "australian_indoor_2_triple",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring", "distance" : 25, "dist_unit" : "metre"}]
+  },
+  {"name" : "Australian Indoor 2 Compound Triple",
+   "codename" : "australian_indoor_2_compound_triple",
+   "location" : "indoor",
+   "body" : "AA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring_compound", "distance" : 25, "dist_unit" : "metre"}]
+  }
+]
