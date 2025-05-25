@@ -176,6 +176,9 @@ Possible options for round collections are:
 * ``WA_indoor`` - World Archery indoor rounds
 * ``WA_field`` - World Archery field rounds
 * ``IFAA_field`` - IFAA indoor and outdoor rounds
+* ``AA_outdoor_metric`` - Archery Australia outdoor metric rounds
+* ``AA_indoor`` - Archery Australia indoor rounds
+* ``AA_field`` - Archery Australia field rounds
 * ``AGB_VI`` - Archery GB Visually Impaired rounds
 * ``WA_VI`` - World Archery Visually Impaired rounds
 * ``misc`` - Miscellaneous rounds such as individual distances, 252 awards, frostbites etc.

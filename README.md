@@ -14,7 +14,7 @@ Designed to make the development of archery codes and apps easier.
 
 Contains:
 - generic representations of targets and rounds
-- World Archery, Archery GB, IFAA rounds
+- World Archery, Archery GB, IFAA, and Archery Australia rounds
 - calculations for Archery GB handicaps and Archery Australia archer skill level
 - calculation of Archery GB classifications
 

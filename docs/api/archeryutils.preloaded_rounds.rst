@@ -39,8 +39,8 @@ WA Outdoor
 
     au.load_rounds.AGB_outdoor_imperial
 
-AGB Outdoor Imperial
---------------------
+AGB (Archery GB) Outdoor Imperial
+---------------------------------
 
 .. ipython:: python
 
@@ -48,8 +48,8 @@ AGB Outdoor Imperial
 
     au.load_rounds.WA_outdoor
 
-AGB Outdoor Metric
---------------------
+AGB (Archery GB) Outdoor Metric
+-------------------------------
 
 .. ipython:: python
 
@@ -57,8 +57,8 @@ AGB Outdoor Metric
 
     au.load_rounds.AGB_outdoor_metric
 
-AGB Outdoor Imperial
---------------------
+AGB (Archery GB) Outdoor Imperial
+---------------------------------
 
 .. ipython:: python
 
@@ -75,8 +75,8 @@ WA Indoor
 
     au.load_rounds.WA_indoor
 
-AGB Indoor
-----------
+AGB (Archery GB) Indoor
+-----------------------
 
 .. ipython:: python
 
@@ -111,14 +111,41 @@ WA VI
 
     au.load_rounds.WA_VI
 
-AGB VI
-------
+AGB (Archery GB) VI
+-------------------
 
 .. ipython:: python
 
     import archeryutils as au
 
     au.load_rounds.AGB_VI
+
+AA (Archery Australia) Outdoor
+------------------------------
+
+.. ipython:: python
+
+    import archeryutils as au
+
+    au.load_rounds.AA_outdoor_metric
+
+AA (Archery Australia) Indoor
+-----------------------------
+
+.. ipython:: python
+
+    import archeryutils as au
+
+    au.load_rounds.AA_indoor
+
+AA (Archery Australia) Field
+----------------------------
+
+.. ipython:: python
+
+    import archeryutils as au
+
+    au.load_rounds.AA_field
 
 Miscellaneous
 -------------
