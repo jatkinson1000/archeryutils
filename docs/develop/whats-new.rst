@@ -3,6 +3,7 @@ What's New
 
 Latest
 ------
+* Added Archery Australia rounds in `#135 <https://github.com/jatkinson1000/archeryutils/pull/135>`_
 * Better use of numpy typing in `#133 <https://github.com/jatkinson1000/archeryutils/pull/133>`_
 * Allow inputs to classification functions to be an archeryutils `Round`
   as well as a string in `#119 <https://github.com/jatkinson1000/archeryutils/pull/119>`_
