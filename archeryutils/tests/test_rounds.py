@@ -123,6 +123,7 @@ class TestPass:
             ("10_zone", 1000),
             ("WA_field", 600),
             ("IFAA_field", 500),
+            ("AA_national_field", 500),
             ("Worcester_2_ring", 500),
             ("Beiter_hit_miss", 100),
         ],
