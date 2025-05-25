@@ -6,11 +6,14 @@ on:
     branches:
     - main
   # run on every push (not commit) to a PR, plus open/reopen
+  # triggers for code changes
   pull_request:
     types:
     - synchronize
     - opened
     - reopened
+    paths:
+      - 'archeryutils/**'
 
 jobs:
   coverage:
