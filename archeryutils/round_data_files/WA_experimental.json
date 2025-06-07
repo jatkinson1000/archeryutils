@@ -1,0 +1,47 @@
+[
+  {"name" : "WA 660 (70m)",
+   "codename" : "wa660_70",
+   "location" : "outdoor",
+   "body" : "WAExp",
+   "family" : "wa660",
+   "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "11_zone", "distance" : 70, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 122, "scoring" : "11_zone", "distance" : 70, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 660 (60m)",
+   "codename" : "wa660_60",
+   "location" : "outdoor",
+   "body" : "WAExp",
+   "family" : "wa660",
+   "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "11_zone", "distance" : 60, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 122, "scoring" : "11_zone", "distance" : 60, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 660 (50m) Compound",
+   "codename" : "wa660_50_c",
+   "location" : "outdoor",
+   "body" : "WAExp",
+   "family" : "wa660",
+   "passes" : [{"n_arrows" : 30, "diameter" : 80, "scoring" : "11_zone", "distance" : 50, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 80, "scoring" : "11_zone", "distance" : 50, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 660 (50m) Compound 6-zone",
+   "codename" : "wa660_50_c_small",
+   "location" : "outdoor",
+   "body" : "WAExp",
+   "family" : "wa660",
+   "passes" : [{"n_arrows" : 30, "diameter" : 80, "scoring" : "11_zone_6_ring", "distance" : 50, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 80, "scoring" : "11_zone_6_ring", "distance" : 50, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 660 (50m) Barebow",
+   "codename" : "wa660_50_b",
+   "location" : "outdoor",
+   "body" : "WAExp",
+   "family" : "wa660",
+   "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "11_zone", "distance" : 50, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 122, "scoring" : "11_zone", "distance" : 50, "dist_unit" : "metre"}
+              ]
+  }
+]
