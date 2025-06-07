@@ -3,6 +3,7 @@ What's New
 
 Latest
 ------
+* Added Experimental WA 660 rounds in `#139 <https://github.com/jatkinson1000/archeryutils/pull/139>`_
 * Added Archery Australia rounds in `#135 <https://github.com/jatkinson1000/archeryutils/pull/135>`_
 * Better use of numpy typing in `#133 <https://github.com/jatkinson1000/archeryutils/pull/133>`_
 * Allow inputs to classification functions to be an archeryutils `Round`
@@ -19,7 +20,7 @@ Latest
 * Bugfix: Field classification naming made consistent with other schemes.
 * Dependencies:
   * Latest ruff
-  * Use dev mypy from GitHub to resolve bug
+  * Use latest mypy (1.16) to resolve Enums
   * Pin sphinx at <8.2.0 due to typing incompatibilities
 
 
