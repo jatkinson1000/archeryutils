@@ -121,6 +121,7 @@ class TestPass:
         [
             ("5_zone", 900),
             ("10_zone", 1000),
+            ("11_zone", 1100),
             ("WA_field", 600),
             ("IFAA_field", 500),
             ("AA_national_field", 500),
