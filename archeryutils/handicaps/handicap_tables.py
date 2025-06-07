@@ -144,7 +144,8 @@ class HandicapTable:
             )
         # Format each row appropriately
         output_rows = [
-            self._format_row(row, hc_dp, self.int_prec) for row in self.table
+            self._format_row(np.asarray(row), hc_dp, self.int_prec)
+            for row in self.table
         ]
         output_str = "\n".join(chain([output_header], output_rows))
 

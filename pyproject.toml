@@ -36,8 +36,7 @@ test = [
     "pytest-mock",
 ]
 lint = [
-    # "mypy>=1.0.0",
-    "mypy @ git+https://github.com/python/mypy.git@master",
+    "mypy>=1.16.0",
     "coverage",
     "pytest>=7.2.0",
     "pytest-mock",
@@ -80,7 +79,6 @@ archeryutils = ["*.json", "round_data_files/*.json", "classifications/*.json"]
 
 [tool.mypy]
 warn_unused_configs = true
-plugins = ["numpy.typing.mypy_plugin"]
 
 [tool.ruff]
 # Run linting and formatting on notebooks
