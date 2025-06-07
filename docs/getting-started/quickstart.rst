@@ -175,6 +175,7 @@ Possible options for round collections are:
 * ``WA_outdoor`` - World Archery outdoor rounds
 * ``WA_indoor`` - World Archery indoor rounds
 * ``WA_field`` - World Archery field rounds
+* ``WA_experimental`` - Experimental World Archery 660 rounds used at Antalya WC 2025
 * ``IFAA_field`` - IFAA indoor and outdoor rounds
 * ``AA_outdoor_metric`` - Archery Australia outdoor metric rounds
 * ``AA_indoor`` - Archery Australia indoor rounds

@@ -147,6 +147,15 @@ AA (Archery Australia) Field
 
     au.load_rounds.AA_field
 
+WA Experimental
+---------------
+
+.. ipython:: python
+
+    import archeryutils as au
+
+    au.load_rounds.WA_experimental
+
 Miscellaneous
 -------------
 
