@@ -102,6 +102,10 @@ class Pass:
             return NotImplemented
         return self.n_arrows == other.n_arrows and self.target == other.target
 
+    def __hash__(self) -> int:
+        """Generate hash for the Pass object."""
+        return hash((self.n_arrows, self.target))
+
     @property
     def scoring_system(self) -> ScoringSystem:
         """Get target scoring_system."""
@@ -234,6 +238,10 @@ class Round:
         if not isinstance(other, Round):
             return NotImplemented
         return self.name == other.name and self.passes == other.passes
+
+    def __hash__(self) -> int:
+        """Generate hash for the Round object."""
+        return hash((self.name, tuple(self.passes)))
 
     def max_score(self) -> float:
         """
