@@ -41,7 +41,8 @@ lint = [
     "pytest>=7.2.0",
     "pytest-mock",
     "ruff>=0.13.3",
-    "blackdoc",
+    "blackdoc<=0.4.2",
+    "black<=25.1.0",  # Pin version due to blackdoc incompatibility. Remove once resolved
 ]
 docs = [
     "sphinx<8.2.0",
@@ -51,7 +52,9 @@ docs = [
     "ipython",
     "pickleshare",  # https://github.com/ipython/ipython/issues/14237
     "ruff>=0.13.3",
-    "blackdoc",
+    "blackdoc<=0.4.2",
+    "black<=25.1.0",  # Pin version due to blackdoc incompatibility. Remove once resolved
+    "myst-parser",
 ]
 dev = [
     "archeryutils[test,lint,docs]",
