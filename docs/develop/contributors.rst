@@ -7,7 +7,7 @@ archeryutils:
 * Jack Atkinson
 
   * `Web <https://jack.atkinson.net/>`_
-  * `@jatkinson1000@fosstodon.org <https://fosstodon.org/@jatkinson1000>`_
+  * `@jatkinson1000@hachyderm.io <https://hachyderm.io/@jatkinson1000>`_
   * GitHub: `@jatkinson1000 <https://github.com/jatkinson1000>`_
   * GitLab: `@jatkinson1000 <https://gitlab.com/jatkinson1000>`_
 
