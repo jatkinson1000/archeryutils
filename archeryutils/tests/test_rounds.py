@@ -1,5 +1,6 @@
 """Tests for Pass and Round classes."""
 
+import re
 from typing import Iterable
 
 import pytest
@@ -24,7 +25,7 @@ class TestPass:
         """Check that Pass raises a TypeError for invalid target."""
         with pytest.raises(
             TypeError,
-            match="The target passed to a Pass should be of type Target.",
+            match=re.escape("The target passed to a Pass should be of type Target."),
         ):
             Pass(36, 42)  # type: ignore[arg-type]
 
@@ -70,6 +71,45 @@ class TestPass:
 
         comparison = pass_ == other
         assert comparison == result
+
+    def test_hash_consistency(self) -> None:
+        """Check hash is same for same object."""
+        pass_ = Pass.at_target(30, "10_zone", 40, (20, "yard"))
+
+        assert hash(pass_) == hash(pass_)
+
+    def test_hash_uniqueness(self) -> None:
+        """Check hash is different for different objects."""
+        pass1 = Pass.at_target(30, "10_zone", 40, (20, "yard"))
+        pass2 = Pass.at_target(12, "10_zone", 40, (20, "yard"))
+        pass3 = Pass.at_target(30, "5_zone", 40, (20, "yard"))
+        pass4 = Pass.at_target(30, "10_zone", 122, (20, "yard"))
+        pass5 = Pass.at_target(30, "10_zone", 40, (80, "yard"))
+        pass6 = Pass.at_target(30, "10_zone", 40, (20, "metre"))
+
+        assert hash(pass1) != hash(pass2)
+        assert hash(pass1) != hash(pass3)
+        assert hash(pass1) != hash(pass4)
+        assert hash(pass1) != hash(pass5)
+        assert hash(pass1) != hash(pass6)
+
+    def test_hashable_in_set(self) -> None:
+        """Check hash can be used in a set."""
+        pass1 = Pass.at_target(30, "10_zone", 40, (20, "yard"))
+        pass2 = Pass.at_target(30, "10_zone", 40, (80, "yard"))
+
+        passes_set = {pass1, pass2}
+        assert pass1 in passes_set
+        assert pass2 in passes_set
+
+    def test_hashable_in_dict(self) -> None:
+        """Check hash can be used in a dict as keys."""
+        pass1 = Pass.at_target(30, "10_zone", 40, (20, "yard"))
+        pass2 = Pass.at_target(30, "10_zone", 40, (80, "yard"))
+
+        rounds_dict = {pass1: "First Pass", pass2: "Second Pass"}
+        assert rounds_dict[pass1] == "First Pass"
+        assert rounds_dict[pass2] == "Second Pass"
 
     def test_default_distance_unit(self) -> None:
         """Check that Pass returns distance in metres when units not specified."""
@@ -168,7 +208,9 @@ class TestRound:
         """Check that Round raises a ValueError for empty passes iterable."""
         with pytest.raises(
             ValueError,
-            match="passes must contain at least one Pass object but none supplied.",
+            match=re.escape(
+                "passes must contain at least one Pass object but none supplied."
+            ),
         ):
             Round("My Round Name", badpass)  # type: ignore[arg-type]
 
@@ -176,7 +218,9 @@ class TestRound:
         """Check that Round raises a TypeError for passes not containing Pass."""
         with pytest.raises(
             TypeError,
-            match="passes in a Round object should be an iterable of Pass objects.",
+            match=re.escape(
+                "passes in a Round object should be an iterable of Pass objects."
+            ),
         ):
             Round("My Round Name", ["a", "b", "c"])  # type: ignore[list-item]
 
@@ -247,6 +291,45 @@ class TestRound:
         round_ = Round("Test", [pass_, pass_])
 
         assert round_ != ("Test", [pass_, pass_])
+
+    def test_hash_consistency(self) -> None:
+        """Check hash is same for same object."""
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+        round_ = Round("Test", [pass_, pass_])
+
+        assert hash(round_) == hash(round_)
+
+    def test_hash_uniqueness(self) -> None:
+        """Check hash is different for different objects."""
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+        round1 = Round("Test1", [pass_, pass_])
+        round2 = Round("Test2", [pass_, pass_])
+
+        assert hash(round1) != hash(round2)
+
+    def test_hashable_in_set(self) -> None:
+        """Check hash can be used in a set."""
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+        round1 = Round("Test1", [pass_, pass_])
+        round2 = Round("Test2", [pass_, pass_])
+
+        rounds_set = {round1, round2}
+        assert round1 in rounds_set
+        assert round2 in rounds_set
+
+    def test_hashable_in_dict(self) -> None:
+        """Check hash can be used in a dict as keys."""
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        pass_ = Pass(30, target)
+        round1 = Round("Test1", [pass_, pass_])
+        round2 = Round("Test2", [pass_, pass_])
+
+        rounds_dict = {round1: "First Round", round2: "Second Round"}
+        assert rounds_dict[round1] == "First Round"
+        assert rounds_dict[round2] == "Second Round"
 
     @pytest.mark.parametrize(
         "passes,result",

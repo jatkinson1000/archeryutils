@@ -256,8 +256,16 @@ class Target:
 
         return self._parameters() == other._parameters()
 
-    def _parameters(self):
-        """Shortcut to get all target parameters as a tuple for comparison."""
+    def __hash__(self) -> int:
+        """Generate hash for the Target object."""
+        return hash(self._parameters())
+
+    def _parameters(self) -> tuple:
+        """
+        Shortcut to get all target parameters as a tuple for comparison.
+
+        Note: Conversion of mutable face_spec dict to a frozenset.
+        """
         return (
             self._scoring_system,
             self._diameter,
@@ -265,7 +273,7 @@ class Target:
             self._distance,
             self._native_distance,
             self.indoor,
-            self.face_spec,
+            frozenset(self.face_spec.items()),
         )
 
     @property

@@ -79,18 +79,56 @@ class TestTarget:
 
         assert target != ("10_zone", 40, (20, "yard"), True)
 
+    def test_hash_consistency(self) -> None:
+        """Check hash is same for same object."""
+        target = Target("10_zone", 40, (20, "yard"), indoor=True)
+        assert hash(target) == hash(target)
+
+    def test_hash_uniqueness(self) -> None:
+        """Check hash is different for different objects."""
+        target1 = Target("10_zone", 40, (20, "yard"), indoor=True)
+        target2 = Target("5_zone", 40, (20, "yard"), indoor=True)
+        target3 = Target("10_zone", 122, (20, "yard"), indoor=True)
+        target4 = Target("10_zone", 40, (80, "yard"), indoor=True)
+        target5 = Target("10_zone", 40, (20, "metre"), indoor=True)
+        target6 = Target("10_zone", 40, (20, "yard"), indoor=False)
+
+        assert hash(target1) != hash(target2)
+        assert hash(target1) != hash(target3)
+        assert hash(target1) != hash(target4)
+        assert hash(target1) != hash(target5)
+        assert hash(target1) != hash(target6)
+
+    def test_hashable_in_set(self) -> None:
+        """Check hash can be used in a set."""
+        target1 = Target("10_zone", 40, (20, "yard"), indoor=True)
+        target2 = Target("10_zone", 30, (80, "yard"), indoor=False)
+        targets_set = {target1, target2}
+        assert target1 in targets_set
+        assert target2 in targets_set
+
+    def test_hashable_in_dict(self) -> None:
+        """Check hash can be used in a dict as keys."""
+        target1 = Target("10_zone", 40, (20, "yard"), indoor=True)
+        target2 = Target("10_zone", 30, (80, "yard"), indoor=False)
+        targets_dict = {target1: "First Target", target2: "Second Target"}
+        assert targets_dict[target1] == "First Target"
+        assert targets_dict[target2] == "Second Target"
+
     def test_invalid_system(self) -> None:
         """Check that Target() returns error value for invalid system."""
         with pytest.raises(
             ValueError,
-            match="Invalid Target Face Type specified.\nPlease select from '(.+)'.",
+            match=r"Invalid Target Face Type specified.\nPlease select from '(.+)'.",
         ):
             # Silence mypy as scoring_system must be a valid literal ScoringSystem
             Target("InvalidScoringSystem", 122, 50, False)  # type: ignore[arg-type]
 
     def test_invalid_distance_unit(self) -> None:
         """Check that Target() returns error value for invalid distance units."""
-        with pytest.raises(ValueError, match="Unit '(.+)' not recognised. Select from"):
+        with pytest.raises(
+            ValueError, match=r"Unit '(.+)' not recognised. Select from"
+        ):
             Target("5_zone", 122, (50, "InvalidDistanceUnit"), False)
 
     def test_default_distance_unit(self) -> None:
@@ -106,7 +144,9 @@ class TestTarget:
 
     def test_invalid_diameter_unit(self) -> None:
         """Check Target() raises error when called with unsupported diameter units."""
-        with pytest.raises(ValueError, match="Unit '(.+)' not recognised. Select from"):
+        with pytest.raises(
+            ValueError, match=r"Unit '(.+)' not recognised. Select from"
+        ):
             Target("5_zone", (122, "bananas"), (50, "yards"))
 
     def test_default_diameter_unit(self) -> None:
@@ -363,7 +403,7 @@ class TestTarget:
         """Check that generating face spec for an unsupported system raises error."""
         with pytest.raises(
             ValueError,
-            match="Scoring system '(.+)' is not supported",
+            match=r"Scoring system '(.+)' is not supported",
         ):
             # Silence mypy as using known invalid scoring system for test
             assert Target.gen_face_spec("Dartchery", 100)  # type: ignore[arg-type]
