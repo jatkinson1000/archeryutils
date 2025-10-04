@@ -51,6 +51,7 @@ When reporting a bug, please include the following:
 
       ```python
       import archeryutils as au
+
       myTarget = au.Target(...)
 
       ...
