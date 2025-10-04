@@ -16,4 +16,4 @@ For details of how to get involved with any of these see :ref:`contributing`.
 
    contributing
    contributors
-   whats-new
+   changelog

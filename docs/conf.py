@@ -28,6 +28,7 @@ extensions = [
     "nbsphinx",
     "IPython.sphinxext.ipython_directive",
     "IPython.sphinxext.ipython_console_highlighting",
+    'myst_parser',
 ]
 
 templates_path = ["_templates"]
