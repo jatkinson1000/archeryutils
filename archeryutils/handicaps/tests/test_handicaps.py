@@ -1,5 +1,7 @@
 """Tests for handicap equations and functions."""
 
+import re
+
 import numpy as np
 import pytest
 
@@ -207,7 +209,11 @@ class TestSigmaT:
         hc_sys = hc.handicap_scheme(hc_system)
         with pytest.raises(
             TypeError,
-            match=("Inappropriate input for handicaps code. Must be numeric value."),
+            match=(
+                re.escape(
+                    "Inappropriate input for handicaps code. Must be numeric value."
+                )
+            ),
         ):
             theta_array = hc_sys.sigma_t(
                 handicap=handicap_array,
@@ -241,7 +247,11 @@ class TestSigmaT:
         hc_sys = hc.handicap_scheme(hc_system)
         with pytest.raises(
             TypeError,
-            match=("Inappropriate input for handicaps code. Must be numeric value."),
+            match=(
+                re.escape(
+                    "Inappropriate input for handicaps code. Must be numeric value."
+                )
+            ),
         ):
             theta_array = hc_sys.sigma_t(
                 handicap=handicap_array,
