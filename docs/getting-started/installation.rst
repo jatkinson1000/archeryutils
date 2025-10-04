@@ -8,6 +8,7 @@ Required dependencies
 
 - Python (3.10 or later)
 - `numpy <https://www.numpy.org/>`__ (1.20 or later)
+- `aenum <https://pypi.org/project/aenum/>`__ (Python versions < 3.12)
 
 .. _optional-dependencies:
 
@@ -71,8 +72,8 @@ For applying quality control to the code::
 
     pip install -e .[lint]
 
-* ruff (0.7.3 or later)
-* mypy (1.0.0 or later)
+* ruff (0.13.3 or later)
+* mypy (1.16.0 or later)
 * coverage
 * pytest (7.2.0 or later)
 * pytest-mock
@@ -89,7 +90,9 @@ For building documentation::
 * sphinx_rtd_theme
 * sphinx-toolbox
 * nbsphinx
+* myst-parser
 * blackdoc
 * ipython
 * pickleshare
-* ruff (0.7.3 or later)
+* ruff (0.13.3 or later)
+* blackdoc
