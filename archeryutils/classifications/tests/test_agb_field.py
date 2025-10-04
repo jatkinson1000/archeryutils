@@ -1,5 +1,7 @@
 """Tests for field classification functions."""
 
+import re
+
 import pytest
 
 import archeryutils.classifications as cf
@@ -278,9 +280,12 @@ class TestAgbFieldClassificationScores:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "field classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "field classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             my_round = Round(
@@ -301,9 +306,12 @@ class TestAgbFieldClassificationScores:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "field classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "field classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.agb_field_classification_scores(
@@ -575,9 +583,12 @@ class TestCalculateAgbFieldClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "field classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "field classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             my_round = Round(
@@ -599,9 +610,12 @@ class TestCalculateAgbFieldClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "field classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "field classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.calculate_agb_field_classification(

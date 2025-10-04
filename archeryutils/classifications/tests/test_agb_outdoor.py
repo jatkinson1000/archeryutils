@@ -341,9 +341,12 @@ class TestAgbOutdoorClassificationScores:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "outdoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "outdoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             my_round = Round(
@@ -364,9 +367,12 @@ class TestAgbOutdoorClassificationScores:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "outdoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "outdoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.agb_outdoor_classification_scores(
@@ -590,9 +596,12 @@ class TestCalculateAgbOutdoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of outdoor "
-                "classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of outdoor "
+                    "classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.calculate_agb_outdoor_classification(
@@ -635,9 +644,12 @@ class TestCalculateAgbOutdoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "outdoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "outdoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             my_round = Round(
@@ -659,9 +671,12 @@ class TestCalculateAgbOutdoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "outdoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "outdoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.calculate_agb_outdoor_classification(

@@ -1,5 +1,7 @@
 """Tests for agb indoor classification functions."""
 
+import re
+
 import pytest
 
 import archeryutils.classifications as cf
@@ -297,9 +299,12 @@ class TestAgbIndoorClassificationScores:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "indoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "indoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             my_round = Round(
@@ -320,9 +325,12 @@ class TestAgbIndoorClassificationScores:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "indoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "indoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.agb_indoor_classification_scores(
@@ -439,9 +447,12 @@ class TestCalculateAgbIndoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "indoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "indoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.calculate_agb_indoor_classification(
@@ -481,9 +492,12 @@ class TestCalculateAgbIndoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "indoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "indoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             my_round = Round(
@@ -505,9 +519,12 @@ class TestCalculateAgbIndoorClassification:
         with pytest.raises(
             ValueError,
             match=(
-                "This round is not recognised for the purposes of "
-                "indoor classification.\n"
-                "Please select an appropriate option using `archeryutils.load_rounds`."
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "indoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
             ),
         ):
             _ = cf.calculate_agb_indoor_classification(

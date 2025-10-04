@@ -107,7 +107,7 @@ class TestLengths:
 
     def test_optional_unit_parsing_units_not_supported(self):
         """Test parsing of quantities with and without units."""
-        with pytest.raises(ValueError, match="Unit (.+) not recognised. Select from"):
+        with pytest.raises(ValueError, match=r"Unit (.+) not recognised. Select from"):
             length.parse_optional_units(
                 (10, "bannana"), length.metre | length.yard, "metre"
             )
@@ -115,6 +115,6 @@ class TestLengths:
     def test_optional_unit_parsing_default_not_supported(self):
         """Test parsing of quantities with and without units."""
         with pytest.raises(
-            ValueError, match="Default unit (.+) must be in supported units"
+            ValueError, match=r"Default unit (.+) must be in supported units"
         ):
             length.parse_optional_units(10, length.metre | length.yard, "inch")

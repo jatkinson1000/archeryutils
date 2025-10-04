@@ -1,5 +1,7 @@
 """Tests for handicap table code."""
 
+import re
+
 import numpy as np
 import pytest
 from numpy.typing import NDArray
@@ -198,7 +200,7 @@ class TestHandicapTable:
         """Check that empty rounds list triggers error."""
         with pytest.raises(
             ValueError,
-            match=("No rounds provided for handicap table."),
+            match=(re.escape("No rounds provided for handicap table.")),
         ):
             hc.HandicapTable("AGB", 1.0, [])
 
@@ -208,6 +210,10 @@ class TestHandicapTable:
         """Check that inappropriate handicaps triggers error."""
         with pytest.raises(
             TypeError,
-            match=("Cannot convert supplied handicaps to float for HandicapTable."),
+            match=(
+                re.escape(
+                    "Cannot convert supplied handicaps to float for HandicapTable."
+                )
+            ),
         ):
             hc.HandicapTable("AGB", "a", [york, hereford])  # type: ignore

@@ -315,7 +315,7 @@ def calculate_agb_indoor_classification(
     'I-B2'
 
     """
-    archery_round, roundname = _check_round_eligibility(archery_round)
+    archery_round, _ = _check_round_eligibility(archery_round)
 
     # Check score is valid
     if score < 0 or score > archery_round.max_score():
