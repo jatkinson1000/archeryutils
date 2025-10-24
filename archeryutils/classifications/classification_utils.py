@@ -33,6 +33,8 @@ class AGBAgeData(TypedDict):
 
     desc: str
     age_group: str
+    min_age: int | None
+    max_age: int | None
     male: list[float]
     female: list[float]
     sighted: list[float]
