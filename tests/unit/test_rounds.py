@@ -435,7 +435,7 @@ class TestRound:
         assert test_round.max_distance().value == 75
 
     def test_n_arrows(self) -> None:
-        """Check that number of arrows is calculated correctly for a Round. """
+        """Check that number of arrows is calculated correctly for a Round."""
         test_round = Round(
             "MyRound",
             [
@@ -444,7 +444,7 @@ class TestRound:
                 Pass.at_target(24, "5_zone", 122, 30, False),
             ],
         )
-        assert test_round.n_arrows() == 144
+        assert test_round.n_arrows == 144
 
     def test_get_info(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Check printing info works as expected."""

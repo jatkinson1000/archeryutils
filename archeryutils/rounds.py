@@ -272,16 +272,16 @@ class Round:
         longest_pass = max(self.passes, key=lambda p: p.distance)
         return longest_pass.native_distance
 
-    def n_arrows(self) -> int:
-        """
-        Return the total number of arrows shot on this round.
-
-        Returns
-        -------
-        n_arrows : int
-            number of arrows in the round
-        """
-        return sum(pass_i.n_arrows for pass_i in self.passes)
+    # def n_arrows(self) -> int:
+    #     """
+    #     Return the total number of arrows shot on this round.
+    #
+    #     Returns
+    #     -------
+    #     n_arrows : int
+    #         number of arrows in the round
+    #     """
+    #     return sum(pass_i.n_arrows for pass_i in self.passes)
 
     def get_info(self) -> None:
         """
