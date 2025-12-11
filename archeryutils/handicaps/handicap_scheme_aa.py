@@ -194,7 +194,7 @@ class HandicapAA2(HandicapScheme):
 
     """
 
-    def __init__(  # noqa: PLR0913 - Too many arguments
+    def __init__(
         self,
         ang_0: float = 1.0e-3,
         k0: float = 2.57,
