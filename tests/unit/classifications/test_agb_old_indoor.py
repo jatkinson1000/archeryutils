@@ -150,6 +150,47 @@ class TestAgbOldIndoorClassificationScores:
 
         assert scores == scores_expected
 
+    @pytest.mark.parametrize(
+        "archery_round,scores_expected",
+        [
+            (
+                ALL_INDOOR_ROUNDS["portsmouth_triple"],
+                [206, 279, 396, 484, 529, 554, 570, 581],
+            ),
+            (
+                ALL_INDOOR_ROUNDS["worcester_5_centre"],
+                [65, 96, 162, 226, 264, 289, 299, 300],
+            ),
+            (
+                ALL_INDOOR_ROUNDS["wa18_triple"],
+                [63, 100, 203, 370, 486, 537, 558, 568],
+            ),
+            (
+                ALL_INDOOR_ROUNDS["wa18"],
+                [117, 173, 295, 420, 493, 537, 558, 568],
+            ),
+        ],
+    )
+    def test_agb_old_indoor_classification_scores_triple_faces(
+        self,
+        archery_round: Round | str,
+        scores_expected: list[int],
+    ) -> None:
+        """
+        Check that indoor classification returns triple face scores when appropriate.
+
+        Portsmouth and Worcester should return a single face score, whilst WA rounds
+        have separate triple face scores.
+        """
+        scores = cf.agb_old_indoor_classification_scores(
+            archery_round=archery_round,
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
+        )
+
+        assert scores == scores_expected[::-1]
+
     def test_agb_old_indoor_classification_scores_gent_compound_worcester(
         self,
     ) -> None:
@@ -277,6 +318,45 @@ class TestAgbOldIndoorClassificationScores:
         )
 
         assert scores == [581, 570, 554, 529, 484, 396, 279, 206]
+
+    def test_agb_old_indoor_classification_scores_non_strict_round(
+        self,
+    ) -> None:
+        """Check old_indoor classification returns expected value for non-strict."""
+        frostbite = load_rounds.misc.frostbite
+        scores = cf.agb_old_indoor_classification_scores(
+            archery_round=frostbite,
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
+            strict_rounds=False,
+        )
+
+        assert scores == [357, 351, 336, 310, 269, 195, 110, 68]
+
+    @pytest.mark.parametrize(
+        "archery_round",
+        ["portsmouth", "Portsmouth", "fake_round", ""],
+    )
+    def test_agb_indoor_classification_scores_non_strict_round_string(
+        self,
+        archery_round,
+    ) -> None:
+        """Check that old indoor classification errors for non strict string rounds."""
+        with pytest.raises(
+            TypeError,
+            match=(
+                r"strict_rounds is False so archery_round must be explicitly specified "
+                "as a Round type instead of a string."
+            ),
+        ):
+            scores = cf.agb_old_indoor_classification_scores(
+                archery_round=archery_round,
+                bowstyle=AGB_bowstyles.COMPOUND,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
+                strict_rounds=False,
+            )
 
 
 class TestCalculateAgbOldIndoorClassification:
@@ -427,3 +507,44 @@ class TestCalculateAgbOldIndoorClassification:
         )
 
         assert my_class == "B"
+
+    def test_agb_old_indoor_classification_non_strict_round(
+        self,
+    ) -> None:
+        """Check old_indoor classification returns expected value for non-strict."""
+        frostbite = load_rounds.misc.frostbite
+        my_class = cf.calculate_agb_old_indoor_classification(
+            archery_round=frostbite,
+            score=315,
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
+            strict_rounds=False,
+        )
+
+        assert my_class == "D"
+
+    @pytest.mark.parametrize(
+        "archery_round",
+        ["portsmouth", "Portsmouth", "fake_round", ""],
+    )
+    def test_agb_indoor_classification_non_strict_round_string(
+        self,
+        archery_round,
+    ) -> None:
+        """Check that old indoor classification errors for non strict string rounds."""
+        with pytest.raises(
+            TypeError,
+            match=(
+                r"strict_rounds is False so archery_round must be explicitly specified "
+                "as a Round type instead of a string."
+            ),
+        ):
+            scores = cf.calculate_agb_old_indoor_classification(
+                archery_round=archery_round,
+                score=123,
+                bowstyle=AGB_bowstyles.COMPOUND,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
+                strict_rounds=False,
+            )
