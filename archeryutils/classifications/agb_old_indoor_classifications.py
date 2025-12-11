@@ -237,6 +237,7 @@ def calculate_agb_old_indoor_classification(
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
+    strict_rounds: bool = True,
 ) -> str:
     """
     Calculate AGB indoor classification from score.
@@ -257,11 +258,21 @@ def calculate_agb_old_indoor_classification(
         archer's gender under AGB indoor target rules
     age_group : AGB_ages
         archer's age group under AGB indoor target rules
+    strict_rounds : bool
+        Whether to enforce valid AGB rounds only
 
     Returns
     -------
     classification_from_score : str
         the classification appropriate for this score
+
+    Raises
+    ------
+    ValueError
+        If requested round is not valid for this scheme (when strict_rounds enabled)
+        If an invalid score for the requested round is provided
+    TypeError
+        If archery_round is passed as a string when strict_rounds disabled
 
     References
     ----------
@@ -283,7 +294,14 @@ def calculate_agb_old_indoor_classification(
     'C'
 
     """
-    archery_round, _ = _check_round_eligibility(archery_round)
+    if strict_rounds:
+        archery_round, _ = _check_round_eligibility(archery_round)
+    elif isinstance(archery_round, str):
+        msg = (
+            "strict_rounds is False so archery_round must be explicitly specified as "
+            "a Round type instead of a string."
+        )
+        raise TypeError(msg)
 
     # Check score is valid
     if score < 0 or score > archery_round.max_score():
@@ -299,6 +317,7 @@ def calculate_agb_old_indoor_classification(
         bowstyle,
         gender,
         age_group,
+        strict_rounds=strict_rounds,
     )
 
     groupname = _get_old_indoor_groupname(bowstyle, gender, age_group)
@@ -322,6 +341,7 @@ def agb_old_indoor_classification_scores(
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
+    strict_rounds: bool = True,
 ) -> list[int]:
     """
     Calculate AGB indoor classification scores for category.
@@ -340,11 +360,20 @@ def agb_old_indoor_classification_scores(
         archer's gender under AGB indoor target rules
     age_group : AGB_ages
         archer's age group under AGB indoor target rules
+    strict_rounds : bool
+        Whether to enforce valid AGB rounds only
 
     Returns
     -------
     classification_scores : ndarray
         scores required for each classification in descending order
+
+    Raises
+    ------
+    ValueError
+        If requested round is not valid for this scheme (when strict_rounds enabled)
+    TypeError
+        If archery_round is passed as a string when strict_rounds disabled
 
     References
     ----------
@@ -366,12 +395,26 @@ def agb_old_indoor_classification_scores(
 
 
     """
-    archery_round, roundname = _check_round_eligibility(archery_round)
+    if strict_rounds:
+        archery_round, roundname = _check_round_eligibility(archery_round)
 
-    # enforce compound scoring
-    if bowstyle is AGB_bowstyles.COMPOUND:
-        roundname = cls_funcs.get_compound_codename(roundname)
-        archery_round = ALL_INDOOR_ROUNDS[roundname]
+        # enforce compound scoring
+        if bowstyle is AGB_bowstyles.COMPOUND:
+            roundname = cls_funcs.get_compound_codename(roundname)
+            archery_round = ALL_INDOOR_ROUNDS[roundname]
+
+        # Strip spots from AGB rounds to enforce full-face
+        if any(
+            namecatch in roundname
+            for namecatch in ["portsmouth", "worcester", "bray_i", "bray_ii"]
+        ):
+            archery_round = ALL_INDOOR_ROUNDS[cls_funcs.strip_spots(roundname)]
+    elif isinstance(archery_round, str):
+        msg = (
+            "strict_rounds is False so archery_round must be explicitly specified as "
+            "a Round type instead of a string."
+        )
+        raise TypeError(msg)
 
     groupname = _get_old_indoor_groupname(bowstyle, gender, age_group)
     group_data = agb_old_indoor_classifications[groupname]

@@ -353,6 +353,45 @@ class TestAgbIndoorClassificationScores:
 
         assert scores == [472, 508, 532, 549, 560, 571, 583, 594][::-1]
 
+    def test_agb_indoor_classification_scores_non_strict_round(
+        self,
+    ) -> None:
+        """Check that indoor classification returns expected value for non strict."""
+        frostbite = load_rounds.misc.frostbite
+        scores = cf.agb_indoor_classification_scores(
+            archery_round=frostbite,
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
+            strict_rounds=False,
+        )
+
+        assert scores == [360, 356, 349, 339, 326, 309, 286, 256]
+
+    @pytest.mark.parametrize(
+        "archery_round",
+        ["portsmouth", "Portsmouth", "fake_round", ""],
+    )
+    def test_agb_indoor_classification_scores_non_strict_round_string(
+        self,
+        archery_round,
+    ) -> None:
+        """Check that indoor classification errors for non strict string rounds."""
+        with pytest.raises(
+            TypeError,
+            match=(
+                r"strict_rounds is False so archery_round must be explicitly specified "
+                "as a Round type instead of a string."
+            ),
+        ):
+            scores = cf.agb_indoor_classification_scores(
+                archery_round=archery_round,
+                bowstyle=AGB_bowstyles.COMPOUND,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
+                strict_rounds=False,
+            )
+
 
 class TestCalculateAgbIndoorClassification:
     """Tests for the indoor classification function."""
@@ -548,3 +587,44 @@ class TestCalculateAgbIndoorClassification:
         )
 
         assert my_class == "I-B1"
+
+    def test_agb_indoor_classification_non_strict_round(
+        self,
+    ) -> None:
+        """Check that indoor classification returns expected value for non-strict."""
+        frostbite = load_rounds.misc.frostbite
+        my_class = cf.calculate_agb_indoor_classification(
+            archery_round=frostbite,
+            score=315,
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
+            strict_rounds=False,
+        )
+
+        assert my_class == "I-A1"
+
+    @pytest.mark.parametrize(
+        "archery_round",
+        ["portsmouth", "Portsmouth", "fake_round", ""],
+    )
+    def test_agb_indoor_classification_non_strict_round_string(
+        self,
+        archery_round,
+    ) -> None:
+        """Check that indoor classification errors for non strict string rounds."""
+        with pytest.raises(
+            TypeError,
+            match=(
+                r"strict_rounds is False so archery_round must be explicitly specified "
+                "as a Round type instead of a string."
+            ),
+        ):
+            scores = cf.calculate_agb_indoor_classification(
+                archery_round=archery_round,
+                score=123,
+                bowstyle=AGB_bowstyles.COMPOUND,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
+                strict_rounds=False,
+            )
