@@ -57,7 +57,7 @@ def test_handicap_schemes_rounds(snapshot, capsys, scheme) -> None:
     table = hc.HandicapTable(
         scheme,
         handicap_array,
-        ALL_ROUNDS.values(),
+        list(ALL_ROUNDS.values()),
         int_prec=True,
         rounded_scores=True,
         clean_gaps=True,
@@ -81,7 +81,7 @@ def test_handicap_schemes_float(snapshot, capsys, scheme) -> None:
     table = hc.HandicapTable(
         scheme,
         handicap_array,
-        SUBSET_ROUNDS.values(),
+        list(SUBSET_ROUNDS.values()),
         int_prec=False,
         rounded_scores=False,
         clean_gaps=False,
