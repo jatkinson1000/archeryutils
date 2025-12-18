@@ -540,7 +540,7 @@ class HandicapScheme(ABC):
             Handicap for maximum score. Has type int if int_prec is True, else float.
 
         Warns
-        ------
+        -----
         UserWarning
             If called with int_prec=False as precision limit of numerical scheme delta.
 
