@@ -30,13 +30,13 @@ jobs:
     # annotate each step with `if: always` to run all regardless
     - name: Check code formatting with ruff
       if: always()
-      run: ruff format --diff archeryutils/
+      run: ruff format --diff archeryutils/ tests/
     - name: Lint with ruff using pyproject.toml configuration
       if: always()
-      run: ruff check archeryutils/
+      run: ruff check archeryutils/ tests/
     - name: Type checking with mypy
       if: always()
-      run: mypy archeryutils/
+      run: mypy archeryutils/ tests/
     - name: Check docs formatting with blackdoc
       if: always()
       run: blackdoc --diff docs/
