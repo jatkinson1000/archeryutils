@@ -63,7 +63,7 @@ def versions() -> None:  # pragma: no cover
         ("coverage", lambda mod: mod.__version__),
         ("ruff", lambda mod: mod.__version__),
         ("pytest", lambda mod: mod.__version__),
-        ("pytest_mock", lambda mod: importlib.metadata.version(mod.__name__)),
+        ("syrupy", lambda mod: mod.__version__),
         ("mypy", lambda mod: importlib.metadata.version(mod.__name__)),
         # docs
         ("sphinx", lambda mod: mod.__version__),

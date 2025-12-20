@@ -33,14 +33,13 @@ dependencies = [
 [project.optional-dependencies]
 test = [
     "pytest>=7.2.0",
-    "pytest-mock",
     "syrupy",
 ]
 lint = [
     "mypy>=1.16.0",
     "coverage",
     "pytest>=7.2.0",
-    "pytest-mock",
+    "syrupy",
     "ruff>=0.13.3",
     "blackdoc<=0.4.2",
     "black<=25.1.0",  # Pin version due to blackdoc incompatibility. Remove once resolved
