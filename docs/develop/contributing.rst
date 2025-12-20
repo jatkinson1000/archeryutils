@@ -210,8 +210,11 @@ Full details and documentation for pytest can be found on the `pytest website <h
 but a short overview is given here:
 
 * Tests should be placed in their own files separate from the source code.
-  They should be placed in a ``tests/`` subdirectory within each package and have
+  They are in the ``tests/`` directory adjacent to the source code and have
   filenames of the format ``test_<something>.py``.
+
+* The ``tests/`` directory contains separate subdirectories for unit and regression
+  tests. The structure of the ``unit/`` subdirectory mirrors that of the source code.
 
 * Tests are often class-based for organisation, with a test class containing all the
   tests pertaining to a particular class, method, etc.
