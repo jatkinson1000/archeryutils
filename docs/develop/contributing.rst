@@ -166,7 +166,8 @@ Since all previously written tests are archived with the code and are run for al
 contributions, it will quickly become apparent if behaviour changes anywhere.
 
 *archeryutils* uses the `pytest <https://pytest.org>`_ framework for writing and
-running tests.
+running tests, with the `syrupy <https://syrupy-project.github.io/syrupy/>`_ plugin
+for snapshot testing.
 
 To run the tests from a development install run, from the top directory::
 
@@ -237,10 +238,18 @@ When considering what tests to write for your contribution consider the followin
   may occur in use. For *archeryutils* a classic example that shows up is the case
   of handling the maximum score for a particular round.
 
-We aim for as much as possible of the *archeryutils* codebase to be covered by testing.
-During continuous integration a
+We aim for as much as possible of the *archeryutils* codebase to be covered by unit
+testing. During continuous integration a
 `coverage checker <https://app.codecov.io/gh/jatkinson1000/archeryutils>`_ will run
 the tests and highlight any parts of the code that are not covered by tests.
+
+Regression tests are used to verify that the code maintains historical behaviour across
+a wide range of parameters.
+For *archeryutils* it is important that classification scores and handicaps remain
+consistent with the Archery GB tables.
+Scores for all classifications and handicap tables for all rounds are compared against
+historical snapshots as part of the regression tests.
+These are contained in the ``tests/regression/`` subdirectory.
 
 
 .. _pull_request:

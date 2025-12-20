@@ -63,7 +63,7 @@ For developing and running the test suite on the code::
     pip install -e .[test]
 
 * pytest (7.2.0 or later)
-* pytest-mock
+* syrupy
 
 lint
 ^^^^
@@ -76,7 +76,7 @@ For applying quality control to the code::
 * mypy (1.16.0 or later)
 * coverage
 * pytest (7.2.0 or later)
-* pytest-mock
+* syrupy
 * blackdoc
 
 docs
