@@ -11,13 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Addition of regression tests for classifications and handicaps using syrupy for
+  snapshots in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
+
 ### Changed
+
+- Tests now in a separate `tests/` directory instead of alongside source in
+  [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
+- Workflows update to include Python 3.14 in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 
 ### Fixes
 
 ### Deprecated
 
 ### Removed
+
+- Removal of unused test dependency pytest-mock in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
+
 
 
 ## [2.0.0](https://github.com/jatkinson1000/archeryutils/compare/v1.1.1...v2.0.0) - 2025-10-04
