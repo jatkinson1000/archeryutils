@@ -243,6 +243,9 @@ def _assign_min_dist(
     Assign appropriate minimum distance required for a category and classification.
 
     Appropriate for 2023 ArcheryGB age groups and classifications.
+    Anything B1 and beyond requires max distance for men U16 and older
+    Anything B2 and beyond requires max distance for women, and men U15 and younger
+    Then step down a distance with each classification
 
     Parameters
     ----------
@@ -459,12 +462,14 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
     return archery_round, roundname
 
 
-def calculate_agb_outdoor_classification(
+def calculate_agb_outdoor_classification(  # noqa: PLR0913 Too many arguments
     score: float,
     archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
+    strict_rounds: bool = True,
+    strict_distance: bool = True,
 ) -> str:
     """
     Calculate AGB outdoor classification from score.
@@ -478,13 +483,20 @@ def calculate_agb_outdoor_classification(
         numerical score on the round to calculate classification for
     archery_round : Round | str
         an archeryutils Round object as suitable for this scheme
-        alternatively the round codename as a str can be used
+        alternatively the round codename as a str can be used (provided strict_rounds)
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
     gender : AGB_genders
         archer's gender under AGB outdoor target rules
     age_group : AGB_ages
         archer's age group under AGB outdoor target rules
+    strict_rounds : bool, default=True
+        Whether to enforce valid AGB outdoor rounds and apply prestige rounds rules.
+        If False then `archery_round` must be of type `Round` for explicit clarity.
+        Prestige rounds will no longer default to allow MB classifications and any
+        max-distance rounds will return MB-tier classifications.
+    strict_distance : bool, default=True
+        Whether to enforce age-dependent distance restrictions
 
     Returns
     -------
@@ -499,7 +511,10 @@ def calculate_agb_outdoor_classification(
     Raises
     ------
     ValueError
+        If requested round is not valid for this scheme (when strict_rounds enabled)
         If an invalid score for the requested round is provided
+    TypeError
+        If archery_round is passed as a string when strict_rounds disabled
 
     Examples
     --------
@@ -516,7 +531,14 @@ def calculate_agb_outdoor_classification(
     'B1'
 
     """
-    archery_round, roundname = _check_round_eligibility(archery_round)
+    if strict_rounds:
+        archery_round, _ = _check_round_eligibility(archery_round)
+    elif isinstance(archery_round, str):
+        msg = (
+            "strict_rounds is False so archery_round must be explicitly specified as "
+            "a Round type instead of a string."
+        )
+        raise TypeError(msg)
 
     # Check score is valid
     if score < 0 or score > archery_round.max_score():
@@ -533,78 +555,22 @@ def calculate_agb_outdoor_classification(
         bowstyle,
         gender,
         age_group,
+        strict_rounds=strict_rounds,
+        strict_distance=strict_distance,
     )
 
     groupname = _get_outdoor_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
+    class_data = dict(zip(group_data["classes"], all_class_scores, strict=True))
 
-    # dictionary ordering guaranteed in python 3.7+
-    class_data = {}
-    for i, class_i in enumerate(group_data["classes"]):
-        class_data[class_i] = {
-            "min_dist": group_data["min_dists"][i],
-            "score": all_class_scores[i],
-        }
-
-    # Check if this is a prestige round and appropriate distances
-    # remove ineligible classes from class_data
-    class_data = _check_prestige_distance(roundname, groupname, class_data)
-
-    # Of the classes remaining, what is the highest classification this score gets?
-    # < 0 handles max scores, > score handles higher classifications
-    for classname, classdata in class_data.items():
-        if classdata["score"] > score:
+    # Of the classes available, what is the highest classification this score gets?
+    # < 0 handles invalid classes & max scores, > score handles higher classifications
+    for classname, classscore in class_data.items():
+        if classscore < 0 or classscore > score:
             continue
         else:
             return classname
     return "UC"
-
-
-def _check_prestige_distance(
-    roundname: str,
-    groupname: str,
-    class_data: dict[str, dict[str, Any]],
-) -> dict[str, dict[str, Any]]:
-    """
-    Check available classifications for eligibility based on distance and prestige..
-
-    Remove MB tier if not a prestige round.
-    Remove any classifications where round is not far enough.
-
-    Parameters
-    ----------
-    roundname : str
-        name of round shot as given by 'codename' in json
-    groupname : str
-        identifier for the category
-    class_data : dict
-        classification information for each category.
-
-    Returns
-    -------
-    class_data : dict
-        updated classification information for each category.
-
-    References
-    ----------
-    ArcheryGB 2023 Rules of Shooting
-    ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
-    """
-    # is it a prestige round? If not remove MB as an option
-    if roundname not in agb_outdoor_classifications[groupname]["prestige_rounds"]:
-        for mb_class in list(class_data.keys())[0:3]:
-            del class_data[mb_class]
-
-        # If not prestige, what classes are ineligible based on distance
-        to_del: list[str] = []
-        round_max_dist = ALL_OUTDOOR_ROUNDS[roundname].max_distance().value
-        for class_i_name, class_i_data in class_data.items():
-            if class_i_data["min_dist"] > round_max_dist:
-                to_del.append(class_i_name)
-        for class_i in to_del:
-            del class_data[class_i]
-
-    return class_data
 
 
 def agb_outdoor_classification_scores(
@@ -612,6 +578,8 @@ def agb_outdoor_classification_scores(
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
+    strict_rounds: bool = True,
+    strict_distance: bool = True,
 ) -> list[int]:
     """
     Calculate AGB outdoor classification scores for category.
@@ -630,6 +598,12 @@ def agb_outdoor_classification_scores(
         archer's gender under AGB outdoor target rules
     age_group : AGB_ages
         archer's age group under AGB outdoor target rules
+    strict_rounds : bool, default=True
+        Whether to enforce valid AGB rounds only and prestige rounds rules
+        If False prestige rounds will no longer default to give all classifications and
+        max-distance rounds will return scores for MB classifications.
+    strict_distance : bool, default=True
+        Whether to enforce age-dependent distance restrictions
 
     Returns
     -------
@@ -640,6 +614,13 @@ def agb_outdoor_classification_scores(
     ----------
     ArcheryGB 2023 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2023)
+
+    Raises
+    ------
+    ValueError
+        If requested round is not valid for this scheme (when strict_rounds enabled)
+    TypeError
+        If archery_round is passed as a string when strict_rounds disabled
 
     Examples
     --------
@@ -665,30 +646,53 @@ def agb_outdoor_classification_scores(
     [-9999, -9999, -9999, -9999, -9999, 931, 797, 646, 493]
 
     """
-    archery_round, roundname = _check_round_eligibility(archery_round)
+    if strict_rounds:
+        archery_round, roundname = _check_round_eligibility(archery_round)
+        archery_round = ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)]
+    elif isinstance(archery_round, str):
+        msg = (
+            "strict_rounds is False so archery_round must be explicitly specified as "
+            "a Round type instead of a string."
+        )
+        raise TypeError(msg)
+    else:
+        # If a custom round has been passed use codename for prestige checks
+        # This assumes users do not set the codename to an alreay existing codename
+        roundname = archery_round.codename
 
     groupname = _get_outdoor_groupname(bowstyle, gender, age_group)
     group_data = agb_outdoor_classifications[groupname]
+
+    hc_scheme = "AGB"
 
     # Get scores required on this round for each classification
     class_scores = [
         hc.score_for_round(
             group_data["class_HC"][i],
-            ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
-            "AGB",
+            archery_round,
+            hc_scheme,
             rounded_score=True,
         )
         for i in range(len(group_data["classes"]))
     ]
 
     # Reduce list based on other criteria besides handicap
-    # is it a prestige round? If not remove MB scores
-    if roundname not in agb_outdoor_classifications[groupname]["prestige_rounds"]:
+    # Is it a prestige round? If not remove MB scores
+    if (
+        strict_rounds
+        and roundname not in agb_outdoor_classifications[groupname]["prestige_rounds"]
+    ):
         class_scores[0:3] = [-9999] * 3
 
-        # If not prestige, what classes are eligible based on category and distance
+    # What classes are eligible based on category and distance
+    # Restrict scores based on distance, unless we are enforcing strict round rules and
+    # this is a prestige round in which case all classifications are available.
+    if strict_distance and not (
+        strict_rounds
+        and roundname in agb_outdoor_classifications[groupname]["prestige_rounds"]
+    ):
         round_max_dist = archery_round.max_distance().value
-        for i in range(3, len(class_scores)):
+        for i in range(len(class_scores)):
             if group_data["min_dists"][i] > round_max_dist:
                 class_scores[i] = -9999
 
