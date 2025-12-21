@@ -5,7 +5,7 @@ import re
 import pytest
 
 import archeryutils.classifications as cf
-from archeryutils import load_rounds
+from archeryutils import Pass, Round, load_rounds
 from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_genders
 from archeryutils.rounds import Pass, Round
 
@@ -15,6 +15,15 @@ ALL_OUTDOOR_ROUNDS = load_rounds.read_json_to_round_dict(
         "AGB_outdoor_metric.json",
         "WA_outdoor.json",
     ],
+)
+
+CUSTOM_ROUND = Round(
+    "My Custom Round",
+    [
+        Pass.at_target(30, "10_zone", 122, (70.0, "m"), indoor=False),
+        Pass.at_target(30, "10_zone", 80, (50.0, "m"), indoor=False),
+    ],
+    location="Outdoor Target",
 )
 
 
@@ -33,6 +42,11 @@ class TestAgbOutdoorClassificationScores:
                 ALL_OUTDOOR_ROUNDS["wa1440_90"],
                 AGB_ages.AGE_ADULT,
                 [426, 566, 717, 866, 999, 1110, 1197, 1266, 1320],
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                AGB_ages.AGE_ADULT,
+                [185, 259, 343, 425, 496, 552, 597, 631, 659],
             ),
             (
                 ALL_OUTDOOR_ROUNDS["wa1440_70"],
@@ -224,12 +238,12 @@ class TestAgbOutdoorClassificationScores:
                 AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
-            # Check coaxing and a valid bowstyle
-            (
+            pytest.param(
                 ALL_OUTDOOR_ROUNDS["wa1440_70"],
                 AGB_bowstyles.COMPOUND,
                 AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
+                id="Check coaxing and a valid bowstyle",
             ),
         ],
     )
@@ -394,6 +408,192 @@ class TestAgbOutdoorClassificationScores:
         )
 
         assert scores == [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392][::-1]
+
+    @pytest.mark.parametrize(
+        "archery_round,expected_scores",
+        [
+            (
+                ALL_OUTDOOR_ROUNDS["st_george"],
+                [961, 947, 924, 891, 848, 795, 729, 651, 562],
+            ),
+            (
+                CUSTOM_ROUND,
+                [579, 567, 552, 533, 510, 482, 447, 405, 354],
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_scores_non_strict(
+        self, archery_round, expected_scores
+    ) -> None:
+        """
+        Check that outdoor classification returns expected value for non strict.
+
+        Non-strict rounds and distance so all scores should always be returned.
+        """
+        scores = cf.agb_outdoor_classification_scores(
+            archery_round=archery_round,
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
+            strict_rounds=False,
+            strict_distance=False,
+        )
+
+        assert scores == expected_scores
+
+    @pytest.mark.parametrize(
+        "archery_round,bowstyle,gender,age_group,expected_scores",
+        [
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["st_george"],
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [961, 947, 924, 891, 848, 795, 729, 651, 562],
+                id="Check long non-prestige returns all classifications.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [-9999, -9999, -9999, -9999, 496, 425, 343, 259, 185],
+                id="Check short 720 prestige no-longer returns all classifications.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [-9999, -9999, -9999, -9999, -9999, -9999, 212, 159, 117],
+                id="Check wrong prestige returns distance-limited classifications.",
+            ),
+            pytest.param(
+                CUSTOM_ROUND,
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [-9999, -9999, -9999, -9999, 413, 354, 285, 215, 153],
+                id="Check custom round (70m) returns up to B2.",
+            ),
+            pytest.param(
+                load_rounds.misc.frostbite,
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 188],
+                id="Check frostbite returns up to A3.",
+            ),
+            pytest.param(
+                load_rounds.AGB_indoor.portsmouth,
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999],
+                id="Check indoor 20y returns nothing for adult.",
+            ),
+            pytest.param(
+                load_rounds.AGB_indoor.portsmouth,
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_UNDER_12,
+                [-9999, -9999, -9999, -9999, -9999, 211, 149, 101, 66],
+                id="Check indoor 20y returns up to B3 for U12.",
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_scores_non_strict_round(
+        self,
+        archery_round,
+        bowstyle,
+        gender,
+        age_group,
+        expected_scores,
+    ) -> None:
+        """Check that classification returns expected scores for non strict rounds."""
+        scores = cf.agb_outdoor_classification_scores(
+            archery_round=archery_round,
+            bowstyle=bowstyle,
+            gender=gender,
+            age_group=age_group,
+            strict_rounds=False,
+            strict_distance=True,
+        )
+
+        assert scores == expected_scores
+
+    @pytest.mark.parametrize(
+        "archery_round",
+        ["wa1440_90", "york", "fake_round", ""],
+    )
+    def test_agb_outdoor_classification_scores_non_strict_round_string(
+        self,
+        archery_round,
+    ) -> None:
+        """Check that outdoor classification errors for non strict string rounds."""
+        with pytest.raises(
+            TypeError,
+            match=(
+                r"strict_rounds is False so archery_round must be explicitly specified "
+                "as a Round type instead of a string."
+            ),
+        ):
+            scores = cf.agb_outdoor_classification_scores(
+                archery_round=archery_round,
+                bowstyle=AGB_bowstyles.COMPOUND,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
+                strict_rounds=False,
+            )
+
+    @pytest.mark.parametrize(
+        "archery_round,bowstyle,gender,age_group,expected_scores",
+        [
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["st_george"],
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [-9999, -9999, -9999, 891, 848, 795, 729, 651, 562],
+                id="Check long non-prestige only returns to B1.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [659, 631, 597, 552, 496, 425, 343, 259, 185],
+                id="Check 720 prestige still returns all classifications.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                [-9999, -9999, -9999, 406, 341, 274, 212, 159, 117],
+                id="Check wrong prestige returns up to B1.",
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_scores_non_strict_distance(
+        self,
+        archery_round,
+        bowstyle,
+        gender,
+        age_group,
+        expected_scores,
+    ) -> None:
+        """Check that classification returns expected scores for non strict dist."""
+        scores = cf.agb_outdoor_classification_scores(
+            archery_round=archery_round,
+            bowstyle=bowstyle,
+            gender=gender,
+            age_group=age_group,
+            strict_rounds=True,
+            strict_distance=False,
+        )
+
+        assert scores == expected_scores
 
 
 class TestCalculateAgbOutdoorClassification:
@@ -700,3 +900,205 @@ class TestCalculateAgbOutdoorClassification:
         )
 
         assert my_class == "B3"
+
+    @pytest.mark.parametrize(
+        "archery_round,score,expected_class",
+        [
+            (
+                ALL_OUTDOOR_ROUNDS["st_george"],
+                930,
+                "MB",
+            ),
+            (
+                CUSTOM_ROUND,
+                500,
+                "B3",
+            ),
+            (
+                load_rounds.misc.frostbite,
+                358,
+                "GMB",
+            ),
+            (
+                load_rounds.AGB_indoor.portsmouth,
+                599,
+                "MB",
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_non_strict(
+        self, archery_round, score, expected_class
+    ) -> None:
+        """Check that outdoor classification returns expected value for non-strict."""
+        frostbite = load_rounds.misc.frostbite
+        my_class = cf.calculate_agb_outdoor_classification(
+            archery_round=archery_round,
+            score=score,
+            bowstyle=AGB_bowstyles.COMPOUND,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.AGE_ADULT,
+            strict_rounds=False,
+            strict_distance=False,
+        )
+
+        assert my_class == expected_class
+
+    @pytest.mark.parametrize(
+        "archery_round,bowstyle,gender,age_group,score,expected_class",
+        [
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["st_george"],
+                AGB_bowstyles.COMPOUND,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                950,
+                "GMB",
+                id="Check long non-prestige can give MB.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                720,
+                "B2",
+                id="Check short 720 prestige no-longer gives MB.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                720,
+                "A1",
+                id="Check wrong prestige returns distance-limited classification.",
+            ),
+            pytest.param(
+                load_rounds.misc.frostbite,
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                300,
+                "A3",
+                id="Check frostbite allows A3.",
+            ),
+            pytest.param(
+                load_rounds.AGB_indoor.portsmouth,
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                600,
+                "UC",
+                id="Check indoor 20y returns nothing for adult.",
+            ),
+            pytest.param(
+                load_rounds.AGB_indoor.portsmouth,
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_UNDER_12,
+                600,
+                "B3",
+                id="Check indoor 20y returns max B3 for U12.",
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_non_strict_round(
+        self,
+        archery_round,
+        bowstyle,
+        gender,
+        age_group,
+        score,
+        expected_class,
+    ) -> None:
+        """Check that expected classification returned for non strict rounds."""
+        my_class = cf.calculate_agb_outdoor_classification(
+            archery_round=archery_round,
+            score=score,
+            bowstyle=bowstyle,
+            gender=gender,
+            age_group=age_group,
+            strict_rounds=False,
+            strict_distance=True,
+        )
+
+        assert my_class == expected_class
+
+    @pytest.mark.parametrize(
+        "archery_round",
+        ["wa1440_90", "york", "fake_round", ""],
+    )
+    def test_agb_outdoor_classification_non_strict_round_string(
+        self,
+        archery_round,
+    ) -> None:
+        """Check that outdoor classification errors for non strict string rounds."""
+        with pytest.raises(
+            TypeError,
+            match=(
+                r"strict_rounds is False so archery_round must be explicitly specified "
+                "as a Round type instead of a string."
+            ),
+        ):
+            scores = cf.calculate_agb_outdoor_classification(
+                archery_round=archery_round,
+                score=123,
+                bowstyle=AGB_bowstyles.COMPOUND,
+                gender=AGB_genders.MALE,
+                age_group=AGB_ages.AGE_ADULT,
+                strict_rounds=False,
+            )
+
+    @pytest.mark.parametrize(
+        "archery_round,bowstyle,gender,age_group,score,expected_class",
+        [
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["windsor_30"],
+                AGB_bowstyles.LONGBOW,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                972,
+                "B1",
+                id="Check short non-prestige returns up to B1.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                AGB_bowstyles.RECURVE,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                720,
+                "EMB",
+                id="Check 720 prestige still allows all classifications.",
+            ),
+            pytest.param(
+                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                AGB_bowstyles.BAREBOW,
+                AGB_genders.MALE,
+                AGB_ages.AGE_ADULT,
+                720,
+                "B1",
+                id="Check wrong prestige unrestricted by distanceto B1.",
+            ),
+        ],
+    )
+    def test_agb_outdoor_classification_non_strict_distance(
+        self,
+        archery_round,
+        bowstyle,
+        gender,
+        age_group,
+        score,
+        expected_class,
+    ) -> None:
+        """Check that expected classification returned for non strict dist."""
+        my_class = cf.calculate_agb_outdoor_classification(
+            archery_round=archery_round,
+            score=score,
+            bowstyle=bowstyle,
+            gender=gender,
+            age_group=age_group,
+            strict_rounds=True,
+            strict_distance=False,
+        )
+
+        assert my_class == expected_class
