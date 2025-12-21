@@ -161,7 +161,7 @@ class Round:
         Formal name of the round
     passes : iterable of Pass
         an iterable of Pass classes making up the round
-    codename : str or None
+    codename : str, default=""
         A machine readable identifier for the round
     location : str or None, default=None
         string identifing where the round is shot
@@ -202,11 +202,11 @@ class Round:
 
     """
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         name: str,
         passes: Iterable[Pass],
-        codename: str | None = None,
+        codename: str = "",
         location: str | None = None,
         body: str | None = None,
         family: str | None = None,
