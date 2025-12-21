@@ -433,6 +433,14 @@ class TestAgbOutdoorClassificationScores:
                 CUSTOM_ROUND,
                 [579, 567, 552, 533, 510, 482, 447, 405, 354],
             ),
+            (
+                load_rounds.misc.frostbite,
+                [360, 357, 353, 347, 339, 330, 318, 304, 286],
+            ),
+            (
+                load_rounds.AGB_indoor.portsmouth,
+                [-9999, -9999, 598, 592, 583, 572, 557, 539, 516],
+            ),
         ],
     )
     def test_agb_outdoor_classification_scores_non_strict(
