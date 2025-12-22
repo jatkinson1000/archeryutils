@@ -87,6 +87,15 @@
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
               ]
   },
+  {"name" : "WA 40m",
+   "codename" : "wa720_40",
+   "location" : "outdoor",
+   "body" : "WA",
+   "family" : "wa720",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
+              ]
+  },
   {"name" : "WA 50m Compound",
    "codename" : "wa720_50_c",
    "location" : "outdoor",
@@ -96,6 +105,15 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]
   },
+  {"name" : "WA 40m Compound",
+   "codename" : "wa720_40_c",
+   "location" : "outdoor",
+   "body" : "WA",
+   "family" : "wa720",
+   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
+              ]
+  },
   {"name" : "WA 50m Barebow",
    "codename" : "wa720_50_b",
    "location" : "outdoor",
@@ -103,6 +121,15 @@
    "family" : "wa720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 30m Barebow",
+   "codename" : "wa720_30_b",
+   "location" : "outdoor",
+   "body" : "WA",
+   "family" : "wa720",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
 
