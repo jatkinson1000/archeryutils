@@ -355,11 +355,14 @@ def _assign_outdoor_prestige(
         "wa720_70",
         "wa720_60",
         "metric_122_50",
+        "wa720_40",
         "metric_122_40",
         "metric_122_30",
     ]
     prestige_720_compound = [
         "wa720_50_c",
+        "metric_80_50",
+        "wa720_40_c",
         "metric_80_40",
         "metric_80_30",
     ]
@@ -367,6 +370,7 @@ def _assign_outdoor_prestige(
         "wa720_50_b",
         "metric_122_50",
         "metric_122_40",
+        "wa720_30_b",
         "metric_122_30",
     ]
 
@@ -378,9 +382,14 @@ def _assign_outdoor_prestige(
     # 720 rounds - bowstyle dependent
     if bowstyle is AGB_bowstyles.COMPOUND:
         # Everyone gets the 'adult' 720
-        prestige_rounds.append(prestige_720_compound[0])
+        prestige_rounds.extend(prestige_720_compound[0:2])
         # Check rest for junior eligible shorter rounds
-        distance_check = distance_check + prestige_720_compound[1:]
+        distance_check = distance_check + prestige_720_compound[2:]
+
+        # Additional fix for U15 who get the 40m round
+        # By extension this also applies to U14 and U12 (though also covered by dist)
+        if age in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12:
+            prestige_rounds.extend(prestige_720_compound[2:4])  # 40m C
 
     elif bowstyle is AGB_bowstyles.BAREBOW:
         # Everyone gets the 'adult' 720
@@ -388,11 +397,21 @@ def _assign_outdoor_prestige(
         # Check rest for junior eligible shorter rounds
         distance_check = distance_check + prestige_720_barebow[1:]
 
+        # Additional fix for U15 who get the 30m round
+        # By extension they also get the 40m and this also applies to U14 and U12
+        if age in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12:
+            prestige_rounds.extend(prestige_720_barebow[2:])  # 40m and 30m B
+
     else:
         # Everyone gets the 'adult' 720
         prestige_rounds.append(prestige_720[0])
         # Check rest for junior eligible shorter rounds
         distance_check = distance_check + prestige_720[1:]
+
+        # Additional fix for U15 who get the 40m round
+        # By extension this also applies to U14 and U12 (though also covered by dist)
+        if age in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12:
+            prestige_rounds.extend(prestige_720[3:5])  # 40m
 
         # Additional fix for Male 50+, U18, and U16 recurve/longbow
         if gender is AGB_genders.MALE:
