@@ -39,13 +39,13 @@ __all__ = [
     "agb_indoor_classification_scores",
     "agb_old_field_classification_scores",
     "agb_old_indoor_classification_scores",
-    "agb_old_outdoor_classification_scores", #new
+    "agb_old_outdoor_classification_scores",  # new
     "agb_outdoor_classification_scores",
     "calculate_agb_field_classification",
     "calculate_agb_indoor_classification",
     "calculate_agb_old_field_classification",
     "calculate_agb_old_indoor_classification",
-    "calculate_agb_old_outdoor_classification", #new
+    "calculate_agb_old_outdoor_classification",  # new
     "calculate_agb_outdoor_classification",
     "coax_field_group",
     "coax_indoor_group",

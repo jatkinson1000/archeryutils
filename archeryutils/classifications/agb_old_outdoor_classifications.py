@@ -41,11 +41,6 @@ old_outdoor_ages = (
     | AGB_ages.AGE_UNDER_12
 )
 
-P = 50  # placeholder
-FACTORS = np.linspace(
-    0.1, 1.9, 6
-)  # temporary scaling factors to produce different scores for testing
-
 
 class GroupData(TypedDict):
     """Structure for old AGB Outdoor classification data."""
@@ -80,23 +75,24 @@ def _get_old_outdoor_groupname(
     """
     if bowstyle not in AGB_bowstyles or bowstyle not in old_outdoor_bowstyles:
         msg = (
-            f"{bowstyle} is not a recognised bowstyle for old indoor classifications. "
+            f"{bowstyle} is not a recognised bowstyle for old outdoor classifications. "
             f"Please select from `{old_outdoor_bowstyles}`."
         )
         raise ValueError(msg)
     if gender not in AGB_genders:
         msg = (
-            f"{gender} is not a recognised gender group for old indoor "
+            f"{gender} is not a recognised gender group for old outdoor "
             "classifications. Please select from `archeryutils.AGB_genders`."
         )
         raise ValueError(msg)
     if age_group not in AGB_ages or age_group not in old_outdoor_ages:
         msg = (
-            f"{age_group} is not a recognised age group for old indoor "
+            f"{age_group} is not a recognised age group for old outdoor "
             f"classifications. Please select from `{old_outdoor_ages}`."
         )
         raise ValueError(msg)
     return cls_funcs.get_groupname(bowstyle, gender, age_group)
+
 
 def _make_agb_old_outdoor_classification_dict() -> dict[str, GroupData]:
     # CHECK: happy with abbreviations, correct label for junior bowman?
@@ -111,14 +107,14 @@ def _make_agb_old_outdoor_classification_dict() -> dict[str, GroupData]:
     A = AGB_ages
 
     handicap_thresholds = {
-        (B.COMPOUND, G.MALE, A.AGE_ADULT):[10, 16, 23, 32, 38, 48],
-        (B.COMPOUND, G.FEMALE, A.AGE_ADULT):[15, 21, 29, 38, 49, 56],
-        (B.RECURVE, G.MALE, A.AGE_ADULT):[22, 28, 36, 44, 50, 58],
-        (B.RECURVE, G.FEMALE, A.AGE_ADULT):[27, 33, 41, 50, 57, 65],
-        (B.BAREBOW, G.MALE, A.AGE_ADULT):[40, 45, 49, 56, 64, 71],
-        (B.BAREBOW, G.FEMALE, A.AGE_ADULT):[49, 51, 57, 64, 71, 78],
-        (B.LONGBOW, G.MALE, A.AGE_ADULT):[52, 55, 60, 65, 69, 74],
-        (B.LONGBOW, G.FEMALE, A.AGE_ADULT):[59, 62, 65, 70, 73, 82],
+        (B.COMPOUND, G.MALE, A.AGE_ADULT): [10, 16, 23, 32, 38, 48],
+        (B.COMPOUND, G.FEMALE, A.AGE_ADULT): [15, 21, 29, 38, 49, 56],
+        (B.RECURVE, G.MALE, A.AGE_ADULT): [22, 28, 36, 44, 50, 58],
+        (B.RECURVE, G.FEMALE, A.AGE_ADULT): [27, 33, 41, 50, 57, 65],
+        (B.BAREBOW, G.MALE, A.AGE_ADULT): [40, 45, 49, 56, 64, 71],
+        (B.BAREBOW, G.FEMALE, A.AGE_ADULT): [49, 51, 57, 64, 71, 78],
+        (B.LONGBOW, G.MALE, A.AGE_ADULT): [52, 55, 60, 65, 69, 74],
+        (B.LONGBOW, G.FEMALE, A.AGE_ADULT): [59, 62, 65, 70, 73, 82],
         (B.COMPOUND, G.MALE, A.AGE_UNDER_18): [23, 32, 38, 48, 56],
         (B.COMPOUND, G.FEMALE, A.AGE_UNDER_18): [29, 38, 49, 56, 66],
         (B.COMPOUND, G.MALE, A.AGE_UNDER_16): [32, 38, 48, 56, 61],
@@ -297,7 +293,8 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
         roundname = archery_round
         archery_round = ALL_OUTDOOR_ROUNDS[roundname]
     elif (
-        isinstance(archery_round, Round) and archery_round in ALL_OUTDOOR_ROUNDS.values()
+        isinstance(archery_round, Round)
+        and archery_round in ALL_OUTDOOR_ROUNDS.values()
     ):
         # Get string key for this round:
         roundname = list(ALL_OUTDOOR_ROUNDS.keys())[
@@ -312,12 +309,13 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
 
     return archery_round, roundname
 
+
 def calculate_agb_old_outdoor_classification(
     score: float,
-    roundname: str,
-    bowstyle: str,
-    gender: str,
-    age_group: str,
+    archery_round: Round | str,
+    bowstyle: AGB_bowstyles,
+    gender: AGB_genders,
+    age_group: AGB_ages,
 ) -> str:
     """
     Calculate AGB outdoor classification from score.
@@ -329,19 +327,21 @@ def calculate_agb_old_outdoor_classification(
     ----------
     score : int
         numerical score on the round to calculate classification for
-    roundname : str
-        name of round shot as given by 'codename' in json
-    bowstyle : str
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
+    bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
-    gender : str
+    gender : AGB_genders
         archer's gender under AGB outdoor target rules
-    age_group : str
+    age_group : AGB_ages
         archer's age group under AGB outdoor target rules
+
 
     Returns
     -------
-    classification_scores : ndarray
-        scores required for each classification in descending order
+    classification_from_score : str
+        the classification appropriate for this score
 
     References
     ----------
@@ -353,17 +353,18 @@ def calculate_agb_old_outdoor_classification(
     TBC
 
     """
+    archery_round, _ = _check_round_eligibility(archery_round)
     # Check score is valid
-    if score < 0 or score > ALL_OUTDOOR_ROUNDS[roundname].max_score():
+    if score < 0 or score > archery_round.max_score():
         msg = (
-            f"Invalid score of {score} for a {roundname}. "
-            f"Should be in range 0-{ALL_OUTDOOR_ROUNDS[roundname].max_score()}.",
+            f"Invalid score of {score} for a {archery_round.name}. "
+            f"Should be in range 0-{archery_round.max_score()}.",
         )
         raise ValueError(msg)
 
     # Get scores required on this round for each classification
     class_scores = agb_old_outdoor_classification_scores(
-        roundname,
+        archery_round,
         bowstyle,
         gender,
         age_group,
@@ -395,13 +396,14 @@ def agb_old_outdoor_classification_scores(
 
     Parameters
     ----------
-    roundname : str
-        name of round shot as given by 'codename' in json
-    bowstyle : str
+    archery_round : Round | str
+        an archeryutils Round object as suitable for this scheme
+        alternatively the round codename as a str can be used
+    bowstyle : AGB_bowstyles
         archer's bowstyle under AGB outdoor target rules
-    gender : str
+    gender : AGB_genders
         archer's gender under AGB outdoor target rules
-    age_group : str
+    age_group : AGB_ages
         archer's age group under AGB outdoor target rules
 
     Returns
@@ -420,7 +422,7 @@ def agb_old_outdoor_classification_scores(
 
     """
     # map newer age categories to supported subset
-    archery_round, _ = _check_round_eligibility(archery_round)
+    archery_round, roundname = _check_round_eligibility(archery_round)
     groupname = _get_old_outdoor_groupname(bowstyle, gender, age_group)
     group_data = agb_old_outdoor_classifications[groupname]
 
@@ -428,42 +430,26 @@ def agb_old_outdoor_classification_scores(
     class_scores = [
         hc.score_for_round(
             group_data["class_HC"][i],
-            archery_round,
+            ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
             "AGBold",
             rounded_score=True,
         )
         for i in range(len(group_data["classes"]))
     ]
-    #
-    # # Get scores required on this round for each classification
-    # class_scores = [
-    #     hc.score_for_round(
-    #         handicap=group_data["class_HC"][i],
-    #         rnd=ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)],
-    #         handicap_sys="AGBold",
-    #         rounded_score=True,
-    #     )
-    #     for i, class_i in enumerate(group_data["classes"])
-    # ]
-    #
-    # # Check distance and round length requirements
-    # n_class = len(class_scores)
-    # round_max_dist = (
-    #     ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)].max_distance().value
-    # )
-    # round_n_dozen = (
-    #     ALL_OUTDOOR_ROUNDS[cls_funcs.strip_spots(roundname)].n_arrows() // 12
-    # )
-    #
-    # for i in range(len(class_scores)):
-    #     if (
-    #         # must hit minimum distance
-    #         group_data["min_dists"][i] > round_max_dist
-    #         or
-    #         # senior MB/GMB requires 12 doz. JMB??
-    #         group_data["min_dozens"][i] > round_n_dozen
-    #     ):
-    #         class_scores[i] = -9999
+
+    # Check distance and round length requirementss
+    round_max_dist = archery_round.max_distance().value
+    round_n_dozen = archery_round.n_arrows // 12
+
+    for i in range(len(class_scores)):
+        if (
+            # must hit minimum distance
+            group_data["min_dists"][i] > round_max_dist
+            or
+            # senior MB/GMB requires 12 doz. JMB??
+            group_data["min_dozens"][i] > round_n_dozen
+        ):
+            class_scores[i] = -9999
 
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
