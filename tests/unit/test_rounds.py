@@ -434,7 +434,6 @@ class TestRound:
         assert pmetric.distance > pyards.distance
         assert test_round.max_distance().value == 75
 
-
     def test_get_info(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Check printing info works as expected."""
         test_round = Round(

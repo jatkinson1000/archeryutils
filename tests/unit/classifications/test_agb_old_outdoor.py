@@ -173,7 +173,7 @@ class TestAgbOldOutdoorClassificationScores:
                 age_group=age_group,
             )
 
-    def test_agb_old_indoor_classification_scores_invalid_round(
+    def test_agb_old_outdoor_classification_scores_invalid_round(
         self,
     ) -> None:
         """Check that old outdoor classification raises error for invalid round."""
@@ -202,7 +202,7 @@ class TestAgbOldOutdoorClassificationScores:
     def test_agb_old_outdoor_classification_scores_invalid_string_round(
         self,
     ) -> None:
-        """Check that indoor classification raises error for invalid string round."""
+        """Check that outdoor classification raises error for invalid string round."""
         with pytest.raises(
             ValueError,
             match=(
@@ -221,10 +221,10 @@ class TestAgbOldOutdoorClassificationScores:
                 age_group=AGB_ages.AGE_ADULT,
             )
 
-    def test_agb_old_indoor_classification_scores_string_round(
+    def test_agb_old_outdoor_classification_scores_string_round(
         self,
     ) -> None:
-        """Check that indoor classification can process a string roundname."""
+        """Check that outdoor classification can process a string roundname."""
         scores = cf.agb_old_outdoor_classification_scores(
             archery_round="wa1440_90",
             bowstyle=AGB_bowstyles.COMPOUND,
@@ -233,3 +233,176 @@ class TestAgbOldOutdoorClassificationScores:
         )
 
         assert scores == [1352, 1311, 1248, 1134, 1026, 774]
+
+
+class TestCalculateAgbOldOutdoorClassification:
+    """Tests for the old_outdoor classification function."""
+
+    @pytest.mark.parametrize(
+        "archery_round,score,age_group,bowstyle,class_expected",
+        [
+            (
+                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                1353,  # 1 above GMB
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUND,
+                "GMB",
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                1351,  # 1 below GMB - Senior
+                AGB_ages.AGE_ADULT,
+                AGB_bowstyles.COMPOUND,
+                "GMB",
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                900,
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
+                "JMB",
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                600,
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
+                "JB",
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                400,
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
+                "1ST",
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                300,
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
+                "2ND",
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                200,
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
+                "3RD",
+            ),
+            (
+                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                1,
+                AGB_ages.AGE_UNDER_12,
+                AGB_bowstyles.RECURVE,
+                "UC",
+            ),
+        ],
+    )
+    def test_calculate_agb_old_outdoor_classification(
+        self,
+        score: float,
+        archery_round: Round | str,
+        age_group: AGB_ages,
+        bowstyle: AGB_bowstyles,
+        class_expected: str,
+    ) -> None:
+        """Check old outdoor classification returns expected value for a few cases."""
+        class_returned = cf.calculate_agb_old_outdoor_classification(
+            archery_round=archery_round,
+            score=score,
+            bowstyle=bowstyle,
+            gender=AGB_genders.MALE,
+            age_group=age_group,
+        )
+        assert class_returned == class_expected
+
+    @pytest.mark.parametrize(
+        "score",
+        [1000, 901, -1, -100],
+    )
+    def test_calculate_agb_old_outdoor_classification_invalid_scores(
+        self,
+        score: float,
+    ) -> None:
+        """Check that old outdoor classification fails for inappropriate scores."""
+        archery_round = ALL_OUTDOOR_ROUNDS["wa900"]
+        with pytest.raises(
+            ValueError,
+            match=(
+                f"Invalid score of {score} for a "
+                f"{archery_round.name}. "
+                f"Should be in range 0-{archery_round.max_score()}."
+            ),
+        ):
+            _ = cf.calculate_agb_old_outdoor_classification(
+                score=score,
+                archery_round=archery_round,
+                bowstyle=AGB_bowstyles.BAREBOW,
+                gender=AGB_genders.FEMALE,
+                age_group=AGB_ages.AGE_ADULT,
+            )
+
+    def test_agb_old_outdoor_classification_invalid_round(
+        self,
+    ) -> None:
+        """Check that old outdoor classification raises error for invalid round."""
+        with pytest.raises(
+            ValueError,
+            match=(
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "outdoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
+            ),
+        ):
+            my_round = Round(
+                "Some Roundname",
+                [Pass.at_target(36, "10_zone", 122, 70.0)],
+            )
+            _ = cf.calculate_agb_old_outdoor_classification(
+                archery_round=my_round,
+                score=666,
+                bowstyle=AGB_bowstyles.RECURVE,
+                gender=AGB_genders.FEMALE,
+                age_group=AGB_ages.AGE_ADULT,
+            )
+
+    def test_agb_old_outdoor_classification_scores_invalid_string_round(
+        self,
+    ) -> None:
+        """Check that old outdoor classification raises error for invalid string round."""
+        with pytest.raises(
+            ValueError,
+            match=(
+                re.escape(
+                    "This round is not recognised for the purposes of "
+                    "outdoor classification.\n"
+                    "Please select an appropriate option using "
+                    "`archeryutils.load_rounds`."
+                )
+            ),
+        ):
+            _ = cf.calculate_agb_old_outdoor_classification(
+                archery_round="invalid_roundname",
+                score=666,
+                bowstyle=AGB_bowstyles.RECURVE,
+                gender=AGB_genders.FEMALE,
+                age_group=AGB_ages.AGE_ADULT,
+            )
+
+    def test_agb_outdoor_classification_scores_string_round(
+        self,
+    ) -> None:
+        """Check that outdoor classification can process a string roundname."""
+        my_class = cf.calculate_agb_old_outdoor_classification(
+            archery_round="hereford",
+            score=500,
+            bowstyle=AGB_bowstyles.LONGBOW,
+            gender=AGB_genders.FEMALE,
+            age_group=AGB_ages.AGE_ADULT,
+        )
+
+        assert my_class == "GMB"
