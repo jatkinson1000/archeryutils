@@ -14,9 +14,15 @@ else:  # pragma: no cover
 
 
 class AGB_genders(Enum):
-    """An enum for holding information about AGB genders."""
+    """
+    An enum for holding information about AGB genders.
 
-    MALE = auto()
+    The Open category is equivalent to Male for scores following 2025 rule changes.
+    Scores remain the same, only branding has changed.
+    """
+
+    OPEN = auto()
+    MALE = OPEN
     FEMALE = auto()
 
 
