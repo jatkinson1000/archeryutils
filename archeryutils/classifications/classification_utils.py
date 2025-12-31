@@ -14,6 +14,7 @@ get_compound_codename
 """
 
 import json
+from functools import cache
 from pathlib import Path
 from typing import Literal, TypedDict
 
@@ -40,8 +41,9 @@ class AGBAgeData(TypedDict):
     step: int
 
 
+@cache
 def read_ages_json(
-    age_file: Path = Path(__file__).parent / "AGB_ages.json",
+    age_file: Path = Path(__file__).parent / "data" / "AGB_ages.json",
 ) -> dict[str, AGBAgeData]:
     """
     Read AGB age categories in from neighbouring json file to list of dicts.
@@ -94,8 +96,9 @@ class AGBBowstyleData(TypedDict):
     ageStep_field: float
 
 
+@cache
 def read_bowstyles_json(
-    bowstyles_file: Path = Path(__file__).parent / "AGB_bowstyles.json",
+    bowstyles_file: Path = Path(__file__).parent / "data" / "AGB_bowstyles.json",
 ) -> dict[str, AGBBowstyleData]:
     """
     Read AGB  bowstyles in from neighbouring json file to list of dicts.
@@ -130,8 +133,9 @@ def read_bowstyles_json(
     raise TypeError(msg)
 
 
+@cache
 def read_genders_json(
-    genders_file: Path = Path(__file__).parent / "AGB_genders.json",
+    genders_file: Path = Path(__file__).parent / "data" / "AGB_genders.json",
 ) -> list[Literal["Male", "Female"]]:
     """
     Read AGB genders in from neighbouring json file to list of dict.
@@ -175,6 +179,7 @@ class AGBClassificationData(TypedDict):
     classes_long: list[str]
 
 
+@cache
 def read_classes_json(
     class_system: str,
 ) -> AGBClassificationData:
@@ -217,7 +222,7 @@ def read_classes_json(
         )
         raise ValueError(msg)
 
-    classes_file = Path(__file__).parent / filename
+    classes_file = Path(__file__).parent / "data" / filename
 
     # Read in classification names as dict
     with open(classes_file, encoding="utf-8") as json_file:
