@@ -300,11 +300,11 @@ Given a score we can calculate the classification it achieves:
         965,
         agb_outdoor_imperial.hereford,
         AGB_bowstyles.RECURVE,
-        AGB_genders.MALE,
+        AGB_genders.OPEN,
         AGB_ages.OVER_50,
     )
     print(
-        f"A score of 965 on a Hereford is class {class_from_score} for a 50+ male recurve."
+        f"A score of 965 on a Hereford is class {class_from_score} for a 50+ open recurve."
     )
 
     # AGB Indoor
@@ -330,7 +330,7 @@ Given a score we can calculate the classification it achieves:
         AGB_ages.ADULT,
     )
     print(
-        f"A score of 168 on a WA Unmarked 24 is class {class_from_score} for an under 18 male traditional."
+        f"A score of 168 on a WA Unmarked 24 is class {class_from_score} for an under adult female traditional."
     )
 
 Or, given a round we can output the scores required for each classification band:
@@ -341,7 +341,7 @@ Or, given a round we can output the scores required for each classification band
     class_scores = cf.agb_outdoor_classification_scores(
         agb_outdoor_imperial.hereford,
         AGB_bowstyles.RECURVE,
-        AGB_genders.MALE,
+        AGB_genders.OPEN,
         AGB_ages.ADULT,
     )
     print(class_scores)
