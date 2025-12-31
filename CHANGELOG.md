@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `OPEN` category added to `AGB_genders` for use in 2026 classifications in
+  [#169](https://github.com/jatkinson1000/archeryutils/pull/169)
 - Addition of regression tests for classifications and handicaps using syrupy for
   snapshots in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 - Addition of strict_rounds and strict_distance arguments for classifications in
@@ -23,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workflows update to include Python 3.14 in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 - AGB age category enums dropped the `AGE_` prefix in [#159](https://github.com/jatkinson1000/archeryutils/pull/159).
   Replaced by `OVER_50`, `ADULT`, `UNDER_18` etc.
+- `AGB_genders` enum updated to add `OPEN`. `MALE` remains for backwards compatibility
+  and legacy classifications as an alias to `OPEN`. Implemented in
+  [#158](https://github.com/jatkinson1000/archeryutils/pull/158)
 
 ### Fixes
 
