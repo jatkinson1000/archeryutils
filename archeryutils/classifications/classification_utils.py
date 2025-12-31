@@ -33,7 +33,7 @@ class AGBAgeData(TypedDict):
 
     desc: str
     age_group: str
-    male: list[float]
+    open: list[float]
     female: list[float]
     sighted: list[float]
     unsighted: list[float]
@@ -132,7 +132,7 @@ def read_bowstyles_json(
 
 def read_genders_json(
     genders_file: Path = Path(__file__).parent / "AGB_genders.json",
-) -> list[Literal["Male", "Female"]]:
+) -> list[Literal["Open", "Female"]]:
     """
     Read AGB genders in from neighbouring json file to list of dict.
 
@@ -265,7 +265,7 @@ def get_age_gender_step(
     """
     Calculate AGB indoor age and gender step for classification dictionaries.
 
-    Contains a tricky fiddle for aligning Male and Female under 15 scores and below,
+    Contains a tricky fiddle for aligning Open and Female under 15 scores and below,
     and a necessary check to ensure that gender step doesnt overtake age step when
     doing this.
 
@@ -300,7 +300,7 @@ def get_age_gender_step(
     if gender is AGB_genders.FEMALE and age_cat <= under_16_int:
         return gender_step + age_cat * age_step
 
-    # Default case for males, and females aged U15 or younger - apply only age steps
+    # Default case for open, and females aged U15 or younger - apply only age steps
     return age_cat * age_step
 
 
