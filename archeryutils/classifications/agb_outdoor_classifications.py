@@ -186,7 +186,7 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
 
         # Get max dists for category from json file data
         # Use metres as corresponding yards >= metric
-        gender_key = cast(Literal["male", "female"], gender.name.lower())
+        gender_key = cast(Literal["open", "female"], gender.name.lower())
         max_dists = agb_age_data[age.name][gender_key]
 
         # set step from datum based on age and gender steps required
@@ -279,9 +279,9 @@ def _assign_min_dist(
     max_dist_index = dists.index(np.min(max_dists))
 
     # Age group trickery:
-    # U15 males and younger step down for B2 and below to align with female scores/hcs
+    # U15 opens and younger step down for B2 and below to align with female scores/hcs
     if (
-        gender is AGB_genders.MALE
+        gender is AGB_genders.OPEN
         and age_group not in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12
     ):
         idxs = np.array([0, 0, 0, 0, 1, 2, 3, 4, 5])
@@ -413,8 +413,8 @@ def _assign_outdoor_prestige(
         if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
             prestige_rounds.extend(prestige_720[3:5])  # 40m
 
-        # Additional fix for Male 50+, U18, and U16 recurve/longbow
-        if gender is AGB_genders.MALE:
+        # Additional fix for Open 50+, U18, and U16 recurve/longbow
+        if gender is AGB_genders.OPEN:
             if age in AGB_ages.OVER_50 | AGB_ages.UNDER_18:
                 prestige_rounds.append(prestige_720[1])  # 60m
             elif age is AGB_ages.UNDER_16:
