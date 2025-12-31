@@ -64,7 +64,7 @@ class TestAgbFieldClassificationScores:
         scores = cf.agb_field_classification_scores(
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.BAREBOW,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=age_group,
         )
 
@@ -95,7 +95,7 @@ class TestAgbFieldClassificationScores:
         """Check that field classification returns expected value for a case."""
         coaxed_vals = cf.coax_field_group(
             bowstyle=AGB_bowstyles.BAREBOW,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=age_group,
         )
         scores = cf.agb_field_classification_scores(
@@ -105,12 +105,25 @@ class TestAgbFieldClassificationScores:
 
         assert scores == scores_expected
 
+    def test_agb_field_classification_scores_male(
+        self,
+    ) -> None:
+        """Check that field classification returns open scores for male."""
+        scores = cf.agb_field_classification_scores(
+            archery_round=ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
+            bowstyle=AGB_bowstyles.BAREBOW,
+            gender=AGB_genders.MALE,
+            age_group=AGB_ages.ADULT,
+        )
+
+        assert scores == [336, 311, 283, 249, 212, 173, 135, 101, 74]
+
     @pytest.mark.parametrize(
         "archery_round,gender,age_group,scores_expected",
         [
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [336, 311, 283, 249, 212, 173, 135, 101, 74],
             ),
@@ -122,7 +135,7 @@ class TestAgbFieldClassificationScores:
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.UNDER_18,
                 [305, 275, 241, 203, 164, 127, 94, 68, 48],
             ),
@@ -217,7 +230,7 @@ class TestAgbFieldClassificationScores:
         scores = cf.agb_field_classification_scores(
             archery_round=archery_round,
             bowstyle=bowstyle,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=AGB_ages.ADULT,
         )
 
@@ -230,7 +243,7 @@ class TestAgbFieldClassificationScores:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 "invalidbowstyle",
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 (
                     "invalidbowstyle is not a recognised bowstyle for field "
@@ -252,7 +265,7 @@ class TestAgbFieldClassificationScores:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 "invalidage",
                 (
                     "invalidage is not a recognised age group for field "
@@ -338,7 +351,7 @@ class TestAgbFieldClassificationScores:
         scores = cf.agb_field_classification_scores(
             archery_round="wa_field_24_blue_marked",
             bowstyle=AGB_bowstyles.BAREBOW,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=AGB_ages.ADULT,
         )
 
@@ -386,7 +399,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999],
                 id="Check red-peg returns no classifications for unsighted.",
@@ -394,7 +407,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_yellow_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [-9999, -9999, -9999, -9999, -9999, -9999, 178, 140, 106],
                 id="Check wrong 24-target returns distance-limited classifications.",
@@ -402,7 +415,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 CUSTOM_ROUND,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [-9999, -9999, -9999, -9999, -9999, -9999, -9999, 167, 108],
                 id="Check custom round (48.5m) returns up to A2.",
@@ -410,7 +423,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 load_rounds.misc.frostbite,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, 128],
                 id="Check frostbite returns A3.",
@@ -418,7 +431,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 load_rounds.misc.frostbite,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.UNDER_12,
                 [286, 256, 217, 170, 123, 82, 52, 32, 19],
                 id="Check frostbite returns all for U12.",
@@ -426,7 +439,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 load_rounds.AGB_indoor.portsmouth,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999],
                 id="Check 20y returns nothing.",
@@ -434,7 +447,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 load_rounds.WA_outdoor.wa1440_60,
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999],
                 id="Check 60m 1440 returns nothing for unsighted.",
@@ -442,7 +455,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 load_rounds.WA_outdoor.wa1440_60,
                 AGB_bowstyles.COMPOUND,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [1423, 1400, 1366, 1322, 1264, 1189, 1091, 965, 810],
                 id="Check 60m 1440 returns scores for sighted.",
@@ -488,7 +501,7 @@ class TestAgbFieldClassificationScores:
             scores = cf.agb_field_classification_scores(
                 archery_round=archery_round,
                 bowstyle=AGB_bowstyles.COMPOUND,
-                gender=AGB_genders.MALE,
+                gender=AGB_genders.OPEN,
                 age_group=AGB_ages.ADULT,
                 strict_rounds=False,
             )
@@ -499,7 +512,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [306, 277, 243, 204, 164, 125, 91, 64, 44],
                 id="Check red-peg returns scores for unsighted.",
@@ -507,7 +520,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_12_red_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [-9999, -9999, -9999, 102, 82, 63, 46, 32, 22],
                 id="Check 12-target red-peg returns B1 scores for unsighted.",
@@ -515,7 +528,7 @@ class TestAgbFieldClassificationScores:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_yellow_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 [360, 338, 313, 285, 253, 217, 178, 140, 106],
                 id="Check short peg 24-target returns all scores.",
@@ -669,7 +682,7 @@ class TestCalculateAgbFieldClassification:
             archery_round=archery_round,
             score=score,
             bowstyle=bowstyle,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=age_group,
         )
 
@@ -712,7 +725,7 @@ class TestCalculateAgbFieldClassification:
         """Check that field classification returns expected value for non-field ages."""
         coaxed_vals = cf.coax_field_group(
             bowstyle=bowstyle,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=age_group,
         )
         class_returned = cf.calculate_agb_field_classification(
@@ -752,7 +765,7 @@ class TestCalculateAgbFieldClassification:
             archery_round=archery_round,
             score=score,
             bowstyle=bowstyle,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=AGB_ages.ADULT,
         )
 
@@ -780,7 +793,7 @@ class TestCalculateAgbFieldClassification:
                 score=score,
                 archery_round=ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 bowstyle=AGB_bowstyles.BAREBOW,
-                gender=AGB_genders.MALE,
+                gender=AGB_genders.OPEN,
                 age_group=AGB_ages.ADULT,
             )
 
@@ -842,7 +855,7 @@ class TestCalculateAgbFieldClassification:
             archery_round="wa_field_24_blue_marked",
             score=252,
             bowstyle=AGB_bowstyles.BAREBOW,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=AGB_ages.ADULT,
         )
 
@@ -882,7 +895,7 @@ class TestCalculateAgbFieldClassification:
             archery_round=archery_round,
             score=score,
             bowstyle=AGB_bowstyles.COMPOUND,
-            gender=AGB_genders.MALE,
+            gender=AGB_genders.OPEN,
             age_group=AGB_ages.ADULT,
             strict_rounds=False,
             strict_distance=False,
@@ -896,7 +909,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_12_red_marked"],
                 AGB_bowstyles.COMPOUND,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 214,
                 "EMB",
@@ -905,7 +918,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_yellow_marked"],
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 412,
                 "A2",
@@ -914,7 +927,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 CUSTOM_ROUND,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 720,
                 "A2",
@@ -923,7 +936,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 load_rounds.misc.frostbite,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 300,
                 "A3",
@@ -932,7 +945,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 load_rounds.AGB_indoor.portsmouth,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 600,
                 "UC",
@@ -941,7 +954,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 load_rounds.WA_outdoor.wa1440_60,
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 1100,
                 "UC",
@@ -950,7 +963,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 load_rounds.WA_outdoor.wa1440_60,
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 1400,
                 "EMB",
@@ -1000,7 +1013,7 @@ class TestCalculateAgbFieldClassification:
                 archery_round=archery_round,
                 score=123,
                 bowstyle=AGB_bowstyles.COMPOUND,
-                gender=AGB_genders.MALE,
+                gender=AGB_genders.OPEN,
                 age_group=AGB_ages.ADULT,
                 strict_rounds=False,
             )
@@ -1011,7 +1024,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 360,
                 "EMB",
@@ -1020,7 +1033,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_12_red_marked"],
                 AGB_bowstyles.RECURVE,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 175,
                 "B1",
@@ -1029,7 +1042,7 @@ class TestCalculateAgbFieldClassification:
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_yellow_marked"],
                 AGB_bowstyles.BAREBOW,
-                AGB_genders.MALE,
+                AGB_genders.OPEN,
                 AGB_ages.ADULT,
                 340,
                 "GMB",
