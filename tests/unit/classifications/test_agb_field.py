@@ -257,8 +257,8 @@ class TestAgbFieldClassificationScores:
                 (
                     "invalidage is not a recognised age group for field "
                     "classifications. Please select from "
-                    "`AGB_ages.AGE_50_PLUS|AGE_ADULT|AGE_UNDER_18|AGE_UNDER_16|"
-                    "AGE_UNDER_15|AGE_UNDER_14|AGE_UNDER_12`."
+                    "`AGB_ages.OVER_50|ADULT|UNDER_18|UNDER_16|"
+                    "UNDER_15|UNDER_14|UNDER_12`."
                 ),
             ),
         ],

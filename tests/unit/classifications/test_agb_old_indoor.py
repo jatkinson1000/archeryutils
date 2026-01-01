@@ -232,9 +232,9 @@ class TestAgbOldIndoorClassificationScores:
                 AGB_genders.MALE,
                 AGB_ages.AGE_UNDER_12,
                 (
-                    "AGB_ages.AGE_UNDER_12 is not a recognised age group for "
+                    "AGB_ages.UNDER_12 is not a recognised age group for "
                     "old indoor classifications. "
-                    "Please select from `AGB_ages.AGE_ADULT`."
+                    "Please select from `AGB_ages.ADULT`."
                 ),
             ),
         ],

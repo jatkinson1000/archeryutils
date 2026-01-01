@@ -301,7 +301,7 @@ Given a score we can calculate the classification it achieves:
         agb_outdoor_imperial.hereford,
         AGB_bowstyles.RECURVE,
         AGB_genders.MALE,
-        AGB_ages.AGE_50_PLUS,
+        AGB_ages.OVER_50,
     )
     print(
         f"A score of 965 on a Hereford is class {class_from_score} for a 50+ male recurve."
@@ -314,7 +314,7 @@ Given a score we can calculate the classification it achieves:
         wa_indoor.wa18,
         AGB_bowstyles.COMPOUND,
         AGB_genders.FEMALE,
-        AGB_ages.AGE_ADULT,
+        AGB_ages.ADULT,
     )
     print(
         f"A score of 562 on a WA 18 is class {class_from_score} for adult female compound."
@@ -327,7 +327,7 @@ Given a score we can calculate the classification it achieves:
         wa_field.wa_field_24_blue_unmarked,
         AGB_bowstyles.TRADITIONAL,
         AGB_genders.FEMALE,
-        AGB_ages.AGE_ADULT,
+        AGB_ages.ADULT,
     )
     print(
         f"A score of 168 on a WA Unmarked 24 is class {class_from_score} for an under 18 male traditional."
@@ -342,7 +342,7 @@ Or, given a round we can output the scores required for each classification band
         agb_outdoor_imperial.hereford,
         AGB_bowstyles.RECURVE,
         AGB_genders.MALE,
-        AGB_ages.AGE_ADULT,
+        AGB_ages.ADULT,
     )
     print(class_scores)
 
@@ -351,7 +351,7 @@ Or, given a round we can output the scores required for each classification band
         agb_indoor.portsmouth,
         AGB_bowstyles.COMPOUND,
         AGB_genders.FEMALE,
-        AGB_ages.AGE_ADULT,
+        AGB_ages.ADULT,
     )
     print(class_scores)
 
@@ -360,7 +360,7 @@ Or, given a round we can output the scores required for each classification band
         wa_field.wa_field_24_blue_unmarked,
         AGB_bowstyles.FLATBOW,
         AGB_genders.FEMALE,
-        AGB_ages.AGE_UNDER_18,
+        AGB_ages.UNDER_18,
     )
     print(class_scores)
 
