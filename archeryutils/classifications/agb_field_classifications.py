@@ -41,13 +41,13 @@ sighted_bowstyles = (
 )
 
 field_ages = (
-    AGB_ages.AGE_50_PLUS
-    | AGB_ages.AGE_ADULT
-    | AGB_ages.AGE_UNDER_18
-    | AGB_ages.AGE_UNDER_16
-    | AGB_ages.AGE_UNDER_15
-    | AGB_ages.AGE_UNDER_14
-    | AGB_ages.AGE_UNDER_12
+    AGB_ages.OVER_50
+    | AGB_ages.ADULT
+    | AGB_ages.UNDER_18
+    | AGB_ages.UNDER_16
+    | AGB_ages.UNDER_15
+    | AGB_ages.UNDER_14
+    | AGB_ages.UNDER_12
 )
 
 
@@ -131,8 +131,8 @@ def coax_field_group(
 
     coax_gender = gender
 
-    if age_group in (AGB_ages.AGE_UNDER_21):
-        coax_age_group = AGB_ages.AGE_ADULT
+    if age_group in (AGB_ages.UNDER_21):
+        coax_age_group = AGB_ages.ADULT
     else:
         coax_age_group = age_group
 
@@ -400,7 +400,7 @@ def calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
     ...     wa_field.wa_field_24_blue_marked,
     ...     cf.AGB_bowstyles.TRADITIONAL,
     ...     cf.AGB_genders.MALE,
-    ...     cf.AGB_ages.AGE_UNDER_18,
+    ...     cf.AGB_ages.UNDER_18,
     ... )
     'B1'
 
@@ -508,7 +508,7 @@ def agb_field_classification_scores(
     ...     wa_field.wa_field_24_red_marked,
     ...     cf.AGB_bowstyles.COMPOUND,
     ...     cf.AGB_genders.MALE,
-    ...     cf.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_ages.ADULT,
     ... )
     [408, 391, 369, 345, 318, 286, 248, 204, 157]
 
@@ -518,7 +518,7 @@ def agb_field_classification_scores(
     ...     wa_field.wa_field_12_red_unmarked,
     ...     cf.AGB_bowstyles.COMPOUND,
     ...     cf.AGB_genders.MALE,
-    ...     cf.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_ages.ADULT,
     ... )
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
 

@@ -34,22 +34,22 @@ class TestAgbFieldClassificationScores:
         [
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [336, 311, 283, 249, 212, 173, 135, 101, 74],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_50_PLUS,
+                AGB_ages.OVER_50,
                 [321, 294, 263, 227, 188, 149, 114, 84, 60],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 [305, 275, 241, 203, 164, 127, 94, 68, 48],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 [224, 185, 146, 111, 82, 58, 41, 28, 19],
             ),
         ],
@@ -75,12 +75,12 @@ class TestAgbFieldClassificationScores:
         [
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_UNDER_21,
+                AGB_ages.UNDER_21,
                 [336, 311, 283, 249, 212, 173, 135, 101, 74],
             ),
             pytest.param(
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [336, 311, 283, 249, 212, 173, 135, 101, 74],
                 id="Test valid values pass through coaxing unchanged",
             ),
@@ -111,25 +111,25 @@ class TestAgbFieldClassificationScores:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.MALE,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [336, 311, 283, 249, 212, 173, 135, 101, 74],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.FEMALE,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [315, 287, 255, 218, 179, 140, 106, 78, 55],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.MALE,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 [305, 275, 241, 203, 164, 127, 94, 68, 48],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.FEMALE,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 [280, 247, 209, 170, 132, 99, 72, 51, 35],
             ),
         ],
@@ -218,7 +218,7 @@ class TestAgbFieldClassificationScores:
             archery_round=archery_round,
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == scores_expected
@@ -231,7 +231,7 @@ class TestAgbFieldClassificationScores:
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 "invalidbowstyle",
                 AGB_genders.MALE,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 (
                     "invalidbowstyle is not a recognised bowstyle for field "
                     "classifications. Please select from "
@@ -243,7 +243,7 @@ class TestAgbFieldClassificationScores:
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 AGB_bowstyles.RECURVE,
                 "invalidgender",
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 (
                     "invalidgender is not a recognised gender group for field "
                     "classifications. Please select from `archeryutils.AGB_genders`."
@@ -306,7 +306,7 @@ class TestAgbFieldClassificationScores:
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_field_classification_scores_invalid_string_round(
@@ -328,7 +328,7 @@ class TestAgbFieldClassificationScores:
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_field_classification_scores_string_round(
@@ -339,7 +339,7 @@ class TestAgbFieldClassificationScores:
             archery_round="wa_field_24_blue_marked",
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == [336, 311, 283, 249, 212, 173, 135, 101, 74]
@@ -552,105 +552,105 @@ class TestCalculateAgbFieldClassification:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 400,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "GMB",
             ),
             (  # Bowman classifications only on 12-target rounds
                 ALL_AGBFIELD_ROUNDS["wa_field_12_red_marked"],
                 200,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "B1",
             ),
             (  # Archer classifications only on shorter rounds - A1
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 400,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "A1",
             ),
             (  # Archer classifications only on shorter rounds - A2
                 ALL_AGBFIELD_ROUNDS["wa_field_24_yellow_marked"],
                 400,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "A2",
             ),
             (  # Archer classifications only on shorter rounds - A3
                 ALL_AGBFIELD_ROUNDS["wa_field_24_white_marked"],
                 400,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "A3",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 337,
-                AGB_ages.AGE_50_PLUS,
+                AGB_ages.OVER_50,
                 AGB_bowstyles.RECURVE,
                 "GMB",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 177,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
                 "B1",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 177,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
                 "UC",
             ),
             (  # Bowman classifications only on 12-target rounds
                 ALL_AGBFIELD_ROUNDS["wa_field_12_blue_marked"],
                 88,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
                 "B1",
             ),
             (  # Archer classifications only on shorter rounds - Junior
                 ALL_AGBFIELD_ROUNDS["wa_field_24_yellow_marked"],
                 400,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
                 "A1",
             ),
             (  # Archer classifications only on shorter rounds - Junior
                 ALL_AGBFIELD_ROUNDS["wa_field_24_white_marked"],
                 400,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
                 "A2",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 143,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.FLATBOW,
                 "EMB",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 96,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "EMB",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 1,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 1,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.ENGLISHLONGBOW,
                 "UC",
             ),
@@ -681,21 +681,21 @@ class TestCalculateAgbFieldClassification:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 306,
-                AGB_ages.AGE_UNDER_21,
+                AGB_ages.UNDER_21,
                 AGB_bowstyles.BAREBOW,
                 "MB",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 306,
-                AGB_ages.AGE_UNDER_21,
+                AGB_ages.UNDER_21,
                 AGB_bowstyles.BAREBOW,
                 "UC",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 306,
-                AGB_ages.AGE_UNDER_21,
+                AGB_ages.UNDER_21,
                 AGB_bowstyles.RECURVE,
                 "B1",
             ),
@@ -753,7 +753,7 @@ class TestCalculateAgbFieldClassification:
             score=score,
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert class_returned == class_expected
@@ -781,7 +781,7 @@ class TestCalculateAgbFieldClassification:
                 archery_round=ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_field_classification_invalid_round(
@@ -808,7 +808,7 @@ class TestCalculateAgbFieldClassification:
                 score=333,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_field_classification_scores_invalid_string_round(
@@ -831,7 +831,7 @@ class TestCalculateAgbFieldClassification:
                 score=333,
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_field_classification_scores_string_round(
@@ -843,7 +843,7 @@ class TestCalculateAgbFieldClassification:
             score=252,
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert my_class == "B1"
