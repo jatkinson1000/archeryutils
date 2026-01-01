@@ -41,7 +41,7 @@ class AGBAgeData(TypedDict):
     step: int
 
 
-@cache
+
 def read_ages_json(
     age_file: Path = Path(__file__).parent / "data" / "AGB_ages.json",
 ) -> dict[str, AGBAgeData]:
@@ -208,21 +208,20 @@ def read_classes_json(
     ----------
     Archery GB Rules of Shooting
     """
-    if class_system == "agb_indoor":
-        filename = "AGB_classes_in.json"
-    elif class_system == "agb_outdoor":
-        filename = "AGB_classes_out.json"
-    elif class_system == "agb_field":
+    match class_system:
+        case "agb_indoor":
+            filename = "AGB_classes_in"
         # Field classifications are same as outdoor
-        filename = "AGB_classes_out.json"
-    else:
-        msg = (
-            "Unexpected classification system specified. "
-            "Expected one of 'agb_indoor', 'agb_outdoor', 'agb_field'."
-        )
-        raise ValueError(msg)
+        case "agb_outdoor" | "agb_field":
+            filename = "AGB_classes_out"
+        case _:
+            msg = (
+                "Unexpected classification system specified. "
+                "Expected one of 'agb_indoor', 'agb_outdoor', 'agb_field'."
+            )
+            raise ValueError(msg)
 
-    classes_file = Path(__file__).parent / "data" / filename
+    classes_file = Path(__file__).parent.joinpath("data", filename).with_suffix(".json")
 
     # Read in classification names as dict
     with open(classes_file, encoding="utf-8") as json_file:
