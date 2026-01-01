@@ -34,13 +34,13 @@ ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
 )
 
 field_ages = (
-    AGB_ages.AGE_50_PLUS
-    | AGB_ages.AGE_ADULT
-    | AGB_ages.AGE_UNDER_18
-    | AGB_ages.AGE_UNDER_16
-    | AGB_ages.AGE_UNDER_15
-    | AGB_ages.AGE_UNDER_14
-    | AGB_ages.AGE_UNDER_12
+    AGB_ages.OVER_50
+    | AGB_ages.ADULT
+    | AGB_ages.UNDER_18
+    | AGB_ages.UNDER_16
+    | AGB_ages.UNDER_15
+    | AGB_ages.UNDER_14
+    | AGB_ages.UNDER_12
 )
 
 target_bowstyles = (
@@ -112,7 +112,7 @@ def test_old_indoor_classification_scores(snapshot, bowstyle, gender) -> None:
             archery_round=archery_round,
             bowstyle=bowstyle,
             gender=gender,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
     assert json.dumps(actual_scores) == snapshot
@@ -120,7 +120,7 @@ def test_old_indoor_classification_scores(snapshot, bowstyle, gender) -> None:
 
 @pytest.mark.parametrize("bowstyle", AGB_bowstyles)
 @pytest.mark.parametrize("gender", AGB_genders)
-@pytest.mark.parametrize("age", AGB_ages.AGE_ADULT | AGB_ages.AGE_UNDER_18)
+@pytest.mark.parametrize("age", AGB_ages.ADULT | AGB_ages.UNDER_18)
 def test_old_field_classification_scores(snapshot, bowstyle, gender, age) -> None:
     """Loop over field rounds and parameters to snapshot test."""
     actual_scores = {}

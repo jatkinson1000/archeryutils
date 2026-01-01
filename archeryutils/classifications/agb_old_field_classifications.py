@@ -52,7 +52,7 @@ sighted_bowstyles = (
     AGB_bowstyles.COMPOUND | AGB_bowstyles.RECURVE | AGB_bowstyles.COMPOUNDLIMITED
 )
 
-old_field_ages = AGB_ages.AGE_ADULT | AGB_ages.AGE_UNDER_18
+old_field_ages = AGB_ages.ADULT | AGB_ages.UNDER_18
 
 
 class GroupData(TypedDict):
@@ -132,10 +132,10 @@ def coax_old_field_group(
 
     coax_gender = gender
 
-    if age_group in (AGB_ages.AGE_UNDER_21 | AGB_ages.AGE_50_PLUS):
-        coax_age_group = AGB_ages.AGE_ADULT
-    elif age_group != AGB_ages.AGE_ADULT:
-        coax_age_group = AGB_ages.AGE_UNDER_18
+    if age_group in (AGB_ages.UNDER_21 | AGB_ages.OVER_50):
+        coax_age_group = AGB_ages.ADULT
+    elif age_group != AGB_ages.ADULT:
+        coax_age_group = AGB_ages.UNDER_18
     else:
         coax_age_group = age_group
 
@@ -173,162 +173,162 @@ def _make_agb_old_field_classification_dict() -> dict[str, GroupData]:
         (
             AGB_bowstyles.COMPOUND,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [393, 377, 344, 312, 279, 247],
         (
             AGB_bowstyles.COMPOUND,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [376, 361, 330, 299, 268, 237],
         (
             AGB_bowstyles.RECURVE,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [338, 317, 288, 260, 231, 203],
         (
             AGB_bowstyles.RECURVE,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [322, 302, 275, 247, 220, 193],
         (
             AGB_bowstyles.BAREBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [328, 307, 279, 252, 224, 197],
         (
             AGB_bowstyles.BAREBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [303, 284, 258, 233, 207, 182],
         (
             AGB_bowstyles.LONGBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [201, 188, 171, 155, 137, 121],
         (
             AGB_bowstyles.LONGBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [152, 142, 129, 117, 103, 91],
         (
             AGB_bowstyles.TRADITIONAL,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [262, 245, 223, 202, 178, 157],
         (
             AGB_bowstyles.TRADITIONAL,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [197, 184, 167, 152, 134, 118],
         (
             AGB_bowstyles.FLATBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [262, 245, 223, 202, 178, 157],
         (
             AGB_bowstyles.FLATBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [197, 184, 167, 152, 134, 118],
         (
             AGB_bowstyles.COMPOUNDLIMITED,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [338, 317, 288, 260, 231, 203],
         (
             AGB_bowstyles.COMPOUNDLIMITED,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [322, 302, 275, 247, 220, 193],
         (
             AGB_bowstyles.COMPOUNDBAREBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [328, 307, 279, 252, 224, 197],
         (
             AGB_bowstyles.COMPOUNDBAREBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_ADULT,
+            AGB_ages.ADULT,
         ): [303, 284, 258, 233, 207, 182],
         (
             AGB_bowstyles.COMPOUND,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [385, 369, 337, 306, 273, 242],
         (
             AGB_bowstyles.COMPOUND,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [357, 343, 314, 284, 255, 225],
         (
             AGB_bowstyles.RECURVE,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [311, 292, 265, 239, 213, 187],
         (
             AGB_bowstyles.RECURVE,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [280, 263, 239, 215, 191, 168],
         (
             AGB_bowstyles.BAREBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [298, 279, 254, 229, 204, 179],
         (
             AGB_bowstyles.BAREBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [251, 236, 214, 193, 172, 151],
         (
             AGB_bowstyles.LONGBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [161, 150, 137, 124, 109, 96],
         (
             AGB_bowstyles.LONGBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [122, 114, 103, 94, 83, 73],
         (
             AGB_bowstyles.TRADITIONAL,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [210, 196, 178, 161, 143, 126],
         (
             AGB_bowstyles.TRADITIONAL,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [158, 147, 134, 121, 107, 95],
         (
             AGB_bowstyles.FLATBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [210, 196, 178, 161, 143, 126],
         (
             AGB_bowstyles.FLATBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [158, 147, 134, 121, 107, 95],
         (
             AGB_bowstyles.COMPOUNDLIMITED,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [311, 292, 265, 239, 213, 187],
         (
             AGB_bowstyles.COMPOUNDLIMITED,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [280, 263, 239, 215, 191, 168],
         (
             AGB_bowstyles.COMPOUNDBAREBOW,
             AGB_genders.MALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [298, 279, 254, 229, 204, 179],
         (
             AGB_bowstyles.COMPOUNDBAREBOW,
             AGB_genders.FEMALE,
-            AGB_ages.AGE_UNDER_18,
+            AGB_ages.UNDER_18,
         ): [251, 236, 214, 193, 172, 151],
     }
 
@@ -443,7 +443,7 @@ def calculate_agb_old_field_classification(
     ...     wa_field.wa_field_24_red_marked,
     ...     cf.AGB_bowstyles.RECURVE,
     ...     cf.AGB_genders.MALE,
-    ...     cf.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_ages.ADULT,
     ... )
     '2nd Class'
 
@@ -527,7 +527,7 @@ def agb_old_field_classification_scores(
     ...     wa_field.wa_field_24_red_marked,
     ...     cf.AGB_bowstyles.RECURVE,
     ...     cf.AGB_genders.MALE,
-    ...     cf.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_ages.ADULT,
     ... )
     [338, 317, 288, 260, 231, 203]
 

@@ -24,7 +24,7 @@ class TestAgbOldIndoorClassificationScores:
         "age_group,scores_expected",
         [
             (
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
         ],
@@ -52,32 +52,32 @@ class TestAgbOldIndoorClassificationScores:
         "age_group,bowstyle,scores_expected",
         [
             (
-                AGB_ages.AGE_50_PLUS,
+                AGB_ages.OVER_50,
                 AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
-                AGB_ages.AGE_UNDER_21,
+                AGB_ages.UNDER_21,
                 AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.RECURVE,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.BAREBOW,
                 [592, 582, 554, 505, 432, 315, 195, 139],
             ),
             (
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUNDLIMITED,
                 [581, 570, 554, 529, 484, 396, 279, 206],
             ),
@@ -110,7 +110,7 @@ class TestAgbOldIndoorClassificationScores:
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=AGB_genders.FEMALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == [582, 569, 534, 479, 380, 255, 139, 93]
@@ -145,7 +145,7 @@ class TestAgbOldIndoorClassificationScores:
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=bowstyle,
             gender=gender,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == scores_expected
@@ -199,7 +199,7 @@ class TestAgbOldIndoorClassificationScores:
             archery_round=ALL_INDOOR_ROUNDS["worcester"],
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == [300, 299, 289, 264, 226, 162, 96, 65]
@@ -211,7 +211,7 @@ class TestAgbOldIndoorClassificationScores:
             (
                 AGB_bowstyles.RECURVE,
                 "invalidgender",
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 (
                     "invalidgender is not a recognised gender group for old indoor "
                     "classifications. Please select from `archeryutils.AGB_genders`."
@@ -220,7 +220,7 @@ class TestAgbOldIndoorClassificationScores:
             (
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.MALE,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 (
                     "AGB_bowstyles.BAREBOW is not a recognised bowstyle for old indoor "
                     "classifications. "
@@ -230,7 +230,7 @@ class TestAgbOldIndoorClassificationScores:
             (
                 AGB_bowstyles.RECURVE,
                 AGB_genders.MALE,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 (
                     "AGB_ages.UNDER_12 is not a recognised age group for "
                     "old indoor classifications. "
@@ -281,7 +281,7 @@ class TestAgbOldIndoorClassificationScores:
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_old_indoor_classification_scores_invalid_string_round(
@@ -303,7 +303,7 @@ class TestAgbOldIndoorClassificationScores:
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_old_indoor_classification_scores_string_round(
@@ -314,7 +314,7 @@ class TestAgbOldIndoorClassificationScores:
             archery_round="portsmouth",
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == [581, 570, 554, 529, 484, 396, 279, 206]
@@ -414,7 +414,7 @@ class TestCalculateAgbOldIndoorClassification:
             archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
             bowstyle=AGB_bowstyles.RECURVE,
             gender=gender,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert class_returned == class_expected
@@ -441,7 +441,7 @@ class TestCalculateAgbOldIndoorClassification:
                 archery_round=ALL_INDOOR_ROUNDS["portsmouth"],
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_indoor_classification_invalid_round(
@@ -468,7 +468,7 @@ class TestCalculateAgbOldIndoorClassification:
                 score=666,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_indoor_classification_scores_invalid_string_round(
@@ -491,7 +491,7 @@ class TestCalculateAgbOldIndoorClassification:
                 score=666,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_indoor_classification_scores_string_round(
@@ -503,7 +503,7 @@ class TestCalculateAgbOldIndoorClassification:
             score=578,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert my_class == "B"

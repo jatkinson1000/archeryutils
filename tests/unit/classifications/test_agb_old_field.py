@@ -24,12 +24,12 @@ class TestAgbOldFieldClassificationScores:
         [
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 [298, 279, 254, 229, 204, 179],
             ),
         ],
@@ -55,23 +55,23 @@ class TestAgbOldFieldClassificationScores:
         [
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_50_PLUS,
+                AGB_ages.OVER_50,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_UNDER_21,
+                AGB_ages.UNDER_21,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 [298, 279, 254, 229, 204, 179],
             ),
             # Check adult passes through coaxing unchanged
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [328, 307, 279, 252, 224, 197],
             ),
         ],
@@ -101,25 +101,25 @@ class TestAgbOldFieldClassificationScores:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.MALE,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [328, 307, 279, 252, 224, 197],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.FEMALE,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 [303, 284, 258, 233, 207, 182],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.MALE,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 [298, 279, 254, 229, 204, 179],
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 AGB_genders.FEMALE,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 [251, 236, 214, 193, 172, 151],
             ),
         ],
@@ -193,7 +193,7 @@ class TestAgbOldFieldClassificationScores:
             archery_round=archery_round,
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == scores_expected
@@ -206,7 +206,7 @@ class TestAgbOldFieldClassificationScores:
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 "invalidbowstyle",
                 AGB_genders.MALE,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 (
                     "invalidbowstyle is not a recognised bowstyle for old field "
                     "classifications. Please select from "
@@ -218,7 +218,7 @@ class TestAgbOldFieldClassificationScores:
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 AGB_bowstyles.RECURVE,
                 "invalidgender",
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 (
                     "invalidgender is not a recognised gender group for old field "
                     "classifications. Please select from `archeryutils.AGB_genders`."
@@ -280,7 +280,7 @@ class TestAgbOldFieldClassificationScores:
                 archery_round=my_round,
                 bowstyle=AGB_bowstyles.RECURVE,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_old_field_classification_scores_invalid_string_round(
@@ -302,7 +302,7 @@ class TestAgbOldFieldClassificationScores:
                 archery_round="invalid_roundname",
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_old_field_classification_scores_string_round(
@@ -313,7 +313,7 @@ class TestAgbOldFieldClassificationScores:
             archery_round="wa_field_24_blue_marked",
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == [328, 307, 279, 252, 224, 197]
@@ -328,14 +328,14 @@ class TestCalculateOldAgbFieldClassification:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 400,
-                AGB_ages.AGE_ADULT,
+                AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "GMB",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 177,
-                AGB_ages.AGE_UNDER_18,
+                AGB_ages.UNDER_18,
                 AGB_bowstyles.TRADITIONAL,
                 "1C",
             ),
@@ -367,42 +367,42 @@ class TestCalculateOldAgbFieldClassification:
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_red_marked"],
                 337,
-                AGB_ages.AGE_50_PLUS,
+                AGB_ages.OVER_50,
                 AGB_bowstyles.RECURVE,
                 "MB",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 306,
-                AGB_ages.AGE_UNDER_21,
+                AGB_ages.UNDER_21,
                 AGB_bowstyles.BAREBOW,
                 "B",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 143,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.FLATBOW,
                 "2C",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 96,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "3C",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 1,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_24_blue_marked"],
                 1,
-                AGB_ages.AGE_UNDER_12,
+                AGB_ages.UNDER_12,
                 AGB_bowstyles.ENGLISHLONGBOW,
                 "UC",
             ),
@@ -460,7 +460,7 @@ class TestCalculateOldAgbFieldClassification:
             score=score,
             bowstyle=bowstyle,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert class_returned == class_expected
@@ -506,7 +506,7 @@ class TestCalculateOldAgbFieldClassification:
                 archery_round=archery_round,
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_old_field_classification_scores_invalid_string_round(
@@ -529,7 +529,7 @@ class TestCalculateOldAgbFieldClassification:
                 score=333,
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.FEMALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
             )
 
     def test_agb_old_field_classification_scores_string_round(
@@ -541,7 +541,7 @@ class TestCalculateOldAgbFieldClassification:
             score=252,
             bowstyle=AGB_bowstyles.BAREBOW,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert my_class == "1C"

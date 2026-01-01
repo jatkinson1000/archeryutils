@@ -317,7 +317,7 @@ def calculate_agb_indoor_classification(
     ...     agb_indoor.wa18,
     ...     cf.AGB_bowstyles.COMPOUND,
     ...     cf.AGB_genders.MALE,
-    ...     cf.AGB_ages.AGE_50_PLUS,
+    ...     cf.AGB_ages.OVER_50,
     ... )
     'I-B2'
 
@@ -416,7 +416,7 @@ def agb_indoor_classification_scores(
     ...     agb_indoor.portsmouth,
     ...     cf.AGB_bowstyles.BAREBOW,
     ...     cf.AGB_genders.MALE,
-    ...     cf.AGB_ages.AGE_UNDER_12,
+    ...     cf.AGB_ages.UNDER_12,
     ... )
     [411, 360, 301, 240, 183, 134, 95, 66]
 
@@ -426,7 +426,7 @@ def agb_indoor_classification_scores(
     ...     agb_indoor.worcester,
     ...     cf.AGB_bowstyles.COMPOUND,
     ...     cf.AGB_genders.FEMALE,
-    ...     cf.AGB_ages.AGE_ADULT,
+    ...     cf.AGB_ages.ADULT,
     ... )
     [-9999, -9999, 298, 289, 276, 257, 233, 200]
 
