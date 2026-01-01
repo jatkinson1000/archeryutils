@@ -232,7 +232,7 @@ class TestAgbOldFieldClassificationScores:
                 (
                     "invalidage is not a recognised age group for old field "
                     "classifications. "
-                    "Please select from `AGB_ages.AGE_ADULT|AGE_UNDER_18`."
+                    "Please select from `AGB_ages.ADULT|UNDER_18`."
                 ),
             ),
         ],
