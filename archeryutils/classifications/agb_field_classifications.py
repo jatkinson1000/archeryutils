@@ -515,4 +515,26 @@ def agb_field_classification_scores(
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
 
+    # Handle possibility of gaps in the tables or max scores by checking 1 HC point
+    # above current (floored to handle 0.5) and amending accordingly
+    # i.e. one must exceed (be lower than) the handicap threshold, not be awarded if
+    # the same score is achievable at a higher handicap.
+    for i, (score, handicap) in enumerate(
+        zip(int_class_scores, group_data["class_HC"], strict=True),
+    ):
+        next_score = hc.score_for_round(
+            np.floor(handicap) + 1,
+            archery_round,
+            hc_scheme,
+            rounded_score=True,
+        )
+        if next_score == score:
+            # If already at max score this classification is impossible
+            if score == archery_round.max_score():
+                int_class_scores[i] = -9999
+            # If gap in table increase to next score
+            # (we assume here that no two classifications are only 1 point apart...)
+            else:
+                int_class_scores[i] += 1
+
     return int_class_scores
