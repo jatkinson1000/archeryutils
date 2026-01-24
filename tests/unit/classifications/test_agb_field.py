@@ -362,7 +362,7 @@ class TestAgbFieldClassificationScores:
         [
             (
                 ALL_AGBFIELD_ROUNDS["wa_field_12_white_marked"],
-                [184, 174, 162, 149, 134, 116, 97, 77, 58],
+                [185, 174, 162, 149, 134, 116, 97, 77, 58],
             ),
             (
                 CUSTOM_ROUND,
@@ -883,6 +883,12 @@ class TestCalculateAgbFieldClassification:
                 load_rounds.AGB_indoor.portsmouth,
                 595,
                 "MB",
+            ),
+            pytest.param(
+                load_rounds.AGB_indoor.portsmouth,
+                600,
+                "GMB",
+                id="Check max score on Portsmouth capped to GMB.",
             ),
         ],
     )
