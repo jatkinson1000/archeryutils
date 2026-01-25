@@ -335,12 +335,14 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
     return archery_round, roundname
 
 
-def calculate_agb_field_classification(
+def calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
     score: float,
     archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
+    strict_rounds: bool = True,
+    strict_distance: bool = True,
 ) -> str:
     """
     Calculate AGB field classification from score.
@@ -354,13 +356,21 @@ def calculate_agb_field_classification(
         numerical score on the round to calculate classification for
     archery_round : Round | str
         an archeryutils Round object as suitable for this scheme
-        alternatively the round codename as a str can be used
+        alternatively the round codename as a str can be used (provided strict_rounds)
     bowstyle : AGB_bowstyles
         archer's bowstyle under AGB field rules
     gender : AGB_genders
         archer's gender under AGB field rules
     age_group : AGB_ages
         archer's age group under AGB field rules
+    strict_rounds : bool, default=True
+        Whether to enforce valid AGB field rounds and apply prestige rounds rules.
+        If False then `archery_round` must be of type `Round` for explicit clarity.
+        Any max-distance rounds return MB-tier classifications (not just 24-target).
+    strict_distance : bool, default=True
+        Whether to enforce age- and bowstyle-dependent upper and lower distance
+        restrictions. Includes removing red-peg (>50m) for unsighted bowstyles and
+        >60m for sighted.
 
     Returns
     -------
@@ -371,6 +381,14 @@ def calculate_agb_field_classification(
     ----------
     ArcheryGB 2025 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2025)
+
+    Raises
+    ------
+    ValueError
+        If requested round is not valid for this scheme (when strict_rounds enabled)
+        If an invalid score for the requested round is provided
+    TypeError
+        If archery_round is passed as a string when strict_rounds disabled
 
     Examples
     --------
@@ -387,7 +405,14 @@ def calculate_agb_field_classification(
     'B1'
 
     """
-    archery_round, _ = _check_round_eligibility(archery_round)
+    if strict_rounds:
+        archery_round, _ = _check_round_eligibility(archery_round)
+    elif isinstance(archery_round, str):
+        msg = (
+            "strict_rounds is False so archery_round must be explicitly specified as "
+            "a Round type instead of a string."
+        )
+        raise TypeError(msg)
 
     # Check score is valid
     if score < 0 or score > archery_round.max_score():
@@ -397,17 +422,20 @@ def calculate_agb_field_classification(
         )
         raise ValueError(msg)
 
-    groupname = _get_field_groupname(bowstyle, gender, age_group)
-    group_data = agb_field_classifications[groupname]
-
     # Get scores required on this round for each classification
     all_class_scores = agb_field_classification_scores(
         archery_round,
         bowstyle,
         gender,
         age_group,
+        strict_rounds=strict_rounds,
+        strict_distance=strict_distance,
     )
 
+    groupname = _get_field_groupname(bowstyle, gender, age_group)
+    group_data = agb_field_classifications[groupname]
+
+    class_data = dict(zip(group_data["classes"], all_class_scores, strict=True))
     class_data = dict(zip(group_data["classes"], all_class_scores, strict=True))
 
     # Of the classes remaining, what is the highest classification this score gets?
@@ -425,6 +453,8 @@ def agb_field_classification_scores(
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
     age_group: AGB_ages,
+    strict_rounds: bool = True,
+    strict_distance: bool = True,
 ) -> list[int]:
     """
     Calculate AGB field classification scores for category.
@@ -443,6 +473,14 @@ def agb_field_classification_scores(
         archer's gender under AGB field target rules
     age_group : str
         archer's age group under AGB field target rules
+    strict_rounds : bool, default=True
+        Whether to enforce valid AGB field rounds and apply prestige rounds rules.
+        If False then `archery_round` must be of type `Round` for explicit clarity.
+        Any max-distance rounds return MB-tier classifications (not just 24-target).
+    strict_distance : bool, default=True
+        Whether to enforce age- and bowstyle-dependent upper and lower distance
+        restrictions. Includes removing red-peg (>50m) for unsighted bowstyles and
+        >60m for sighted.
 
     Returns
     -------
@@ -453,6 +491,13 @@ def agb_field_classification_scores(
     ----------
     ArcheryGB 2025 Rules of Shooting
     ArcheryGB Shooting Administrative Procedures - SAP7 (2025)
+
+    Raises
+    ------
+    ValueError
+        If requested round is not valid for this scheme (when strict_rounds enabled)
+    TypeError
+        If archery_round is passed as a string when strict_rounds disabled
 
     Examples
     --------
@@ -478,7 +523,18 @@ def agb_field_classification_scores(
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
 
     """
-    archery_round, _ = _check_round_eligibility(archery_round)
+    if strict_rounds:
+        archery_round, roundname = _check_round_eligibility(archery_round)
+    elif isinstance(archery_round, str):
+        msg = (
+            "strict_rounds is False so archery_round must be explicitly specified as "
+            "a Round type instead of a string."
+        )
+        raise TypeError(msg)
+    else:
+        # If a custom round has been passed use codename for prestige checks
+        # This assumes users do not set the codename to an alreay existing codename
+        roundname = archery_round.codename
 
     groupname = _get_field_groupname(bowstyle, gender, age_group)
     group_data = agb_field_classifications[groupname]
@@ -497,19 +553,21 @@ def agb_field_classification_scores(
     ]
 
     # Reduce list based on other criteria besides handicap
-    # What classes are eligible based on category and distance
-    round_max_dist = archery_round.max_distance().value
-    for i in range(len(class_scores)):
-        # What classes are eligible based on category and distance
-        # Is round too short?
-        if group_data["min_dists"][i] > round_max_dist:
-            class_scores[i] = -9999
-        # Is peg too long (i.e. red peg for unsighted)?
-        if group_data["max_distance"] < round_max_dist:
-            class_scores[i] = -9999
-    # What classes are eligible based on round length (24 targets)
-    if "12" in archery_round.name:
+    # Based on round length (24 targets for MB)
+    if strict_rounds and "wa_field_24_" not in archery_round.codename:
         class_scores[0:3] = [-9999] * 3
+
+    # What classes are eligible based on category and distance
+    if strict_distance:
+        round_max_dist = archery_round.max_distance().value
+        for i in range(len(class_scores)):
+            # What classes are eligible based on category and distance
+            # Is round too short?
+            if group_data["min_dists"][i] > round_max_dist:
+                class_scores[i] = -9999
+            # Is peg too long (i.e. red peg for unsighted)?
+            if group_data["max_distance"] < round_max_dist:
+                class_scores[i] = -9999
 
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy

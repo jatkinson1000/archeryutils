@@ -266,7 +266,7 @@ class TestAgbOldFieldClassificationScores:
             match=(
                 re.escape(
                     "This round is not recognised for the purposes of "
-                    "field classification.\n"
+                    "old AGB field classifications.\n"
                     "Please select an appropriate option using "
                     "`archeryutils.load_rounds`."
                 )
@@ -292,7 +292,7 @@ class TestAgbOldFieldClassificationScores:
             match=(
                 re.escape(
                     "This round is not recognised for the purposes of "
-                    "field classification.\n"
+                    "old AGB field classifications.\n"
                     "Please select an appropriate option using "
                     "`archeryutils.load_rounds`."
                 )
@@ -518,7 +518,7 @@ class TestCalculateOldAgbFieldClassification:
             match=(
                 re.escape(
                     "This round is not recognised for the purposes of "
-                    "field classification.\n"
+                    "old AGB field classifications.\n"
                     "Please select an appropriate option using "
                     "`archeryutils.load_rounds`."
                 )
