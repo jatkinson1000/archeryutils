@@ -383,7 +383,8 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
         ]
     else:
         error = (
-            "This round is not recognised for the purposes of field classification.\n"
+            "This round is not recognised for the purposes of old AGB field "
+            "classifications.\n"
             "Please select an appropriate option using `archeryutils.load_rounds`."
         )
         raise ValueError(error)
