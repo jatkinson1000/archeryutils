@@ -14,6 +14,7 @@ get_compound_codename
 """
 
 import json
+from functools import cache
 from pathlib import Path
 from typing import Literal, TypedDict
 
@@ -40,16 +41,10 @@ class AGBAgeData(TypedDict):
     step: int
 
 
-def read_ages_json(
-    age_file: Path = Path(__file__).parent / "AGB_ages.json",
-) -> dict[str, AGBAgeData]:
+@cache
+def read_ages_json() -> dict[str, AGBAgeData]:
     """
     Read AGB age categories in from neighbouring json file to list of dicts.
-
-    Parameters
-    ----------
-    age_file : Path, default="./AGB_ages.json"
-        path to json file with age information
 
     Returns
     -------
@@ -65,15 +60,17 @@ def read_ages_json(
     ----------
     Archery GB Rules of Shooting
     """
-    with open(age_file, encoding="utf-8") as json_file:
-        ages = json.load(json_file)
-    if isinstance(ages, dict):
-        return ages
-    msg = (
-        f"Unexpected ages input when reading from json file. "
-        f"Expected dict() but got {type(ages)}. Check {age_file}."
-    )
-    raise TypeError(msg)
+    age_file = Path(__file__).parent.joinpath("data", "AGB_ages.json")
+    ages = json.loads(age_file.read_text(encoding="utf-8"))
+
+    if not isinstance(ages, dict):
+        msg = (
+            f"Unexpected ages input when reading from json file. "
+            f"Expected dict() but got {type(ages)}. Check {age_file}."
+        )
+        raise TypeError(msg)
+
+    return ages
 
 
 class AGBBowstyleData(TypedDict):
@@ -94,16 +91,10 @@ class AGBBowstyleData(TypedDict):
     ageStep_field: float
 
 
-def read_bowstyles_json(
-    bowstyles_file: Path = Path(__file__).parent / "AGB_bowstyles.json",
-) -> dict[str, AGBBowstyleData]:
+@cache
+def read_bowstyles_json() -> dict[str, AGBBowstyleData]:
     """
     Read AGB  bowstyles in from neighbouring json file to list of dicts.
-
-    Parameters
-    ----------
-    bowstyles_file : Path, default="./AGB_bowstyles.json"
-        path to json file
 
     Returns
     -------
@@ -119,27 +110,23 @@ def read_bowstyles_json(
     ----------
     Archery GB Rules of Shooting
     """
-    with open(bowstyles_file, encoding="utf-8") as json_file:
-        bowstyles = json.load(json_file)
-    if isinstance(bowstyles, dict):
-        return bowstyles
-    msg = (
-        f"Unexpected bowstyles input when reading from json file. "
-        f"Expected dict() but got {type(bowstyles)}. Check {bowstyles_file}."
-    )
-    raise TypeError(msg)
+    bowstyles_file = Path(__file__).parent.joinpath("data", "AGB_bowstyles.json")
+    bowstyles = json.loads(bowstyles_file.read_text(encoding="utf-8"))
+
+    if not isinstance(bowstyles, dict):
+        msg = (
+            f"Unexpected bowstyles input when reading from json file. "
+            f"Expected dict() but got {type(bowstyles)}. Check {bowstyles_file}."
+        )
+        raise TypeError(msg)
+
+    return bowstyles
 
 
-def read_genders_json(
-    genders_file: Path = Path(__file__).parent / "AGB_genders.json",
-) -> list[Literal["Male", "Female"]]:
+@cache
+def read_genders_json() -> list[Literal["Male", "Female"]]:
     """
     Read AGB genders in from neighbouring json file to list of dict.
-
-    Parameters
-    ----------
-    genders_file : Path, default="./AGB_genders.json"
-        path to json file
 
     Returns
     -------
@@ -156,15 +143,17 @@ def read_genders_json(
     Archery GB Rules of Shooting
     """
     # Read in gender info as list
-    with open(genders_file, encoding="utf-8") as json_file:
-        genders = json.load(json_file)["genders"]
-    if isinstance(genders, list):
-        return genders
-    msg = (
-        f"Unexpected genders input when reading from json file. "
-        f"Expected list() but got {type(genders)}. Check {genders_file}."
-    )
-    raise TypeError(msg)
+    genders_file = Path(__file__).parent.joinpath("data", "AGB_genders.json")
+    genders = json.loads(genders_file.read_text(encoding="utf-8"))["genders"]
+
+    if not isinstance(genders, list):
+        msg = (
+            f"Unexpected genders input when reading from json file. "
+            f"Expected list() but got {type(genders)}. Check {genders_file}."
+        )
+        raise TypeError(msg)
+
+    return genders
 
 
 class AGBClassificationData(TypedDict):
@@ -175,6 +164,7 @@ class AGBClassificationData(TypedDict):
     classes_long: list[str]
 
 
+@cache
 def read_classes_json(
     class_system: str,
 ) -> AGBClassificationData:
@@ -203,21 +193,20 @@ def read_classes_json(
     ----------
     Archery GB Rules of Shooting
     """
-    if class_system == "agb_indoor":
-        filename = "AGB_classes_in.json"
-    elif class_system == "agb_outdoor":
-        filename = "AGB_classes_out.json"
-    elif class_system == "agb_field":
+    match class_system:
+        case "agb_indoor":
+            filename = "AGB_classes_in"
         # Field classifications are same as outdoor
-        filename = "AGB_classes_out.json"
-    else:
-        msg = (
-            "Unexpected classification system specified. "
-            "Expected one of 'agb_indoor', 'agb_outdoor', 'agb_field'."
-        )
-        raise ValueError(msg)
+        case "agb_outdoor" | "agb_field":
+            filename = "AGB_classes_out"
+        case _:
+            msg = (
+                "Unexpected classification system specified. "
+                "Expected one of 'agb_indoor', 'agb_outdoor', 'agb_field'."
+            )
+            raise ValueError(msg)
 
-    classes_file = Path(__file__).parent / filename
+    classes_file = Path(__file__).parent.joinpath("data", filename).with_suffix(".json")
 
     # Read in classification names as dict
     with open(classes_file, encoding="utf-8") as json_file:

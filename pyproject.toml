@@ -77,7 +77,7 @@ include = ["archeryutils", "archeryutils.*"]  # package names should match these
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [tool.setuptools.package-data]
-archeryutils = ["*.json", "round_data_files/*.json", "classifications/*.json"]
+archeryutils = ["*.json", "round_data_files/*.json", "classifications/data/*.json"]
 
 [tool.mypy]
 warn_unused_configs = true
