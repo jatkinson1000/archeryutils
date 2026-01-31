@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Addition of regression tests for classifications and handicaps using syrupy for
   snapshots in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
+- Addition of strict_rounds and strict_distance arguments for classifications in
+  [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
 
 ### Changed
 
@@ -21,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workflows update to include Python 3.14 in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 
 ### Fixes
+
+- Bugfix for old indoor classifications to enforce full single face on AGB rounds but
+  allow separate scores for triple faces for WA rounds. Previously triple faces gave
+  different classification scores on AGB rounds.
+  In [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
 
 ### Deprecated
 
