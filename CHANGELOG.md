@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests now in a separate `tests/` directory instead of alongside source in
   [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 - Workflows update to include Python 3.14 in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
+- AGB age category enums dropped the `AGE_` prefix in [#159](https://github.com/jatkinson1000/archeryutils/pull/159).
+  Replaced by `OVER_50`, `ADULT`, `UNDER_18` etc.
 
 ### Fixes
 
@@ -30,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   In [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
 
 ### Deprecated
+
+- Use of AGB age category enums with the `AGE_` prefix in [#159](https://github.com/jatkinson1000/archeryutils/pull/159).
+  Raises a warning and will be removed in future.
+  Instead use new `OVER_50`, `ADULT`, `UNDER_18` etc.
 
 ### Removed
 
