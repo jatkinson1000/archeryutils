@@ -491,4 +491,13 @@ def agb_indoor_classification_scores(
             else:
                 int_class_scores[i] += 1
 
+    # Handle repeated scores by forcing at least 1 point separation between classes.
+    # Currently no coverage as this is not triggered and is hard to test for.
+    for i, score in enumerate(int_class_scores[:-1]):
+        if int_class_scores[i + 1] == score and score >= 0:  # pragma: no cover
+            if score == archery_round.max_score():
+                int_class_scores[i + 1] = -9999
+            else:
+                int_class_scores[i + 1] += 1
+
     return int_class_scores

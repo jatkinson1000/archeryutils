@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Addition of new WA rounds for Under 15 category and updating of prestige rounds for
   outdoor classifications accordingly in [#156](https://github.com/jatkinson1000/archeryutils/pull/156)
   and [#164](https://github.com/jatkinson1000/archeryutils/pull/164).
+- Protection against repeated scores in classification tables in [#163](https://github.com/jatkinson1000/archeryutils/pull/163).
+  Only changes Under 12 Longbow New Warwick but guards for any future changes.
 
 ### Changed
 

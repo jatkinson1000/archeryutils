@@ -448,7 +448,7 @@ def calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
     return "UC"
 
 
-def agb_field_classification_scores(
+def agb_field_classification_scores(  # noqa:PLR0912
     archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
@@ -594,5 +594,14 @@ def agb_field_classification_scores(
             # (we assume here that no two classifications are only 1 point apart...)
             else:
                 int_class_scores[i] += 1
+
+    # Handle repeated scores by forcing at least 1 point separation between classes.
+    # Currently no coverage as this is not triggered and is hard to test for.
+    for i, score in enumerate(int_class_scores[:-1]):  # pragma: no cover
+        if int_class_scores[i + 1] == score and score >= 0:
+            if score == archery_round.max_score():
+                int_class_scores[i + 1] = -9999
+            else:
+                int_class_scores[i + 1] += 1
 
     return int_class_scores
