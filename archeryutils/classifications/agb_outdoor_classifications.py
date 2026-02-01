@@ -592,7 +592,7 @@ def calculate_agb_outdoor_classification(  # noqa: PLR0913 Too many arguments
     return "UC"
 
 
-def agb_outdoor_classification_scores(
+def agb_outdoor_classification_scores(  # noqa:PLR0912
     archery_round: Round | str,
     bowstyle: AGB_bowstyles,
     gender: AGB_genders,
@@ -740,5 +740,14 @@ def agb_outdoor_classification_scores(
             # (we assume here that no two classifications are only 1 point apart...)
             else:
                 int_class_scores[i] += 1
+
+    # Handle repeated scores by forcing at least 1 point separation between classes.
+    for i, score in enumerate(int_class_scores[:-1]):
+        if int_class_scores[i + 1] == score and score >= 0:
+            if score == archery_round.max_score():  # pragma: no cover
+                # Currently no coverage as not triggered and hard to test for.
+                int_class_scores[i + 1] = -9999
+            else:
+                int_class_scores[i + 1] += 1
 
     return int_class_scores
