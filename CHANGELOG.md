@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Addition of strict_rounds and strict_distance arguments for classifications in
   [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
 - Addition of new WA rounds for Under 15 category and updating of prestige rounds for
-  outdoor classifications accordingly in [#156](https://github.com/jatkinson1000/archeryutils/pull/156).
+  outdoor classifications accordingly in [#156](https://github.com/jatkinson1000/archeryutils/pull/156)
+  and [#164](https://github.com/jatkinson1000/archeryutils/pull/164).
 
 ### Changed
 
