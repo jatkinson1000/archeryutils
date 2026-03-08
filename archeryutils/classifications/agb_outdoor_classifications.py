@@ -368,6 +368,7 @@ def _assign_outdoor_prestige(
     prestige_720_barebow = [
         "wa720_50_b",
         "metric_122_50",
+        "wa720_40",
         "metric_122_40",
         "wa720_30_b",
         "metric_122_30",
