@@ -388,7 +388,7 @@ def _assign_outdoor_prestige(
 
         # Additional fix for U15 who get the 40m round
         # By extension this also applies to U14 and U12 (though also covered by dist)
-        if age in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12:
+        if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
             prestige_rounds.extend(prestige_720_compound[2:4])  # 40m C
 
     elif bowstyle is AGB_bowstyles.BAREBOW:
@@ -399,7 +399,7 @@ def _assign_outdoor_prestige(
 
         # Additional fix for U15 who get the 30m round
         # By extension they also get the 40m and this also applies to U14 and U12
-        if age in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12:
+        if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
             prestige_rounds.extend(prestige_720_barebow[2:])  # 40m and 30m B
 
     else:
@@ -410,7 +410,7 @@ def _assign_outdoor_prestige(
 
         # Additional fix for U15 who get the 40m round
         # By extension this also applies to U14 and U12 (though also covered by dist)
-        if age in AGB_ages.AGE_UNDER_15 | AGB_ages.AGE_UNDER_14 | AGB_ages.AGE_UNDER_12:
+        if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
             prestige_rounds.extend(prestige_720[3:5])  # 40m
 
         # Additional fix for Male 50+, U18, and U16 recurve/longbow
