@@ -803,13 +803,16 @@ class TestHandicapFromScore:
         handicap_expected: float,
     ) -> None:
         """Check correct handicap returned for max score without int_prec=True."""
-        handicap = hc.handicap_from_score(
-            max_score,
-            testround,
-            hc_system,
-            None,
-            False,
-        )
+        # Note that this raises a UserWarning as checking maximum score returns first
+        # handicap from iterative procedure but we are checking for exactly that here.
+        with pytest.warns(UserWarning):
+            handicap = hc.handicap_from_score(
+                max_score,
+                testround,
+                hc_system,
+                None,
+                False,
+            )
 
         assert handicap == pytest.approx(handicap_expected)
 
