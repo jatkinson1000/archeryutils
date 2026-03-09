@@ -61,8 +61,9 @@ class TestHandicapTable:
                 + "             2          1279          1294\n"
                 + "             3          1276          1293",
             ),
-            (
-                # Check int_prec false and rounded true (forces int_prec true)
+            pytest.param(
+                # Check int_prec false and rounded true.
+                # Forces int_prec true and raises UserWarning which we ignore.
                 np.array([1, 2, 3]),
                 False,
                 True,
@@ -70,6 +71,7 @@ class TestHandicapTable:
                 + "             1          1281              \n"
                 + "             2          1279          1294\n"
                 + "             3          1276          1293",
+                marks=pytest.mark.filterwarnings("ignore::UserWarning"),
             ),
             (
                 # Check int_prec false and rounded false
