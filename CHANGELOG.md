@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AGB_genders` enum updated to add `OPEN`. `MALE` remains for backwards compatibility
   and legacy classifications as an alias to `OPEN`. Implemented in
   [#158](https://github.com/jatkinson1000/archeryutils/pull/158)
+- Long Metric Gents and Ladies renamed to Long Metric (90m) and (70m) in line with
+  April 2026 changes to Archery GB Rules of Shooting in
+  [#166](https://github.com/jatkinson1000/archeryutils/pull/166)
 
 ### Fixes
 
