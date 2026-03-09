@@ -56,8 +56,8 @@
   },
 
 
-  {"name" : "Long Metric Gents",
-   "codename" : "long_metric_gents",
+  {"name" : "Long Metric (90m)",
+   "codename" : "long_metric_90",
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "metriclong",
@@ -65,8 +65,8 @@
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "Long Metric Ladies",
-   "codename" : "long_metric_ladies",
+  {"name" : "Long Metric (70m)",
+   "codename" : "long_metric_70",
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "metriclong",
