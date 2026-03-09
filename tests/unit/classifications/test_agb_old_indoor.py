@@ -186,7 +186,7 @@ class TestAgbOldIndoorClassificationScores:
             archery_round=archery_round,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
         )
 
         assert scores == scores_expected[::-1]
@@ -328,7 +328,7 @@ class TestAgbOldIndoorClassificationScores:
             archery_round=frostbite,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
             strict_rounds=False,
         )
 
@@ -354,7 +354,7 @@ class TestAgbOldIndoorClassificationScores:
                 archery_round=archery_round,
                 bowstyle=AGB_bowstyles.COMPOUND,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
                 strict_rounds=False,
             )
 
@@ -518,7 +518,7 @@ class TestCalculateAgbOldIndoorClassification:
             score=315,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.MALE,
-            age_group=AGB_ages.AGE_ADULT,
+            age_group=AGB_ages.ADULT,
             strict_rounds=False,
         )
 
@@ -545,6 +545,6 @@ class TestCalculateAgbOldIndoorClassification:
                 score=123,
                 bowstyle=AGB_bowstyles.COMPOUND,
                 gender=AGB_genders.MALE,
-                age_group=AGB_ages.AGE_ADULT,
+                age_group=AGB_ages.ADULT,
                 strict_rounds=False,
             )
