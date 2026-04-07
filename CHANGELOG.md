@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Long Metric Gents and Ladies renamed to Long Metric (90m) and (70m) in line with
   April 2026 changes to Archery GB Rules of Shooting in
   [#169](https://github.com/jatkinson1000/archeryutils/pull/169)
+- Consistent treatment of AGB classifications where there are gaps in the handicap tables.
+  Outdoor and Field updated to match Indoor as part of 2026 Update in
+  [#168](https://github.com/jatkinson1000/archeryutils/pull/168)
 
 ### Fixes
 
