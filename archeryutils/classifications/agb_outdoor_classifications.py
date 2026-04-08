@@ -186,7 +186,7 @@ def _make_agb_outdoor_classification_dict() -> dict[str, GroupData]:
 
         # Get max dists for category from json file data
         # Use metres as corresponding yards >= metric
-        gender_key = cast(Literal["male", "female"], gender.name.lower())
+        gender_key = cast(Literal["open", "female"], gender.name.lower())
         max_dists = agb_age_data[age.name][gender_key]
 
         # set step from datum based on age and gender steps required
@@ -279,9 +279,9 @@ def _assign_min_dist(
     max_dist_index = dists.index(np.min(max_dists))
 
     # Age group trickery:
-    # U15 males and younger step down for B2 and below to align with female scores/hcs
+    # U15 opens and younger step down for B2 and below to align with female scores/hcs
     if (
-        gender is AGB_genders.MALE
+        gender is AGB_genders.OPEN
         and age_group not in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12
     ):
         idxs = np.array([0, 0, 0, 0, 1, 2, 3, 4, 5])
@@ -354,18 +354,23 @@ def _assign_outdoor_prestige(
         "wa720_70",
         "wa720_60",
         "metric_122_50",
+        "wa720_40",
         "metric_122_40",
         "metric_122_30",
     ]
     prestige_720_compound = [
         "wa720_50_c",
+        "metric_80_50",
+        "wa720_40_c",
         "metric_80_40",
         "metric_80_30",
     ]
     prestige_720_barebow = [
         "wa720_50_b",
         "metric_122_50",
+        "wa720_40",
         "metric_122_40",
+        "wa720_30_b",
         "metric_122_30",
     ]
 
@@ -377,9 +382,14 @@ def _assign_outdoor_prestige(
     # 720 rounds - bowstyle dependent
     if bowstyle is AGB_bowstyles.COMPOUND:
         # Everyone gets the 'adult' 720
-        prestige_rounds.append(prestige_720_compound[0])
+        prestige_rounds.extend(prestige_720_compound[0:2])
         # Check rest for junior eligible shorter rounds
-        distance_check = distance_check + prestige_720_compound[1:]
+        distance_check = distance_check + prestige_720_compound[2:]
+
+        # Additional fix for U15 who get the 40m round
+        # By extension this also applies to U14 and U12 (though also covered by dist)
+        if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
+            prestige_rounds.extend(prestige_720_compound[2:4])  # 40m C
 
     elif bowstyle is AGB_bowstyles.BAREBOW:
         # Everyone gets the 'adult' 720
@@ -387,14 +397,24 @@ def _assign_outdoor_prestige(
         # Check rest for junior eligible shorter rounds
         distance_check = distance_check + prestige_720_barebow[1:]
 
+        # Additional fix for U15 who get the 30m round
+        # By extension they also get the 40m and this also applies to U14 and U12
+        if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
+            prestige_rounds.extend(prestige_720_barebow[2:])  # 40m and 30m B
+
     else:
         # Everyone gets the 'adult' 720
         prestige_rounds.append(prestige_720[0])
         # Check rest for junior eligible shorter rounds
         distance_check = distance_check + prestige_720[1:]
 
-        # Additional fix for Male 50+, U18, and U16 recurve/longbow
-        if gender is AGB_genders.MALE:
+        # Additional fix for U15 who get the 40m round
+        # By extension this also applies to U14 and U12 (though also covered by dist)
+        if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
+            prestige_rounds.extend(prestige_720[3:5])  # 40m
+
+        # Additional fix for Open 50+, U18, and U16 recurve/longbow
+        if gender is AGB_genders.OPEN:
             if age in AGB_ages.OVER_50 | AGB_ages.UNDER_18:
                 prestige_rounds.append(prestige_720[1])  # 60m
             elif age is AGB_ages.UNDER_16:
@@ -698,5 +718,32 @@ def agb_outdoor_classification_scores(
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
+
+    # Handle possibility of gaps in the tables or max scores by checking 1 HC point
+    # above current (floored to handle 0.5) and amending accordingly
+    # i.e. one must exceed (be lower than) the handicap threshold, not be awarded if
+    # the same score is achievable at a higher handicap.
+    for i, (score, handicap) in enumerate(
+        zip(int_class_scores, group_data["class_HC"], strict=True),
+    ):
+        next_score = hc.score_for_round(
+            np.floor(handicap) + 1,
+            archery_round,
+            hc_scheme,
+            rounded_score=True,
+        )
+        if next_score == score:
+            # If already at max score this classification is impossible
+            if score == archery_round.max_score():
+                int_class_scores[i] = -9999
+            # If gap in table increase to next score
+            # (we assume here that no two classifications are only 1 point apart...)
+            else:
+                int_class_scores[i] += 1
+
+    # Finally, ensure that there are no repeated scores.
+    int_class_scores = cls_funcs.fix_repeated_scores(
+        int_class_scores, archery_round.max_score()
+    )
 
     return int_class_scores

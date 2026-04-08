@@ -399,7 +399,7 @@ def calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
     ...     177,
     ...     wa_field.wa_field_24_blue_marked,
     ...     cf.AGB_bowstyles.TRADITIONAL,
-    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_genders.OPEN,
     ...     cf.AGB_ages.UNDER_18,
     ... )
     'B1'
@@ -507,7 +507,7 @@ def agb_field_classification_scores(
     >>> cf.agb_field_classification_scores(
     ...     wa_field.wa_field_24_red_marked,
     ...     cf.AGB_bowstyles.COMPOUND,
-    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_genders.OPEN,
     ...     cf.AGB_ages.ADULT,
     ... )
     [408, 391, 369, 345, 318, 286, 248, 204, 157]
@@ -517,7 +517,7 @@ def agb_field_classification_scores(
     >>> cf.agb_field_classification_scores(
     ...     wa_field.wa_field_12_red_unmarked,
     ...     cf.AGB_bowstyles.COMPOUND,
-    ...     cf.AGB_genders.MALE,
+    ...     cf.AGB_genders.OPEN,
     ...     cf.AGB_ages.ADULT,
     ... )
     [-9999, -9999, -9999, 173, 159, 143, 124, 102, 79],
@@ -572,5 +572,32 @@ def agb_field_classification_scores(
     # Score threshold should be int (score_for_round called with round=True)
     # Enforce this for better code and to satisfy mypy
     int_class_scores = [int(x) for x in class_scores]
+
+    # Handle possibility of gaps in the tables or max scores by checking 1 HC point
+    # above current (floored to handle 0.5) and amending accordingly
+    # i.e. one must exceed (be lower than) the handicap threshold, not be awarded if
+    # the same score is achievable at a higher handicap.
+    for i, (score, handicap) in enumerate(
+        zip(int_class_scores, group_data["class_HC"], strict=True),
+    ):
+        next_score = hc.score_for_round(
+            np.floor(handicap) + 1,
+            archery_round,
+            hc_scheme,
+            rounded_score=True,
+        )
+        if next_score == score:
+            # If already at max score this classification is impossible
+            if score == archery_round.max_score():
+                int_class_scores[i] = -9999
+            # If gap in table increase to next score
+            # (we assume here that no two classifications are only 1 point apart...)
+            else:
+                int_class_scores[i] += 1
+
+    # Finally, ensure that there are no repeated scores.
+    int_class_scores = cls_funcs.fix_repeated_scores(
+        int_class_scores, archery_round.max_score()
+    )
 
     return int_class_scores

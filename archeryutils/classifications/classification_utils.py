@@ -33,7 +33,7 @@ class AGBAgeData(TypedDict):
 
     desc: str
     age_group: str
-    male: list[float]
+    open: list[float]
     female: list[float]
     sighted: list[float]
     unsighted: list[float]
@@ -132,7 +132,7 @@ def read_bowstyles_json(
 
 def read_genders_json(
     genders_file: Path = Path(__file__).parent / "AGB_genders.json",
-) -> list[Literal["Male", "Female"]]:
+) -> list[Literal["Open", "Female"]]:
     """
     Read AGB genders in from neighbouring json file to list of dict.
 
@@ -265,7 +265,7 @@ def get_age_gender_step(
     """
     Calculate AGB indoor age and gender step for classification dictionaries.
 
-    Contains a tricky fiddle for aligning Male and Female under 15 scores and below,
+    Contains a tricky fiddle for aligning Open and Female under 15 scores and below,
     and a necessary check to ensure that gender step doesnt overtake age step when
     doing this.
 
@@ -300,7 +300,7 @@ def get_age_gender_step(
     if gender is AGB_genders.FEMALE and age_cat <= under_16_int:
         return gender_step + age_cat * age_step
 
-    # Default case for males, and females aged U15 or younger - apply only age steps
+    # Default case for open, and females aged U15 or younger - apply only age steps
     return age_cat * age_step
 
 
@@ -359,3 +359,39 @@ def get_compound_codename(round_codename: str) -> str:
         round_codename = convert_dict[round_codename]
 
     return round_codename
+
+
+def fix_repeated_scores(scores: list[int], max_score: float) -> list[int]:
+    """
+    Check for repeated scores in a classification table and fix where needed.
+
+    Forces at least 1 point separation between classes, increasing where needed up to
+    maximum score.
+
+    Parameters
+    ----------
+    scores : list[int]
+        A set of classification scores from high to low
+    max_score : float
+        The maximum possible score on the round in question
+
+    Returns
+    -------
+    list[int]
+        Amended classification scores with no repeated values
+    """
+    for i in range(len(scores) - 1, 0, -1):
+        # If previous score is invalid then set the rest to invalid
+        if scores[i] < 0:
+            scores[i - 1] = -9999
+        # Is the next score (i-1) valid and equal (or below) the previous score (i)?
+        # If so handle. Previously
+        elif scores[i - 1] <= scores[i] and scores[i - 1] >= 0:
+            # If already at max score set rest to invalid
+            if scores[i] == max_score:
+                scores[i - 1] = -9999
+            # Increment previous score by 1 for new distinct threshold
+            else:
+                scores[i - 1] = scores[i] + 1
+
+    return scores

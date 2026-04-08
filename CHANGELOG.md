@@ -11,10 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `OPEN` category added to `AGB_genders` for use in 2026 classifications in
+  [#169](https://github.com/jatkinson1000/archeryutils/pull/169)
 - Addition of regression tests for classifications and handicaps using syrupy for
   snapshots in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 - Addition of strict_rounds and strict_distance arguments for classifications in
   [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
+- Addition of new WA rounds for Under 15 category and updating of prestige rounds for
+  outdoor classifications accordingly in [#167](https://github.com/jatkinson1000/archeryutils/pull/167).
+- Protection against repeated scores in classification tables in [#170](https://github.com/jatkinson1000/archeryutils/pull/170).
+  Only changes Under 12 Longbow New Warwick but guards for any future changes.
 
 ### Changed
 
@@ -23,6 +29,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workflows update to include Python 3.14 in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 - AGB age category enums dropped the `AGE_` prefix in [#159](https://github.com/jatkinson1000/archeryutils/pull/159).
   Replaced by `OVER_50`, `ADULT`, `UNDER_18` etc.
+- `AGB_genders` enum updated to add `OPEN`. `MALE` remains for backwards compatibility
+  and legacy classifications as an alias to `OPEN`. Implemented in
+  [#169](https://github.com/jatkinson1000/archeryutils/pull/169)
+- Long Metric Gents and Ladies renamed to Long Metric (90m) and (70m) in line with
+  April 2026 changes to Archery GB Rules of Shooting in
+  [#169](https://github.com/jatkinson1000/archeryutils/pull/169)
+- Consistent treatment of AGB classifications where there are gaps in the handicap tables.
+  Outdoor and Field updated to match Indoor as part of 2026 Update in
+  [#168](https://github.com/jatkinson1000/archeryutils/pull/168)
+- Score changes in Under 12 Longbow New Warwick removing repeated scores from
+  [#170](https://github.com/jatkinson1000/archeryutils/pull/170).
 
 ### Fixes
 
@@ -30,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   allow separate scores for triple faces for WA rounds. Previously triple faces gave
   different classification scores on AGB rounds.
   In [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
+- All compound categories get metric 122 80 as a prestige round in addition to the
+  WA 50m compound round as equivalent in [#167](https://github.com/jatkinson1000/archeryutils/pull/167).
 
 ### Deprecated
 
