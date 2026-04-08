@@ -70,4 +70,4 @@ def calculate_age_group(
             return AGB_ages[age_key]
 
     # If no min or max age is hit, assume adult
-    return AGB_ages.AGE_ADULT
+    return AGB_ages.ADULT
