@@ -595,4 +595,9 @@ def agb_field_classification_scores(
             else:
                 int_class_scores[i] += 1
 
+    # Finally, ensure that there are no repeated scores.
+    int_class_scores = cls_funcs.fix_repeated_scores(
+        int_class_scores, archery_round.max_score()
+    )
+
     return int_class_scores
