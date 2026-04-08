@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
 - Addition of new WA rounds for Under 15 category and updating of prestige rounds for
   outdoor classifications accordingly in [#167](https://github.com/jatkinson1000/archeryutils/pull/167).
+- Protection against repeated scores in classification tables in [#170](https://github.com/jatkinson1000/archeryutils/pull/170).
+  Only changes Under 12 Longbow New Warwick but guards for any future changes.
 
 ### Changed
 
@@ -36,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Consistent treatment of AGB classifications where there are gaps in the handicap tables.
   Outdoor and Field updated to match Indoor as part of 2026 Update in
   [#168](https://github.com/jatkinson1000/archeryutils/pull/168)
+- Score changes in Under 12 Longbow New Warwick removing repeated scores from
+  [#170](https://github.com/jatkinson1000/archeryutils/pull/170).
 
 ### Fixes
 
