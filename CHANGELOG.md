@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   snapshots in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 - Addition of strict_rounds and strict_distance arguments for classifications in
   [#149](https://github.com/jatkinson1000/archeryutils/pull/149)
+- Add function to calculate Archery GB age groups as part of the classifications module
+  by [@mjtamlyn](https://github.com/mjtamlyn) in [#134](https://github.com/jatkinson1000/archeryutils/pull/134)
 
 ### Changed
 
