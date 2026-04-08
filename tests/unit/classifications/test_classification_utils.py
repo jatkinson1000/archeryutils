@@ -1,5 +1,6 @@
 """Tests for classification utilities."""
 
+import numpy as np
 import pytest
 
 import archeryutils.classifications.classification_utils as class_utils
@@ -82,3 +83,77 @@ class TestStringUtils:
         strippedname = class_utils.strip_spots(roundname)
 
         assert strippedname == strippedname_expected
+
+
+class TestScoreFixing:
+    """Tests for the score fixing utilities."""
+
+    @pytest.mark.parametrize(
+        "scores,max_score,expected",
+        [
+            # Test case 1: No repeated scores
+            (
+                [100, 95, 90, 85, 80],
+                100,
+                [100, 95, 90, 85, 80],
+            ),
+            # Test case 2: Repeated scores in middle
+            (
+                [100, 95, 90, 90, 80],
+                100,
+                [100, 95, 91, 90, 80],
+            ),
+            # Test case 3: Multiple repeated scores
+            (
+                [100, 95, 90, 90, 90, 80],
+                100,
+                [100, 95, 92, 91, 90, 80],
+            ),
+            # Test case 4: Repeated max scores
+            (
+                [100, 100, 100, 95, 90],
+                100,
+                [-9999, -9999, 100, 95, 90],
+            ),
+            # Test case 5: All same scores
+            (
+                [80, 80, 80, 80],
+                100,
+                [83, 82, 81, 80],
+            ),
+            # Test case 6: Scores at max
+            (
+                [100, 100, 100],
+                100,
+                [-9999, -9999, 100],
+            ),
+            # Test case 7: Single score
+            (
+                [90],
+                100,
+                [90],
+            ),
+            # Test case 8: Two identical scores
+            (
+                [85, 85],
+                100,
+                [86, 85],
+            ),
+            # Test case 9: Real example that caught edge case in the code
+            (
+                [500, 499, 498, 497, 496, 425, 343, 259, 185],
+                500,
+                [500, 499, 498, 497, 496, 425, 343, 259, 185],
+            ),
+        ],
+    )
+    def test_fix_repeated_scores(
+        self,
+        scores: list[int],
+        max_score: float,
+        expected: list[int],
+    ) -> None:
+        """Test that fix_repeated_scores() correctly handles repeated scores."""
+        result = class_utils.fix_repeated_scores(scores, max_score)
+
+        assert result == expected
