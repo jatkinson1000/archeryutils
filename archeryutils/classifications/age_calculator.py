@@ -12,12 +12,12 @@ from archeryutils.classifications.AGB_data import AGB_ages
 from archeryutils.classifications.classification_utils import AGBAgeData, read_ages_json
 
 
-def calculate_age_group(
+def calculate_agb_age_group(
     year_of_birth: int,
     year_of_event: int | None = None,
 ) -> AGB_ages:
     """
-    Calculate the age group for an athlete given birth year.
+    Calculate the Archery GB age group for an athlete given birth year.
 
     Parameters
     ----------

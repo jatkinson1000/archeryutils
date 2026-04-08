@@ -26,7 +26,7 @@ from .agb_outdoor_classifications import (
     calculate_agb_outdoor_classification,
     coax_outdoor_group,
 )
-from .age_calculator import calculate_age_group
+from .age_calculator import calculate_agb_age_group
 
 __all__ = [
     "AGB_ages",
@@ -37,12 +37,12 @@ __all__ = [
     "agb_old_field_classification_scores",
     "agb_old_indoor_classification_scores",
     "agb_outdoor_classification_scores",
+    "calculate_agb_age_group",
     "calculate_agb_field_classification",
     "calculate_agb_indoor_classification",
     "calculate_agb_old_field_classification",
     "calculate_agb_old_indoor_classification",
     "calculate_agb_outdoor_classification",
-    "calculate_age_group",
     "coax_field_group",
     "coax_indoor_group",
     "coax_old_field_group",
