@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Classifications updated to the 2026.1 AGB system in [#171](https://github.com/jatkinson1000/archeryutils/pull/171)
+  which acted as staging for several of the below changes.
 - Tests now in a separate `tests/` directory instead of alongside source in
   [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
 - Workflows update to include Python 3.14 in [#148](https://github.com/jatkinson1000/archeryutils/pull/148)
