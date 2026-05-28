@@ -2,6 +2,7 @@ package classifications
 
 import (
 	"fmt"
+	"math"
 	"sync"
 
 	"github.com/jatkinson1000/archeryutils/handicaps"
@@ -119,29 +120,46 @@ func assignOutdoorPrestige(bowstyle Bowstyle, gender Gender, age Age, maxDists [
 		"metric_i", "metric_ii", "metric_iii", "metric_iv", "metric_v",
 	}
 	prestige720 := []string{
-		"wa720_70", "wa720_60", "metric_122_50", "metric_122_40", "metric_122_30",
+		"wa720_70", "wa720_60", "metric_122_50", "wa720_40", "metric_122_40", "metric_122_30",
 	}
 	prestige720Compound := []string{
-		"wa720_50_c", "metric_80_40", "metric_80_30",
+		"wa720_50_c", "metric_80_50", "wa720_40_c", "metric_80_40", "metric_80_30",
 	}
 	prestige720Barebow := []string{
-		"wa720_50_b", "metric_122_50", "metric_122_40", "metric_122_30",
+		"wa720_50_b", "metric_122_50", "wa720_40", "metric_122_40", "wa720_30_b", "metric_122_30",
 	}
+
+	youngJunior := age == Under15 || age == Under14 || age == Under12
 
 	var prestige []string
 	var distCheck []string
 
 	switch bowstyle {
 	case Compound:
-		prestige = append(prestige, prestige720Compound[0])
-		distCheck = append(distCheck, prestige720Compound[1:]...)
+		// Everyone gets wa720_50_c and metric_80_50
+		prestige = append(prestige, prestige720Compound[0:2]...)
+		// Remaining rounds added via distance check
+		distCheck = append(distCheck, prestige720Compound[2:]...)
+		// U15/U14/U12 additionally get the 40m compound round directly
+		if youngJunior {
+			prestige = append(prestige, prestige720Compound[2:4]...)
+		}
 	case Barebow:
 		prestige = append(prestige, prestige720Barebow[0])
 		distCheck = append(distCheck, prestige720Barebow[1:]...)
+		// U15/U14/U12 additionally get the 40m and 30m barebow rounds directly
+		if youngJunior {
+			prestige = append(prestige, prestige720Barebow[2:]...)
+		}
 	default:
 		prestige = append(prestige, prestige720[0])
 		distCheck = append(distCheck, prestige720[1:]...)
-		if gender == Male {
+		// U15/U14/U12 additionally get the 40m round directly
+		if youngJunior {
+			prestige = append(prestige, prestige720[3:5]...)
+		}
+		// Open 50+/U18/U16 get extra 720 variant
+		if gender == Open || gender == Male {
 			if age == Over50 || age == Under18 {
 				prestige = append(prestige, prestige720[1])
 			} else if age == Under16 {
@@ -188,7 +206,7 @@ func isOutdoorBowstyle(b Bowstyle) bool {
 }
 
 func isValidGender(g Gender) bool {
-	return g == Male || g == Female
+	return g == Male || g == Female || g == Open
 }
 
 func isValidAge(a Age) bool {
@@ -296,6 +314,20 @@ func OutdoorClassificationScores(
 		s := handicaps.ScoreForRound(hcScheme, gd.classHC[i], archeryRound, 0, true)
 		classScores[i] = int(s)
 	}
+
+	// Gap/max-score handling: check score at floor(hc)+1
+	for i, hc := range gd.classHC {
+		nextScore := int(handicaps.ScoreForRound(hcScheme, math.Floor(hc)+1, archeryRound, 0, true))
+		if nextScore == classScores[i] {
+			if classScores[i] == int(archeryRound.MaxScore()) {
+				classScores[i] = -9999
+			} else {
+				classScores[i]++
+			}
+		}
+	}
+
+	classScores = fixRepeatedScores(classScores, archeryRound.MaxScore())
 
 	// Prestige round check: non-prestige rounds cannot earn MB or above (classes 0,1,2)
 	if strictRounds {

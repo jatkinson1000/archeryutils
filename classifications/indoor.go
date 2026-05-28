@@ -202,5 +202,7 @@ func IndoorClassificationScores(
 		}
 	}
 
+	classScores = fixRepeatedScores(classScores, archeryRound.MaxScore())
+
 	return classScores, nil
 }

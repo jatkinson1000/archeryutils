@@ -12,7 +12,7 @@ var dataFS embed.FS
 // AgeData holds configuration for one age group.
 type AgeData struct {
 	AgeGroup  string    `json:"age_group"`
-	Male      []float64 `json:"male"`
+	Open      []float64 `json:"open"`   // previously "male"
 	Female    []float64 `json:"female"`
 	Sighted   []float64 `json:"sighted"`
 	Unsighted []float64 `json:"unsighted"`
@@ -130,9 +130,10 @@ func bowstyleDataFor(b Bowstyle) BowstyleData {
 }
 
 // maxDistsForGender returns the max distance list for the given gender from AgeData.
+// Male and Open both use the "open" distances; Female uses "female".
 func maxDistsForGender(ad AgeData, g Gender) []float64 {
-	if g == Male {
-		return ad.Male
+	if g == Female {
+		return ad.Female
 	}
-	return ad.Female
+	return ad.Open
 }

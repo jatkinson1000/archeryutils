@@ -117,3 +117,23 @@ func takeClip(arr []float64, idxs []int, offset int) []float64 {
 	}
 	return out
 }
+
+// fixRepeatedScores ensures no two adjacent class scores are the same or inverted,
+// working from the easiest class upward. A class whose score equals or exceeds
+// the class below it is bumped to classBelow+1; if that would exceed maxScore
+// the class is marked unachievable (-9999). Classes already at -9999 propagate
+// that mark upward.
+func fixRepeatedScores(scores []int, maxScore float64) []int {
+	for i := len(scores) - 1; i > 0; i-- {
+		if scores[i] < 0 {
+			scores[i-1] = -9999
+		} else if scores[i-1] >= 0 && scores[i-1] <= scores[i] {
+			if scores[i] == int(maxScore) {
+				scores[i-1] = -9999
+			} else {
+				scores[i-1] = scores[i] + 1
+			}
+		}
+	}
+	return scores
+}

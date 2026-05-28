@@ -5,13 +5,15 @@ package classifications
 type Gender uint8
 
 const (
-	Male   Gender = 1 << iota // MALE
+	Male   Gender = 1 << iota // MALE   — Open category
 	Female                    // FEMALE
+	Open                      // OPEN
 )
 
 var genderNames = map[Gender]string{
 	Male:   "MALE",
 	Female: "FEMALE",
+	Open:   "OPEN",
 }
 
 func (g Gender) String() string {
@@ -22,7 +24,7 @@ func (g Gender) String() string {
 }
 
 // AllGenders lists every defined Gender value.
-var AllGenders = []Gender{Male, Female}
+var AllGenders = []Gender{Male, Female, Open}
 
 // Age identifies an AGB age group as a bitflag.
 type Age uint32

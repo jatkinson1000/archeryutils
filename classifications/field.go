@@ -2,6 +2,7 @@ package classifications
 
 import (
 	"fmt"
+	"math"
 	"strings"
 	"sync"
 
@@ -255,6 +256,20 @@ func FieldClassificationScores(
 		s := handicaps.ScoreForRound(hcScheme, gd.classHC[i], archeryRound, 0, true)
 		classScores[i] = int(s)
 	}
+
+	// Gap/max-score handling: check score at floor(hc)+1
+	for i, hc := range gd.classHC {
+		nextScore := int(handicaps.ScoreForRound(hcScheme, math.Floor(hc)+1, archeryRound, 0, true))
+		if nextScore == classScores[i] {
+			if classScores[i] == int(archeryRound.MaxScore()) {
+				classScores[i] = -9999
+			} else {
+				classScores[i]++
+			}
+		}
+	}
+
+	classScores = fixRepeatedScores(classScores, archeryRound.MaxScore())
 
 	// MB+ requires 24-target round
 	if strictRounds && !strings.Contains(archeryRound.Codename, "wa_field_24_") {
