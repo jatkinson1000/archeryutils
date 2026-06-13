@@ -1,42 +1,60 @@
 name: Coverage
 
 on:
-  # run on every push to main
   push:
     branches:
     - main
-  # run on every push (not commit) to a PR, plus open/reopen
-  # triggers for code changes
   pull_request:
     types:
     - synchronize
     - opened
     - reopened
     paths:
-      - 'archeryutils/**'
-      - 'tests/**'
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'ts/**'
 
 jobs:
-  coverage:
-    name: coverage
+  go-coverage:
+    name: Go coverage
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-go@v5
       with:
-        python-version: "3.14"
-    - run: |
-          pip install coverage
-          pip install .[test]
-
-    # annotate each step with `if: always` to run all regardless
-    - name: Check coverage
-      if: always()
-      run: coverage run -m pytest .
-
-    - name: Upload coverage reports to Codecov
+        go-version-file: go.mod
+    - name: Run tests with coverage
+      run: go test -coverprofile=coverage.out ./...
+    - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
-        fail_ci_if_error: true 
+        files: coverage.out
+        flags: go
+        fail_ci_if_error: true
         token: ${{ secrets.CODECOV_TOKEN }}
 
+  ts-coverage:
+    name: TypeScript coverage
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ts
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "22"
+        cache: npm
+        cache-dependency-path: ts/package-lock.json
+    - name: Install dependencies
+      run: npm ci
+    - name: Run tests with coverage
+      run: npx vitest run --coverage
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        files: ts/coverage/lcov.info
+        flags: typescript
+        fail_ci_if_error: true
+        token: ${{ secrets.CODECOV_TOKEN }}

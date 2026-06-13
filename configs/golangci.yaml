@@ -1,0 +1,105 @@
+version: '2'
+
+run:
+  timeout: 4m
+  issues-exit-code: 10
+  tests: true
+
+output:
+  formats:
+    text:
+      path: stdout
+      print-linter-name: true
+      print-issued-lines: true
+    junit-xml:
+      path: /tmp/test-results/golangci-report.xml
+
+linters:
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - durationcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - fatcontext
+    - gocheckcompilerdirectives
+    # - goconst
+    # - gocritic
+    - gocyclo
+    - gomoddirectives
+    - gosec
+    - govet
+    - importas
+    - inamedparam
+    - ineffassign
+    - intrange
+    - lll
+    - makezero
+    - mirror
+    - misspell
+    - musttag
+    - nakedret
+    - noctx
+    # - nolintlint
+    - predeclared
+    - promlinter
+    - reassign
+    - recvcheck
+    - rowserrcheck
+    - spancheck
+    # - sqlclosecheck
+    - staticcheck
+    - testifylint
+    - unconvert
+    - unparam
+    - unused
+    - usetesting
+    - wastedassign
+  settings:
+    gocyclo:
+      min-complexity: 150
+    depguard:
+      rules:
+        main:
+          deny:
+            - pkg: github.com/davecgh/go-spew/spew
+    misspell:
+      locale: UK
+    lll:
+      line-length: 150
+      tab-width: 1
+    govet:
+      enable:
+        - nillness
+        - unusedwrite
+        - waitgroup
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - lll
+      - text: '.Close` is not checked'
+        linters:
+          - errcheck
+      - text: 'G304:'
+        linters:
+          - gosec
+      - text: 'G706:'
+        linters:
+          - gosec
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true

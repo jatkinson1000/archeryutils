@@ -30,6 +30,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "4.1.8",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
     "vitest": "4.1.8"

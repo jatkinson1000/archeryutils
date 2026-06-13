@@ -1,42 +1,49 @@
 name: lint
 
 on:
-  # run on every push to main
   push:
     branches:
     - main
-  # run on every push (not commit) to a PR, plus open/reopen
-  # triggers for code changes in py files or changes to docs
   pull_request:
     types:
     - synchronize
     - opened
     - reopened
     paths:
-      - '**.py'
-      - docs/**
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'ts/**'
 
 jobs:
-  various:
-    name: various (ruff formatting, ruff linting, mypy)
+  go-lint:
+    name: Go (golangci-lint)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-go@v5
       with:
-        python-version: "3.14"
-    - run: pip install .[lint]
+        go-version-file: go.mod
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v8
+      with:
+        version: v2
+        args: --config configs/golangci.yaml
 
-    # annotate each step with `if: always` to run all regardless
-    - name: Check code formatting with ruff
-      if: always()
-      run: ruff format --diff archeryutils/ tests/
-    - name: Lint with ruff using pyproject.toml configuration
-      if: always()
-      run: ruff check archeryutils/ tests/
-    - name: Type checking with mypy
-      if: always()
-      run: mypy archeryutils/ tests/
-    - name: Check docs formatting with blackdoc
-      if: always()
-      run: blackdoc --diff docs/
+  ts-lint:
+    name: TypeScript (typecheck)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ts
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "22"
+        cache: npm
+        cache-dependency-path: ts/package-lock.json
+    - name: Install dependencies
+      run: npm ci
+    - name: Type check
+      run: npm run typecheck

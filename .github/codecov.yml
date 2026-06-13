@@ -1,6 +1,16 @@
-comment:                  # this is a top-level key
+comment:
   layout: "reach, diff, flags, files"
   behavior: new
-  require_changes: false  # if true: only post the comment if coverage changes
-  require_base: no        # [yes :: must have a base report to post]
-  require_head: yes       # [yes :: must have a head report to post]
+  require_changes: false
+  require_base: no
+  require_head: yes
+
+flags:
+  go:
+    paths:
+      - "**/*.go"
+    carryforward: true
+  typescript:
+    paths:
+      - "ts/src/**"
+    carryforward: true
