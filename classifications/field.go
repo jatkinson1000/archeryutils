@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/jatkinson1000/archeryutils/handicaps"
-	"github.com/jatkinson1000/archeryutils/rounds"
+	"github.com/retbrown/archeryutils/handicaps"
+	"github.com/retbrown/archeryutils/rounds"
 )
 
 type fieldGroupData struct {

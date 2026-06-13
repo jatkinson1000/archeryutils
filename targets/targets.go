@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/jatkinson1000/archeryutils/length"
+	"github.com/retbrown/archeryutils/length"
 )
 
 // ScoringSystem names a target face/scoring system.

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/jatkinson1000/archeryutils/targets"
+	"github.com/retbrown/archeryutils/targets"
 )
 
 // Pass represents a single pass of arrows shot at a target.

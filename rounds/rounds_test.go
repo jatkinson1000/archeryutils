@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jatkinson1000/archeryutils/rounds"
-	"github.com/jatkinson1000/archeryutils/targets"
+	"github.com/retbrown/archeryutils/rounds"
+	"github.com/retbrown/archeryutils/targets"
 )
 
 var sharedTarget = func() *targets.Target {

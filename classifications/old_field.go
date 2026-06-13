@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jatkinson1000/archeryutils/rounds"
+	"github.com/retbrown/archeryutils/rounds"
 )
 
 type oldFieldGroupData struct {

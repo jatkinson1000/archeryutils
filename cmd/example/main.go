@@ -14,9 +14,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jatkinson1000/archeryutils/classifications"
-	"github.com/jatkinson1000/archeryutils/handicaps"
-	"github.com/jatkinson1000/archeryutils/rounds"
+	"github.com/retbrown/archeryutils/classifications"
+	"github.com/retbrown/archeryutils/handicaps"
+	"github.com/retbrown/archeryutils/rounds"
 )
 
 func main() {

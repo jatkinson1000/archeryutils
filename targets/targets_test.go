@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jatkinson1000/archeryutils/targets"
+	"github.com/retbrown/archeryutils/targets"
 )
 
 func mustTarget(t *testing.T, sys targets.ScoringSystem, diam, dist targets.Quantity, indoor bool) *targets.Target {

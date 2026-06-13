@@ -3,9 +3,9 @@ package classifications_test
 import (
 	"testing"
 
-	"github.com/jatkinson1000/archeryutils/classifications"
-	"github.com/jatkinson1000/archeryutils/rounds"
-	"github.com/jatkinson1000/archeryutils/targets"
+	"github.com/retbrown/archeryutils/classifications"
+	"github.com/retbrown/archeryutils/rounds"
+	"github.com/retbrown/archeryutils/targets"
 )
 
 func indoorRound(t *testing.T, name string) *rounds.Round {

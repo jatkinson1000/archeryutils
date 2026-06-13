@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jatkinson1000/archeryutils/rounds"
+	"github.com/retbrown/archeryutils/rounds"
 )
 
 const fillInt = -9999

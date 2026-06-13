@@ -6,8 +6,8 @@ import (
 	"math"
 	"sort"
 
-	"github.com/jatkinson1000/archeryutils/rounds"
-	"github.com/jatkinson1000/archeryutils/targets"
+	"github.com/retbrown/archeryutils/rounds"
+	"github.com/retbrown/archeryutils/targets"
 )
 
 // Scheme is the interface implemented by all handicap systems.

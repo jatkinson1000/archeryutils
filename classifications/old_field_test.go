@@ -3,7 +3,7 @@ package classifications_test
 import (
 	"testing"
 
-	"github.com/jatkinson1000/archeryutils/classifications"
+	"github.com/retbrown/archeryutils/classifications"
 )
 
 func TestOldFieldClassificationScoresAges(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/jatkinson1000/archeryutils/targets"
+	"github.com/retbrown/archeryutils/targets"
 )
 
 // roundJSON mirrors the JSON structure of a single round entry.

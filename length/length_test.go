@@ -3,7 +3,7 @@ package length_test
 import (
 	"testing"
 
-	"github.com/jatkinson1000/archeryutils/length"
+	"github.com/retbrown/archeryutils/length"
 )
 
 func TestKnownUnits(t *testing.T) {
