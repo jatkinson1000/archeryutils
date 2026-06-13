@@ -32,8 +32,17 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version: ${{ matrix.go-version }}
+    - name: Install gotestsum
+      run: go install gotest.tools/gotestsum@latest
     - name: Run tests
-      run: go test -race ./...
+      run: gotestsum --junitfile junit.xml -- -race ./...
+    - name: Upload test results to Codecov
+      if: ${{ !cancelled() }}
+      uses: codecov/test-results-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: junit.xml
+        flags: go
 
   ts-test:
     name: TypeScript tests (node ${{ matrix.node-version }})
@@ -59,4 +68,11 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Run tests
-      run: npm test
+      run: npx vitest run --reporter=default --reporter=junit --outputFile.junit=junit.xml
+    - name: Upload test results to Codecov
+      if: ${{ !cancelled() }}
+      uses: codecov/test-results-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ts/junit.xml
+        flags: typescript
