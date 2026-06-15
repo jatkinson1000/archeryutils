@@ -136,6 +136,13 @@
    "family" : "distance_metric",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 15, "dist_unit" : "metre"}]
   },
+  {"name" : "3 Doz @ 10m (122cm)",
+   "codename" : "misc_3_doz_10m_122cm",
+   "location" : "outdoor",
+   "body" : "custom",
+   "family" : "distance_metric",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 10, "dist_unit" : "metre"}]
+  },
 
   {"name" : "3 Doz @ 50m (80cm)",
    "codename" : "misc_3_doz_50m_80cm",
@@ -228,5 +235,19 @@
    "body" : "custom",
    "family" : "distance_imperial",
    "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}]
+  },
+  {"name" : "2 Doz @ 15y (122cm)",
+   "codename" : "misc_2_doz_15y_122cm",
+   "location" : "outdoor",
+   "body" : "custom",
+   "family" : "distance_imperial",
+   "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 15, "dist_unit" : "yard"}]
+  },
+  {"name" : "2 Doz @ 10y (122cm)",
+   "codename" : "misc_2_doz_10y_122cm",
+   "location" : "outdoor",
+   "body" : "custom",
+   "family" : "distance_imperial",
+   "passes" : [{"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 10, "dist_unit" : "yard"}]
   }
 ]
