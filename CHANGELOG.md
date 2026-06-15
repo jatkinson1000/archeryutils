@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Addition of 10/15 yard/metre 2/3 dozen rounds to miscellaneous rounds with snapshots
+  updated accordingly in [#175](https://github.com/jatkinson1000/archeryutils/pull/175).
+
 ### Changed
 
 ### Fixes
