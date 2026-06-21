@@ -1,14 +1,10 @@
 """
 Code providing various functionalities using the archery handicap equations.
 
-Makes use of the basic handicap equations in handicaps.handicap_equations to do
-more elaborate things such as reverse calculation of handicap from score,
-generation of handicap tables, etc.
-
 Extended Summary
 ----------------
-Code to add functionality to the basic handicap equations code
-in handicap_equations.py including inverse function and display.
+Code that makes use of the equations in handicap_scheme and derivatives to do
+more elaborate things.
 
 Routine Listings
 ----------------
