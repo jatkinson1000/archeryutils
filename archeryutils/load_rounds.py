@@ -50,8 +50,8 @@ LOCATIONS = {
 # Looking up a deprecated codename resolves to the canonical Round and emits a
 # DeprecationWarning.  To remove the deprecation framework in future, delete
 # _collect_deprecated_names, the deprecated_names= kwarg in read_json_to_round_dict,
-# and the four deprecation-aware methods on DotDict (__init__, __getitem__,
-# __contains__, get).
+# the four deprecation-aware methods on DotDict (__init__, __getitem__,
+# __contains__, get), and simplify the __add__ method.
 
 
 def _collect_deprecated_names(rounds_data: list[dict[str, Any]]) -> dict[str, str]:
@@ -101,6 +101,9 @@ class DotDict(dict[str, V]):
     Also supports backwards-compatible resolution for deprecated round
     codenames. Looking up a deprecated codename returns the canonical
     :class:`~archeryutils.rounds.Round` and emits a :class:`DeprecationWarning`.
+
+    Two DotDicts can be combined with ``+``, merging entries and deprecated
+    names into a new DotDict.
 
     References
     ----------
@@ -171,6 +174,61 @@ class DotDict(dict[str, V]):
         if key in self:  # Use modified __contains__
             return self[key]  # Use modified __getitem__
         return default
+
+    def __add__(self, other: "DotDict[V]") -> "DotDict[V]":
+        """
+        Combine two DotDicts into a new DotDict.
+
+        Merges the codename to item pairs and deprecated name mappings of
+        both operands. Codenames and deprecated names must each be unique
+        across the two DotDicts.
+
+        Parameters
+        ----------
+        other : DotDict
+            The DotDict to combine with this one.
+
+        Returns
+        -------
+        DotDict
+            A new ``DotDict`` containing all entries and deprecated names
+            from both operands.
+
+        Raises
+        ------
+        ValueError
+            If the DotDicts share a codename or deprecated name, or if a
+            deprecated name clashes with a codename in the combined DotDict.
+        """
+        if not isinstance(other, DotDict):
+            return NotImplemented
+
+        duplicates = self.keys() & other.keys()
+        if duplicates:
+            msg = f"Duplicate codename(s) {sorted(duplicates)} found in both DotDicts."
+            raise ValueError(msg)
+
+        self_deprecated = self.__dict__.get("_deprecated_names", {})
+        other_deprecated = other.__dict__.get("_deprecated_names", {})
+        duplicates = set(self_deprecated) & set(other_deprecated)
+        if duplicates:
+            msg = (
+                f"Duplicate deprecated name(s) {sorted(duplicates)} found in "
+                f"both DotDicts."
+            )
+            raise ValueError(msg)
+
+        combined = {**self, **other}
+        deprecated_names = {**self_deprecated, **other_deprecated}
+        clashes = deprecated_names.keys() & combined.keys()
+        if clashes:
+            msg = (
+                f"Deprecated codename(s) {sorted(clashes)} clash with an "
+                f"existing round codename."
+            )
+            raise ValueError(msg)
+
+        return DotDict(combined, deprecated_names=deprecated_names)
 
     def __getattr__(self, name: str) -> Any:
         """
