@@ -51,7 +51,7 @@ LOCATIONS = {
 # DeprecationWarning.  To remove the deprecation framework in future, delete
 # _collect_deprecated_names, the deprecated_names= kwarg in read_json_to_round_dict,
 # the four deprecation-aware methods on DotDict (__init__, __getitem__,
-# __contains__, get), and simplify the __add__ method.
+# __contains__, get), and simplify the __add__ method. Also remove related tests.
 
 
 def _collect_deprecated_names(rounds_data: list[dict[str, Any]]) -> dict[str, str]:
