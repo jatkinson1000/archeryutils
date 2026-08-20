@@ -105,7 +105,8 @@
                {"n_arrows" : 30, "diameter" : 16, "diameter_unit" : "inches", "scoring" : "Worcester", "distance" : 20, "dist_unit" : "yard"}]
   },
   {"name" : "Worcester 5-Spot",
-   "codename" : "worcester_5_centre",
+   "codename" : "worcester_5_spot",
+   "deprecated_names" : ["worcester_5_centre"],
    "location" : "indoor",
    "body" : "AGB",
    "passes" : [{"n_arrows" : 30, "diameter" : 16, "diameter_unit" : "inches", "scoring" : "Worcester_2_ring", "distance" : 20, "dist_unit" : "yard"},
