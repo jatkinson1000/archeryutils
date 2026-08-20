@@ -321,8 +321,8 @@ def strip_spots(
         name of round shot as given by 'codename' in json
     """
     roundname = roundname.replace("_triple", "")
-    roundname = roundname.replace("_5_centre", "")
-    roundname = roundname.replace("_small", "")
+    roundname = roundname.replace("_5_spot", "")
+    roundname = roundname.replace("_6_zone", "")
     return roundname
 
 
@@ -349,10 +349,10 @@ def get_compound_codename(round_codename: str) -> str:
         "portsmouth": "portsmouth_compound",
         "portsmouth_triple": "portsmouth_compound_triple",
         "vegas": "vegas_compound",
-        "wa18": "wa18_compound",
-        "wa18_triple": "wa18_compound_triple",
-        "wa25": "wa25_compound",
-        "wa25_triple": "wa25_compound_triple",
+        "wa_18": "wa_18_compound",
+        "wa_18_triple": "wa_18_compound_triple",
+        "wa_25": "wa_25_compound",
+        "wa_25_triple": "wa_25_compound_triple",
     }
 
     if convert_dict.get(round_codename) is not None:
