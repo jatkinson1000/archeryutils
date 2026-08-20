@@ -331,47 +331,38 @@ def _assign_outdoor_prestige(
     prestige_imperial = [
         "york",
         "hereford",
-        "bristol_i",
-        "bristol_ii",
-        "bristol_iii",
-        "bristol_iv",
-        "bristol_v",
+        "bristol_60",
+        "bristol_50",
+        "bristol_40",
+        "bristol_30",
     ]
     prestige_metric = [
-        "wa1440_90",
-        "wa1440_90_small",
-        "wa1440_70",
-        "wa1440_70_small",
-        "wa1440_60",
-        "wa1440_60_small",
-        "metric_i",
-        "metric_ii",
-        "metric_iii",
-        "metric_iv",
-        "metric_v",
+        "wa_1440_90",
+        "wa_1440_90_6_zone",
+        "wa_1440_70",
+        "wa_1440_70_6_zone",
+        "wa_1440_60",
+        "wa_1440_60_6_zone",
+        "agb_1440_50",
+        "agb_1440_40",
+        "agb_1440_30",
     ]
     prestige_720 = [
-        "wa720_70",
-        "wa720_60",
-        "metric_122_50",
-        "wa720_40",
-        "metric_122_40",
-        "metric_122_30",
+        "wa_70_122",
+        "wa_60_122",
+        "wa_50_122",
+        "wa_40_122",
+        "wa_30_122",
     ]
     prestige_720_compound = [
-        "wa720_50_c",
-        "metric_80_50",
-        "wa720_40_c",
-        "metric_80_40",
-        "metric_80_30",
+        "wa_50_80",
+        "wa_40_80",
+        "agb_30_80",
     ]
     prestige_720_barebow = [
-        "wa720_50_b",
-        "metric_122_50",
-        "wa720_40",
-        "metric_122_40",
-        "wa720_30_b",
-        "metric_122_30",
+        "wa_50_122",
+        "wa_40_122",
+        "wa_30_122",
     ]
 
     # Assign prestige rounds for the category
@@ -382,14 +373,14 @@ def _assign_outdoor_prestige(
     # 720 rounds - bowstyle dependent
     if bowstyle is AGB_bowstyles.COMPOUND:
         # Everyone gets the 'adult' 720
-        prestige_rounds.extend(prestige_720_compound[0:2])
+        prestige_rounds.append(prestige_720_compound[0])
         # Check rest for junior eligible shorter rounds
-        distance_check = distance_check + prestige_720_compound[2:]
+        distance_check = distance_check + prestige_720_compound[1:]
 
         # Additional fix for U15 who get the 40m round
         # By extension this also applies to U14 and U12 (though also covered by dist)
         if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
-            prestige_rounds.extend(prestige_720_compound[2:4])  # 40m C
+            prestige_rounds.append(prestige_720_compound[1])  # 40m C
 
     elif bowstyle is AGB_bowstyles.BAREBOW:
         # Everyone gets the 'adult' 720
@@ -400,7 +391,7 @@ def _assign_outdoor_prestige(
         # Additional fix for U15 who get the 30m round
         # By extension they also get the 40m and this also applies to U14 and U12
         if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
-            prestige_rounds.extend(prestige_720_barebow[2:])  # 40m and 30m B
+            prestige_rounds.extend(prestige_720_barebow[1:])  # 40m and 30m B
 
     else:
         # Everyone gets the 'adult' 720
@@ -411,7 +402,7 @@ def _assign_outdoor_prestige(
         # Additional fix for U15 who get the 40m round
         # By extension this also applies to U14 and U12 (though also covered by dist)
         if age in AGB_ages.UNDER_15 | AGB_ages.UNDER_14 | AGB_ages.UNDER_12:
-            prestige_rounds.extend(prestige_720[3:5])  # 40m
+            prestige_rounds.append(prestige_720[3])  # 40m
 
         # Additional fix for Open 50+, U18, and U16 recurve/longbow
         if gender is AGB_genders.OPEN:
