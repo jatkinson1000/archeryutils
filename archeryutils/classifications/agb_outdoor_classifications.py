@@ -253,7 +253,7 @@ def _assign_min_dist(
         string defining gender
     age_group : str,
         string defining age group
-    max_dists: List[float]
+    max_dists: List[int]
         list of integers defining the maximum distances for category
 
     Returns
@@ -276,7 +276,7 @@ def _assign_min_dist(
     # Use metres because corresponding yards distances are >= metric ones
     dists = [90, 70, 60, 50, 40, 30, 20, 15]
 
-    max_dist_index = dists.index(np.min(max_dists))
+    max_dist_index = dists.index(int(np.min(max_dists)))
 
     # Age group trickery:
     # U15 opens and younger step down for B2 and below to align with female scores/hcs
@@ -474,7 +474,7 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
     return archery_round, roundname
 
 
-def calculate_agb_outdoor_classification(  # noqa: PLR0913 Too many arguments
+def calculate_agb_outdoor_classification(  # noqa: PLR0913, PLR0917 Too many arguments
     score: float,
     archery_round: Round | str,
     bowstyle: AGB_bowstyles,

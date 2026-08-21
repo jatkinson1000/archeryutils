@@ -339,7 +339,7 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
     return archery_round, roundname
 
 
-def calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
+def calculate_agb_field_classification(  # noqa: PLR0913, PLR0917 Too many arguments
     score: float,
     archery_round: Round | str,
     bowstyle: AGB_bowstyles,
