@@ -158,15 +158,15 @@ class TestAgbOldIndoorClassificationScores:
                 [206, 279, 396, 484, 529, 554, 570, 581],
             ),
             (
-                ALL_INDOOR_ROUNDS["worcester_5_centre"],
+                ALL_INDOOR_ROUNDS["worcester_5_spot"],
                 [65, 96, 162, 226, 264, 289, 299, 300],
             ),
             (
-                ALL_INDOOR_ROUNDS["wa18_triple"],
+                ALL_INDOOR_ROUNDS["wa_18_triple"],
                 [63, 100, 203, 370, 486, 537, 558, 568],
             ),
             (
-                ALL_INDOOR_ROUNDS["wa18"],
+                ALL_INDOOR_ROUNDS["wa_18"],
                 [117, 173, 295, 420, 493, 537, 558, 568],
             ),
         ],
