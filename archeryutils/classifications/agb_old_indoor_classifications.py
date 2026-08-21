@@ -288,7 +288,7 @@ def calculate_agb_old_indoor_classification(
     >>> agb_indoor = load_rounds.AGB_indoor
     >>> cf.calculate_agb_old_indoor_classification(
     ...     547,
-    ...     agb_indoor.wa18,
+    ...     agb_indoor.wa_18,
     ...     AGB_bowstyles.COMPOUND,
     ...     AGB_genders.MALE,
     ...     AGB_ages.ADULT,

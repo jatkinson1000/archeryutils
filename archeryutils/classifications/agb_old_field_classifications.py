@@ -444,7 +444,7 @@ def calculate_agb_old_field_classification(
     >>> wa_field = load_rounds.WA_field
     >>> cf.calculate_agb_old_field_classification(
     ...     247,
-    ...     wa_field.wa_field_24_red_marked,
+    ...     wa_field.wa_field_24_marked_red,
     ...     cf.AGB_bowstyles.RECURVE,
     ...     cf.AGB_genders.MALE,
     ...     cf.AGB_ages.ADULT,
@@ -530,7 +530,7 @@ def agb_old_field_classification_scores(
     >>> from archeryutils import load_rounds
     >>> wa_field = load_rounds.WA_field
     >>> cf.agb_old_field_classification_scores(
-    ...     wa_field.wa_field_24_red_marked,
+    ...     wa_field.wa_field_24_marked_red,
     ...     cf.AGB_bowstyles.RECURVE,
     ...     cf.AGB_genders.MALE,
     ...     cf.AGB_ages.ADULT,

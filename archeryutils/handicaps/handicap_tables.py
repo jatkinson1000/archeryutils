@@ -163,7 +163,7 @@ class HandicapTable:
         >>> agb_table = hc.HandicapTable(
         ...     "AGB",
         ...     [1.0, 2.0, 3.0, 4.0, 5.0],
-        ...     [wa_outdoor.wa1440_90, wa_outdoor.wa1440_70, wa_outdoor.wa1440_60],
+        ...     [wa_outdoor.wa_1440_90, wa_outdoor.wa_1440_70, wa_outdoor.wa_1440_60],
         ... )
         >>> agb_table.print()
               Handicap WA 1440 (90m) WA 1440 (70m) WA 1440 (60m)
@@ -196,7 +196,7 @@ class HandicapTable:
         >>> agb_table = hc.HandicapTable(
         ...     "AGB",
         ...     [1.0, 2.0, 3.0, 4.0, 5.0],
-        ...     [wa_outdoor.wa1440_90, wa_outdoor.wa1440_70, wa_outdoor.wa1440_60],
+        ...     [wa_outdoor.wa_1440_90, wa_outdoor.wa_1440_70, wa_outdoor.wa_1440_60],
         ... )
         >>> agb_table.to_csv("mycsvfile.csv")
         Writing handicap table to csv...Done.
@@ -231,7 +231,7 @@ class HandicapTable:
         >>> agb_table = hc.HandicapTable(
         ...     "AGB",
         ...     [1.0, 2.0, 3.0, 4.0, 5.0],
-        ...     [wa_outdoor.wa1440_90, wa_outdoor.wa1440_70, wa_outdoor.wa1440_60],
+        ...     [wa_outdoor.wa_1440_90, wa_outdoor.wa_1440_70, wa_outdoor.wa_1440_60],
         ... )
         >>> agb_table.to_file("mytextfile.txt")
         Writing handicap table to file...Done.

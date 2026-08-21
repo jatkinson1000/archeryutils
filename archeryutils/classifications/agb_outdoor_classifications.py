@@ -650,7 +650,7 @@ def agb_outdoor_classification_scores(
     If a classification cannot be achieved a fill value of `-9999` is returned:
 
     >>> cf.agb_outdoor_classification_scores(
-    ...     agb_outdoor.bristol_ii,
+    ...     agb_outdoor.bristol_60,
     ...     cf.AGB_bowstyles.RECURVE,
     ...     cf.AGB_genders.FEMALE,
     ...     cf.AGB_ages.ADULT,
