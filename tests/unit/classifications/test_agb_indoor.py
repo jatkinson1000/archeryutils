@@ -239,7 +239,7 @@ class TestAgbIndoorClassificationScores:
                 [472, 508, 532, 549, 560, 571, 583, 594],
             ),
             (
-                ALL_INDOOR_ROUNDS["worcester_5_centre"],
+                ALL_INDOOR_ROUNDS["worcester_5_spot"],
                 [217, 246, 267, 283, 294, 300, -9999, -9999],
             ),
             (

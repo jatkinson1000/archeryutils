@@ -11,6 +11,7 @@
   },
   {"name" : "Hereford",
    "codename" : "hereford",
+   "deprecated_names" : ["bristol_i"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "york_hereford_bristol",
@@ -19,18 +20,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Bristol I",
-   "codename" : "bristol_i",
-   "location" : "outdoor",
-   "body" : "AGB",
-   "family" : "york_hereford_bristol",
-   "passes" : [{"n_arrows" : 72, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
-               {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
-               {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
-              ]
-  },
-  {"name" : "Bristol II",
-   "codename" : "bristol_ii",
+  {"name" : "Bristol 60",
+   "codename" : "bristol_60",
+   "deprecated_names" : ["bristol_ii"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "york_hereford_bristol",
@@ -39,8 +31,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Bristol III",
-   "codename" : "bristol_iii",
+  {"name" : "Bristol 50",
+   "codename" : "bristol_50",
+   "deprecated_names" : ["bristol_iii"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "york_hereford_bristol",
@@ -49,8 +42,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Bristol IV",
-   "codename" : "bristol_iv",
+  {"name" : "Bristol 40",
+   "codename" : "bristol_40",
+   "deprecated_names" : ["bristol_iv"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "york_hereford_bristol",
@@ -59,8 +53,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Bristol V",
-   "codename" : "bristol_v",
+  {"name" : "Bristol 30",
+   "codename" : "bristol_30",
+   "deprecated_names" : ["bristol_v"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "york_hereford_bristol",
@@ -75,7 +70,7 @@
    "codename" : "st_george",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "stgeorge_albion_windsor",
+   "family" : "st_george_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 100, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
@@ -85,17 +80,18 @@
    "codename" : "albion",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "stgeorge_albion_windsor",
+   "family" : "st_george_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Windsor",
-   "codename" : "windsor",
+  {"name" : "Windsor 60",
+   "codename" : "windsor_60",
+   "deprecated_names" : ["windsor"],
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "stgeorge_albion_windsor",
+   "family" : "st_george_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
@@ -105,7 +101,7 @@
    "codename" : "windsor_50",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "stgeorge_albion_windsor",
+   "family" : "st_george_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 50, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
@@ -115,7 +111,7 @@
    "codename" : "windsor_40",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "stgeorge_albion_windsor",
+   "family" : "st_george_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"}
@@ -125,7 +121,7 @@
    "codename" : "windsor_30",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "stgeorge_albion_windsor",
+   "family" : "st_george_albion_windsor",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 20, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 10, "dist_unit" : "yard"}
@@ -133,8 +129,9 @@
   },
 
 
-  {"name" : "New Western",
-   "codename" : "new_western",
+  {"name" : "Western 100",
+   "codename" : "western_100",
+   "deprecated_names" : ["new_western"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "western",
@@ -142,8 +139,9 @@
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Long Western",
-   "codename" : "long_western",
+  {"name" : "Western 80",
+   "codename" : "western_80",
+   "deprecated_names" : ["long_western"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "western",
@@ -151,8 +149,9 @@
                {"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Western",
-   "codename" : "western",
+  {"name" : "Western 60",
+   "codename" : "western_60",
+   "deprecated_names" : ["western"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "western",
@@ -200,19 +199,20 @@
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "St Nicholas",
+  {"name" : "St. Nicholas",
    "codename" : "st_nicholas",
    "location" : "outdoor",
    "body" : "AGB",
-   "family" : "stnicholas",
+   "family" : "st_nicholas",
    "passes" : [{"n_arrows" : 48, "diameter" : 122, "scoring" : "5_zone", "distance" : 40, "dist_unit" : "yard"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "5_zone", "distance" : 30, "dist_unit" : "yard"}
               ]
   },
 
 
-    {"name" : "New National",
-   "codename" : "new_national",
+  {"name" : "National 100",
+   "codename" : "national_100",
+   "deprecated_names" : ["new_national"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "national",
@@ -220,8 +220,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Long National",
-   "codename" : "long_national",
+  {"name" : "National 80",
+   "codename" : "national_80",
+   "deprecated_names" : ["long_national"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "national",
@@ -229,8 +230,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "National",
-   "codename" : "national",
+  {"name" : "National 60",
+   "codename" : "national_60",
+   "deprecated_names" : ["national"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "national",
@@ -268,8 +270,9 @@
 
 
 
-  {"name" : "New Warwick",
-   "codename" : "new_warwick",
+  {"name" : "Warwick 100",
+   "codename" : "warwick_100",
+   "deprecated_names" : ["new_warwick"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "warwick",
@@ -277,8 +280,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 80, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Long Warwick",
-   "codename" : "long_warwick",
+  {"name" : "Warwick 80",
+   "codename" : "warwick_80",
+   "deprecated_names" : ["long_warwick"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "warwick",
@@ -286,8 +290,9 @@
                {"n_arrows" : 24, "diameter" : 122, "scoring" : "5_zone", "distance" : 60, "dist_unit" : "yard"}
               ]
   },
-  {"name" : "Warwick",
-   "codename" : "warwick",
+  {"name" : "Warwick 60",
+   "codename" : "warwick_60",
+   "deprecated_names" : ["warwick"],
    "location" : "outdoor",
    "body" : "AGB",
    "family" : "warwick",

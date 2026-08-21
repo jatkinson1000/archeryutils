@@ -71,7 +71,7 @@ class TestStringUtils:
             ("portsmouth_compound", "portsmouth_compound"),
             ("portsmouth_compound_triple", "portsmouth_compound"),
             ("portsmouth_triple_compound", "portsmouth_compound"),
-            ("worcester_5_centre", "worcester"),
+            ("worcester_5_spot", "worcester"),
         ],
     )
     def test_strip_spots(

@@ -13,11 +13,11 @@ For example, to load all WA Outdoor rounds and then extract the WA1440 (90m) we 
     import archeryutils as au
 
     wa_outdoor_rounds = au.load_rounds.WA_outdoor
-    my_wa1440_90 = wa_outdoor_rounds.wa1440_90
+    my_wa_1440_90 = wa_outdoor_rounds.wa_1440_90
 
-    print(my_wa1440_90)
+    print(my_wa_1440_90)
 
-    my_wa1440_90.get_info()
+    my_wa_1440_90.get_info()
 
 Or, to load the round directly:
 
@@ -25,7 +25,7 @@ Or, to load the round directly:
 
     import archeryutils as au
 
-    au.load_rounds.WA_outdoor.wa1440_90
+    au.load_rounds.WA_outdoor.wa_1440_90
 
 See below for a list of all available round dictionaries, and the rounds they contain.
 The keys of the dictionary should be used for dot-notation access.
@@ -37,7 +37,7 @@ WA Outdoor
 
     import archeryutils as au
 
-    au.load_rounds.AGB_outdoor_imperial
+    au.load_rounds.WA_outdoor
 
 AGB (Archery GB) Outdoor Imperial
 ---------------------------------
@@ -46,7 +46,7 @@ AGB (Archery GB) Outdoor Imperial
 
     import archeryutils as au
 
-    au.load_rounds.WA_outdoor
+    au.load_rounds.AGB_outdoor_imperial
 
 AGB (Archery GB) Outdoor Metric
 -------------------------------
@@ -56,15 +56,6 @@ AGB (Archery GB) Outdoor Metric
     import archeryutils as au
 
     au.load_rounds.AGB_outdoor_metric
-
-AGB (Archery GB) Outdoor Imperial
----------------------------------
-
-.. ipython:: python
-
-    import archeryutils as au
-
-    au.load_rounds.AGB_outdoor_imperial
 
 WA Indoor
 ---------
@@ -92,6 +83,15 @@ WA Field
     import archeryutils as au
 
     au.load_rounds.WA_field
+
+AGB (Archery GB) Field
+----------------------
+
+.. ipython:: python
+
+    import archeryutils as au
+
+    au.load_rounds.AGB_field
 
 IFAA Field
 ----------

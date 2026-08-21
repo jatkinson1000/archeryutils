@@ -1,31 +1,34 @@
 [
-  {"name" : "WA 1440 (90m)",
-   "codename" : "wa1440_90",
+  {"name" : "WA 1440 90",
+   "codename" : "wa_1440_90",
+   "deprecated_names" : ["wa1440_90"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa1440",
+   "family" : "wa_1440",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 (70m)",
-   "codename" : "wa1440_70",
+  {"name" : "WA 1440 70",
+   "codename" : "wa_1440_70",
+   "deprecated_names" : ["wa1440_70", "metric_i"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa1440",
+   "family" : "wa_1440",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 (60m)",
-   "codename" : "wa1440_60",
+  {"name" : "WA 1440 60",
+   "codename" : "wa_1440_60",
+   "deprecated_names" : ["wa1440_60", "metric_ii"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa1440",
+   "family" : "wa_1440",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
@@ -34,8 +37,9 @@
   },
 
 
-  {"name" : "WA 1440 (90m) 6-zone",
-   "codename" : "wa1440_90_small",
+  {"name" : "WA 1440 90 (6-zone)",
+   "codename" : "wa_1440_90_6_zone",
+   "deprecated_names" : ["wa1440_90_small"],
    "location" : "outdoor",
    "body" : "WA",
    "family" : "",
@@ -45,8 +49,9 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 (70m) 6-zone",
-   "codename" : "wa1440_70_small",
+  {"name" : "WA 1440 70 (6-zone)",
+   "codename" : "wa_1440_70_6_zone",
+   "deprecated_names" : ["wa1440_70_small"],
    "location" : "outdoor",
    "body" : "WA",
    "family" : "",
@@ -56,8 +61,9 @@
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone_6_ring", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 1440 (60m) 6-zone",
-   "codename" : "wa1440_60_small",
+  {"name" : "WA 1440 60 (6-zone)",
+   "codename" : "wa_1440_60_6_zone",
+   "deprecated_names" : ["wa1440_60_small"],
    "location" : "outdoor",
    "body" : "WA",
    "family" : "",
@@ -69,75 +75,83 @@
   },
 
 
-  {"name" : "WA 70m",
-   "codename" : "wa720_70",
+  {"name" : "WA 70m (122cm)",
+   "codename" : "wa_70_122",
+   "deprecated_names" : ["wa720_70"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa720",
+   "family" : "wa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 60m",
-   "codename" : "wa720_60",
+  {"name" : "WA 60m (122cm)",
+   "codename" : "wa_60_122",
+   "deprecated_names" : ["wa720_60"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa720",
+   "family" : "wa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 40m",
-   "codename" : "wa720_40",
+  {"name" : "WA 50m (122cm)",
+   "codename" : "wa_50_122",
+   "deprecated_names" : ["wa720_50_b", "metric_122_50"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa720",
-   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
-               {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
-              ]
-  },
-  {"name" : "WA 50m Compound",
-   "codename" : "wa720_50_c",
-   "location" : "outdoor",
-   "body" : "WA",
-   "family" : "wa720",
-   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
-               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
-              ]
-  },
-  {"name" : "WA 40m Compound",
-   "codename" : "wa720_40_c",
-   "location" : "outdoor",
-   "body" : "WA",
-   "family" : "wa720",
-   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
-               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
-              ]
-  },
-  {"name" : "WA 50m Barebow",
-   "codename" : "wa720_50_b",
-   "location" : "outdoor",
-   "body" : "WA",
-   "family" : "wa720",
+   "family" : "wa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]
   },
-  {"name" : "WA 30m Barebow",
-   "codename" : "wa720_30_b",
+  {"name" : "WA 40m (122cm)",
+   "codename" : "wa_40_122",
+   "deprecated_names" : ["wa720_40", "metric_122_40"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa720",
+   "family" : "wa_720",
+   "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 30m (122cm)",
+   "codename" : "wa_30_122",
+   "deprecated_names" : ["wa720_30_b", "metric_122_30"],
+   "location" : "outdoor",
+   "body" : "WA",
+   "family" : "wa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
   },
-
-  {"name" : "WA 900",
-   "codename" : "wa900",
+  {"name" : "WA 50m (80cm)",
+   "codename" : "wa_50_80",
+   "deprecated_names" : ["wa720_50_c", "metric_80_50"],
    "location" : "outdoor",
    "body" : "WA",
-   "family" : "wa900",
+   "family" : "wa_720",
+   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
+              ]
+  },
+  {"name" : "WA 40m (80cm)",
+   "codename" : "wa_40_80",
+   "deprecated_names" : ["wa720_40_c", "metric_80_40"],
+   "location" : "outdoor",
+   "body" : "WA",
+   "family" : "wa_720",
+   "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
+               {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
+              ]
+  },
+
+  {"name" : "WA 900",
+   "codename" : "wa_900",
+   "deprecated_names" : ["wa900", "agb900_60"],
+   "location" : "outdoor",
+   "body" : "WA",
+   "family" : "wa_900",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}

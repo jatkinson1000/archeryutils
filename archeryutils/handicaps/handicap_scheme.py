@@ -311,13 +311,13 @@ class HandicapScheme(ABC):
         >>> import archeryutils.handicaps as hc
         >>> wa_outdoor = au.load_rounds.WA_outdoor
         >>> agb_scheme = hc.handicap_scheme("AGB")
-        >>> agb_scheme.score_for_passes(10.0, wa_outdoor.wa1440_90)
+        >>> agb_scheme.score_for_passes(10.0, wa_outdoor.wa_1440_90)
         array([322.84091528, 338.44257659, 338.66395001, 355.87959411])
 
         It can also be passed an array of handicaps:
 
         >>> agb_scheme.score_for_passes(
-        ...     np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90
+        ...     np.array([10.0, 50.0, 100.0]), wa_outdoor.wa_1440_90
         ... )
         array([[322.84091528, 162.76200686,   8.90456718],
                [338.44257659, 217.88206641,  16.70850537],
@@ -369,14 +369,14 @@ class HandicapScheme(ABC):
         >>> import archeryutils.handicaps as hc
         >>> wa_outdoor = au.load_rounds.WA_outdoor
         >>> agb_scheme = hc.handicap_scheme("AGB")
-        >>> agb_scheme.score_for_round(10.0, wa_outdoor.wa1440_90)
+        >>> agb_scheme.score_for_round(10.0, wa_outdoor.wa_1440_90)
         1356.0
 
         To get a decimal value of the exact handicap corresponding to the requested
         score use ``rounded_score=False``:
 
         >>> agb_scheme.score_for_round(
-        ...     wa_outdoor.wa1440_90,
+        ...     wa_outdoor.wa_1440_90,
         ...     10.0,
         ...     rounded_score=False,
         ... )
@@ -385,7 +385,7 @@ class HandicapScheme(ABC):
         It can also be passed an array of handicaps:
 
         >>> agb_scheme.score_for_round(
-        ...     np.array([10.0, 50.0, 100.0]), wa_outdoor.wa1440_90
+        ...     np.array([10.0, 50.0, 100.0]), wa_outdoor.wa_1440_90
         ... )
         array([1356.,  887.,   91.])
 
@@ -457,14 +457,14 @@ class HandicapScheme(ABC):
         >>> import archeryutils.handicaps as hc
         >>> wa_outdoor = au.load_rounds.WA_outdoor
         >>> agb_scheme = hc.handicap_scheme("AGB")
-        >>> agb_scheme.score_for_round(wa_outdoor.wa1440_90, 10.0)
-        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa1440_90)
+        >>> agb_scheme.score_for_round(wa_outdoor.wa_1440_90, 10.0)
+        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa_1440_90)
         43.999964586102706
 
         To get an integer value as would appear in the handicap tables use
         ``int_prec=True``:
 
-        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa1440_90, int_prec=True)
+        >>> agb_scheme.handicap_from_score(999, wa_outdoor.wa_1440_90, int_prec=True)
         44.0
 
         """

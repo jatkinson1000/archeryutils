@@ -26,6 +26,7 @@ ALL_ROUNDS = load_rounds.read_json_to_round_dict(
         "WA_experimental.json",
         "AA_outdoor_metric.json",
         "WA_field.json",
+        "AGB_field.json",
         "AA_field.json",
         "IFAA_field.json",
         "AGB_VI.json",

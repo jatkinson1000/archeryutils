@@ -3,7 +3,7 @@
    "codename" : "aa_50_1440",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa1440",
+   "family" : "aa_1440",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
@@ -14,7 +14,7 @@
    "codename" : "aa_40_1440",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa1440",
+   "family" : "aa_1440",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
@@ -97,7 +97,7 @@
    "codename" : "hobart",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900",
+   "family" : "aa_900",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
@@ -107,7 +107,7 @@
    "codename" : "perth",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900",
+   "family" : "aa_900",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
@@ -117,7 +117,7 @@
    "codename" : "canberra",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900",
+   "family" : "aa_900",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
@@ -127,7 +127,7 @@
    "codename" : "short_canberra",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900",
+   "family" : "aa_900",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
@@ -137,7 +137,7 @@
    "codename" : "junior_canberra",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900",
+   "family" : "aa_900",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"}
@@ -147,7 +147,7 @@
    "codename" : "mini_canberra",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900",
+   "family" : "aa_900",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 10, "dist_unit" : "metre"}
@@ -159,7 +159,7 @@
    "codename" : "grange",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
@@ -169,7 +169,7 @@
    "codename" : "melbourne",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
@@ -179,7 +179,7 @@
    "codename" : "darwin",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
@@ -189,7 +189,7 @@
    "codename" : "geelong",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
@@ -199,7 +199,7 @@
    "codename" : "newcastle",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 122, "scoring" : "10_zone", "distance" : 20, "dist_unit" : "metre"}
@@ -209,7 +209,7 @@
    "codename" : "holt",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
@@ -219,7 +219,7 @@
    "codename" : "samford",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
@@ -229,7 +229,7 @@
    "codename" : "drake",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa900_single_distance",
+   "family" : "aa_900_single_distance",
    "passes" : [{"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 30, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
@@ -241,7 +241,7 @@
    "codename" : "wollongong",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa720_split_distance",
+   "family" : "aa_720_split_distance",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 90, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"}
               ]
@@ -250,7 +250,7 @@
    "codename" : "townsville",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa720_split_distance",
+   "family" : "aa_720_split_distance",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 70, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 60, "dist_unit" : "metre"}
               ]
@@ -259,7 +259,7 @@
    "codename" : "launceston",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa720_split_distance",
+   "family" : "aa_720_split_distance",
    "passes" : [{"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 80, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
@@ -270,7 +270,7 @@
    "codename" : "aa_50_720",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa720",
+   "family" : "aa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 50, "dist_unit" : "metre"}
               ]
@@ -279,7 +279,7 @@
    "codename" : "aa_40_720",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa720",
+   "family" : "aa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 40, "dist_unit" : "metre"}
               ]
@@ -288,7 +288,7 @@
    "codename" : "aa_30_720",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa720",
+   "family" : "aa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]
@@ -297,7 +297,7 @@
    "codename" : "aa_20_720",
    "location" : "outdoor",
    "body" : "AA",
-   "family" : "aa720",
+   "family" : "aa_720",
    "passes" : [{"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"},
                {"n_arrows" : 36, "diameter" : 122, "scoring" : "10_zone", "distance" : 30, "dist_unit" : "metre"}
               ]

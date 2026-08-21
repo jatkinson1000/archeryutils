@@ -39,47 +39,47 @@ class TestAgbOutdoorClassificationScores:
         "archery_round,age_group,scores_expected",
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_ages.ADULT,
                 [426, 566, 717, 866, 999, 1110, 1197, 1266, 1320],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                ALL_OUTDOOR_ROUNDS["wa_70_122"],
                 AGB_ages.ADULT,
                 [185, 259, 343, 425, 496, 552, 597, 631, 659],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_ages.OVER_50,
                 [364, 503, 659, 817, 960, 1079, 1173, 1247, 1305],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_ages.UNDER_21,
                 [313, 435, 577, 728, 877, 1008, 1117, 1203, 1270],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_ages.UNDER_18,
                 [259, 373, 514, 671, 828, 969, 1086, 1179, 1252],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_60"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_60"],
                 AGB_ages.UNDER_16,
                 [227, 335, 474, 635, 799, 946, 1068, 1165, 1241],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_50"],
                 AGB_ages.UNDER_15,
                 [270, 389, 534, 693, 849, 988, 1101, 1191, 1261],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_iv"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_40"],
                 AGB_ages.UNDER_14,
                 [396, 524, 666, 814, 952, 1070, 1166, 1242, 1301],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_v"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_30"],
                 AGB_ages.UNDER_12,
                 [406, 550, 706, 858, 992, 1104, 1193, 1263, 1317],
             ),
@@ -105,22 +105,22 @@ class TestAgbOutdoorClassificationScores:
         "archery_round,age_group,scores_expected",
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_ages.ADULT,
                 [392, 536, 693, 849, 988, 1101, 1191, 1261, 1316],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_50"],
                 AGB_ages.UNDER_16,
                 [293, 418, 567, 727, 881, 1014, 1122, 1207, 1274],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_iii"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_50"],
                 AGB_ages.UNDER_15,
                 [270, 389, 534, 693, 849, 988, 1101, 1191, 1261],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_v"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_30"],
                 AGB_ages.UNDER_12,
                 [406, 550, 706, 858, 992, 1104, 1193, 1263, 1317],
             ),
@@ -151,43 +151,43 @@ class TestAgbOutdoorClassificationScores:
         "archery_round,bowstyle,gender,scores_expected",
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_bowstyles.COMPOUND,
                 AGB_genders.OPEN,
                 [866, 982, 1081, 1162, 1229, 1283, 1327, 1362, 1389],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.COMPOUND,
                 AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.OPEN,
                 [290, 380, 484, 598, 717, 835, 945, 1042, 1124],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.FEMALE,
                 [252, 338, 441, 558, 682, 806, 921, 1023, 1108],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_bowstyles.LONGBOW,
                 AGB_genders.OPEN,
                 [85, 124, 177, 248, 337, 445, 566, 696, 825],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.LONGBOW,
                 AGB_genders.FEMALE,
                 [64, 94, 136, 195, 274, 373, 493, 625, 761],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.ENGLISHLONGBOW,
                 AGB_genders.FEMALE,
                 [64, 94, 136, 195, 274, 373, 493, 625, 761],
@@ -215,31 +215,31 @@ class TestAgbOutdoorClassificationScores:
         "archery_round,bowstyle,gender,scores_expected",
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_bowstyles.FLATBOW,
                 AGB_genders.OPEN,
                 [290, 380, 484, 598, 717, 835, 945, 1042, 1124],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.TRADITIONAL,
                 AGB_genders.FEMALE,
                 [252, 338, 441, 558, 682, 806, 921, 1023, 1108],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.COMPOUNDBAREBOW,
                 AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.COMPOUNDLIMITED,
                 AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 AGB_bowstyles.COMPOUND,
                 AGB_genders.FEMALE,
                 [870, 988, 1086, 1167, 1233, 1286, 1330, 1364, 1392],
@@ -272,7 +272,7 @@ class TestAgbOutdoorClassificationScores:
     ) -> None:
         """Check that appropriate open scores returned for male."""
         scores = cf.agb_outdoor_classification_scores(
-            ALL_OUTDOOR_ROUNDS["wa1440_90"],
+            ALL_OUTDOOR_ROUNDS["wa_1440_90"],
             AGB_bowstyles.BAREBOW,
             AGB_genders.MALE,
             AGB_ages.ADULT,
@@ -284,7 +284,7 @@ class TestAgbOutdoorClassificationScores:
         "archery_round,scores_expected",
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90_small"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90_6_zone"],
                 [866, 982, 1081, 1162, 1229, 1283, 1327, 1362, 1389],
             ),
         ],
@@ -309,7 +309,7 @@ class TestAgbOutdoorClassificationScores:
         # Check all systems, different distances, negative and large handicaps.
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 "invalidbowstyle",
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -320,7 +320,7 @@ class TestAgbOutdoorClassificationScores:
                 ),
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_bowstyles.RECURVE,
                 "invalidgender",
                 AGB_ages.ADULT,
@@ -330,7 +330,7 @@ class TestAgbOutdoorClassificationScores:
                 ),
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.OPEN,
                 "invalidage",
@@ -414,7 +414,7 @@ class TestAgbOutdoorClassificationScores:
     ) -> None:
         """Check that outdoor classification can process a string roundname."""
         scores = cf.agb_outdoor_classification_scores(
-            archery_round="wa1440_70",
+            archery_round="wa_1440_70",
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.FEMALE,
             age_group=AGB_ages.ADULT,
@@ -474,7 +474,7 @@ class TestAgbOutdoorClassificationScores:
                 id="Check long non-prestige returns all classifications.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                ALL_OUTDOOR_ROUNDS["wa_70_122"],
                 AGB_bowstyles.RECURVE,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -482,7 +482,7 @@ class TestAgbOutdoorClassificationScores:
                 id="Check short 720 prestige no-longer returns all classifications.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                ALL_OUTDOOR_ROUNDS["wa_50_80"],
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -545,7 +545,7 @@ class TestAgbOutdoorClassificationScores:
 
     @pytest.mark.parametrize(
         "archery_round",
-        ["wa1440_90", "york", "fake_round", ""],
+        ["wa_1440_90", "york", "fake_round", ""],
     )
     def test_agb_outdoor_classification_scores_non_strict_round_string(
         self,
@@ -579,7 +579,7 @@ class TestAgbOutdoorClassificationScores:
                 id="Check long non-prestige only returns to B1.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                ALL_OUTDOOR_ROUNDS["wa_70_122"],
                 AGB_bowstyles.RECURVE,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -587,7 +587,7 @@ class TestAgbOutdoorClassificationScores:
                 id="Check 720 prestige still returns all classifications.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                ALL_OUTDOOR_ROUNDS["wa_50_80"],
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -624,70 +624,70 @@ class TestCalculateAgbOutdoorClassification:
         "archery_round,score,age_group,bowstyle,class_expected",
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 1390,  # 1 above EMB
                 AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "EMB",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 1382,  # 1 below EMB
                 AGB_ages.OVER_50,
                 AGB_bowstyles.COMPOUND,
                 "GMB",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 900,  # midway MB
                 AGB_ages.UNDER_21,
                 AGB_bowstyles.BAREBOW,
                 "MB",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 1269,  # 1 below MB
                 AGB_ages.UNDER_18,
                 AGB_bowstyles.COMPOUND,
                 "B1",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa1440_70"],
+                ALL_OUTDOOR_ROUNDS["wa_1440_70"],
                 969,  # boundary value
                 AGB_ages.UNDER_18,
                 AGB_bowstyles.RECURVE,
                 "B1",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_v"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_30"],
                 992,  # Boundary
                 AGB_ages.UNDER_12,
                 AGB_bowstyles.RECURVE,
                 "B2",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_v"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_30"],
                 222,  # Midway
                 AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "A1",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_v"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_30"],
                 91,  # On boundary
                 AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_v"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_30"],
                 1,
                 AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
                 "UC",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_v"],
+                ALL_OUTDOOR_ROUNDS["agb_1440_30"],
                 250,
                 AGB_ages.UNDER_12,
                 AGB_bowstyles.LONGBOW,
@@ -718,21 +718,21 @@ class TestCalculateAgbOutdoorClassification:
         "archery_round,score,age_group,bowstyle,class_expected",
         [
             (
-                ALL_OUTDOOR_ROUNDS["wa720_70"],  # Not prestige only 70m => B2
+                ALL_OUTDOOR_ROUNDS["wa_70_122"],  # Not prestige only 70m => B2
                 720,
                 AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "B2",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa720_50_b"],  # Not prestige only 50m => A1
+                ALL_OUTDOOR_ROUNDS["wa_50_122"],  # Not prestige only 50m => A1
                 720,
                 AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
                 "A1",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa720_50_c"],  # Prestige => EMB
+                ALL_OUTDOOR_ROUNDS["wa_50_80"],  # Prestige => EMB
                 720,
                 AGB_ages.ADULT,
                 AGB_bowstyles.COMPOUND,
@@ -740,7 +740,7 @@ class TestCalculateAgbOutdoorClassification:
             ),
             (
                 ALL_OUTDOOR_ROUNDS[
-                    "metric_80_30"
+                    "agb_30_80"
                 ],  # This and next 2 check Prestige by age
                 720,
                 AGB_ages.ADULT,
@@ -748,42 +748,42 @@ class TestCalculateAgbOutdoorClassification:
                 "A3",  # 30m for adults gets A3
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_80_30"],
+                ALL_OUTDOOR_ROUNDS["agb_30_80"],
                 720,
                 AGB_ages.UNDER_14,
                 AGB_bowstyles.COMPOUND,
                 "B3",  # Max dist reqd. for B1 and B2
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_80_30"],
+                ALL_OUTDOOR_ROUNDS["agb_30_80"],
                 720,
                 AGB_ages.UNDER_12,
                 AGB_bowstyles.COMPOUND,
                 "EMB",  # Age appropriate
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_122_50"],
+                ALL_OUTDOOR_ROUNDS["wa_50_122"],
                 720,
                 AGB_ages.UNDER_16,
                 AGB_bowstyles.COMPOUND,
                 "B2",  # Under 16+ Max dist reqd. for B1 (not B2)
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa720_60"],  # Recurve 50+ get 60m 720
+                ALL_OUTDOOR_ROUNDS["wa_60_122"],  # Recurve 50+ get 60m 720
                 720,
                 AGB_ages.OVER_50,
                 AGB_bowstyles.RECURVE,
                 "EMB",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["wa720_60"],  # Recurve U18 get 60m 720
+                ALL_OUTDOOR_ROUNDS["wa_60_122"],  # Recurve U18 get 60m 720
                 720,
                 AGB_ages.UNDER_18,
                 AGB_bowstyles.RECURVE,
                 "EMB",
             ),
             (
-                ALL_OUTDOOR_ROUNDS["metric_122_50"],  # Recurve U18 get 50m Metric 122
+                ALL_OUTDOOR_ROUNDS["wa_50_122"],  # Recurve U18 get 50m Metric 122
                 720,
                 AGB_ages.UNDER_16,
                 AGB_bowstyles.RECURVE,
@@ -844,15 +844,15 @@ class TestCalculateAgbOutdoorClassification:
             match=(
                 re.escape(
                     f"Invalid score of {score} for a "
-                    f"{ALL_OUTDOOR_ROUNDS['wa1440_90'].name}. "
+                    f"{ALL_OUTDOOR_ROUNDS['wa_1440_90'].name}. "
                     f"Should be in range "
-                    f"0-{ALL_OUTDOOR_ROUNDS['wa1440_90'].max_score()}."
+                    f"0-{ALL_OUTDOOR_ROUNDS['wa_1440_90'].max_score()}."
                 )
             ),
         ):
             _ = cf.calculate_agb_outdoor_classification(
                 score=score,
-                archery_round=ALL_OUTDOOR_ROUNDS["wa1440_90"],
+                archery_round=ALL_OUTDOOR_ROUNDS["wa_1440_90"],
                 bowstyle=AGB_bowstyles.BAREBOW,
                 gender=AGB_genders.OPEN,
                 age_group=AGB_ages.ADULT,
@@ -913,7 +913,7 @@ class TestCalculateAgbOutdoorClassification:
     ) -> None:
         """Check that outdoor classification can process a string roundname."""
         my_class = cf.calculate_agb_outdoor_classification(
-            archery_round="wa1440_70",
+            archery_round="wa_1440_70",
             score=1200,
             bowstyle=AGB_bowstyles.COMPOUND,
             gender=AGB_genders.FEMALE,
@@ -977,7 +977,7 @@ class TestCalculateAgbOutdoorClassification:
                 id="Check long non-prestige can give MB.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                ALL_OUTDOOR_ROUNDS["wa_70_122"],
                 AGB_bowstyles.RECURVE,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -986,7 +986,7 @@ class TestCalculateAgbOutdoorClassification:
                 id="Check short 720 prestige no-longer gives MB.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                ALL_OUTDOOR_ROUNDS["wa_50_80"],
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -1047,7 +1047,7 @@ class TestCalculateAgbOutdoorClassification:
 
     @pytest.mark.parametrize(
         "archery_round",
-        ["wa1440_90", "york", "fake_round", ""],
+        ["wa_1440_90", "york", "fake_round", ""],
     )
     def test_agb_outdoor_classification_non_strict_round_string(
         self,
@@ -1083,7 +1083,7 @@ class TestCalculateAgbOutdoorClassification:
                 id="Check short non-prestige returns up to B1.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_70"],
+                ALL_OUTDOOR_ROUNDS["wa_70_122"],
                 AGB_bowstyles.RECURVE,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,
@@ -1092,7 +1092,7 @@ class TestCalculateAgbOutdoorClassification:
                 id="Check 720 prestige still allows all classifications.",
             ),
             pytest.param(
-                ALL_OUTDOOR_ROUNDS["wa720_50_c"],
+                ALL_OUTDOOR_ROUNDS["wa_50_80"],
                 AGB_bowstyles.BAREBOW,
                 AGB_genders.OPEN,
                 AGB_ages.ADULT,

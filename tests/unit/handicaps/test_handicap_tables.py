@@ -25,14 +25,14 @@ hereford = Round(
         Pass.at_target(24, "5_zone", 122, (50, "yard"), False),
     ],
 )
-metric122_30 = Round(
-    "Metric 122-30",
+wa_30_122 = Round(
+    "WA 30m (122cm)",
     [
         Pass.at_target(36, "10_zone", 122, 30, False),
         Pass.at_target(36, "10_zone", 122, 30, False),
     ],
 )
-roundlist = [york, hereford, metric122_30]
+roundlist = [york, hereford, wa_30_122]
 
 
 class TestHandicapTable:

@@ -14,6 +14,7 @@ old_agb_field_classification_scores
 
 """
 
+import re
 from typing import Tuple, TypedDict
 
 import archeryutils.classifications.classification_utils as cls_funcs
@@ -24,6 +25,7 @@ from archeryutils.rounds import Round
 ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
+        "AGB_field.json",
     ],
 )
 
@@ -372,8 +374,10 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
 
     """
     if isinstance(archery_round, str) and archery_round in ALL_FIELD_ROUNDS:
-        roundname = archery_round
-        archery_round = ALL_FIELD_ROUNDS[roundname]
+        # Resolve via the rounds dict so deprecated codenames warn, then force the
+        # canonical codename for scheme logic that keys on roundname.
+        archery_round = ALL_FIELD_ROUNDS[archery_round]
+        roundname = archery_round.codename
     elif (
         isinstance(archery_round, Round) and archery_round in ALL_FIELD_ROUNDS.values()
     ):
@@ -440,7 +444,7 @@ def calculate_agb_old_field_classification(
     >>> wa_field = load_rounds.WA_field
     >>> cf.calculate_agb_old_field_classification(
     ...     247,
-    ...     wa_field.wa_field_24_red_marked,
+    ...     wa_field.wa_field_24_marked_red,
     ...     cf.AGB_bowstyles.RECURVE,
     ...     cf.AGB_genders.MALE,
     ...     cf.AGB_ages.ADULT,
@@ -465,9 +469,11 @@ def calculate_agb_old_field_classification(
 
     # Check Round is appropriate:
     # Sighted can have any Red 24, unsighted can have any blue 24
-    if bowstyle in sighted_bowstyles and "wa_field_24_red_" not in roundname:
+    if bowstyle in sighted_bowstyles and not re.search(r"wa_field_24_.*red", roundname):
         return UNCLASSIFIED
-    if bowstyle not in sighted_bowstyles and "wa_field_24_blue_" not in roundname:
+    if bowstyle not in sighted_bowstyles and not re.search(
+        r"wa_field_24_.*blue", roundname
+    ):
         return UNCLASSIFIED
 
     # What is the highest classification this score gets?
@@ -524,7 +530,7 @@ def agb_old_field_classification_scores(
     >>> from archeryutils import load_rounds
     >>> wa_field = load_rounds.WA_field
     >>> cf.agb_old_field_classification_scores(
-    ...     wa_field.wa_field_24_red_marked,
+    ...     wa_field.wa_field_24_marked_red,
     ...     cf.AGB_bowstyles.RECURVE,
     ...     cf.AGB_genders.MALE,
     ...     cf.AGB_ages.ADULT,

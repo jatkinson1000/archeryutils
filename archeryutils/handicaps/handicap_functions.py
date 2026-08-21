@@ -187,14 +187,14 @@ def score_for_passes(
     >>> import archeryutils as au
     >>> from archeryutils import handicaps as hc
     >>> wa_outdoor = au.load_rounds.WA_outdoor
-    >>> hc.score_for_passes(10.0, wa_outdoor.wa1440_90, "AGB")
+    >>> hc.score_for_passes(10.0, wa_outdoor.wa_1440_90, "AGB")
     array([322.84091528, 338.44257659, 338.66395001, 355.87959411])
 
     It can also be passed an array of handicaps:
 
     >>> hc.score_for_passes(
     ...     np.array([10.0, 50.0, 100.0]),
-    ...     wa_outdoor.wa1440_90,
+    ...     wa_outdoor.wa_1440_90,
     ...     "AGB",
     ... )
     array([[322.84091528, 162.76200686,   8.90456718],
@@ -249,10 +249,10 @@ def score_for_round(
     >>> import archeryutils as au
     >>> from archeryutils import handicaps as hc
     >>> wa_outdoor = au.load_rounds.WA_outdoor
-    >>> hc.score_for_round(10.0, wa_outdoor.wa1440_90, "AGB")
+    >>> hc.score_for_round(10.0, wa_outdoor.wa_1440_90, "AGB")
     1356.0
     >>> au.handicap_equations.score_for_round(
-    ...     wa_outdoor.wa1440_90, 10.0, rounded_score=False
+    ...     wa_outdoor.wa_1440_90, 10.0, rounded_score=False
     ... )
     1355.8270359849505
 
@@ -260,7 +260,7 @@ def score_for_round(
 
     >>> hc.score_for_round(
     ...     np.array([10.0, 50.0, 100.0]),
-    ...     wa_outdoor.wa1440_90,
+    ...     wa_outdoor.wa_1440_90,
     ... )
     array([1356.,  887.,   91.])
 
@@ -311,14 +311,14 @@ def handicap_from_score(
 
     >>> import archeryutils as au
     >>> wa_outdoor = au.load_rounds.WA_outdoor
-    >>> hc.handicap_from_score(999, wa_outdoor.wa1440_90, "AGB")
+    >>> hc.handicap_from_score(999, wa_outdoor.wa_1440_90, "AGB")
     43.999964586102706
 
     To get an integer value as would appear in the handicap tables use
     ``int_prec=True``:
 
     >>> au.handicap_functions.handicap_from_score(
-    ...     999, wa_outdoor.wa1440_90, "AGB", hc_params, int_prec=True
+    ...     999, wa_outdoor.wa_1440_90, "AGB", hc_params, int_prec=True
     ... )
     44.0
 

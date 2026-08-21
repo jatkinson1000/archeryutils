@@ -239,8 +239,10 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
 
     """
     if isinstance(archery_round, str) and archery_round in ALL_INDOOR_ROUNDS:
-        roundname = archery_round
-        archery_round = ALL_INDOOR_ROUNDS[roundname]
+        # Resolve via the rounds dict so deprecated codenames warn, then force the
+        # canonical codename for scheme logic that keys on roundname.
+        archery_round = ALL_INDOOR_ROUNDS[archery_round]
+        roundname = archery_round.codename
     elif (
         isinstance(archery_round, Round) and archery_round in ALL_INDOOR_ROUNDS.values()
     ):
@@ -314,7 +316,7 @@ def calculate_agb_indoor_classification(
     >>> agb_indoor = load_rounds.AGB_indoor
     >>> cf.calculate_agb_indoor_classification(
     ...     547,
-    ...     agb_indoor.wa18,
+    ...     agb_indoor.wa_18,
     ...     cf.AGB_bowstyles.COMPOUND,
     ...     cf.AGB_genders.OPEN,
     ...     cf.AGB_ages.OVER_50,

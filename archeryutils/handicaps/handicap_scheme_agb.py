@@ -182,7 +182,7 @@ class HandicapAGBold(HandicapScheme):
 
     """
 
-    def __init__(  # noqa: PLR0913 - Too many arguments
+    def __init__(  # noqa: PLR0913, PLR0917 Too many arguments
         self,
         datum: float = 12.9,
         step: float = 3.6,

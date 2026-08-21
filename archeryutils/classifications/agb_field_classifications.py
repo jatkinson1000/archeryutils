@@ -8,6 +8,7 @@ agb_field_classification_scores
 """
 
 import itertools
+import re
 from typing import Tuple, TypedDict
 
 import numpy as np
@@ -22,6 +23,7 @@ from archeryutils.rounds import Round
 ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
+        "AGB_field.json",
     ]
 )
 
@@ -312,7 +314,9 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
 
     """
     if isinstance(archery_round, str) and archery_round in ALL_FIELD_ROUNDS:
-        roundname = archery_round
+        # Resolve via the rounds dict so deprecated codenames warn, then force the
+        # canonical codename for scheme logic that keys on roundname.
+        roundname = ALL_FIELD_ROUNDS[archery_round].codename
     elif (
         isinstance(archery_round, Round) and archery_round in ALL_FIELD_ROUNDS.values()
     ):
@@ -335,7 +339,7 @@ def _check_round_eligibility(archery_round: Round | str) -> Tuple[Round, str]:
     return archery_round, roundname
 
 
-def calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
+def calculate_agb_field_classification(  # noqa: PLR0913, PLR0917 Too many arguments
     score: float,
     archery_round: Round | str,
     bowstyle: AGB_bowstyles,
@@ -397,7 +401,7 @@ def calculate_agb_field_classification(  # noqa: PLR0913 Too many arguments
     >>> wa_field = load_rounds.WA_field
     >>> cf.calculate_agb_field_classification(
     ...     177,
-    ...     wa_field.wa_field_24_blue_marked,
+    ...     wa_field.wa_field_24_marked_blue,
     ...     cf.AGB_bowstyles.TRADITIONAL,
     ...     cf.AGB_genders.OPEN,
     ...     cf.AGB_ages.UNDER_18,
@@ -505,7 +509,7 @@ def agb_field_classification_scores(
     >>> from archeryutils import load_rounds
     >>> wa_field = load_rounds.WA_field
     >>> cf.agb_field_classification_scores(
-    ...     wa_field.wa_field_24_red_marked,
+    ...     wa_field.wa_field_24_marked_red,
     ...     cf.AGB_bowstyles.COMPOUND,
     ...     cf.AGB_genders.OPEN,
     ...     cf.AGB_ages.ADULT,
@@ -515,7 +519,7 @@ def agb_field_classification_scores(
     If a classification cannot be achieved a fill value of `-9999` is returned:
 
     >>> cf.agb_field_classification_scores(
-    ...     wa_field.wa_field_12_red_unmarked,
+    ...     wa_field.wa_field_12_unmarked_red,
     ...     cf.AGB_bowstyles.COMPOUND,
     ...     cf.AGB_genders.OPEN,
     ...     cf.AGB_ages.ADULT,
@@ -554,7 +558,7 @@ def agb_field_classification_scores(
 
     # Reduce list based on other criteria besides handicap
     # Based on round length (24 targets for MB)
-    if strict_rounds and "wa_field_24_" not in archery_round.codename:
+    if strict_rounds and not re.search(r"(wa|agb)_field_24_", archery_round.codename):
         class_scores[0:3] = [-9999] * 3
 
     # What classes are eligible based on category and distance

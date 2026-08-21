@@ -30,20 +30,20 @@ hereford = Round(
         Pass.at_target(24, "5_zone", 122, (50, "yard"), False),
     ],
 )
-western = Round(
+western_60 = Round(
     "Western",
     [
         Pass.at_target(48, "5_zone", 122, (60, "yard"), False),
         Pass.at_target(48, "5_zone", 122, (50, "yard"), False),
     ],
 )
-vegas300 = Round(
+vegas_300 = Round(
     "Vegas 300",
     [
         Pass.at_target(30, "10_zone", 40, (20, "yard"), True),
     ],
 )
-wa1440_90 = Round(
+wa_1440_90 = Round(
     "WA1440 90m",
     [
         Pass.at_target(36, "10_zone", 122, (90, "metre"), False),
@@ -52,7 +52,7 @@ wa1440_90 = Round(
         Pass.at_target(36, "10_zone", 80, (30, "metre"), False),
     ],
 )
-wa1440_70 = Round(
+wa_1440_70 = Round(
     "WA1440 70m",
     [
         Pass.at_target(36, "10_zone", 122, 70, False),
@@ -61,15 +61,15 @@ wa1440_70 = Round(
         Pass.at_target(36, "10_zone", 80, 30, False),
     ],
 )
-wa720_70 = Round(
+wa_70_122 = Round(
     "WA 720 70m",
     [
         Pass.at_target(36, "10_zone", 122, 70, False),
         Pass.at_target(36, "10_zone", 122, 70, False),
     ],
 )
-metric122_30 = Round(
-    "Metric 122-30",
+wa_30_122 = Round(
+    "WA 30m (122cm)",
     [
         Pass.at_target(36, "10_zone", 122, 30, False),
         Pass.at_target(36, "10_zone", 122, 30, False),
@@ -758,16 +758,16 @@ class TestHandicapFromScore:
     @pytest.mark.parametrize(
         "hc_system,testround,max_score,handicap_expected",
         [
-            ("AGB", metric122_30, 720, 11),
-            ("AA", metric122_30, 720, 107),
-            # ("AA2", metric122_30, 720, 107),
+            ("AGB", wa_30_122, 720, 11),
+            ("AA", wa_30_122, 720, 107),
+            # ("AA2", wa_30_122, 720, 107),
             # ------------------------------
-            ("AGB", western, 864, 9),
-            ("AGBold", western, 864, 6),
+            ("AGB", western_60, 864, 9),
+            ("AGBold", western_60, 864, 6),
             # ------------------------------
-            ("AGB", vegas300, 300, 3),
-            ("AA", vegas300, 300, 119),
-            # ("AA2", vegas300, 300, 119),
+            ("AGB", vegas_300, 300, 3),
+            ("AA", vegas_300, 300, 119),
+            # ("AA2", vegas_300, 300, 119),
         ],
     )
     def test_maximum_score(
@@ -791,8 +791,8 @@ class TestHandicapFromScore:
     @pytest.mark.parametrize(
         "hc_system,testround,max_score,handicap_expected",
         [
-            ("AGB", metric122_30, 720, 11.75),
-            ("AA", metric122_30, 720, 106.98),
+            ("AGB", wa_30_122, 720, 11.75),
+            ("AA", wa_30_122, 720, 106.98),
         ],
     )
     def test_maximum_score_float(
@@ -821,42 +821,42 @@ class TestHandicapFromScore:
         [
             # ------------------------------
             # Generic scores:
-            ("AGB", wa720_70, 700, 1),
-            ("AGBold", wa720_70, 700, 1),
-            ("AA", wa720_70, 700, 119),
-            # ("AA2", wa720_70, 700, 107),
-            ("AGB", wa720_70, 500, 44),
-            ("AGBold", wa720_70, 500, 40),
-            ("AA", wa720_70, 500, 64),
-            # ("AA2", wa720_70, 500, 107),
+            ("AGB", wa_70_122, 700, 1),
+            ("AGBold", wa_70_122, 700, 1),
+            ("AA", wa_70_122, 700, 119),
+            # ("AA2", wa_70_122, 700, 107),
+            ("AGB", wa_70_122, 500, 44),
+            ("AGBold", wa_70_122, 500, 40),
+            ("AA", wa_70_122, 500, 64),
+            # ("AA2", wa_70_122, 500, 107),
             # ------------------------------
             # Score on the lower bound of a band:
-            ("AGB", wa720_70, 283, 63),
-            ("AGBold", wa720_70, 286, 53),
-            ("AA", wa720_70, 280, 39),
-            # ("AA2", wa720_70, 500, 107),
+            ("AGB", wa_70_122, 283, 63),
+            ("AGBold", wa_70_122, 286, 53),
+            ("AA", wa_70_122, 280, 39),
+            # ("AA2", wa_70_122, 500, 107),
             # ------------------------------
             # Score on upper bound of a band:
-            ("AGB", wa720_70, 486, 46),
-            ("AGBold", wa720_70, 488, 41),
-            ("AA", wa720_70, 491, 62),
-            # ("AA2", wa720_70, 500, 107),
+            ("AGB", wa_70_122, 486, 46),
+            ("AGBold", wa_70_122, 488, 41),
+            ("AA", wa_70_122, 491, 62),
+            # ("AA2", wa_70_122, 500, 107),
             # ------------------------------
             # Scores that give negative AGB handicaps:
-            ("AGB", wa720_70, 710, -5),
-            ("AGBold", wa720_70, 710, -5),
-            # ("AA", wa720_70, 491, 62)
-            # ("AA2", wa720_70, 500, 107),
+            ("AGB", wa_70_122, 710, -5),
+            ("AGBold", wa_70_122, 710, -5),
+            # ("AA", wa_70_122, 491, 62)
+            # ("AA2", wa_70_122, 500, 107),
             # ------------------------------
             # Scores that give 0 AA handicaps:
-            ("AA", wa720_70, 52, 0),
-            # ("AA2", wa720_70, 500, 107),
+            ("AA", wa_70_122, 52, 0),
+            # ("AA2", wa_70_122, 500, 107),
             # ------------------------------
             # Multiple Distance Round:
-            ("AGB", wa1440_90, 850, 52),
-            ("AGBold", wa1440_90, 850, 46),
-            ("AA", wa1440_90, 850, 53),
-            # ("AA2", wa1440_90, 850, 53),
+            ("AGB", wa_1440_90, 850, 52),
+            ("AGBold", wa_1440_90, 850, 46),
+            ("AA", wa_1440_90, 850, 53),
+            # ("AA2", wa_1440_90, 850, 53),
         ],
     )
     def test_int_precision(
@@ -881,16 +881,16 @@ class TestHandicapFromScore:
         "hc_system,testround,testscore,handicap_expected",
         [
             # Generic scores:
-            ("AGB", wa720_70, 500, 43.474880980),
-            ("AGBold", wa720_70, 500, 39.056931372),
-            ("AA", wa720_70, 500, 64.197993398),
-            # ("AA2", wa720_70, 500, 107),
+            ("AGB", wa_70_122, 500, 43.474880980),
+            ("AGBold", wa_70_122, 500, 39.056931372),
+            ("AA", wa_70_122, 500, 64.197993398),
+            # ("AA2", wa_70_122, 500, 107),
             # ------------------------------
             # Multiple Distance Round:
-            ("AGB", wa1440_90, 850, 51.775514610),
-            ("AGBold", wa1440_90, 850, 45.303733163),
-            ("AA", wa1440_90, 850, 53.545592683),
-            # ("AA2", wa1440_90, 850, 53),
+            ("AGB", wa_1440_90, 850, 51.775514610),
+            ("AGBold", wa_1440_90, 850, 45.303733163),
+            ("AA", wa_1440_90, 850, 53.545592683),
+            # ("AA2", wa_1440_90, 850, 53),
         ],
     )
     def test_decimal(

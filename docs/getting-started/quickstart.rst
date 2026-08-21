@@ -172,6 +172,7 @@ Possible options for round collections are:
 * ``AGB_outdoor_imperial`` - Archery GB outdoor imperial rounds
 * ``AGB_outdoor_metric`` - Archery GB outdoor metric rounds
 * ``AGB_indoor`` - Archery GB indoor rounds
+* ``AGB_field`` - Archery GB field rounds
 * ``WA_outdoor`` - World Archery outdoor rounds
 * ``WA_indoor`` - World Archery indoor rounds
 * ``WA_field`` - World Archery field rounds
@@ -311,7 +312,7 @@ Given a score we can calculate the classification it achieves:
     wa_indoor = load_rounds.WA_indoor
     class_from_score = cf.calculate_agb_indoor_classification(
         562,
-        wa_indoor.wa18,
+        wa_indoor.wa_18,
         AGB_bowstyles.COMPOUND,
         AGB_genders.FEMALE,
         AGB_ages.ADULT,
@@ -324,7 +325,7 @@ Given a score we can calculate the classification it achieves:
     wa_field = load_rounds.WA_field
     class_from_score = cf.calculate_agb_field_classification(
         168,
-        wa_field.wa_field_24_blue_unmarked,
+        wa_field.wa_field_24_unmarked_blue,
         AGB_bowstyles.TRADITIONAL,
         AGB_genders.FEMALE,
         AGB_ages.ADULT,
@@ -357,7 +358,7 @@ Or, given a round we can output the scores required for each classification band
 
     wa_field = load_rounds.WA_field
     class_scores = cf.agb_field_classification_scores(
-        wa_field.wa_field_24_blue_unmarked,
+        wa_field.wa_field_24_unmarked_blue,
         AGB_bowstyles.FLATBOW,
         AGB_genders.FEMALE,
         AGB_ages.UNDER_18,
