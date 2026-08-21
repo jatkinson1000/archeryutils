@@ -23,6 +23,7 @@ from archeryutils.rounds import Round
 ALL_FIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
+        "AGB_field.json",
     ]
 )
 

@@ -11,6 +11,7 @@ from archeryutils.classifications.AGB_data import AGB_ages, AGB_bowstyles, AGB_g
 ALL_AGBFIELD_ROUNDS = load_rounds.read_json_to_round_dict(
     [
         "WA_field.json",
+        "AGB_field.json",
     ],
 )
 
