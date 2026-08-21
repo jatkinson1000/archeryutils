@@ -13,12 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Addition of 10/15 yard/metre 2/3 dozen rounds to miscellaneous rounds with snapshots
   updated accordingly in [#175](https://github.com/jatkinson1000/archeryutils/pull/175).
+- Ability to add `DotDict`s of Rounds in [#176](https://github.com/jatkinson1000/archeryutils/pull/176).
 
 ### Changed
+
+- Round names updated to follow new AGB conventions in [#176](https://github.com/jatkinson1000/archeryutils/pull/176).
+  Old codenames are retained for some backwards compatibility, but are deprecated.
+  Reduces number of rounds and duplication across different bodies.
+- Separated WA and AGB field rounds into distinct JSON files
+  (`WA_field.json`, `AGB_field.json`) in [#176](https://github.com/jatkinson1000/archeryutils/pull/176).
+- Standardised some inconsistencies across round metadata
+  in [#176](https://github.com/jatkinson1000/archeryutils/pull/176).
 
 ### Fixes
 
 ### Deprecated
+
+- Previous round codenames superseded by the new AGB conventions remain usable
+  via a deprecation-aware `DotDict` but emit a `DeprecationWarning` in
+  [#176](https://github.com/jatkinson1000/archeryutils/pull/176).
 
 ### Removed
 
