@@ -8,6 +8,7 @@ agb_field_classification_scores
 """
 
 import itertools
+import re
 from typing import Tuple, TypedDict
 
 import numpy as np
@@ -556,7 +557,7 @@ def agb_field_classification_scores(
 
     # Reduce list based on other criteria besides handicap
     # Based on round length (24 targets for MB)
-    if strict_rounds and "wa_field_24_" not in archery_round.codename:
+    if strict_rounds and not re.search(r"(wa|agb)_field_24_", archery_round.codename):
         class_scores[0:3] = [-9999] * 3
 
     # What classes are eligible based on category and distance

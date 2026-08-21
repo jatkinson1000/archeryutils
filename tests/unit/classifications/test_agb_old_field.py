@@ -494,7 +494,7 @@ class TestCalculateOldAgbFieldClassification:
         """Check that field classification fails for inappropriate scores."""
         with pytest.raises(
             ValueError,
-            match=(
+            match=re.escape(
                 f"Invalid score of {score} for a "
                 f"{archery_round.name}. "
                 f"Should be in range "

@@ -783,10 +783,12 @@ class TestCalculateAgbFieldClassification:
         with pytest.raises(
             ValueError,
             match=(
-                f"Invalid score of {score} for a "
-                f"{ALL_AGBFIELD_ROUNDS['wa_field_24_blue_marked'].name}. "
-                "Should be in range "
-                f"0-{ALL_AGBFIELD_ROUNDS['wa_field_24_blue_marked'].max_score()}."
+                re.escape(
+                    f"Invalid score of {score} for a "
+                    f"{ALL_AGBFIELD_ROUNDS['wa_field_24_blue_marked'].name}. "
+                    "Should be in range "
+                    f"0-{ALL_AGBFIELD_ROUNDS['wa_field_24_blue_marked'].max_score()}."
+                )
             ),
         ):
             _ = cf.calculate_agb_field_classification(

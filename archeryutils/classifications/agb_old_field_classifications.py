@@ -14,6 +14,7 @@ old_agb_field_classification_scores
 
 """
 
+import re
 from typing import Tuple, TypedDict
 
 import archeryutils.classifications.classification_utils as cls_funcs
@@ -467,9 +468,11 @@ def calculate_agb_old_field_classification(
 
     # Check Round is appropriate:
     # Sighted can have any Red 24, unsighted can have any blue 24
-    if bowstyle in sighted_bowstyles and "wa_field_24_red_" not in roundname:
+    if bowstyle in sighted_bowstyles and not re.search(r"wa_field_24_.*red", roundname):
         return UNCLASSIFIED
-    if bowstyle not in sighted_bowstyles and "wa_field_24_blue_" not in roundname:
+    if bowstyle not in sighted_bowstyles and not re.search(
+        r"wa_field_24_.*blue", roundname
+    ):
         return UNCLASSIFIED
 
     # What is the highest classification this score gets?
